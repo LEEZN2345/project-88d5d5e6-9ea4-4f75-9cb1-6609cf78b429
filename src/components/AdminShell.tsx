@@ -9,14 +9,20 @@ import {
   Truck,
 } from "lucide-react";
 
-const NAV = [
+type NavItem = {
+  to: string;
+  icon: typeof LayoutDashboard;
+  label: string;
+  exact?: boolean;
+};
+const NAV: NavItem[] = [
   { to: "/admin", icon: LayoutDashboard, label: "概览", exact: true },
   { to: "/admin/products", icon: Package, label: "商品/档口" },
   { to: "/admin/orders", icon: ClipboardList, label: "订单" },
   { to: "/admin/payment-accounts", icon: Wallet, label: "收款账户" },
   { to: "/admin/refunds", icon: Undo2, label: "退款工单" },
   { to: "/admin/logistics", icon: Truck, label: "物流导入" },
-] as const;
+];
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });

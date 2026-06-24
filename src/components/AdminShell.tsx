@@ -39,7 +39,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             return (
               <Link
                 key={to}
-                to={to}
+                to={to as string}
                 className={cn(
                   "flex items-center gap-2 rounded-md px-3 py-2 text-sm transition",
                   active
@@ -67,7 +67,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             return (
               <Link
                 key={to}
-                to={to}
+                to={to as string}
                 className={cn(
                   "rounded-md px-2 py-1 text-xs",
                   active

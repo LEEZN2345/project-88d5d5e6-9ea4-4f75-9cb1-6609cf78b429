@@ -21,6 +21,7 @@ import { Route as ProductsIdRouteImport } from './routes/products.$id'
 import { Route as OrdersIdRouteImport } from './routes/orders.$id'
 import { Route as LogisticsIdRouteImport } from './routes/logistics.$id'
 import { Route as AdminPaymentAccountsRouteImport } from './routes/admin.payment-accounts'
+import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 
 const MeRoute = MeRouteImport.update({
   id: '/me',
@@ -82,12 +83,18 @@ const AdminPaymentAccountsRoute = AdminPaymentAccountsRouteImport.update({
   path: '/admin/payment-accounts',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminOrdersRoute = AdminOrdersRouteImport.update({
+  id: '/admin/orders',
+  path: '/admin/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/me': typeof MeRoute
+  '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/me': typeof MeRoute
+  '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
@@ -117,6 +125,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/me': typeof MeRoute
+  '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
@@ -133,6 +142,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/me'
+    | '/admin/orders'
     | '/admin/payment-accounts'
     | '/logistics/$id'
     | '/orders/$id'
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/me'
+    | '/admin/orders'
     | '/admin/payment-accounts'
     | '/logistics/$id'
     | '/orders/$id'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/me'
+    | '/admin/orders'
     | '/admin/payment-accounts'
     | '/logistics/$id'
     | '/orders/$id'
@@ -176,6 +188,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CartRoute: typeof CartRoute
   MeRoute: typeof MeRoute
+  AdminOrdersRoute: typeof AdminOrdersRoute
   AdminPaymentAccountsRoute: typeof AdminPaymentAccountsRoute
   LogisticsIdRoute: typeof LogisticsIdRoute
   OrdersIdRoute: typeof OrdersIdRoute
@@ -272,6 +285,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPaymentAccountsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/orders': {
+      id: '/admin/orders'
+      path: '/admin/orders'
+      fullPath: '/admin/orders'
+      preLoaderRoute: typeof AdminOrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -280,6 +300,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CartRoute: CartRoute,
   MeRoute: MeRoute,
+  AdminOrdersRoute: AdminOrdersRoute,
   AdminPaymentAccountsRoute: AdminPaymentAccountsRoute,
   LogisticsIdRoute: LogisticsIdRoute,
   OrdersIdRoute: OrdersIdRoute,

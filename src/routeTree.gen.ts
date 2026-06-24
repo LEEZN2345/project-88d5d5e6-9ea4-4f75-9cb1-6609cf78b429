@@ -9,9 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SupportRouteImport } from './routes/support'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as NewArrivalsRouteImport } from './routes/new-arrivals'
 import { Route as MeRouteImport } from './routes/me'
+import { Route as KycRouteImport } from './routes/kyc'
+import { Route as FavoritesRouteImport } from './routes/favorites'
+import { Route as DiscountsRouteImport } from './routes/discounts'
+import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AddressesRouteImport } from './routes/addresses'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ShopsIndexRouteImport } from './routes/shops.index'
 import { Route as OrdersIndexRouteImport } from './routes/orders.index'
@@ -26,9 +34,44 @@ import { Route as AdminPaymentAccountsRouteImport } from './routes/admin.payment
 import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 import { Route as AdminLogisticsRouteImport } from './routes/admin.logistics'
 
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewArrivalsRoute = NewArrivalsRouteImport.update({
+  id: '/new-arrivals',
+  path: '/new-arrivals',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MeRoute = MeRouteImport.update({
   id: '/me',
   path: '/me',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KycRoute = KycRouteImport.update({
+  id: '/kyc',
+  path: '/kyc',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FavoritesRoute = FavoritesRouteImport.update({
+  id: '/favorites',
+  path: '/favorites',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiscountsRoute = DiscountsRouteImport.update({
+  id: '/discounts',
+  path: '/discounts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CartRoute = CartRouteImport.update({
@@ -39,6 +82,11 @@ const CartRoute = CartRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AddressesRoute = AddressesRouteImport.update({
+  id: '/addresses',
+  path: '/addresses',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -109,9 +157,17 @@ const AdminLogisticsRoute = AdminLogisticsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/addresses': typeof AddressesRoute
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
+  '/discounts': typeof DiscountsRoute
+  '/favorites': typeof FavoritesRoute
+  '/kyc': typeof KycRoute
   '/me': typeof MeRoute
+  '/new-arrivals': typeof NewArrivalsRoute
+  '/settings': typeof SettingsRoute
+  '/support': typeof SupportRoute
   '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
@@ -127,9 +183,17 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/addresses': typeof AddressesRoute
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
+  '/discounts': typeof DiscountsRoute
+  '/favorites': typeof FavoritesRoute
+  '/kyc': typeof KycRoute
   '/me': typeof MeRoute
+  '/new-arrivals': typeof NewArrivalsRoute
+  '/settings': typeof SettingsRoute
+  '/support': typeof SupportRoute
   '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
@@ -146,9 +210,17 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/addresses': typeof AddressesRoute
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
+  '/discounts': typeof DiscountsRoute
+  '/favorites': typeof FavoritesRoute
+  '/kyc': typeof KycRoute
   '/me': typeof MeRoute
+  '/new-arrivals': typeof NewArrivalsRoute
+  '/settings': typeof SettingsRoute
+  '/support': typeof SupportRoute
   '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
@@ -166,9 +238,17 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/addresses'
     | '/auth'
     | '/cart'
+    | '/checkout'
+    | '/discounts'
+    | '/favorites'
+    | '/kyc'
     | '/me'
+    | '/new-arrivals'
+    | '/settings'
+    | '/support'
     | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
@@ -184,9 +264,17 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/addresses'
     | '/auth'
     | '/cart'
+    | '/checkout'
+    | '/discounts'
+    | '/favorites'
+    | '/kyc'
     | '/me'
+    | '/new-arrivals'
+    | '/settings'
+    | '/support'
     | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
@@ -202,9 +290,17 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/addresses'
     | '/auth'
     | '/cart'
+    | '/checkout'
+    | '/discounts'
+    | '/favorites'
+    | '/kyc'
     | '/me'
+    | '/new-arrivals'
+    | '/settings'
+    | '/support'
     | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
@@ -221,9 +317,17 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AddressesRoute: typeof AddressesRoute
   AuthRoute: typeof AuthRoute
   CartRoute: typeof CartRoute
+  CheckoutRoute: typeof CheckoutRoute
+  DiscountsRoute: typeof DiscountsRoute
+  FavoritesRoute: typeof FavoritesRoute
+  KycRoute: typeof KycRoute
   MeRoute: typeof MeRoute
+  NewArrivalsRoute: typeof NewArrivalsRoute
+  SettingsRoute: typeof SettingsRoute
+  SupportRoute: typeof SupportRoute
   AdminLogisticsRoute: typeof AdminLogisticsRoute
   AdminOrdersRoute: typeof AdminOrdersRoute
   AdminPaymentAccountsRoute: typeof AdminPaymentAccountsRoute
@@ -240,11 +344,60 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/new-arrivals': {
+      id: '/new-arrivals'
+      path: '/new-arrivals'
+      fullPath: '/new-arrivals'
+      preLoaderRoute: typeof NewArrivalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/me': {
       id: '/me'
       path: '/me'
       fullPath: '/me'
       preLoaderRoute: typeof MeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kyc': {
+      id: '/kyc'
+      path: '/kyc'
+      fullPath: '/kyc'
+      preLoaderRoute: typeof KycRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/favorites': {
+      id: '/favorites'
+      path: '/favorites'
+      fullPath: '/favorites'
+      preLoaderRoute: typeof FavoritesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/discounts': {
+      id: '/discounts'
+      path: '/discounts'
+      fullPath: '/discounts'
+      preLoaderRoute: typeof DiscountsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cart': {
@@ -259,6 +412,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/addresses': {
+      id: '/addresses'
+      path: '/addresses'
+      fullPath: '/addresses'
+      preLoaderRoute: typeof AddressesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -357,9 +517,17 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AddressesRoute: AddressesRoute,
   AuthRoute: AuthRoute,
   CartRoute: CartRoute,
+  CheckoutRoute: CheckoutRoute,
+  DiscountsRoute: DiscountsRoute,
+  FavoritesRoute: FavoritesRoute,
+  KycRoute: KycRoute,
   MeRoute: MeRoute,
+  NewArrivalsRoute: NewArrivalsRoute,
+  SettingsRoute: SettingsRoute,
+  SupportRoute: SupportRoute,
   AdminLogisticsRoute: AdminLogisticsRoute,
   AdminOrdersRoute: AdminOrdersRoute,
   AdminPaymentAccountsRoute: AdminPaymentAccountsRoute,

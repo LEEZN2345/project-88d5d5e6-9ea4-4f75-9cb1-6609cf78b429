@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { MALLS } from "@/lib/buildings";
-import { ChevronDown, ChevronUp, Search, ShoppingCart, MoreHorizontal } from "lucide-react";
+import { Search, ShoppingCart, MoreHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -42,7 +42,6 @@ function tilesFor(building: string, floor: string): Tile[] {
 const HERO_IMG = (b: string) => `https://picsum.photos/seed/hero-${b}/800/420`;
 
 function ShopsIndex() {
-  const [tab, setTab] = useState<"档口分类" | "种类分类">("档口分类");
   const dongdaemun = MALLS.find((m) => m.city === "东大门")!;
   // Only include buildings that actually have floors for this UI
   const buildings = useMemo(
@@ -52,16 +51,15 @@ function ShopsIndex() {
   const [activeBuilding, setActiveBuilding] = useState<string>(buildings[0].name);
   const current = buildings.find((b) => b.name === activeBuilding)!;
   const [activeFloor, setActiveFloor] = useState<string>(current.floors[0]);
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({ [buildings[0].name]: true });
 
   const onPickBuilding = (name: string) => {
     const b = buildings.find((x) => x.name === name)!;
     setActiveBuilding(name);
     setActiveFloor(b.floors[0]);
-    setExpanded((e) => ({ ...e, [name]: true }));
   };
 
   const tiles = tilesFor(activeBuilding, activeFloor);
+  const shopCount = 80 + ((activeBuilding.length * 7 + activeFloor.length * 13) % 90);
 
   return (
     <MobileShell>
@@ -71,120 +69,131 @@ function ShopsIndex() {
         right={
           <div className="flex items-center gap-3 text-muted-foreground">
             <MoreHorizontal className="h-5 w-5" />
-            <Search className="h-5 w-5" />
             <ShoppingCart className="h-5 w-5" />
           </div>
         }
       />
-      <div className="flex items-center justify-around border-b border-border bg-background px-4 pt-2">
-        {(["档口分类", "种类分类"] as const).map((t) => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={cn(
-              "relative flex-1 pb-2 text-sm",
-              tab === t ? "font-semibold text-primary" : "text-muted-foreground"
-            )}
-          >
-            {t}
-            {tab === t && (
-              <span className="absolute left-1/2 -bottom-px h-0.5 w-10 -translate-x-1/2 rounded-full bg-primary" />
-            )}
-          </button>
-        ))}
+
+      {/* Search bar */}
+      <div className="border-b border-border bg-background px-3 py-2">
+        <div className="flex items-center gap-2 rounded-full bg-muted px-4 py-2">
+          <Search className="h-4 w-4 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="搜索档口、货号..."
+            className="w-full bg-transparent text-xs text-foreground outline-none placeholder:text-muted-foreground"
+          />
+        </div>
       </div>
 
-      <div className="flex h-[calc(100vh-3rem-3rem-4rem)] min-h-[560px]">
+      <div className="flex min-h-[560px]">
         {/* Left rail */}
-        <aside className="w-24 shrink-0 overflow-y-auto border-r border-border bg-muted/30">
-          <ul className="py-1">
+        <aside className="w-24 shrink-0 overflow-y-auto border-r border-border bg-muted/40">
+          <nav className="flex flex-col">
             {buildings.map((b) => {
-              const isOpen = !!expanded[b.name];
               const isActive = b.name === activeBuilding;
               return (
-                <li key={b.name}>
+                <div
+                  key={b.name}
+                  className={cn(
+                    isActive && "border-l-4 border-foreground bg-background"
+                  )}
+                >
                   <button
-                    onClick={() => {
-                      onPickBuilding(b.name);
-                      setExpanded((e) => ({ ...e, [b.name]: !e[b.name] }));
-                    }}
+                    onClick={() => onPickBuilding(b.name)}
                     className={cn(
-                      "flex w-full items-center justify-between gap-1 px-3 py-2.5 text-left text-[13px]",
-                      isActive ? "font-semibold text-foreground" : "text-foreground/80"
+                      "w-full px-3 py-3.5 text-left text-[12px] uppercase tracking-tight",
+                      isActive
+                        ? "font-bold text-foreground"
+                        : "text-muted-foreground hover:text-foreground"
                     )}
                   >
-                    <span className="truncate">{b.name}</span>
-                    {isOpen ? (
-                      <ChevronUp className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                    ) : (
-                      <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                    )}
+                    <span className="block truncate">{b.name}</span>
                   </button>
-                  {isOpen && isActive && (
-                    <ul className="bg-background">
+                  {isActive && (
+                    <div className="flex flex-col bg-muted/40">
                       {b.floors.map((f) => {
                         const fa = f === activeFloor;
                         return (
-                          <li key={f}>
-                            <button
-                              onClick={() => setActiveFloor(f)}
-                              className={cn(
-                                "relative block w-full px-3 py-2 text-left text-[13px]",
-                                fa ? "font-semibold text-foreground" : "text-muted-foreground"
-                              )}
-                            >
-                              {f}
-                              {fa && (
-                                <span className="absolute bottom-1 left-3 h-0.5 w-6 rounded-full bg-gradient-to-r from-primary to-primary/40" />
-                              )}
-                            </button>
-                          </li>
+                          <button
+                            key={f}
+                            onClick={() => setActiveFloor(f)}
+                            className={cn(
+                              "px-4 py-2 text-left text-[11px]",
+                              fa
+                                ? "bg-background font-bold text-foreground"
+                                : "text-muted-foreground"
+                            )}
+                          >
+                            {f}
+                          </button>
                         );
                       })}
-                    </ul>
+                    </div>
                   )}
-                </li>
+                </div>
               );
             })}
-          </ul>
+          </nav>
         </aside>
 
         {/* Right pane */}
         <section className="flex-1 overflow-y-auto bg-background">
-          <div className="px-3 pt-3">
-            <div className="overflow-hidden rounded-md">
+          {/* Hero banner */}
+          <div className="p-3">
+            <div className="relative h-28 overflow-hidden rounded-xl bg-muted">
               <img
                 src={HERO_IMG(activeBuilding)}
                 alt={activeBuilding}
-                className="h-40 w-full object-cover"
+                className="h-full w-full object-cover"
               />
-            </div>
-            <div className="my-3 flex items-center justify-center gap-3 text-xs text-muted-foreground">
-              <span className="h-px w-6 bg-border" />
-              <span className="font-medium text-foreground">{activeFloor}</span>
-              <span className="h-px w-6 bg-border" />
+              <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/55 via-black/10 to-transparent p-3">
+                <h2 className="text-base font-bold text-white">
+                  {activeBuilding} 购物中心
+                </h2>
+                <p className="text-[10px] uppercase tracking-widest text-white/80">
+                  Market Premium Select
+                </p>
+              </div>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-2 px-3 pb-6">
+
+          {/* Sticky floor header */}
+          <div className="sticky top-0 z-10 flex items-baseline justify-between bg-background px-3 py-2">
+            <div className="flex items-baseline gap-2">
+              <h3 className="text-sm font-black text-foreground">{activeFloor}</h3>
+              <span className="text-[10px] text-muted-foreground">
+                本层共 {shopCount} 个档口
+              </span>
+            </div>
+            <span className="text-[9px] font-bold uppercase tracking-tighter text-muted-foreground/70">
+              Sorted by popularity
+            </span>
+          </div>
+
+          {/* 3-col shop grid */}
+          <div className="grid grid-cols-3 gap-x-2 gap-y-4 px-3 pb-6 pt-1">
             {tiles.map((t) => (
               <Link
                 key={t.code}
                 to="/shops/$id"
                 params={{ id: "s1" }}
-                className="group flex flex-col"
+                className="group flex flex-col gap-1.5"
               >
-                <div className="aspect-square overflow-hidden rounded-md bg-muted">
+                <div className="aspect-square overflow-hidden rounded-md border border-border bg-muted">
                   <img
                     src={t.cover}
                     alt={t.name}
                     className="h-full w-full object-cover transition group-active:scale-95"
                   />
                 </div>
-                <div className="mt-1.5 truncate text-center text-[12px] font-semibold text-foreground">
-                  {t.name}
-                </div>
-                <div className="text-center text-[11px] text-muted-foreground">
-                  ({t.code})
+                <div className="leading-tight">
+                  <p className="truncate text-[11px] font-bold text-foreground">
+                    {t.name}
+                  </p>
+                  <p className="text-[9px] font-medium tracking-tight text-muted-foreground">
+                    {t.code}
+                  </p>
                 </div>
               </Link>
             ))}

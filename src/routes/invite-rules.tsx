@@ -230,3 +230,71 @@ function ComparisonCard() {
     </section>
   );
 }
+
+function StoryCard() {
+  return (
+    <section className="rounded-2xl border border-border bg-card p-4">
+      <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
+        <Coffee className="h-4 w-4 text-primary" /> 一个咖啡店的故事
+      </div>
+
+      <p className="text-xs leading-relaxed text-muted-foreground">
+        把平台想成一家会员制咖啡馆。<span className="text-foreground">服务费</span>就是你的「单杯价」，<span className="text-foreground">运费</span>就是「打包外送费」。
+      </p>
+
+      <div className="mt-3 space-y-2">
+        <Step
+          n="1"
+          title="小红刚下载 App（受邀注册）"
+          body="坐下来点了一杯：3.0% / ₩9500。这是被邀请者的起步价。"
+        />
+        <Step
+          n="2"
+          title="小红拉了同行小白进来（发出邀请）"
+          body="店长说：「介绍朋友，单杯减 0.1%。」小红立刻变成 2.9% / ₩9500。"
+          hl
+        />
+        <Step
+          n="3"
+          title="小白 90 天内补货满 500 万韩币（1 人有效）"
+          body="从这一刻起，外送费也开始减：小红降到 2.8% / ₩9400。"
+        />
+        <Step
+          n="4"
+          title="小红又拉来 4 个达标的朋友（5 人有效）"
+          body="封顶档！2.5% / ₩9000。再继续拉人，价格也不会更低了。"
+          hl
+        />
+        <Step
+          n="5"
+          title="小白只想自己用，不打算拉人"
+          body="没关系，永远是 3.0% / ₩9500。小红升档不会影响小白，小白也不沾光。"
+        />
+      </div>
+
+      <div className="mt-3 rounded-lg border border-dashed border-border bg-muted/30 px-3 py-2 text-[11px] leading-relaxed text-muted-foreground">
+        <span className="font-semibold text-foreground">一句话：</span>
+        你享受的折扣，来自你<span className="text-foreground">亲手拉来并且真在下单</span>的那群人。
+        他们不补货（90 天内 500 万），你的档位就自动滑回去。
+      </div>
+    </section>
+  );
+}
+
+function Step({ n, title, body, hl }: { n: string; title: string; body: string; hl?: boolean }) {
+  return (
+    <div className="flex gap-3">
+      <div
+        className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold ${
+          hl ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+        }`}
+      >
+        {n}
+      </div>
+      <div className="flex-1">
+        <div className="text-xs font-medium">{title}</div>
+        <div className="mt-0.5 text-[11px] leading-relaxed text-muted-foreground">{body}</div>
+      </div>
+    </div>
+  );
+}

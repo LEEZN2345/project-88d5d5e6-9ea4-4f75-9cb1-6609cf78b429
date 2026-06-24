@@ -9,38 +9,258 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as MeRouteImport } from './routes/me'
+import { Route as CartRouteImport } from './routes/cart'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ShopsIndexRouteImport } from './routes/shops.index'
+import { Route as OrdersIndexRouteImport } from './routes/orders.index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as ShopsIdRouteImport } from './routes/shops.$id'
+import { Route as ProductsIdRouteImport } from './routes/products.$id'
+import { Route as OrdersIdRouteImport } from './routes/orders.$id'
+import { Route as LogisticsIdRouteImport } from './routes/logistics.$id'
+import { Route as AdminRefundsRouteImport } from './routes/admin.refunds'
+import { Route as AdminProductsRouteImport } from './routes/admin.products'
+import { Route as AdminPaymentAccountsRouteImport } from './routes/admin.payment-accounts'
+import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
+import { Route as AdminLogisticsRouteImport } from './routes/admin.logistics'
 
+const MeRoute = MeRouteImport.update({
+  id: '/me',
+  path: '/me',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CartRoute = CartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShopsIndexRoute = ShopsIndexRouteImport.update({
+  id: '/shops/',
+  path: '/shops/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrdersIndexRoute = OrdersIndexRouteImport.update({
+  id: '/orders/',
+  path: '/orders/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopsIdRoute = ShopsIdRouteImport.update({
+  id: '/shops/$id',
+  path: '/shops/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductsIdRoute = ProductsIdRouteImport.update({
+  id: '/products/$id',
+  path: '/products/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrdersIdRoute = OrdersIdRouteImport.update({
+  id: '/orders/$id',
+  path: '/orders/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LogisticsIdRoute = LogisticsIdRouteImport.update({
+  id: '/logistics/$id',
+  path: '/logistics/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRefundsRoute = AdminRefundsRouteImport.update({
+  id: '/admin/refunds',
+  path: '/admin/refunds',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminProductsRoute = AdminProductsRouteImport.update({
+  id: '/admin/products',
+  path: '/admin/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminPaymentAccountsRoute = AdminPaymentAccountsRouteImport.update({
+  id: '/admin/payment-accounts',
+  path: '/admin/payment-accounts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminOrdersRoute = AdminOrdersRouteImport.update({
+  id: '/admin/orders',
+  path: '/admin/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLogisticsRoute = AdminLogisticsRouteImport.update({
+  id: '/admin/logistics',
+  path: '/admin/logistics',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/cart': typeof CartRoute
+  '/me': typeof MeRoute
+  '/admin/logistics': typeof AdminLogisticsRoute
+  '/admin/orders': typeof AdminOrdersRoute
+  '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
+  '/admin/products': typeof AdminProductsRoute
+  '/admin/refunds': typeof AdminRefundsRoute
+  '/logistics/$id': typeof LogisticsIdRoute
+  '/orders/$id': typeof OrdersIdRoute
+  '/products/$id': typeof ProductsIdRoute
+  '/shops/$id': typeof ShopsIdRoute
+  '/admin/': typeof AdminIndexRoute
+  '/orders/': typeof OrdersIndexRoute
+  '/shops/': typeof ShopsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/cart': typeof CartRoute
+  '/me': typeof MeRoute
+  '/admin/logistics': typeof AdminLogisticsRoute
+  '/admin/orders': typeof AdminOrdersRoute
+  '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
+  '/admin/products': typeof AdminProductsRoute
+  '/admin/refunds': typeof AdminRefundsRoute
+  '/logistics/$id': typeof LogisticsIdRoute
+  '/orders/$id': typeof OrdersIdRoute
+  '/products/$id': typeof ProductsIdRoute
+  '/shops/$id': typeof ShopsIdRoute
+  '/admin': typeof AdminIndexRoute
+  '/orders': typeof OrdersIndexRoute
+  '/shops': typeof ShopsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/cart': typeof CartRoute
+  '/me': typeof MeRoute
+  '/admin/logistics': typeof AdminLogisticsRoute
+  '/admin/orders': typeof AdminOrdersRoute
+  '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
+  '/admin/products': typeof AdminProductsRoute
+  '/admin/refunds': typeof AdminRefundsRoute
+  '/logistics/$id': typeof LogisticsIdRoute
+  '/orders/$id': typeof OrdersIdRoute
+  '/products/$id': typeof ProductsIdRoute
+  '/shops/$id': typeof ShopsIdRoute
+  '/admin/': typeof AdminIndexRoute
+  '/orders/': typeof OrdersIndexRoute
+  '/shops/': typeof ShopsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/cart'
+    | '/me'
+    | '/admin/logistics'
+    | '/admin/orders'
+    | '/admin/payment-accounts'
+    | '/admin/products'
+    | '/admin/refunds'
+    | '/logistics/$id'
+    | '/orders/$id'
+    | '/products/$id'
+    | '/shops/$id'
+    | '/admin/'
+    | '/orders/'
+    | '/shops/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/cart'
+    | '/me'
+    | '/admin/logistics'
+    | '/admin/orders'
+    | '/admin/payment-accounts'
+    | '/admin/products'
+    | '/admin/refunds'
+    | '/logistics/$id'
+    | '/orders/$id'
+    | '/products/$id'
+    | '/shops/$id'
+    | '/admin'
+    | '/orders'
+    | '/shops'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/cart'
+    | '/me'
+    | '/admin/logistics'
+    | '/admin/orders'
+    | '/admin/payment-accounts'
+    | '/admin/products'
+    | '/admin/refunds'
+    | '/logistics/$id'
+    | '/orders/$id'
+    | '/products/$id'
+    | '/shops/$id'
+    | '/admin/'
+    | '/orders/'
+    | '/shops/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
+  CartRoute: typeof CartRoute
+  MeRoute: typeof MeRoute
+  AdminLogisticsRoute: typeof AdminLogisticsRoute
+  AdminOrdersRoute: typeof AdminOrdersRoute
+  AdminPaymentAccountsRoute: typeof AdminPaymentAccountsRoute
+  AdminProductsRoute: typeof AdminProductsRoute
+  AdminRefundsRoute: typeof AdminRefundsRoute
+  LogisticsIdRoute: typeof LogisticsIdRoute
+  OrdersIdRoute: typeof OrdersIdRoute
+  ProductsIdRoute: typeof ProductsIdRoute
+  ShopsIdRoute: typeof ShopsIdRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  OrdersIndexRoute: typeof OrdersIndexRoute
+  ShopsIndexRoute: typeof ShopsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/me': {
+      id: '/me'
+      path: '/me'
+      fullPath: '/me'
+      preLoaderRoute: typeof MeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +268,110 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/shops/': {
+      id: '/shops/'
+      path: '/shops'
+      fullPath: '/shops/'
+      preLoaderRoute: typeof ShopsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orders/': {
+      id: '/orders/'
+      path: '/orders'
+      fullPath: '/orders/'
+      preLoaderRoute: typeof OrdersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shops/$id': {
+      id: '/shops/$id'
+      path: '/shops/$id'
+      fullPath: '/shops/$id'
+      preLoaderRoute: typeof ShopsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/products/$id': {
+      id: '/products/$id'
+      path: '/products/$id'
+      fullPath: '/products/$id'
+      preLoaderRoute: typeof ProductsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orders/$id': {
+      id: '/orders/$id'
+      path: '/orders/$id'
+      fullPath: '/orders/$id'
+      preLoaderRoute: typeof OrdersIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/logistics/$id': {
+      id: '/logistics/$id'
+      path: '/logistics/$id'
+      fullPath: '/logistics/$id'
+      preLoaderRoute: typeof LogisticsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/refunds': {
+      id: '/admin/refunds'
+      path: '/admin/refunds'
+      fullPath: '/admin/refunds'
+      preLoaderRoute: typeof AdminRefundsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/products': {
+      id: '/admin/products'
+      path: '/admin/products'
+      fullPath: '/admin/products'
+      preLoaderRoute: typeof AdminProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/payment-accounts': {
+      id: '/admin/payment-accounts'
+      path: '/admin/payment-accounts'
+      fullPath: '/admin/payment-accounts'
+      preLoaderRoute: typeof AdminPaymentAccountsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/orders': {
+      id: '/admin/orders'
+      path: '/admin/orders'
+      fullPath: '/admin/orders'
+      preLoaderRoute: typeof AdminOrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/logistics': {
+      id: '/admin/logistics'
+      path: '/admin/logistics'
+      fullPath: '/admin/logistics'
+      preLoaderRoute: typeof AdminLogisticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
+  CartRoute: CartRoute,
+  MeRoute: MeRoute,
+  AdminLogisticsRoute: AdminLogisticsRoute,
+  AdminOrdersRoute: AdminOrdersRoute,
+  AdminPaymentAccountsRoute: AdminPaymentAccountsRoute,
+  AdminProductsRoute: AdminProductsRoute,
+  AdminRefundsRoute: AdminRefundsRoute,
+  LogisticsIdRoute: LogisticsIdRoute,
+  OrdersIdRoute: OrdersIdRoute,
+  ProductsIdRoute: ProductsIdRoute,
+  ShopsIdRoute: ShopsIdRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  OrdersIndexRoute: OrdersIndexRoute,
+  ShopsIndexRoute: ShopsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

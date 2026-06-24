@@ -76,7 +76,7 @@ function Cart() {
           <div className="text-sm font-semibold">{formatKRW(totalKRW)}</div>
           <div className="text-[10px] text-muted-foreground">≈ {formatCNY(krwToCny(totalKRW))}</div>
         </div>
-        <Button>提交订单</Button>
+        <Button asChild><Link to="/checkout">提交订单</Link></Button>
       </div>
     </MobileShell>
   );

@@ -36,30 +36,30 @@ function Index() {
 
       <div className="mt-4 grid grid-cols-3 gap-2 px-4">
         {[
-          { icon: Flame, label: "热门档口", color: "text-orange-500" },
-          { icon: Sparkles, label: "今日上新", color: "text-blue-500" },
-          { icon: TicketPercent, label: "档口折扣", color: "text-rose-500" },
-        ].map(({ icon: Icon, label, color }) => (
-          <div key={label} className="flex flex-col items-center justify-center rounded-xl border border-border bg-card py-3">
+          { to: "/shops", icon: Flame, label: "热门档口", color: "text-orange-500" },
+          { to: "/new-arrivals", icon: Sparkles, label: "今日上新", color: "text-blue-500" },
+          { to: "/discounts", icon: TicketPercent, label: "档口折扣", color: "text-rose-500" },
+        ].map(({ to, icon: Icon, label, color }) => (
+          <Link key={label} to={to} className="flex flex-col items-center justify-center rounded-xl border border-border bg-card py-3">
             <Icon className={`h-5 w-5 ${color}`} />
             <span className="mt-1 text-xs text-muted-foreground">{label}</span>
-          </div>
+          </Link>
         ))}
       </div>
 
-      <Section title="新款抢先" linkLabel="更多新款">
+      <Section title="新款抢先" linkTo="/new-arrivals" linkLabel="更多新款">
         <div className="grid grid-cols-2 gap-3 px-4">
           {newProducts.map((p) => <ProductCard key={p.id} p={p} />)}
         </div>
       </Section>
 
-      <Section title="折扣促销" linkLabel="全部折扣">
+      <Section title="折扣促销" linkTo="/discounts" linkLabel="全部折扣">
         <div className="grid grid-cols-2 gap-3 px-4">
           {dealProducts.map((p) => <ProductCard key={p.id} p={p} />)}
         </div>
       </Section>
 
-      <Section title="推荐档口" linkLabel="全部档口">
+      <Section title="推荐档口" linkTo="/shops" linkLabel="全部档口">
         <div className="space-y-3 px-4">
           {SHOPS.slice(0, 3).map((s) => (
             <Link key={s.id} to="/shops/$id" params={{ id: s.id }} className="flex gap-3 rounded-xl border border-border bg-card p-3">
@@ -84,12 +84,12 @@ function Index() {
   );
 }
 
-function Section({ title, linkLabel, children }: { title: string; linkLabel: string; children: React.ReactNode }) {
+function Section({ title, linkTo, linkLabel, children }: { title: string; linkTo: string; linkLabel: string; children: React.ReactNode }) {
   return (
     <section className="mt-6">
       <div className="mb-2 flex items-center justify-between px-4">
         <h2 className="text-sm font-semibold">{title}</h2>
-        <span className="text-xs text-muted-foreground">{linkLabel} →</span>
+        <Link to={linkTo} className="text-xs text-muted-foreground">{linkLabel} →</Link>
       </div>
       {children}
     </section>

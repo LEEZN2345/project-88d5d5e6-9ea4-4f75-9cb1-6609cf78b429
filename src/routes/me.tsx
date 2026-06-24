@@ -35,11 +35,11 @@ function Me() {
       </div>
 
       <div className="space-y-2 px-4 pt-4">
-        <Item icon={MapPin} label="收货地址" />
-        <Item icon={Heart} label="我的收藏" />
-        <Item icon={MessageSquare} label="联系客服" />
-        <Item icon={Shield} label="实名认证" right="未认证" />
-        <Item icon={Settings} label="设置" />
+        <Item to="/addresses" icon={MapPin} label="收货地址" />
+        <Item to="/favorites" icon={Heart} label="我的收藏" />
+        <Item to="/support" icon={MessageSquare} label="联系客服" />
+        <Item to="/kyc" icon={Shield} label="实名认证" right="未认证" />
+        <Item to="/settings" icon={Settings} label="设置" />
       </div>
 
       <div className="px-4 pt-4">
@@ -56,13 +56,13 @@ function Me() {
   );
 }
 
-function Item({ icon: Icon, label, right }: { icon: typeof MapPin; label: string; right?: string }) {
+function Item({ to, icon: Icon, label, right }: { to: string; icon: typeof MapPin; label: string; right?: string }) {
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3">
+    <Link to={to} className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3">
       <Icon className="h-4 w-4 text-muted-foreground" />
       <span className="flex-1 text-sm">{label}</span>
       {right && <span className="text-xs text-muted-foreground">{right}</span>}
       <ChevronRight className="h-4 w-4 text-muted-foreground" />
-    </div>
+    </Link>
   );
 }

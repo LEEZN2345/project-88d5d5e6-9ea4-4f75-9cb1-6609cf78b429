@@ -7,17 +7,6 @@ export const Route = createFileRoute("/invite-rules")({
   component: InviteRules,
 });
 
-const TIERS = [
-  { d: "初始用户", fee: "3.0%", ship: "9800", note: "自然注册默认起步档" },
-  { d: "受邀用户", fee: "3.0%", ship: "9500", note: "凭邀请码注册即享" },
-  { d: "已发出邀请 · 0 有效", fee: "2.9%", ship: "9500", note: "拉到任意邀请即服务费 -0.1%" },
-  { d: "1 人有效", fee: "2.8%", ship: "9400", note: "起：每多 1 人，服务费 -0.1% & 运费 -₩100" },
-  { d: "2 人有效", fee: "2.7%", ship: "9300", note: "" },
-  { d: "3 人有效", fee: "2.6%", ship: "9200", note: "" },
-  { d: "4 人有效", fee: "2.5%", ship: "9100", note: "服务费已封顶 2.5%" },
-  { d: "5 人及以上有效", fee: "2.5%", ship: "9000", note: "运费封顶 · 不再下探" },
-];
-
 const FAQ = [
   {
     q: "什么算「有效下线」？",

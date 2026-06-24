@@ -8,12 +8,13 @@ export const Route = createFileRoute("/invite-rules")({
 });
 
 const TIERS = [
-  { d: "初始用户", fee: "3.0%", ship: "9800", note: "自然注册默认起步档" },
-  { d: "被邀请者 · 起步", fee: "2.9%", ship: "9500", note: "凭邀请码注册即享" },
-  { d: "1 人", fee: "2.8%", ship: "9500", note: "种子用户" },
-  { d: "2 人", fee: "2.7%", ship: "9500", note: "" },
-  { d: "3 人", fee: "2.6%", ship: "9500", note: "" },
-  { d: "4 人及以上", fee: "2.5%", ship: "9500", note: "最低封顶" },
+  { d: "初始用户 · 种子档", fee: "3.0%", ship: "9800", note: "自然注册默认起步档" },
+  { d: "受邀用户", fee: "3.0%", ship: "9500", note: "凭邀请码注册即享" },
+  { d: "已发出邀请 (0 有效)", fee: "2.9%", ship: "9500", note: "拉到任意邀请即降 0.1%" },
+  { d: "1 人有效", fee: "2.8%", ship: "9500", note: "每多 1 个有效下线再 -0.1%" },
+  { d: "2 人有效", fee: "2.7%", ship: "9500", note: "" },
+  { d: "3 人有效", fee: "2.6%", ship: "9500", note: "" },
+  { d: "4 人及以上有效", fee: "2.5%", ship: "9000", note: "最低封顶 · 不再下探" },
 ];
 
 const FAQ = [
@@ -31,7 +32,7 @@ const FAQ = [
   },
   {
     q: "我升档后，我的下线会跟着一起便宜吗？",
-    a: "不会。新下线一律从被邀请者起步档 2.9% 开始，自己拉够 1 个有效下线才能进 2.8% 种子档。邀请人的档位只作用于自己，不下沉、不继承。",
+    a: "不会。新下线一律从受邀用户 3.0% 开始：自己发出邀请即可降到 2.9%，每多 1 个有效下线再 -0.1%，封顶 2.5% / ₩9000。邀请人的档位只作用于自己，不下沉、不继承。",
   },
   {
     q: "档位什么时候生效？",
@@ -61,8 +62,8 @@ export default function InviteRules() {
           <div className="flex items-center gap-2 text-sm opacity-90">
             <Sparkles className="h-4 w-4" /> 邀请越多，费率越低
           </div>
-          <div className="mt-2 text-2xl font-semibold">最低可享 2.5% 服务费</div>
-          <div className="mt-1 text-xs opacity-80">运费低至 ₩9500/kg（初始用户 ₩9800/kg）</div>
+          <div className="mt-2 text-2xl font-semibold">最低可享 2.5% / ₩9000</div>
+          <div className="mt-1 text-xs opacity-80">受邀用户 ₩9500/kg 起步，初始用户 ₩9800/kg</div>
         </section>
 
         <section className="rounded-2xl border border-border bg-card p-4">
@@ -104,7 +105,8 @@ export default function InviteRules() {
             lines={[
               "下线达标后次日 00:00 自动降档",
               "下线掉出后档位不上调",
-              "新下线一律从被邀请者起步档 2.9% 开始，不继承邀请人档位",
+              "新下线从受邀用户 3.0% 起步，发出邀请降至 2.9%，每多 1 个有效下线再 -0.1%",
+              "封顶 2.5% / ₩9000，不再下探",
             ]}
           />
           <RuleCard

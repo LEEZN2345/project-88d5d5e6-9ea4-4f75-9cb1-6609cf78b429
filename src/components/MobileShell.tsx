@@ -21,7 +21,7 @@ export function MobileShell({ children }: { children: React.ReactNode }) {
           return (
             <Link
               key={to}
-              to={to}
+              to={to as string}
               className={cn(
                 "flex flex-1 flex-col items-center gap-0.5 py-1 text-xs transition",
                 active ? "text-primary" : "text-muted-foreground",

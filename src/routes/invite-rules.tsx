@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
-import { Clock, Users, Sparkles, ArrowRight, Store } from "lucide-react";
+import { Users, Sparkles, ArrowRight, Store } from "lucide-react";
 
 export const Route = createFileRoute("/invite-rules")({
   head: () => ({ meta: [{ title: "邀请分销规则 · 东大门订货通" }] }),

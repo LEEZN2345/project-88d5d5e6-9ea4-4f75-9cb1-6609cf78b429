@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { MALLS } from "@/lib/buildings";
-import { ChevronDown, ChevronUp, Search, ShoppingCart, Menu, MoreHorizontal } from "lucide-react";
+import { ChevronDown, ChevronUp, Search, ShoppingCart, MoreHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 

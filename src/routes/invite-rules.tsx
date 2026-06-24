@@ -1,22 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
-import { Clock, Users, TrendingDown, Shield, HelpCircle, Sparkles, ArrowRight } from "lucide-react";
+import { Clock, Users, TrendingDown, Shield, HelpCircle, Sparkles, ArrowRight, Coffee } from "lucide-react";
 
 export const Route = createFileRoute("/invite-rules")({
   head: () => ({ meta: [{ title: "邀请分销规则 · 东大门订货通" }] }),
   component: InviteRules,
 });
-
-const TIERS = [
-  { d: "初始用户", fee: "3.0%", ship: "9800", note: "自然注册默认起步档" },
-  { d: "受邀用户", fee: "3.0%", ship: "9500", note: "凭邀请码注册即享" },
-  { d: "已发出邀请 · 0 有效", fee: "2.9%", ship: "9500", note: "拉到任意邀请即服务费 -0.1%" },
-  { d: "1 人有效", fee: "2.8%", ship: "9400", note: "起：每多 1 人，服务费 -0.1% & 运费 -₩100" },
-  { d: "2 人有效", fee: "2.7%", ship: "9300", note: "" },
-  { d: "3 人有效", fee: "2.6%", ship: "9200", note: "" },
-  { d: "4 人有效", fee: "2.5%", ship: "9100", note: "服务费已封顶 2.5%" },
-  { d: "5 人及以上有效", fee: "2.5%", ship: "9000", note: "运费封顶 · 不再下探" },
-];
 
 const FAQ = [
   {
@@ -69,28 +58,7 @@ export default function InviteRules() {
 
         <ComparisonCard />
 
-        <section className="rounded-2xl border border-border bg-card p-4">
-          <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
-            <TrendingDown className="h-4 w-4 text-primary" /> 档位表
-          </div>
-          <div className="overflow-hidden rounded-lg border border-border">
-            <div className="grid grid-cols-12 bg-muted px-3 py-2 text-[11px] font-medium text-muted-foreground">
-              <div className="col-span-5">有效下线</div>
-              <div className="col-span-3 text-right">服务费</div>
-              <div className="col-span-4 text-right">运费₩/kg</div>
-            </div>
-            {TIERS.map((t) => (
-              <div key={t.d} className="grid grid-cols-12 items-center border-t border-border px-3 py-2 text-xs">
-                <div className="col-span-5">
-                  <div>{t.d}</div>
-                  {t.note && <div className="text-[10px] text-muted-foreground">{t.note}</div>}
-                </div>
-                <div className="col-span-3 text-right font-semibold tabular-nums">{t.fee}</div>
-                <div className="col-span-4 text-right tabular-nums">{t.ship}</div>
-              </div>
-            ))}
-          </div>
-        </section>
+        <StoryCard />
 
         <section className="space-y-2">
           <RuleCard
@@ -249,5 +217,73 @@ function ComparisonCard() {
         说明：被邀请者本身不会因邀请人档位变化而变化；只有自己也去邀请并产生「有效下线」，才能开始降档。封顶 <span className="font-semibold text-foreground">2.5% / ₩9000</span>。
       </div>
     </section>
+  );
+}
+
+function StoryCard() {
+  return (
+    <section className="rounded-2xl border border-border bg-card p-4">
+      <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
+        <Coffee className="h-4 w-4 text-primary" /> 一个咖啡店的故事
+      </div>
+
+      <p className="text-xs leading-relaxed text-muted-foreground">
+        把平台想成一家会员制咖啡馆。<span className="text-foreground">服务费</span>就是你的「单杯价」，<span className="text-foreground">运费</span>就是「打包外送费」。
+      </p>
+
+      <div className="mt-3 space-y-2">
+        <Step
+          n="1"
+          title="小红刚下载 App（受邀注册）"
+          body="坐下来点了一杯：3.0% / ₩9500。这是被邀请者的起步价。"
+        />
+        <Step
+          n="2"
+          title="小红拉了同行小白进来（发出邀请）"
+          body="店长说：「介绍朋友，单杯减 0.1%。」小红立刻变成 2.9% / ₩9500。"
+          hl
+        />
+        <Step
+          n="3"
+          title="小白 90 天内补货满 500 万韩币（1 人有效）"
+          body="从这一刻起，外送费也开始减：小红降到 2.8% / ₩9400。"
+        />
+        <Step
+          n="4"
+          title="小红又拉来 4 个达标的朋友（5 人有效）"
+          body="封顶档！2.5% / ₩9000。再继续拉人，价格也不会更低了。"
+          hl
+        />
+        <Step
+          n="5"
+          title="小白只想自己用，不打算拉人"
+          body="没关系，永远是 3.0% / ₩9500。小红升档不会影响小白，小白也不沾光。"
+        />
+      </div>
+
+      <div className="mt-3 rounded-lg border border-dashed border-border bg-muted/30 px-3 py-2 text-[11px] leading-relaxed text-muted-foreground">
+        <span className="font-semibold text-foreground">一句话：</span>
+        你享受的折扣，来自你<span className="text-foreground">亲手拉来并且真在下单</span>的那群人。
+        他们不补货（90 天内 500 万），你的档位就自动滑回去。
+      </div>
+    </section>
+  );
+}
+
+function Step({ n, title, body, hl }: { n: string; title: string; body: string; hl?: boolean }) {
+  return (
+    <div className="flex gap-3">
+      <div
+        className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold ${
+          hl ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+        }`}
+      >
+        {n}
+      </div>
+      <div className="flex-1">
+        <div className="text-xs font-medium">{title}</div>
+        <div className="mt-0.5 text-[11px] leading-relaxed text-muted-foreground">{body}</div>
+      </div>
+    </div>
   );
 }

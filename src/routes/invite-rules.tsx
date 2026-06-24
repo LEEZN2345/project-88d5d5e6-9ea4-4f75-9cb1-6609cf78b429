@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
-import { Clock, Users, TrendingDown, Shield, HelpCircle, Sparkles, ArrowRight } from "lucide-react";
+import { Clock, Users, TrendingDown, Shield, HelpCircle, Sparkles, ArrowRight, Coffee } from "lucide-react";
 
 export const Route = createFileRoute("/invite-rules")({
   head: () => ({ meta: [{ title: "邀请分销规则 · 东大门订货通" }] }),
@@ -69,28 +69,7 @@ export default function InviteRules() {
 
         <ComparisonCard />
 
-        <section className="rounded-2xl border border-border bg-card p-4">
-          <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
-            <TrendingDown className="h-4 w-4 text-primary" /> 档位表
-          </div>
-          <div className="overflow-hidden rounded-lg border border-border">
-            <div className="grid grid-cols-12 bg-muted px-3 py-2 text-[11px] font-medium text-muted-foreground">
-              <div className="col-span-5">有效下线</div>
-              <div className="col-span-3 text-right">服务费</div>
-              <div className="col-span-4 text-right">运费₩/kg</div>
-            </div>
-            {TIERS.map((t) => (
-              <div key={t.d} className="grid grid-cols-12 items-center border-t border-border px-3 py-2 text-xs">
-                <div className="col-span-5">
-                  <div>{t.d}</div>
-                  {t.note && <div className="text-[10px] text-muted-foreground">{t.note}</div>}
-                </div>
-                <div className="col-span-3 text-right font-semibold tabular-nums">{t.fee}</div>
-                <div className="col-span-4 text-right tabular-nums">{t.ship}</div>
-              </div>
-            ))}
-          </div>
-        </section>
+        <StoryCard />
 
         <section className="space-y-2">
           <RuleCard

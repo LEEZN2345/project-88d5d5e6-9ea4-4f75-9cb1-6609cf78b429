@@ -99,7 +99,13 @@ export function BuildingFilterSheet({ trigger, value, onChange }: Props) {
               return (
                 <li key={b.name}>
                   <button
-                    onClick={() => setActiveBuilding(isActive ? null : b.name)}
+                    onClick={() => {
+                      if (b.floors.length === 0) {
+                        toggleFloor(b.name, "全部");
+                      } else {
+                        setActiveBuilding(isActive ? null : b.name);
+                      }
+                    }}
                     className={cn(
                       "flex w-full items-center gap-2 py-2 text-left text-[15px]",
                       highlighted ? "font-semibold text-primary" : "text-foreground"
@@ -116,7 +122,7 @@ export function BuildingFilterSheet({ trigger, value, onChange }: Props) {
                       />
                     )}
                   </button>
-                  {isActive && (
+                  {isActive && b.floors.length > 0 && (
                     <div className="flex flex-wrap gap-2 py-2">
                       {["全部", ...b.floors].map((f) => {
                         const selected =

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
-import { Clock, Users, TrendingDown, Shield, HelpCircle, Sparkles } from "lucide-react";
+import { Clock, Users, TrendingDown, Shield, HelpCircle, Sparkles, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/invite-rules")({
   head: () => ({ meta: [{ title: "邀请分销规则 · 东大门订货通" }] }),
@@ -8,13 +8,14 @@ export const Route = createFileRoute("/invite-rules")({
 });
 
 const TIERS = [
-  { d: "初始用户 · 种子档", fee: "3.0%", ship: "9800", note: "自然注册默认起步档" },
+  { d: "初始用户", fee: "3.0%", ship: "9800", note: "自然注册默认起步档" },
   { d: "受邀用户", fee: "3.0%", ship: "9500", note: "凭邀请码注册即享" },
-  { d: "已发出邀请 (0 有效)", fee: "2.9%", ship: "9500", note: "拉到任意邀请即降 0.1%" },
-  { d: "1 人有效", fee: "2.8%", ship: "9500", note: "每多 1 个有效下线再 -0.1%" },
-  { d: "2 人有效", fee: "2.7%", ship: "9500", note: "" },
-  { d: "3 人有效", fee: "2.6%", ship: "9500", note: "" },
-  { d: "4 人及以上有效", fee: "2.5%", ship: "9000", note: "最低封顶 · 不再下探" },
+  { d: "已发出邀请 · 0 有效", fee: "2.9%", ship: "9500", note: "拉到任意邀请即服务费 -0.1%" },
+  { d: "1 人有效", fee: "2.8%", ship: "9400", note: "起：每多 1 人，服务费 -0.1% & 运费 -₩100" },
+  { d: "2 人有效", fee: "2.7%", ship: "9300", note: "" },
+  { d: "3 人有效", fee: "2.6%", ship: "9200", note: "" },
+  { d: "4 人有效", fee: "2.5%", ship: "9100", note: "服务费已封顶 2.5%" },
+  { d: "5 人及以上有效", fee: "2.5%", ship: "9000", note: "运费封顶 · 不再下探" },
 ];
 
 const FAQ = [
@@ -32,7 +33,7 @@ const FAQ = [
   },
   {
     q: "我升档后，我的下线会跟着一起便宜吗？",
-    a: "不会。新下线一律从受邀用户 3.0% 开始：自己发出邀请即可降到 2.9%，每多 1 个有效下线再 -0.1%，封顶 2.5% / ₩9000。邀请人的档位只作用于自己，不下沉、不继承。",
+    a: "不会。新下线一律从受邀用户 3.0% / ₩9500 开始：自己发出邀请即服务费降到 2.9%；从第 1 个有效下线起，服务费每多 1 人 -0.1%、运费每多 1 人 -₩100，封顶 2.5% / ₩9000。邀请人档位只作用于自己，不下沉、不继承。",
   },
   {
     q: "档位什么时候生效？",
@@ -62,9 +63,11 @@ export default function InviteRules() {
           <div className="flex items-center gap-2 text-sm opacity-90">
             <Sparkles className="h-4 w-4" /> 邀请越多，费率越低
           </div>
-          <div className="mt-2 text-2xl font-semibold">最低可享 2.5% / ₩9000</div>
-          <div className="mt-1 text-xs opacity-80">受邀用户 ₩9500/kg 起步，初始用户 ₩9800/kg</div>
+          <div className="mt-2 text-2xl font-semibold">最低 2.5% / ₩9000</div>
+          <div className="mt-1 text-xs opacity-80">从 1 人有效起：服务费 -0.1% & 运费 -₩100 / 人</div>
         </section>
+
+        <ComparisonCard />
 
         <section className="rounded-2xl border border-border bg-card p-4">
           <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
@@ -105,7 +108,9 @@ export default function InviteRules() {
             lines={[
               "下线达标后次日 00:00 自动降档",
               "下线掉出后档位不上调",
-              "新下线从受邀用户 3.0% 起步，发出邀请降至 2.9%，每多 1 个有效下线再 -0.1%",
+              "新下线从受邀用户 3.0% / ₩9500 起步，不继承邀请人档位",
+              "邀请人发出邀请 → 服务费 2.9%（运费暂不变）",
+              "从 1 人有效起：服务费每多 1 人 -0.1%，运费每多 1 人 -₩100",
               "封顶 2.5% / ₩9000，不再下探",
             ]}
           />
@@ -180,5 +185,69 @@ function RuleCard({
         ))}
       </ul>
     </div>
+  );
+}
+
+function ComparisonCard() {
+  const inviter = [
+    { label: "0 有效", fee: "2.9%", ship: "9500" },
+    { label: "1 有效", fee: "2.8%", ship: "9400" },
+    { label: "2 有效", fee: "2.7%", ship: "9300" },
+    { label: "3 有效", fee: "2.6%", ship: "9200" },
+    { label: "4 有效", fee: "2.5%", ship: "9100" },
+    { label: "5+ 有效", fee: "2.5%", ship: "9000" },
+  ];
+  return (
+    <section className="rounded-2xl border border-border bg-card p-4">
+      <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
+        <Users className="h-4 w-4 text-primary" /> 邀请者 vs 被邀请者
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        {/* 被邀请者 */}
+        <div className="rounded-xl border border-border bg-muted/40 p-3">
+          <div className="text-[11px] text-muted-foreground">被邀请者（新注册）</div>
+          <div className="mt-1 text-lg font-semibold tabular-nums">3.0%</div>
+          <div className="text-[11px] text-muted-foreground">运费 ₩9500/kg</div>
+          <div className="mt-2 rounded-md bg-background px-2 py-1 text-[10px] text-muted-foreground">
+            想再低？→ 自己也去邀请
+          </div>
+        </div>
+
+        {/* 邀请者起点 */}
+        <div className="rounded-xl border border-primary/30 bg-primary/5 p-3">
+          <div className="text-[11px] text-primary">邀请者（已发出邀请）</div>
+          <div className="mt-1 text-lg font-semibold tabular-nums text-primary">2.9% 起</div>
+          <div className="text-[11px] text-muted-foreground">运费 ₩9500/kg 起</div>
+          <div className="mt-2 rounded-md bg-background px-2 py-1 text-[10px] text-muted-foreground">
+            每 +1 有效：-0.1% & -₩100
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4 text-[11px] font-medium text-muted-foreground">邀请者降档路径</div>
+      <div className="mt-2 flex items-stretch gap-1 overflow-x-auto">
+        {inviter.map((t, i) => (
+          <div key={t.label} className="flex items-center gap-1">
+            <div className={`min-w-[64px] rounded-lg border px-2 py-1.5 text-center ${
+              i === inviter.length - 1
+                ? "border-primary bg-primary text-primary-foreground"
+                : "border-border bg-card"
+            }`}>
+              <div className="text-[10px] opacity-80">{t.label}</div>
+              <div className="text-xs font-semibold tabular-nums">{t.fee}</div>
+              <div className="text-[10px] tabular-nums opacity-80">₩{t.ship}</div>
+            </div>
+            {i < inviter.length - 1 && (
+              <ArrowRight className="h-3 w-3 shrink-0 text-muted-foreground" />
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-3 rounded-lg bg-muted/40 px-3 py-2 text-[11px] leading-relaxed text-muted-foreground">
+        说明：被邀请者本身不会因邀请人档位变化而变化；只有自己也去邀请并产生「有效下线」，才能开始降档。封顶 <span className="font-semibold text-foreground">2.5% / ₩9000</span>。
+      </div>
+    </section>
   );
 }

@@ -23,6 +23,7 @@ import { Route as LogisticsIdRouteImport } from './routes/logistics.$id'
 import { Route as AdminRefundsRouteImport } from './routes/admin.refunds'
 import { Route as AdminPaymentAccountsRouteImport } from './routes/admin.payment-accounts'
 import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
+import { Route as AdminLogisticsRouteImport } from './routes/admin.logistics'
 
 const MeRoute = MeRouteImport.update({
   id: '/me',
@@ -94,12 +95,18 @@ const AdminOrdersRoute = AdminOrdersRouteImport.update({
   path: '/admin/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminLogisticsRoute = AdminLogisticsRouteImport.update({
+  id: '/admin/logistics',
+  path: '/admin/logistics',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/me': typeof MeRoute
+  '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
   '/admin/refunds': typeof AdminRefundsRoute
@@ -116,6 +123,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/me': typeof MeRoute
+  '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
   '/admin/refunds': typeof AdminRefundsRoute
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/me': typeof MeRoute
+  '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
   '/admin/refunds': typeof AdminRefundsRoute
@@ -151,6 +160,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/me'
+    | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
     | '/admin/refunds'
@@ -167,6 +177,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/me'
+    | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
     | '/admin/refunds'
@@ -183,6 +194,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/me'
+    | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
     | '/admin/refunds'
@@ -200,6 +212,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CartRoute: typeof CartRoute
   MeRoute: typeof MeRoute
+  AdminLogisticsRoute: typeof AdminLogisticsRoute
   AdminOrdersRoute: typeof AdminOrdersRoute
   AdminPaymentAccountsRoute: typeof AdminPaymentAccountsRoute
   AdminRefundsRoute: typeof AdminRefundsRoute
@@ -312,6 +325,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminOrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/logistics': {
+      id: '/admin/logistics'
+      path: '/admin/logistics'
+      fullPath: '/admin/logistics'
+      preLoaderRoute: typeof AdminLogisticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -320,6 +340,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CartRoute: CartRoute,
   MeRoute: MeRoute,
+  AdminLogisticsRoute: AdminLogisticsRoute,
   AdminOrdersRoute: AdminOrdersRoute,
   AdminPaymentAccountsRoute: AdminPaymentAccountsRoute,
   AdminRefundsRoute: AdminRefundsRoute,

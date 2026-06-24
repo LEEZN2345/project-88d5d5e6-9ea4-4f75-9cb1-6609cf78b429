@@ -21,6 +21,7 @@ import { Route as ProductsIdRouteImport } from './routes/products.$id'
 import { Route as OrdersIdRouteImport } from './routes/orders.$id'
 import { Route as LogisticsIdRouteImport } from './routes/logistics.$id'
 import { Route as AdminRefundsRouteImport } from './routes/admin.refunds'
+import { Route as AdminProductsRouteImport } from './routes/admin.products'
 import { Route as AdminPaymentAccountsRouteImport } from './routes/admin.payment-accounts'
 import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 import { Route as AdminLogisticsRouteImport } from './routes/admin.logistics'
@@ -85,6 +86,11 @@ const AdminRefundsRoute = AdminRefundsRouteImport.update({
   path: '/admin/refunds',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminProductsRoute = AdminProductsRouteImport.update({
+  id: '/admin/products',
+  path: '/admin/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminPaymentAccountsRoute = AdminPaymentAccountsRouteImport.update({
   id: '/admin/payment-accounts',
   path: '/admin/payment-accounts',
@@ -109,6 +115,7 @@ export interface FileRoutesByFullPath {
   '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
+  '/admin/products': typeof AdminProductsRoute
   '/admin/refunds': typeof AdminRefundsRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByTo {
   '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
+  '/admin/products': typeof AdminProductsRoute
   '/admin/refunds': typeof AdminRefundsRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
@@ -144,6 +152,7 @@ export interface FileRoutesById {
   '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
+  '/admin/products': typeof AdminProductsRoute
   '/admin/refunds': typeof AdminRefundsRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
@@ -163,6 +172,7 @@ export interface FileRouteTypes {
     | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
+    | '/admin/products'
     | '/admin/refunds'
     | '/logistics/$id'
     | '/orders/$id'
@@ -180,6 +190,7 @@ export interface FileRouteTypes {
     | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
+    | '/admin/products'
     | '/admin/refunds'
     | '/logistics/$id'
     | '/orders/$id'
@@ -197,6 +208,7 @@ export interface FileRouteTypes {
     | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
+    | '/admin/products'
     | '/admin/refunds'
     | '/logistics/$id'
     | '/orders/$id'
@@ -215,6 +227,7 @@ export interface RootRouteChildren {
   AdminLogisticsRoute: typeof AdminLogisticsRoute
   AdminOrdersRoute: typeof AdminOrdersRoute
   AdminPaymentAccountsRoute: typeof AdminPaymentAccountsRoute
+  AdminProductsRoute: typeof AdminProductsRoute
   AdminRefundsRoute: typeof AdminRefundsRoute
   LogisticsIdRoute: typeof LogisticsIdRoute
   OrdersIdRoute: typeof OrdersIdRoute
@@ -311,6 +324,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRefundsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/products': {
+      id: '/admin/products'
+      path: '/admin/products'
+      fullPath: '/admin/products'
+      preLoaderRoute: typeof AdminProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/payment-accounts': {
       id: '/admin/payment-accounts'
       path: '/admin/payment-accounts'
@@ -343,6 +363,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminLogisticsRoute: AdminLogisticsRoute,
   AdminOrdersRoute: AdminOrdersRoute,
   AdminPaymentAccountsRoute: AdminPaymentAccountsRoute,
+  AdminProductsRoute: AdminProductsRoute,
   AdminRefundsRoute: AdminRefundsRoute,
   LogisticsIdRoute: LogisticsIdRoute,
   OrdersIdRoute: OrdersIdRoute,

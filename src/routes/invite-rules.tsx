@@ -62,7 +62,7 @@ export default function InviteRules() {
             <Sparkles className="h-4 w-4" /> 邀请越多，费率越低
           </div>
           <div className="mt-2 text-2xl font-semibold">最低可享 2.5% 服务费</div>
-          <div className="mt-1 text-xs opacity-80">运费 ₩9500/kg（散客 ₩9800/kg）</div>
+          <div className="mt-1 text-xs opacity-80">运费低至 ₩9500/kg（初始用户 ₩9800/kg）</div>
         </section>
 
         <section className="rounded-2xl border border-border bg-card p-4">
@@ -104,7 +104,7 @@ export default function InviteRules() {
             lines={[
               "下线达标后次日 00:00 自动降档",
               "下线掉出后档位不上调",
-              "新下线一律从 3.5% 起步，不继承邀请人档位",
+              "新下线一律从被邀请者起步档 2.9% 开始，不继承邀请人档位",
             ]}
           />
           <RuleCard

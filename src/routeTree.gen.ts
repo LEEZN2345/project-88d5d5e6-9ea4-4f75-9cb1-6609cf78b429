@@ -20,6 +20,7 @@ import { Route as ShopsIdRouteImport } from './routes/shops.$id'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
 import { Route as OrdersIdRouteImport } from './routes/orders.$id'
 import { Route as LogisticsIdRouteImport } from './routes/logistics.$id'
+import { Route as AdminRefundsRouteImport } from './routes/admin.refunds'
 import { Route as AdminPaymentAccountsRouteImport } from './routes/admin.payment-accounts'
 import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 
@@ -78,6 +79,11 @@ const LogisticsIdRoute = LogisticsIdRouteImport.update({
   path: '/logistics/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRefundsRoute = AdminRefundsRouteImport.update({
+  id: '/admin/refunds',
+  path: '/admin/refunds',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminPaymentAccountsRoute = AdminPaymentAccountsRouteImport.update({
   id: '/admin/payment-accounts',
   path: '/admin/payment-accounts',
@@ -96,6 +102,7 @@ export interface FileRoutesByFullPath {
   '/me': typeof MeRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
+  '/admin/refunds': typeof AdminRefundsRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
   '/products/$id': typeof ProductsIdRoute
@@ -111,6 +118,7 @@ export interface FileRoutesByTo {
   '/me': typeof MeRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
+  '/admin/refunds': typeof AdminRefundsRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
   '/products/$id': typeof ProductsIdRoute
@@ -127,6 +135,7 @@ export interface FileRoutesById {
   '/me': typeof MeRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
+  '/admin/refunds': typeof AdminRefundsRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
   '/products/$id': typeof ProductsIdRoute
@@ -144,6 +153,7 @@ export interface FileRouteTypes {
     | '/me'
     | '/admin/orders'
     | '/admin/payment-accounts'
+    | '/admin/refunds'
     | '/logistics/$id'
     | '/orders/$id'
     | '/products/$id'
@@ -159,6 +169,7 @@ export interface FileRouteTypes {
     | '/me'
     | '/admin/orders'
     | '/admin/payment-accounts'
+    | '/admin/refunds'
     | '/logistics/$id'
     | '/orders/$id'
     | '/products/$id'
@@ -174,6 +185,7 @@ export interface FileRouteTypes {
     | '/me'
     | '/admin/orders'
     | '/admin/payment-accounts'
+    | '/admin/refunds'
     | '/logistics/$id'
     | '/orders/$id'
     | '/products/$id'
@@ -190,6 +202,7 @@ export interface RootRouteChildren {
   MeRoute: typeof MeRoute
   AdminOrdersRoute: typeof AdminOrdersRoute
   AdminPaymentAccountsRoute: typeof AdminPaymentAccountsRoute
+  AdminRefundsRoute: typeof AdminRefundsRoute
   LogisticsIdRoute: typeof LogisticsIdRoute
   OrdersIdRoute: typeof OrdersIdRoute
   ProductsIdRoute: typeof ProductsIdRoute
@@ -278,6 +291,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LogisticsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/refunds': {
+      id: '/admin/refunds'
+      path: '/admin/refunds'
+      fullPath: '/admin/refunds'
+      preLoaderRoute: typeof AdminRefundsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/payment-accounts': {
       id: '/admin/payment-accounts'
       path: '/admin/payment-accounts'
@@ -302,6 +322,7 @@ const rootRouteChildren: RootRouteChildren = {
   MeRoute: MeRoute,
   AdminOrdersRoute: AdminOrdersRoute,
   AdminPaymentAccountsRoute: AdminPaymentAccountsRoute,
+  AdminRefundsRoute: AdminRefundsRoute,
   LogisticsIdRoute: LogisticsIdRoute,
   OrdersIdRoute: OrdersIdRoute,
   ProductsIdRoute: ProductsIdRoute,

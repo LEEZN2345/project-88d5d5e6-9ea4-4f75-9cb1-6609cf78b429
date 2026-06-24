@@ -1,0 +1,355 @@
+// 前端原型 mock 数据 (M1)。后续替换为 Lovable Cloud 数据。
+
+export type Shop = {
+  id: string;
+  name: string;
+  nameKo: string;
+  building: string; // 例如 doota / migliore / apm
+  floor: string;
+  tags: string[];
+  cover: string;
+  productCount: number;
+};
+
+export type Product = {
+  id: string;
+  internalCode: string; // 内部唯一款号
+  shopId: string;
+  name: string;
+  priceKRW: number;
+  images: string[];
+  category: string;
+  isNew?: boolean;
+  discount?: number; // 百分比
+  colors: string[];
+  sizes: string[];
+};
+
+export type CartItem = {
+  productId: string;
+  qty: number;
+  color: string;
+  size: string;
+};
+
+export type OrderStatus =
+  | "pending_payment" // 待付款 (买手转账)
+  | "paid_pending_proxy" // 已转账,待平台代付
+  | "paid_locked" // 平台已代付,汇率已锁
+  | "in_warehouse" // 韩国仓
+  | "in_transit" // 在途
+  | "delivering" // 国内派送
+  | "delivered" // 已签收
+  | "refunding"; // 退款中
+
+export const STATUS_LABEL: Record<OrderStatus, string> = {
+  pending_payment: "待付款",
+  paid_pending_proxy: "待代付",
+  paid_locked: "已锁汇率",
+  in_warehouse: "韩国仓",
+  in_transit: "在途",
+  delivering: "国内派送",
+  delivered: "已签收",
+  refunding: "退款中",
+};
+
+export type Order = {
+  id: string;
+  createdAt: string;
+  items: { product: Product; qty: number; color: string; size: string }[];
+  totalKRW: number;
+  snapshotRate?: number; // KRW -> CNY,代付时锁定
+  totalCNY?: number;
+  status: OrderStatus;
+  paymentAccount: { name: string; channel: "wechat" | "alipay"; holder: string };
+  paymentProofUrl?: string;
+  receiptUrl?: string; // 韩币小票
+  logisticsNo?: string;
+};
+
+export type ShipmentEvent = {
+  node:
+    | "韩国仓入库"
+    | "打包出库"
+    | "起运"
+    | "到港清关"
+    | "国内派送"
+    | "已签收";
+  time: string;
+  note?: string;
+};
+
+export type PaymentAccount = {
+  id: string;
+  channel: "wechat" | "alipay";
+  holder: string;
+  qrUrl: string;
+  dailyLimit: number; // CNY
+  todayReceived: number;
+  status: "active" | "paused";
+  lastUsedAt?: string;
+};
+
+export type RefundRequest = {
+  id: string;
+  orderId: string;
+  amountCNY: number;
+  reason: string;
+  status: "cs_pending" | "finance_pending" | "paid" | "rejected";
+  csUser?: string;
+  financeUser?: string;
+  createdAt: string;
+};
+
+const img = (seed: string, w = 600, h = 800) =>
+  `https://picsum.photos/seed/${seed}/${w}/${h}`;
+
+export const SHOPS: Shop[] = [
+  {
+    id: "s1",
+    name: "MILK 女装",
+    nameKo: "밀크",
+    building: "Migliore",
+    floor: "2F-A41",
+    tags: ["女装", "上新快"],
+    cover: img("milk", 600, 400),
+    productCount: 286,
+  },
+  {
+    id: "s2",
+    name: "BLUE LABEL",
+    nameKo: "블루라벨",
+    building: "Doota",
+    floor: "5F-B12",
+    tags: ["设计师", "外套"],
+    cover: img("blue", 600, 400),
+    productCount: 142,
+  },
+  {
+    id: "s3",
+    name: "STELLA SHOES",
+    nameKo: "스텔라",
+    building: "apM",
+    floor: "B1-22",
+    tags: ["鞋包", "新品"],
+    cover: img("stella", 600, 400),
+    productCount: 98,
+  },
+  {
+    id: "s4",
+    name: "ROUND HOUSE",
+    nameKo: "라운드하우스",
+    building: "Migliore",
+    floor: "3F-C08",
+    tags: ["男装", "基础款"],
+    cover: img("round", 600, 400),
+    productCount: 211,
+  },
+];
+
+export const PRODUCTS: Product[] = [
+  {
+    id: "p1",
+    internalCode: "DD-2025-0114",
+    shopId: "s1",
+    name: "羊毛混纺翻领长大衣",
+    priceKRW: 168000,
+    images: [img("coat1"), img("coat2"), img("coat3")],
+    category: "外套",
+    isNew: true,
+    colors: ["奶白", "燕麦", "炭灰"],
+    sizes: ["FREE"],
+  },
+  {
+    id: "p2",
+    internalCode: "DD-2025-0115",
+    shopId: "s1",
+    name: "宽松版型针织开衫",
+    priceKRW: 89000,
+    images: [img("knit1"), img("knit2")],
+    category: "针织",
+    discount: 15,
+    colors: ["米色", "黑"],
+    sizes: ["FREE"],
+  },
+  {
+    id: "p3",
+    internalCode: "DD-2025-0203",
+    shopId: "s2",
+    name: "落肩廓形西装外套",
+    priceKRW: 245000,
+    images: [img("blazer1"), img("blazer2")],
+    category: "外套",
+    isNew: true,
+    colors: ["黑", "驼"],
+    sizes: ["S", "M", "L"],
+  },
+  {
+    id: "p4",
+    internalCode: "DD-2025-0401",
+    shopId: "s3",
+    name: "牛皮乐福鞋",
+    priceKRW: 132000,
+    images: [img("shoe1"), img("shoe2")],
+    category: "鞋",
+    colors: ["黑", "棕"],
+    sizes: ["230", "235", "240", "245"],
+  },
+  {
+    id: "p5",
+    internalCode: "DD-2025-0512",
+    shopId: "s4",
+    name: "纯棉重磅 T 恤",
+    priceKRW: 39000,
+    images: [img("tee1")],
+    category: "T 恤",
+    discount: 20,
+    colors: ["白", "黑", "米"],
+    sizes: ["M", "L", "XL"],
+  },
+  {
+    id: "p6",
+    internalCode: "DD-2025-0613",
+    shopId: "s2",
+    name: "高腰阔腿牛仔裤",
+    priceKRW: 78000,
+    images: [img("jean1"), img("jean2")],
+    category: "裤装",
+    isNew: true,
+    colors: ["原色", "深蓝"],
+    sizes: ["25", "26", "27", "28"],
+  },
+];
+
+export const REFERENCE_RATE = 0.0053; // 1 KRW ≈ 0.0053 CNY (参考)
+
+export const ORDERS: Order[] = [
+  {
+    id: "DD20251128001",
+    createdAt: "2025-11-28 14:22",
+    items: [
+      { product: PRODUCTS[0]!, qty: 1, color: "奶白", size: "FREE" },
+      { product: PRODUCTS[1]!, qty: 2, color: "米色", size: "FREE" },
+    ],
+    totalKRW: 168000 + 89000 * 2,
+    status: "paid_locked",
+    snapshotRate: 0.00528,
+    totalCNY: Math.round((168000 + 89000 * 2) * 0.00528 * 100) / 100,
+    paymentAccount: { name: "微信收款 03", channel: "wechat", holder: "张**" },
+    paymentProofUrl: img("proof1", 400, 600),
+    receiptUrl: img("receipt1", 400, 600),
+    logisticsNo: "DDKR202511280001",
+  },
+  {
+    id: "DD20251127014",
+    createdAt: "2025-11-27 09:11",
+    items: [{ product: PRODUCTS[3]!, qty: 1, color: "黑", size: "240" }],
+    totalKRW: 132000,
+    status: "in_transit",
+    snapshotRate: 0.00531,
+    totalCNY: Math.round(132000 * 0.00531 * 100) / 100,
+    paymentAccount: { name: "支付宝 01", channel: "alipay", holder: "李**" },
+    paymentProofUrl: img("proof2", 400, 600),
+    receiptUrl: img("receipt2", 400, 600),
+    logisticsNo: "DDKR202511270014",
+  },
+  {
+    id: "DD20251126008",
+    createdAt: "2025-11-26 16:40",
+    items: [{ product: PRODUCTS[4]!, qty: 5, color: "白", size: "L" }],
+    totalKRW: 39000 * 5,
+    status: "pending_payment",
+    paymentAccount: { name: "微信收款 01", channel: "wechat", holder: "王**" },
+  },
+];
+
+export const SHIPMENT_EVENTS: Record<string, ShipmentEvent[]> = {
+  DDKR202511280001: [
+    { node: "韩国仓入库", time: "2025-11-28 18:30" },
+    { node: "打包出库", time: "2025-11-29 10:12", note: "已装箱 2 件" },
+  ],
+  DDKR202511270014: [
+    { node: "韩国仓入库", time: "2025-11-27 17:00" },
+    { node: "打包出库", time: "2025-11-28 09:20" },
+    { node: "起运", time: "2025-11-28 22:00", note: "航班 KE5523" },
+    { node: "到港清关", time: "2025-11-29 11:05" },
+  ],
+};
+
+export const PAYMENT_ACCOUNTS: PaymentAccount[] = [
+  {
+    id: "a1",
+    channel: "wechat",
+    holder: "张**",
+    qrUrl: img("qr1", 200, 200),
+    dailyLimit: 20000,
+    todayReceived: 18420,
+    status: "active",
+    lastUsedAt: "2025-11-28 14:22",
+  },
+  {
+    id: "a2",
+    channel: "wechat",
+    holder: "王**",
+    qrUrl: img("qr2", 200, 200),
+    dailyLimit: 20000,
+    todayReceived: 6500,
+    status: "active",
+    lastUsedAt: "2025-11-28 11:02",
+  },
+  {
+    id: "a3",
+    channel: "alipay",
+    holder: "李**",
+    qrUrl: img("qr3", 200, 200),
+    dailyLimit: 30000,
+    todayReceived: 30000,
+    status: "active",
+    lastUsedAt: "2025-11-28 12:11",
+  },
+  {
+    id: "a4",
+    channel: "alipay",
+    holder: "赵**",
+    qrUrl: img("qr4", 200, 200),
+    dailyLimit: 30000,
+    todayReceived: 0,
+    status: "paused",
+  },
+];
+
+export const REFUNDS: RefundRequest[] = [
+  {
+    id: "R001",
+    orderId: "DD20251125003",
+    amountCNY: 412.5,
+    reason: "档口缺货,买手申请退款",
+    status: "finance_pending",
+    csUser: "客服-小南",
+    createdAt: "2025-11-28 10:30",
+  },
+  {
+    id: "R002",
+    orderId: "DD20251124011",
+    amountCNY: 198.0,
+    reason: "尺码不符,已退回",
+    status: "paid",
+    csUser: "客服-小南",
+    financeUser: "财务-阿珍",
+    createdAt: "2025-11-26 15:20",
+  },
+  {
+    id: "R003",
+    orderId: "DD20251128009",
+    amountCNY: 89.5,
+    reason: "买手取消订单",
+    status: "cs_pending",
+    createdAt: "2025-11-28 19:10",
+  },
+];
+
+export const krwToCny = (krw: number, rate = REFERENCE_RATE) =>
+  Math.round(krw * rate * 100) / 100;
+
+export const formatKRW = (n: number) => `₩${n.toLocaleString("ko-KR")}`;
+export const formatCNY = (n: number) => `¥${n.toFixed(2)}`;

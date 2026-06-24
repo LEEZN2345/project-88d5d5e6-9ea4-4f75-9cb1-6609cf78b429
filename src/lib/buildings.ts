@@ -16,7 +16,7 @@ export const MALLS: Mall[] = [
       { name: "Jeil Pyunghwa", floors: ["B1", "1F", "2F", "3F", "4F", "5F"] },
       { name: "Dong Pyunghwa", floors: ["B1", "1F", "2F", "3F", "4F"] },
       { name: "Queen's Square", floors: ["B1", "1F", "2F", "3F", "4F", "5F"] },
-      { name: "Studio W", floors: ["1F", "2F", "3F", "4F"] },
+      { name: "Studio W", floors: ["B1", "1F", "2F", "3F", "4F", "5F", "6F", "SIDE"] },
       { name: "DWP", floors: ["B1", "1F", "2F", "3F", "1F Beginni", "ANNEX", "SIDE"] },
       { name: "Belpost", floors: ["B1", "1F", "2F", "3F"] },
       { name: "APM Luxe", floors: ["B1", "B2", "1F", "2F", "3F", "4F", "5F", "6F", "7F"] },
@@ -32,7 +32,6 @@ export const MALLS: Mall[] = [
       { name: "Shoes Market D", floors: ["1F", "2F"] },
     ],
   },
-      { name: "Studio W", floors: ["B1", "1F", "2F", "3F", "4F", "5F", "6F", "SIDE"] },
   {
     city: "南大门",
     buildings: [

@@ -142,8 +142,10 @@ function AreaView() {
     setActiveFloor(b.floors[0]);
   };
 
-  const tiles = tilesFor(activeBuilding, activeFloor);
-  const shopCount = 80 + ((activeBuilding.length * 7 + activeFloor.length * 13) % 90);
+  const shops = shopsByBuildingFloor(activeBuilding, activeFloor);
+  const floorsCovered = floorsWithShops(activeBuilding);
+  const hasIndexed = buildingHasShops(activeBuilding);
+  const shopCount = shops.length;
 
   return (
     <>
@@ -186,6 +188,7 @@ function AreaView() {
                     <div className="flex flex-col bg-muted/40">
                       {b.floors.map((f) => {
                         const fa = f === activeFloor;
+                        const has = shopsByBuildingFloor(b.name, f).length > 0;
                         return (
                           <button
                             key={f}
@@ -198,6 +201,9 @@ function AreaView() {
                             )}
                           >
                             {f}
+                            {has && (
+                              <span className="ml-1 inline-block h-1 w-1 rounded-full bg-amber-500 align-middle" />
+                            )}
                           </button>
                         );
                       })}
@@ -235,41 +241,64 @@ function AreaView() {
             <div className="flex items-baseline gap-2">
               <h3 className="text-sm font-black text-foreground">{activeFloor}</h3>
               <span className="text-[10px] text-muted-foreground">
-                本层共 {shopCount} 个档口
+                {shopCount > 0 ? `已收录 ${shopCount} 个档口` : "暂未收录档口"}
               </span>
             </div>
             <span className="text-[9px] font-bold uppercase tracking-tighter text-muted-foreground/70">
-              Sorted by popularity
+              Sorted by rank
             </span>
           </div>
 
           {/* 3-col shop grid */}
-          <div className="grid grid-cols-3 gap-x-2 gap-y-4 px-3 pb-6 pt-1">
-            {tiles.map((t) => (
-              <Link
-                key={t.code}
-                to="/shops/$id"
-                params={{ id: "s1" }}
-                className="group flex flex-col gap-1.5"
-              >
-                <div className="aspect-square overflow-hidden rounded-md border border-border bg-muted">
-                  <img
-                    src={t.cover}
-                    alt={t.name}
-                    className="h-full w-full object-cover transition group-active:scale-95"
-                  />
-                </div>
-                <div className="leading-tight">
-                  <p className="truncate text-[11px] font-bold text-foreground">
-                    {t.name}
-                  </p>
-                  <p className="text-[9px] font-medium tracking-tight text-muted-foreground">
-                    {t.code}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
+          {shops.length > 0 ? (
+            <div className="grid grid-cols-3 gap-x-2 gap-y-4 px-3 pb-6 pt-1">
+              {shops.map((s: IndexedShop) => (
+                <Link
+                  key={`${s.building}-${s.floor}-${s.code}`}
+                  to="/shops/$id"
+                  params={{ id: "s1" }}
+                  className="group flex flex-col gap-1.5"
+                >
+                  <div className="relative aspect-square overflow-hidden rounded-md border border-border bg-muted">
+                    <img
+                      src={img(`${s.building}-${s.code}-${s.name}`)}
+                      alt={s.name}
+                      className="h-full w-full object-cover transition group-active:scale-95"
+                    />
+                    {s.rank && s.rank <= 10 && (
+                      <span className="absolute left-1 top-1 rounded bg-gradient-to-br from-amber-400 to-orange-500 px-1 py-0.5 text-[9px] font-black text-white shadow">
+                        TOP{s.rank}
+                      </span>
+                    )}
+                    {s.hot && (
+                      <span className="absolute right-1 top-1 rounded bg-rose-500 px-1 py-0.5 text-[8px] font-bold text-white">
+                        实体热
+                      </span>
+                    )}
+                  </div>
+                  <div className="leading-tight">
+                    <p className="truncate text-[11px] font-bold text-foreground">
+                      {s.name}
+                    </p>
+                    <p className="text-[9px] font-medium tracking-tight text-muted-foreground">
+                      {s.code}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="mx-3 mb-6 mt-2 rounded-xl border border-dashed border-border bg-muted/30 px-4 py-10 text-center">
+              <p className="text-[12px] font-semibold text-foreground">
+                本层档口正在收录中
+              </p>
+              <p className="mt-1 text-[10px] text-muted-foreground">
+                {hasIndexed
+                  ? `${activeBuilding} 已收录楼层: ${[...floorsCovered].join(" · ")}`
+                  : "该商场尚未录入档口数据,敬请期待"}
+              </p>
+            </div>
+          )}
         </section>
       </div>
     </>

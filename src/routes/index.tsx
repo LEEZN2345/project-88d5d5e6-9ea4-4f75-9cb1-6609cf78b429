@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
-import { SHOPS, PRODUCTS, formatKRW, krwToCny, formatCNY } from "@/lib/mock-data";
+import { SHOPS, PRODUCTS, REFERENCE_RATE, formatKRW, krwToCny, formatCNY } from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Search, Flame, Sparkles, TicketPercent } from "lucide-react";
+import { Search, Flame, Sparkles, TicketPercent, TrendingUp } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -21,12 +21,36 @@ export const Route = createFileRoute("/")({
 function Index() {
   const newProducts = PRODUCTS.filter((p) => p.isNew);
   const dealProducts = PRODUCTS.filter((p) => p.discount);
+  const today = new Date().toLocaleDateString("zh-CN", { month: "2-digit", day: "2-digit" });
+  const krwPerCny = 1 / REFERENCE_RATE; // 1 CNY ≈ ? KRW
   return (
     <MobileShell>
       <MobileHeader
         title="东大门订货通"
         right={<Link to="/admin" className="text-xs text-muted-foreground">运营后台</Link>}
       />
+      <div className="mx-4 mt-3 rounded-xl border border-border bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/15 text-primary">
+              <TrendingUp className="h-4 w-4" />
+            </div>
+            <div>
+              <div className="text-[11px] text-muted-foreground">今日参考汇率 · {today}</div>
+              <div className="text-sm font-semibold">
+                1 CNY ≈ <span className="text-primary">{krwPerCny.toFixed(2)}</span> KRW
+              </div>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="text-[11px] text-muted-foreground">1000 KRW</div>
+            <div className="text-sm font-semibold">≈ {formatCNY(krwToCny(1000))}</div>
+          </div>
+        </div>
+        <div className="mt-2 text-[10px] text-muted-foreground">
+          仅供参考,实际以代付小票当日锁定汇率为准
+        </div>
+      </div>
       <div className="px-4 pt-3">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

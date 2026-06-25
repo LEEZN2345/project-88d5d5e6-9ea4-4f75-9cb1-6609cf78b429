@@ -53,3 +53,57 @@ export const OFFLINE_HOT: RankShop[] = [
   { rank: 11, name: "Fizz", location: "apMLuxe-5F-531" },
   { rank: 12, name: "MUCH MORE", location: "apM-B1-B105" },
 ];
+
+// 把 location 解析成 building / floor / code,便于按区域分组检索
+export type IndexedShop = {
+  name: string;
+  building: string; // 与 MALLS 中 building.name 对齐
+  floor: string; // 与 MALLS 中 floors[i] 对齐
+  code: string; // 档口号
+  rank?: number; // 若来自榜单
+  hot?: boolean; // 实体店热门
+};
+
+const BUILDING_MAP: Record<string, string> = {
+  apm: "APM",
+  apmluxe: "APM Luxe",
+  apmplace: "APM Place",
+};
+
+function parseLocation(loc: string): { building: string; floor: string; code: string } | null {
+  const parts = loc.split("-");
+  if (parts.length < 3) return null;
+  const key = parts[0]!.toLowerCase();
+  const building = BUILDING_MAP[key];
+  if (!building) return null;
+  return { building, floor: parts[1]!, code: parts[2]! };
+}
+
+const indexed: IndexedShop[] = [];
+const hotNames = new Set(OFFLINE_HOT.map((s) => s.name));
+for (const s of APM_RANK) {
+  const p = parseLocation(s.location);
+  if (!p) continue;
+  indexed.push({ name: s.name, ...p, rank: s.rank, hot: hotNames.has(s.name) });
+}
+// OFFLINE_HOT 已在 APM_RANK 出现过,不再重复加入
+
+export const INDEXED_SHOPS: IndexedShop[] = indexed;
+
+export function shopsByBuildingFloor(building: string, floor: string): IndexedShop[] {
+  return INDEXED_SHOPS.filter((s) => s.building === building && s.floor === floor).sort(
+    (a, b) => (a.rank ?? 999) - (b.rank ?? 999)
+  );
+}
+
+export function buildingHasShops(building: string): boolean {
+  return INDEXED_SHOPS.some((s) => s.building === building);
+}
+
+export function floorsWithShops(building: string): Set<string> {
+  const set = new Set<string>();
+  INDEXED_SHOPS.forEach((s) => {
+    if (s.building === building) set.add(s.floor);
+  });
+  return set;
+}

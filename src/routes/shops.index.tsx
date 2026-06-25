@@ -1,7 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { MALLS } from "@/lib/buildings";
-import { APM_RANK, OFFLINE_HOT, type RankShop } from "@/lib/rank-data";
+import {
+  APM_RANK,
+  OFFLINE_HOT,
+  shopsByBuildingFloor,
+  floorsWithShops,
+  buildingHasShops,
+  type RankShop,
+  type IndexedShop,
+} from "@/lib/rank-data";
 import {
   Search,
   ShoppingCart,
@@ -27,29 +35,7 @@ export const Route = createFileRoute("/shops/")({
   component: ShopsIndex,
 });
 
-const SHOP_POOL = [
-  "LUMIPLE", "humming", "MARIE M", "LE-PPL", "FLORAL", "Ande",
-  "ÁRBOL", "2DA", "PLOVER", "NOIR", "ATELIER", "MUSE",
-  "OLIVE", "ROSEN", "BLANC", "SOON", "CIEL", "VERA",
-];
-
 const img = (seed: string) => `https://picsum.photos/seed/${seed}/400/300`;
-
-type Tile = { name: string; code: string; cover: string };
-
-function tilesFor(building: string, floor: string): Tile[] {
-  // deterministic pseudo-random offset by name length
-  const offset = (building.length * 3 + floor.length) % SHOP_POOL.length;
-  const count = 9;
-  const floorNum = parseInt(floor.replace(/[^0-9]/g, "") || "1", 10);
-  const base = (floor.startsWith("B") ? -1 : 1) * floorNum * 100 + 1;
-  return Array.from({ length: count }, (_, i) => {
-    const nm = SHOP_POOL[(offset + i) % SHOP_POOL.length];
-    const num = base + i * 2;
-    const code = `P${String(num).padStart(3, "0")}`;
-    return { name: nm, code, cover: img(`${building}-${floor}-${i}`) };
-  });
-}
 
 const HERO_IMG = (b: string) => `https://picsum.photos/seed/hero-${b}/800/420`;
 

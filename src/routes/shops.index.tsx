@@ -1,7 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { MALLS } from "@/lib/buildings";
-import { Search, ShoppingCart, MoreHorizontal } from "lucide-react";
+import { APM_RANK, OFFLINE_HOT, type RankShop } from "@/lib/rank-data";
+import {
+  Search,
+  ShoppingCart,
+  MoreHorizontal,
+  MapPinned,
+  Trophy,
+  Crown,
+  Flame,
+  Store,
+  TrendingUp,
+  ChevronRight,
+} from "lucide-react";
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -41,7 +53,93 @@ function tilesFor(building: string, floor: string): Tile[] {
 
 const HERO_IMG = (b: string) => `https://picsum.photos/seed/hero-${b}/800/420`;
 
+type TabKey = "area" | "rank";
+
 function ShopsIndex() {
+  const [tab, setTab] = useState<TabKey>("area");
+
+  return (
+    <MobileShell>
+      <MobileHeader
+        title="档口"
+        back
+        right={
+          <div className="flex items-center gap-3 text-muted-foreground">
+            <MoreHorizontal className="h-5 w-5" />
+            <ShoppingCart className="h-5 w-5" />
+          </div>
+        }
+      />
+
+      {/* Card switcher */}
+      <div className="grid grid-cols-2 gap-2 border-b border-border bg-background px-3 py-3">
+        <TabCard
+          active={tab === "area"}
+          onClick={() => setTab("area")}
+          icon={<MapPinned className="h-4 w-4" />}
+          title="按区域逛"
+          subtitle="商场 · 楼层 · 档口"
+          tone="dark"
+        />
+        <TabCard
+          active={tab === "rank"}
+          onClick={() => setTab("rank")}
+          icon={<Trophy className="h-4 w-4" />}
+          title="拿货排行榜"
+          subtitle="销量 · 实体店热门"
+          tone="amber"
+        />
+      </div>
+
+      {tab === "area" ? <AreaView /> : <RankView />}
+    </MobileShell>
+  );
+}
+
+function TabCard({
+  active,
+  onClick,
+  icon,
+  title,
+  subtitle,
+  tone,
+}: {
+  active: boolean;
+  onClick: () => void;
+  icon: React.ReactNode;
+  title: string;
+  subtitle: string;
+  tone: "dark" | "amber";
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        "relative overflow-hidden rounded-xl border px-3 py-2.5 text-left transition",
+        active
+          ? tone === "dark"
+            ? "border-foreground bg-foreground text-background"
+            : "border-amber-500 bg-gradient-to-br from-amber-400 to-orange-500 text-white"
+          : "border-border bg-muted/40 text-muted-foreground"
+      )}
+    >
+      <div className="flex items-center gap-1.5">
+        {icon}
+        <span className="text-[13px] font-bold">{title}</span>
+      </div>
+      <p
+        className={cn(
+          "mt-0.5 text-[10px]",
+          active ? "opacity-90" : "text-muted-foreground"
+        )}
+      >
+        {subtitle}
+      </p>
+    </button>
+  );
+}
+
+function AreaView() {
   const dongdaemun = MALLS.find((m) => m.city === "东大门")!;
   // Only include buildings that actually have floors for this UI
   const buildings = useMemo(
@@ -62,19 +160,7 @@ function ShopsIndex() {
   const shopCount = 80 + ((activeBuilding.length * 7 + activeFloor.length * 13) % 90);
 
   return (
-    <MobileShell>
-      <MobileHeader
-        title="分类"
-        back
-        right={
-          <div className="flex items-center gap-3 text-muted-foreground">
-            <MoreHorizontal className="h-5 w-5" />
-            <ShoppingCart className="h-5 w-5" />
-          </div>
-        }
-      />
-
-      {/* Search bar */}
+    <>
       <div className="border-b border-border bg-background px-3 py-2">
         <div className="flex items-center gap-2 rounded-full bg-muted px-4 py-2">
           <Search className="h-4 w-4 text-muted-foreground" />
@@ -200,6 +286,123 @@ function ShopsIndex() {
           </div>
         </section>
       </div>
-    </MobileShell>
+    </>
+  );
+}
+
+function RankView() {
+  return (
+    <div className="space-y-4 bg-muted/20 px-3 py-4">
+      <RankSection
+        title="东大门排行榜"
+        subtitle="apM 集团档口 · 近 30 天销量 TOP"
+        icon={<Crown className="h-4 w-4" />}
+        accent="from-amber-400 to-orange-500"
+        data={APM_RANK}
+        badge="TOP 30"
+      />
+      <RankSection
+        title="实体店热门拿货档口"
+        subtitle="线下买手店 · 高频补货榜"
+        icon={<Store className="h-4 w-4" />}
+        accent="from-rose-500 to-red-500"
+        data={OFFLINE_HOT}
+        badge="实体精选"
+      />
+      <p className="pb-4 text-center text-[10px] text-muted-foreground">
+        数据每日 00:00 北京时间更新 · 仅供参考
+      </p>
+    </div>
+  );
+}
+
+function RankSection({
+  title,
+  subtitle,
+  icon,
+  accent,
+  data,
+  badge,
+}: {
+  title: string;
+  subtitle: string;
+  icon: React.ReactNode;
+  accent: string;
+  data: RankShop[];
+  badge: string;
+}) {
+  return (
+    <section className="overflow-hidden rounded-2xl border border-border bg-background shadow-sm">
+      {/* Card header */}
+      <div className={cn("relative bg-gradient-to-r px-4 py-3 text-white", accent)}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20">
+              {icon}
+            </div>
+            <div>
+              <h3 className="text-sm font-bold leading-none">{title}</h3>
+              <p className="mt-1 text-[10px] opacity-90">{subtitle}</p>
+            </div>
+          </div>
+          <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold">
+            {badge}
+          </span>
+        </div>
+      </div>
+
+      {/* List */}
+      <ul className="divide-y divide-border">
+        {data.map((s) => (
+          <li key={`${title}-${s.rank}`}>
+            <Link
+              to="/shops/$id"
+              params={{ id: "s1" }}
+              className="flex items-center gap-3 px-3 py-2.5 active:bg-muted/50"
+            >
+              <RankBadge rank={s.rank} />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-[13px] font-bold text-foreground">
+                  {s.name}
+                </p>
+                <p className="truncate text-[10px] text-muted-foreground">
+                  {s.location}
+                </p>
+              </div>
+              {s.rank <= 3 && (
+                <Flame className="h-3.5 w-3.5 text-orange-500" />
+              )}
+              {s.rank > 3 && s.rank <= 10 && (
+                <TrendingUp className="h-3.5 w-3.5 text-emerald-500" />
+              )}
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+function RankBadge({ rank }: { rank: number }) {
+  const top = rank <= 3;
+  const tone =
+    rank === 1
+      ? "bg-gradient-to-br from-yellow-400 to-amber-600 text-white"
+      : rank === 2
+      ? "bg-gradient-to-br from-slate-300 to-slate-500 text-white"
+      : rank === 3
+      ? "bg-gradient-to-br from-orange-400 to-orange-700 text-white"
+      : "bg-muted text-muted-foreground";
+  return (
+    <div
+      className={cn(
+        "flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[12px] font-black tabular-nums",
+        tone,
+        top && "shadow-sm"
+      )}
+    >
+      {rank}
+    </div>
   );
 }

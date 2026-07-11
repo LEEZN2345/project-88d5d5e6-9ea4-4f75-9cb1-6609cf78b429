@@ -138,13 +138,13 @@ function ProductDetail() {
           <Store className="h-3 w-3" /> 档口批发价
         </div>
         <div className="mt-2 flex items-center justify-center gap-2">
-          <span className="text-4xl font-extrabold tracking-tight">{formatKRW(tier.unit)}</span>
-          <span className="text-sm text-muted-foreground">≈ {formatCNY(krwToCny(tier.unit))}</span>
+          <span className="text-4xl font-extrabold tracking-tight">{formatKRW(baseKRW)}</span>
+          <span className="text-sm text-muted-foreground">≈ {formatCNY(tierUnitCNY)}</span>
         </div>
         <div className="mt-1.5 flex items-center justify-center gap-2">
-          {savedKRW > 0 && (
+          {savedCNY > 0 && (
             <div className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] ${tier.accentChip}`}>
-              <Sparkles className="h-3 w-3" /> {tier.label}省 {formatKRW(savedKRW)}
+              <Sparkles className="h-3 w-3" /> {tier.label}省 {formatCNY(savedCNY)}
             </div>
           )}
           <button className="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-[10px] text-muted-foreground hover:bg-accent hover:text-foreground transition">

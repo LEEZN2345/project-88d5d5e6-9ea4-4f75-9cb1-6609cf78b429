@@ -22,7 +22,7 @@ type TierKey = "solo" | "group" | "bulk";
 type Tier = {
   key: TierKey;
   label: string;
-  unit: number; // KRW 单价
+  margin: number; // CNY 毛利率
   qty: number;
   tag: string;
   hint: string;
@@ -36,7 +36,7 @@ const TIERS: Tier[] = [
   {
     key: "solo",
     label: "单人直购",
-    unit: 168000,
+    margin: 0.2,
     qty: 1,
     tag: "推荐",
     hint: "现货速发",
@@ -48,7 +48,7 @@ const TIERS: Tier[] = [
   {
     key: "group",
     label: "拼单团购",
-    unit: 160000,
+    margin: 0.13,
     qty: 1,
     tag: "性价比",
     hint: "需拉 1 人",
@@ -60,7 +60,7 @@ const TIERS: Tier[] = [
   {
     key: "bulk",
     label: "双件批发",
-    unit: 154000,
+    margin: 0.06,
     qty: 2,
     tag: "最低价",
     hint: "买 2 件",
@@ -93,9 +93,12 @@ function ProductDetail() {
   }, [api]);
 
   const tier = TIERS.find((t) => t.key === tierKey)!;
-  const soloUnit = TIERS[0]!.unit;
-  const totalKRW = tier.unit * tier.qty;
-  const savedKRW = (soloUnit - tier.unit) * tier.qty;
+  const baseKRW = p.priceKRW;
+  const baseCNY = krwToCny(baseKRW);
+  const tierUnitCNY = baseCNY * (1 + tier.margin);
+  const soloUnitCNY = baseCNY * (1 + TIERS[0]!.margin);
+  const totalCNY = tierUnitCNY * tier.qty;
+  const savedCNY = (soloUnitCNY - tierUnitCNY) * tier.qty;
 
   return (
     <MobileShell>
@@ -135,13 +138,13 @@ function ProductDetail() {
           <Store className="h-3 w-3" /> 档口批发价
         </div>
         <div className="mt-2 flex items-center justify-center gap-2">
-          <span className="text-4xl font-extrabold tracking-tight">{formatKRW(tier.unit)}</span>
-          <span className="text-sm text-muted-foreground">≈ {formatCNY(krwToCny(tier.unit))}</span>
+          <span className="text-4xl font-extrabold tracking-tight">{formatKRW(baseKRW)}</span>
+          <span className="text-sm text-muted-foreground">≈ {formatCNY(tierUnitCNY)}</span>
         </div>
         <div className="mt-1.5 flex items-center justify-center gap-2">
-          {savedKRW > 0 && (
+          {savedCNY > 0 && (
             <div className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] ${tier.accentChip}`}>
-              <Sparkles className="h-3 w-3" /> {tier.label}省 {formatKRW(savedKRW)}
+              <Sparkles className="h-3 w-3" /> {tier.label}省 {formatCNY(savedCNY)}
             </div>
           )}
           <button className="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-[10px] text-muted-foreground hover:bg-accent hover:text-foreground transition">
@@ -190,7 +193,8 @@ function ProductDetail() {
         <div className="grid grid-cols-3 gap-2">
           {TIERS.map((t) => {
             const active = t.key === tierKey;
-            const diff = (soloUnit - t.unit) * t.qty;
+            const tUnitCNY = baseCNY * (1 + t.margin);
+            const diff = (soloUnitCNY - tUnitCNY) * t.qty;
             return (
               <button
                 key={t.key}
@@ -204,13 +208,13 @@ function ProductDetail() {
                 </span>
                 <div className="mt-1 text-xs font-medium">{t.label}</div>
                 <div className={`text-sm font-bold ${active ? t.accentText : ""}`}>
-                  {formatKRW(t.unit)}
+                  {formatCNY(tUnitCNY)}
                   {t.qty > 1 && <span className="text-[10px] font-normal">/件</span>}
                 </div>
                 {t.qty > 1 ? (
-                  <div className="text-[10px] text-muted-foreground">总 {formatKRW(t.unit * t.qty)}</div>
+                  <div className="text-[10px] text-muted-foreground">总 {formatCNY(tUnitCNY * t.qty)}</div>
                 ) : diff > 0 ? (
-                  <div className="text-[10px] text-muted-foreground">省 {formatKRW(diff)}</div>
+                  <div className="text-[10px] text-muted-foreground">省 {formatCNY(diff)}</div>
                 ) : (
                   <div className="text-[10px] text-muted-foreground">{t.hint}</div>
                 )}
@@ -237,7 +241,7 @@ function ProductDetail() {
               <Button size="sm" variant="outline" className="flex-1">直接付款占位</Button>
             </div>
             <div className="mt-2 text-[10px] text-muted-foreground">
-              等不及？点击补差价 {formatCNY(krwToCny(soloUnit - tier.unit))} 转为直购。
+              等不及？点击补差价 {formatCNY(soloUnitCNY - tierUnitCNY)} 转为直购。
             </div>
           </div>
         )}
@@ -245,7 +249,9 @@ function ProductDetail() {
           <div className="mt-2 text-right text-[11px] text-muted-foreground">无需拼单,付款即锁汇率</div>
         )}
         {tierKey === "bulk" && (
-          <div className="mt-2 text-right text-[11px] text-muted-foreground">数量已锁定 2 件 · 单价最低</div>
+          <div className="mt-2 text-right text-[11px] text-muted-foreground">
+            数量已锁定 2 件 · 单价最低 · 大量批发联系客服微信: dasuguoji
+          </div>
         )}
       </div>
 
@@ -262,10 +268,10 @@ function ProductDetail() {
           <Button variant="outline" size="icon"><MessageCircle className="h-4 w-4" /></Button>
           <Button className="flex-1 h-11 text-sm font-semibold">
             {tierKey === "bulk"
-              ? `立即购 2 件 ${formatKRW(totalKRW)}`
+              ? `立即购 2 件 ${formatCNY(totalCNY)}`
               : tierKey === "group"
-                ? `拼单下单 ${formatKRW(totalKRW)}`
-                : `立即下单 ${formatKRW(totalKRW)}`}
+                ? `拼单下单 ${formatCNY(totalCNY)}`
+                : `立即下单 ${formatCNY(totalCNY)}`}
           </Button>
         </div>
         <div className="mt-1 text-center text-[10px] text-muted-foreground">

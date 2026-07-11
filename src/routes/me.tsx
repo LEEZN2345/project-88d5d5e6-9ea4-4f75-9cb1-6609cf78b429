@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
-import { ChevronRight, MapPin, Heart, MessageSquare, Settings, Shield, Gift } from "lucide-react";
+import { ChevronRight, MapPin, Heart, MessageSquare, Settings, Shield, Gift, ShoppingBag, ClipboardList } from "lucide-react";
 
 export const Route = createFileRoute("/me")({
   head: () => ({ meta: [{ title: "我的 · 东大门订货通" }] }),
@@ -35,6 +35,8 @@ function Me() {
       </div>
 
       <div className="space-y-2 px-4 pt-4">
+        <Item to="/orders" icon={ClipboardList} label="我的订单" right="全部" />
+        <Item to="/cart" icon={ShoppingBag} label="购物车" />
         <Item to="/addresses" icon={MapPin} label="收货地址" />
         <Item to="/favorites" icon={Heart} label="我的收藏" />
         <Item to="/invite-rules" icon={Gift} label="邀请分销规则" right="最低 2.5%" />

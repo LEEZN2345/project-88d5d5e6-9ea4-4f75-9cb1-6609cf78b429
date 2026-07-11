@@ -1,12 +1,11 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Store, ShoppingBag, ClipboardList, User } from "lucide-react";
+import { Home, Store, Users, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const TABS = [
   { to: "/", icon: Home, label: "首页" },
   { to: "/shops", icon: Store, label: "档口" },
-  { to: "/cart", icon: ShoppingBag, label: "购物车" },
-  { to: "/orders", icon: ClipboardList, label: "订单" },
+  { to: "/groups", icon: Users, label: "拼单广场" },
   { to: "/me", icon: User, label: "我的" },
 ] as const;
 

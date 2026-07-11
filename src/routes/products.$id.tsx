@@ -22,7 +22,7 @@ type TierKey = "solo" | "group" | "bulk";
 type Tier = {
   key: TierKey;
   label: string;
-  unit: number; // KRW 单价
+  margin: number; // CNY 毛利率
   qty: number;
   tag: string;
   hint: string;
@@ -36,7 +36,7 @@ const TIERS: Tier[] = [
   {
     key: "solo",
     label: "单人直购",
-    unit: 168000,
+    margin: 0.2,
     qty: 1,
     tag: "推荐",
     hint: "现货速发",
@@ -48,7 +48,7 @@ const TIERS: Tier[] = [
   {
     key: "group",
     label: "拼单团购",
-    unit: 160000,
+    margin: 0.13,
     qty: 1,
     tag: "性价比",
     hint: "需拉 1 人",
@@ -60,7 +60,7 @@ const TIERS: Tier[] = [
   {
     key: "bulk",
     label: "双件批发",
-    unit: 154000,
+    margin: 0.06,
     qty: 2,
     tag: "最低价",
     hint: "买 2 件",

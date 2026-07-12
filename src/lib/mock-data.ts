@@ -4,9 +4,11 @@ export type Shop = {
   id: string;
   name: string;
   nameKo: string;
+  brand?: string; // 主打品牌名
   building: string; // 例如 doota / migliore / apm
   floor: string;
   tags: string[];
+  minOrderQty: 1 | 2; // 起订件数：1=支持单件购买，2=同款 2 件起批
   cover: string;
   productCount: number;
 };
@@ -21,6 +23,7 @@ export type Product = {
   category: string;
   isNew?: boolean;
   discount?: number; // 百分比
+  uploadedAt: string; // YYYY-MM-DD 上新日期
   colors: string[];
   sizes: string[];
 };

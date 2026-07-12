@@ -162,7 +162,7 @@ function AreaView() {
 
       {/* Top building chip strip (replaces left rail) */}
       <div className="border-b border-border bg-background">
-        <div className="scrollbar-none flex gap-2 overflow-x-auto px-3 py-2.5">
+        <div className="flex flex-wrap gap-1.5 px-3 py-2.5">
           {buildings.map((b) => {
             const isActive = b.name === activeBuilding;
             const has = buildingHasShops(b.name);
@@ -171,7 +171,7 @@ function AreaView() {
                 key={b.name}
                 onClick={() => onPickBuilding(b.name)}
                 className={cn(
-                  "relative shrink-0 rounded-full border px-3.5 py-1.5 text-[12px] font-bold uppercase tracking-tight transition",
+                  "relative rounded-full border px-3 py-1.5 text-[11px] font-bold uppercase tracking-tight transition",
                   isActive
                     ? "border-foreground bg-foreground text-background"
                     : "border-border bg-muted/40 text-muted-foreground"

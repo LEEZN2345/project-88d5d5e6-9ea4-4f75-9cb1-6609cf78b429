@@ -228,8 +228,19 @@ function AdminFeedback() {
           <tbody>
             {list.map(({ order, fb }) => {
               const shopIds = Array.from(new Set(order.items.map((i) => i.product.shopId)));
+              const open = !!expanded[order.id];
               return (
+                <Fragment key={order.id}>
                 <tr key={order.id} className="border-t border-border">
+                  <Td>
+                    <button
+                      onClick={() => toggleExpand(order.id)}
+                      className="inline-flex h-6 w-6 items-center justify-center rounded hover:bg-muted"
+                      aria-label={open ? "收起" : "展开明细"}
+                    >
+                      {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                    </button>
+                  </Td>
                   <Td>
                     <input
                       type="checkbox"
@@ -339,11 +350,72 @@ function AdminFeedback() {
                     </Button>
                   </Td>
                 </tr>
+                {open && (
+                  <tr className="border-t border-border bg-muted/30">
+                    <Td></Td>
+                    <Td colSpan={10} className="py-2">
+                      <div className="mb-1 text-[11px] font-medium text-muted-foreground">
+                        订单明细（共 {order.items.length} 个 SKU · {order.items.reduce((s, i) => s + i.qty, 0)} 件）
+                      </div>
+                      <table className="w-full text-xs">
+                        <thead className="text-muted-foreground">
+                          <tr>
+                            <th className="px-2 py-1 text-left font-normal">图片</th>
+                            <th className="px-2 py-1 text-left font-normal">档口</th>
+                            <th className="px-2 py-1 text-left font-normal">款式 / 内部款号</th>
+                            <th className="px-2 py-1 text-left font-normal">颜色</th>
+                            <th className="px-2 py-1 text-left font-normal">尺寸</th>
+                            <th className="px-2 py-1 text-left font-normal">数量</th>
+                            <th className="px-2 py-1 text-left font-normal">单价</th>
+                            <th className="px-2 py-1 text-left font-normal">小计</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {order.items.map((it, idx) => {
+                            const shop = SHOPS.find((s) => s.id === it.product.shopId);
+                            return (
+                              <tr key={idx} className="border-t border-border/60">
+                                <td className="px-2 py-1.5">
+                                  <img
+                                    src={it.product.images[0]}
+                                    alt=""
+                                    className="h-10 w-10 rounded object-cover"
+                                  />
+                                </td>
+                                <td className="px-2 py-1.5">
+                                  <div>{shop?.name}</div>
+                                  <div className="text-muted-foreground">
+                                    {shop?.building} · {shop?.floor}
+                                    {shop?.position ? `-${shop.position}` : ""}
+                                  </div>
+                                </td>
+                                <td className="px-2 py-1.5">
+                                  <div>{it.product.name}</div>
+                                  <div className="font-mono text-[10px] text-muted-foreground">
+                                    {it.product.internalCode}
+                                  </div>
+                                </td>
+                                <td className="px-2 py-1.5">{it.color}</td>
+                                <td className="px-2 py-1.5">{it.size}</td>
+                                <td className="px-2 py-1.5">× {it.qty}</td>
+                                <td className="px-2 py-1.5">{formatKRW(it.product.priceKRW)}</td>
+                                <td className="px-2 py-1.5">
+                                  {formatKRW(it.product.priceKRW * it.qty)}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </Td>
+                  </tr>
+                )}
+                </Fragment>
               );
             })}
             {list.length === 0 && (
               <tr>
-                <td colSpan={10} className="px-3 py-10 text-center text-sm text-muted-foreground">
+                <td colSpan={11} className="px-3 py-10 text-center text-sm text-muted-foreground">
                   暂无匹配订单
                 </td>
               </tr>

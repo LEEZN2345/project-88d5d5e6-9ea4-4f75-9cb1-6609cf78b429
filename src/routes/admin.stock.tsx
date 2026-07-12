@@ -23,7 +23,7 @@ import { Plus, Minus, Trash2, Search, Warehouse } from "lucide-react";
 
 export const Route = createFileRoute("/admin/stock")({
   head: () => ({ meta: [{ title: "现货管理 · 运营后台" }] }),
-  component: AdminStock;
+  component: AdminStock,
 });
 
 function AdminStock() {

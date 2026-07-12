@@ -113,15 +113,6 @@ function ShopDetail() {
               <Package className="mr-1 h-3 w-3" />
               {singleBuy ? "支持单件购买" : "同款 2 件起订"}
             </Badge>
-            {shop.tags.map((t) => (
-              <Badge
-                key={t}
-                variant="secondary"
-                className="text-[11px] font-medium"
-              >
-                {t}
-              </Badge>
-            ))}
           </div>
 
           <Button

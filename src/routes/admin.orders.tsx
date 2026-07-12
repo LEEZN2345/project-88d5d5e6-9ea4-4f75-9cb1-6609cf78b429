@@ -21,7 +21,7 @@ function AdminOrders() {
         <table className="w-full text-sm">
           <thead className="bg-muted/50 text-xs text-muted-foreground">
             <tr>
-              <Th>订单号</Th><Th>下单时间</Th><Th>件数</Th><Th>韩币</Th><Th>锁定汇率</Th><Th>人民币</Th><Th>支付渠道</Th><Th>收款账户</Th><Th>状态</Th><Th>操作</Th>
+              <Th>订单号</Th><Th>下单时间</Th><Th>件数</Th><Th>韩币</Th><Th>锁定汇率</Th><Th>人民币</Th><Th>支付渠道</Th><Th>商户号</Th><Th>状态</Th><Th>操作</Th>
             </tr>
           </thead>
           <tbody>

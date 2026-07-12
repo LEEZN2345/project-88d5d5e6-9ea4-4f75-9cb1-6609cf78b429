@@ -260,7 +260,6 @@ function ProductDetail() {
                 <button
                   onClick={() => {
                     setTierKey(t.key);
-                    setExpanded(isOpen ? null : t.key);
                   }}
                   className="flex w-full items-center gap-3 p-3 text-left"
                 >
@@ -290,7 +289,16 @@ function ProductDetail() {
                       {t.qty > 1 && <span className="ml-1">· 共 {t.qty} 件</span>}
                     </div>
                   </div>
-                  <span className="flex items-center gap-0.5 text-[11px] text-muted-foreground">
+                  <span
+                    role="button"
+                    tabIndex={0}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setTierKey(t.key);
+                      setExpanded(isOpen ? null : t.key);
+                    }}
+                    className="flex items-center gap-0.5 text-[11px] text-muted-foreground"
+                  >
                     计价明细
                     {isOpen ? (
                       <ChevronDown className="h-3.5 w-3.5" />
@@ -300,8 +308,10 @@ function ProductDetail() {
                   </span>
                 </button>
 
-                {isOpen && (
+                {selected && (
                   <div className="mx-3 mb-3 rounded-lg bg-background/70 p-3 text-xs">
+                    {isOpen && (
+                      <>
                     <div className="mb-1 font-medium">📊 价格明细</div>
                     <Row label="档口批发价" value={`${baseKRW.toLocaleString()} KRW`} />
                     <Row label="国际运费" value={`+${INTL_SHIPPING_KRW.toLocaleString()} KRW`} />
@@ -323,12 +333,15 @@ function ProductDetail() {
                     <div className="mt-2 rounded-md bg-muted/60 px-2 py-1.5 text-[11px] text-muted-foreground">
                       计算公式：({baseKRW.toLocaleString()} + {INTL_SHIPPING_KRW.toLocaleString()}) ÷ {krwPerCny.toFixed(2)} × {multiplier} = {formatCNY(tUnitCNY)}
                     </div>
+                      </>
+                    )}
                     <Button
                       size="sm"
-                      className="mt-3 h-9 w-full text-xs font-semibold"
+                      className={`${isOpen ? "mt-3" : ""} h-11 w-full text-sm font-semibold`}
                       onClick={(e) => {
                         e.stopPropagation();
                         setTierKey(t.key);
+                        setExpanded(null);
                       }}
                     >
                       {t.cta(formatCNY(tTotalCNY), formatCNY(tUnitCNY))}

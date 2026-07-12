@@ -327,8 +327,15 @@ function ProductDetail() {
 
       {/* 档口批发价卡 */}
       <div className="mx-4 mt-3 rounded-xl border border-amber-500/40 bg-amber-50/60 p-3 dark:bg-amber-950/20">
-        <div className="text-[11px] font-medium text-amber-700 dark:text-amber-300">
-          🇰🇷 档口批发价
+        <div className="flex items-center justify-between">
+          <div className="text-[11px] font-medium text-amber-700 dark:text-amber-300">
+            🇰🇷 档口批发价
+          </div>
+          {minOrderQty === 2 && (
+            <span className="rounded-full bg-amber-500 px-2 py-0.5 text-[9px] font-medium text-white">
+              同款 2 件起拍
+            </span>
+          )}
         </div>
         <div className="mt-1 flex items-end justify-between">
           <span className="text-3xl font-extrabold tracking-tight">

@@ -231,5 +231,5 @@ function AdminOrders() {
   );
 }
 
-const Th = ({ children }: { children: React.ReactNode }) => <th className="px-3 py-2 text-left font-medium">{children}</th>;
-const Td = ({ children, className = "", colSpan }: { children: React.ReactNode; className?: string; colSpan?: number }) => <td colSpan={colSpan} className={`px-3 py-2 ${className}`}>{children}</td>;
+const Th = ({ children }: { children?: React.ReactNode }) => <th className="px-3 py-2 text-left font-medium">{children}</th>;
+const Td = ({ children, className = "", colSpan }: { children?: React.ReactNode; className?: string; colSpan?: number }) => <td colSpan={colSpan} className={`px-3 py-2 ${className}`}>{children}</td>;

@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "@/components/AdminShell";
-import { ORDERS, STATUS_LABEL, formatKRW, formatCNY } from "@/lib/mock-data";
+import { ORDERS, STATUS_LABEL, CHANNEL_LABEL, formatKRW, formatCNY, SHOPS, type OrderChannel } from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useState, Fragment } from "react";
+import { ChevronRight, ChevronDown, Download } from "lucide-react";
 
 export const Route = createFileRoute("/admin/orders")({
   head: () => ({ meta: [{ title: "订单管理 · 运营后台" }] }),
@@ -14,23 +16,127 @@ function AdminOrders() {
   // 全部走在线支付（微信/支付宝商户号）
   const payChannelOf = (idx: number): { label: string } =>
     idx % 2 === 0 ? { label: "微信 · 在线" } : { label: "支付宝 · 在线" };
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const [channelFilter, setChannelFilter] = useState<OrderChannel | "all">("all");
+  const toggle = (id: string) => setExpanded((e) => ({ ...e, [id]: !e[id] }));
+  const shopOf = (shopId: string) => SHOPS.find((s) => s.id === shopId);
+  const rows = ORDERS.filter((o) => channelFilter === "all" || o.channel === channelFilter);
+
+  const channelBadge = (c: OrderChannel) => {
+    const map: Record<OrderChannel, string> = {
+      single: "bg-sky-500/15 text-sky-700 dark:text-sky-300",
+      group: "bg-violet-500/15 text-violet-700 dark:text-violet-300",
+      moq2: "bg-amber-500/15 text-amber-700 dark:text-amber-300",
+    };
+    return <span className={`rounded px-1.5 py-0.5 text-[11px] ${map[c]}`}>{CHANNEL_LABEL[c]}</span>;
+  };
+
+  const exportCSV = () => {
+    const header = ["订单号","下单时间","下单渠道","会员","电话","收货地址","档口号","内部款号","商品","颜色","尺寸","数量","单价(KRW)","小计(KRW)","订单总额(KRW)","订单总额(CNY)","锁定汇率","状态"];
+    const lines: string[] = [header.join(",")];
+    rows.forEach((o) => {
+      o.items.forEach((it) => {
+        const shop = shopOf(it.product.shopId);
+        const cells = [
+          o.id,
+          o.createdAt,
+          CHANNEL_LABEL[o.channel],
+          o.buyer.name,
+          o.buyer.phone,
+          o.buyer.address,
+          `${shop?.name ?? ""} ${shop?.floor ?? ""}`.trim(),
+          it.product.internalCode,
+          it.product.name,
+          it.color,
+          it.size,
+          String(it.qty),
+          String(it.product.priceKRW),
+          String(it.product.priceKRW * it.qty),
+          String(o.totalKRW),
+          o.totalCNY != null ? String(o.totalCNY) : "",
+          o.snapshotRate != null ? String(o.snapshotRate) : "",
+          STATUS_LABEL[o.status],
+        ].map((v) => {
+          const s = String(v).replace(/"/g, '""');
+          return /[",\n]/.test(s) ? `"${s}"` : s;
+        });
+        lines.push(cells.join(","));
+      });
+    });
+    const csv = "\uFEFF" + lines.join("\n"); // BOM for Excel
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `orders_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const filters: { id: OrderChannel | "all"; label: string }[] = [
+    { id: "all", label: "全部" },
+    { id: "single", label: "单件购买" },
+    { id: "group", label: "拼单购买" },
+    { id: "moq2", label: "2件起订" },
+  ];
+
   return (
     <AdminShell>
-      <h1 className="mb-4 text-xl font-semibold">订单管理</h1>
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-xl font-semibold">订单管理</h1>
+        <Button size="sm" variant="outline" onClick={exportCSV}>
+          <Download className="mr-1 h-4 w-4" />导出 CSV（拆分明细）
+        </Button>
+      </div>
+      <div className="mb-3 flex flex-wrap gap-2">
+        {filters.map((f) => (
+          <button
+            key={f.id}
+            onClick={() => setChannelFilter(f.id)}
+            className={`rounded-full px-3 py-1 text-xs ${
+              channelFilter === f.id
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-muted-foreground hover:bg-muted/70"
+            }`}
+          >
+            {f.label}
+            <span className="ml-1 opacity-70">
+              ({f.id === "all" ? ORDERS.length : ORDERS.filter((o) => o.channel === f.id).length})
+            </span>
+          </button>
+        ))}
+      </div>
       <Card className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-muted/50 text-xs text-muted-foreground">
             <tr>
-              <Th>订单号</Th><Th>下单时间</Th><Th>件数</Th><Th>韩币</Th><Th>锁定汇率</Th><Th>人民币</Th><Th>支付渠道</Th><Th>商户号</Th><Th>状态</Th><Th>操作</Th>
+              <Th></Th><Th>订单号</Th><Th>下单时间</Th><Th>下单渠道</Th><Th>会员 / 收货</Th><Th>件数</Th><Th>韩币</Th><Th>锁定汇率</Th><Th>人民币</Th><Th>支付</Th><Th>状态</Th><Th>操作</Th>
             </tr>
           </thead>
           <tbody>
-            {ORDERS.map((o, i) => {
+            {rows.map((o, i) => {
               const pc = payChannelOf(i);
+              const open = expanded[o.id];
               return (
+              <Fragment key={o.id}>
               <tr key={o.id} className="border-t border-border">
+                <Td>
+                  <button
+                    onClick={() => toggle(o.id)}
+                    className="inline-flex h-6 w-6 items-center justify-center rounded hover:bg-muted"
+                    aria-label={open ? "收起" : "展开明细"}
+                  >
+                    {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                  </button>
+                </Td>
                 <Td className="font-mono text-xs">{o.id}</Td>
                 <Td className="text-xs">{o.createdAt}</Td>
+                <Td>{channelBadge(o.channel)}</Td>
+                <Td className="text-xs">
+                  <div className="font-medium text-foreground">{o.buyer.name}</div>
+                  <div className="text-muted-foreground">{o.buyer.phone}</div>
+                  <div className="max-w-[220px] truncate text-muted-foreground" title={o.buyer.address}>{o.buyer.address}</div>
+                </Td>
                 <Td>{o.items.reduce((s, i) => s + i.qty, 0)}</Td>
                 <Td>{formatKRW(o.totalKRW)}</Td>
                 <Td className="text-xs">
@@ -43,9 +149,9 @@ function AdminOrders() {
                 </Td>
                 <Td>{o.totalCNY ? formatCNY(o.totalCNY) : ""}</Td>
                 <Td className="text-xs">
-                  <Badge>{pc.label}</Badge>
+                  <Badge variant="outline">{pc.label}</Badge>
+                  <div className="mt-0.5 text-muted-foreground">{o.paymentAccount.name}</div>
                 </Td>
-                <Td className="text-xs">{o.paymentAccount.name}</Td>
                 <Td><Badge>{STATUS_LABEL[o.status]}</Badge></Td>
                 <Td>
                   <div className="flex gap-1">
@@ -56,6 +162,54 @@ function AdminOrders() {
                   </div>
                 </Td>
               </tr>
+              {open && (
+                <tr className="border-t border-border bg-muted/30">
+                  <Td className="align-top"></Td>
+                  <Td colSpan={11} className="py-2">
+                    <div className="mb-1 text-[11px] font-medium text-muted-foreground">订单明细（拆分二级）</div>
+                    <table className="w-full text-xs">
+                      <thead className="text-muted-foreground">
+                        <tr>
+                          <th className="px-2 py-1 text-left font-normal">图片</th>
+                          <th className="px-2 py-1 text-left font-normal">档口号</th>
+                          <th className="px-2 py-1 text-left font-normal">款式 / 内部款号</th>
+                          <th className="px-2 py-1 text-left font-normal">颜色</th>
+                          <th className="px-2 py-1 text-left font-normal">尺寸</th>
+                          <th className="px-2 py-1 text-left font-normal">数量</th>
+                          <th className="px-2 py-1 text-left font-normal">单价</th>
+                          <th className="px-2 py-1 text-left font-normal">小计</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {o.items.map((it, idx) => {
+                          const shop = shopOf(it.product.shopId);
+                          return (
+                            <tr key={idx} className="border-t border-border/60">
+                              <td className="px-2 py-1.5">
+                                <img src={it.product.images[0]} alt="" className="h-10 w-10 rounded object-cover" />
+                              </td>
+                              <td className="px-2 py-1.5">
+                                <div>{shop?.name}</div>
+                                <div className="text-muted-foreground">{shop?.building} · {shop?.floor}</div>
+                              </td>
+                              <td className="px-2 py-1.5">
+                                <div>{it.product.name}</div>
+                                <div className="font-mono text-[10px] text-muted-foreground">{it.product.internalCode}</div>
+                              </td>
+                              <td className="px-2 py-1.5">{it.color}</td>
+                              <td className="px-2 py-1.5">{it.size}</td>
+                              <td className="px-2 py-1.5">× {it.qty}</td>
+                              <td className="px-2 py-1.5">{formatKRW(it.product.priceKRW)}</td>
+                              <td className="px-2 py-1.5">{formatKRW(it.product.priceKRW * it.qty)}</td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </Td>
+                </tr>
+              )}
+              </Fragment>
               );
             })}
           </tbody>
@@ -63,8 +217,11 @@ function AdminOrders() {
       </Card>
 
       <Card className="mt-4 p-4 text-xs text-muted-foreground">
-        <div className="font-medium text-foreground">支付与代付流程</div>
+        <div className="font-medium text-foreground">订单管理说明</div>
         <ul className="mt-1 list-disc space-y-0.5 pl-5">
+          <li><b>下单渠道</b>：<span className="text-foreground">单件购买</span>（档口 minOrderQty=1）/ <span className="text-foreground">拼单购买</span>（多买手拼团凑批）/ <span className="text-foreground">2 件起订</span>（同款同色 ≥2 件）。用于运营分析与档口对账。</li>
+          <li><b>合并订单</b>：一笔订单包含多个 SKU 时，点击左侧「▸」展开二级明细（档口号 / 款式 / 颜色 / 尺寸 / 数量）。</li>
+          <li><b>导出 CSV</b>：按当前筛选导出，一行 = 一个 SKU 明细（拼多档口/多色可直接分发给档口）。</li>
           <li><b>在线支付</b>（微信/支付宝商户号）：买手支付后回调自动写入订单，进入待代付。</li>
           <li><b>锁定汇率</b>已自动化：支付成功时按「汇率与配置」当前生效汇率快照到 order.snapshotRate，人工无需干预。</li>
           <li><b>标记已代付</b>：平台向韩国档口付款后，上传韩币付款小票 + 真实购汇成本（仅用于对账，不影响买手结算金额）。</li>
@@ -74,5 +231,5 @@ function AdminOrders() {
   );
 }
 
-const Th = ({ children }: { children: React.ReactNode }) => <th className="px-3 py-2 text-left font-medium">{children}</th>;
-const Td = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => <td className={`px-3 py-2 ${className}`}>{children}</td>;
+const Th = ({ children }: { children?: React.ReactNode }) => <th className="px-3 py-2 text-left font-medium">{children}</th>;
+const Td = ({ children, className = "", colSpan }: { children?: React.ReactNode; className?: string; colSpan?: number }) => <td colSpan={colSpan} className={`px-3 py-2 ${className}`}>{children}</td>;

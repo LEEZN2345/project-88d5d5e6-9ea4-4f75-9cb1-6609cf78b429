@@ -287,6 +287,8 @@ function AdminOrders() {
           <li><b>在线支付</b>（微信/支付宝商户号）：买手支付后回调自动写入订单，进入待代付。</li>
           <li><b>锁定汇率</b>已自动化：支付成功时按「汇率与配置」当前生效汇率快照到 order.snapshotRate，人工无需干预。</li>
           <li><b>标记已代付</b>：平台向韩国档口付款后，上传韩币付款小票 + 真实购汇成本（仅用于对账，不影响买手结算金额）。</li>
+          <li><b>首单标识</b>：档口 2 件起拍时，若用户下 1 件（单件直购），系统会代订 2 件。<span className="text-foreground">首次下单</span>会显示「首次下单 · 需订购 2 件 · 1 件自动纳入现货库」。</li>
+          <li><b>现货复用</b>：同款再次被下单时，若命中现货库会提示「是否发现货」。点「是」后，<Link to="/admin/shipping" className="text-primary underline">发货管理</Link>将从现货库出库，无需再向档口下单。</li>
         </ul>
       </Card>
     </AdminShell>

@@ -13,6 +13,23 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { toast } from "sonner";
 import { useMemo, useState } from "react";
 import {
   PackageCheck,
@@ -93,6 +110,7 @@ const TEMPLATE_FIELDS = [
   { name: "备注", required: false, example: "航班 KE5523" },
 ];
 const NODE_ENUM = ["韩国仓入库", "打包出库", "起运", "到港清关", "国内派送", "已签收"];
+const CARRIERS = ["顺丰速运", "圆通速递", "中通快递", "韵达快递", "京东物流", "EMS", "通关社A", "通关社B"];
 
 function AdminShipping() {
   const [tab, setTab] = useState<"queue" | "import">("queue");
@@ -100,6 +118,42 @@ function AdminShipping() {
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [srcFilter, setSrcFilter] = useState<ShipSource | "all">("all");
   const [stFilter, setStFilter] = useState<ShipStatus | "all">("all");
+  const [confirmRow, setConfirmRow] = useState<ShipRow | null>(null);
+  const [formTracking, setFormTracking] = useState("");
+  const [formCarrier, setFormCarrier] = useState("");
+  const [formErr, setFormErr] = useState<{ t?: string; c?: string }>({});
+
+  const openConfirm = (r: ShipRow) => {
+    setConfirmRow(r);
+    setFormTracking(r.trackingNo ?? "");
+    setFormCarrier(r.carrier ?? "");
+    setFormErr({});
+  };
+
+  const submitConfirm = () => {
+    const t = formTracking.trim();
+    const c = formCarrier.trim();
+    const err: { t?: string; c?: string } = {};
+    if (!t) err.t = "请填写运单号";
+    else if (t.length > 64) err.t = "运单号过长";
+    if (!c) err.c = "请选择物流方式";
+    if (err.t || err.c) {
+      setFormErr(err);
+      return;
+    }
+    if (!confirmRow) return;
+    setRows((rs) =>
+      rs.map((x) =>
+        x.key === confirmRow.key
+          ? { ...x, trackingNo: t, carrier: c, status: "shipped" }
+          : x,
+      ),
+    );
+    toast.success("已确认发货", {
+      description: `订单 ${confirmRow.orderId} · ${c} · ${t}，已同步至用户后台`,
+    });
+    setConfirmRow(null);
+  };
 
   const filtered = useMemo(
     () =>
@@ -284,13 +338,7 @@ function AdminShipping() {
                           <Button
                             size="sm"
                             className="h-7 text-[11px]"
-                            onClick={() =>
-                              setRows((rs) =>
-                                rs.map((x) =>
-                                  x.key === r.key ? { ...x, status: "shipped" } : x,
-                                ),
-                              )
-                            }
+                            onClick={() => openConfirm(r)}
                           >
                             确认发货
                           </Button>

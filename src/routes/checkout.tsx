@@ -54,6 +54,7 @@ function Checkout() {
   const [step, setStep] = useState<PayStep>("qr");
   const [channel, setChannel] = useState<"wechat" | "alipay">(assigned.channel);
   const [seconds, setSeconds] = useState(15 * 60);
+  const mockAccountNo = channel === "wechat" ? "wxid_ddm888" : "6221****3520";
 
   useEffect(() => {
     if (!payOpen || step !== "qr") return;
@@ -80,7 +81,7 @@ function Checkout() {
 
   const copyAccount = async () => {
     try {
-      await navigator.clipboard.writeText(assigned.name);
+      await navigator.clipboard.writeText(mockAccountNo);
       toast.success("账号已复制");
     } catch {
       toast.error("复制失败");
@@ -228,7 +229,7 @@ function Checkout() {
                         onClick={copyAccount}
                         className="flex items-center gap-1 text-primary"
                       >
-                        {assigned.name}
+                        {mockAccountNo}
                         <Copy className="h-3 w-3" />
                       </button>
                     </div>

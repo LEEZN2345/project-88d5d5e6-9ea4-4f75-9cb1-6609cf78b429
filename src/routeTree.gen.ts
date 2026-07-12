@@ -35,6 +35,7 @@ import { Route as OrdersIdRouteImport } from './routes/orders.$id'
 import { Route as LogisticsIdRouteImport } from './routes/logistics.$id'
 import { Route as AdminRefundsRouteImport } from './routes/admin.refunds'
 import { Route as AdminProductsRouteImport } from './routes/admin.products'
+import { Route as AdminPointsMallRouteImport } from './routes/admin.points-mall'
 import { Route as AdminPaymentAccountsRouteImport } from './routes/admin.payment-accounts'
 import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 import { Route as AdminLogisticsRouteImport } from './routes/admin.logistics'
@@ -170,6 +171,11 @@ const AdminProductsRoute = AdminProductsRouteImport.update({
   path: '/admin/products',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminPointsMallRoute = AdminPointsMallRouteImport.update({
+  id: '/admin/points-mall',
+  path: '/admin/points-mall',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminPaymentAccountsRoute = AdminPaymentAccountsRouteImport.update({
   id: '/admin/payment-accounts',
   path: '/admin/payment-accounts',
@@ -212,6 +218,7 @@ export interface FileRoutesByFullPath {
   '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
+  '/admin/points-mall': typeof AdminPointsMallRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/refunds': typeof AdminRefundsRoute
   '/logistics/$id': typeof LogisticsIdRoute
@@ -244,6 +251,7 @@ export interface FileRoutesByTo {
   '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
+  '/admin/points-mall': typeof AdminPointsMallRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/refunds': typeof AdminRefundsRoute
   '/logistics/$id': typeof LogisticsIdRoute
@@ -277,6 +285,7 @@ export interface FileRoutesById {
   '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
+  '/admin/points-mall': typeof AdminPointsMallRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/refunds': typeof AdminRefundsRoute
   '/logistics/$id': typeof LogisticsIdRoute
@@ -311,6 +320,7 @@ export interface FileRouteTypes {
     | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
+    | '/admin/points-mall'
     | '/admin/products'
     | '/admin/refunds'
     | '/logistics/$id'
@@ -343,6 +353,7 @@ export interface FileRouteTypes {
     | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
+    | '/admin/points-mall'
     | '/admin/products'
     | '/admin/refunds'
     | '/logistics/$id'
@@ -375,6 +386,7 @@ export interface FileRouteTypes {
     | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
+    | '/admin/points-mall'
     | '/admin/products'
     | '/admin/refunds'
     | '/logistics/$id'
@@ -408,6 +420,7 @@ export interface RootRouteChildren {
   AdminLogisticsRoute: typeof AdminLogisticsRoute
   AdminOrdersRoute: typeof AdminOrdersRoute
   AdminPaymentAccountsRoute: typeof AdminPaymentAccountsRoute
+  AdminPointsMallRoute: typeof AdminPointsMallRoute
   AdminProductsRoute: typeof AdminProductsRoute
   AdminRefundsRoute: typeof AdminRefundsRoute
   LogisticsIdRoute: typeof LogisticsIdRoute
@@ -603,6 +616,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminProductsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/points-mall': {
+      id: '/admin/points-mall'
+      path: '/admin/points-mall'
+      fullPath: '/admin/points-mall'
+      preLoaderRoute: typeof AdminPointsMallRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/payment-accounts': {
       id: '/admin/payment-accounts'
       path: '/admin/payment-accounts'
@@ -666,6 +686,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminLogisticsRoute: AdminLogisticsRoute,
   AdminOrdersRoute: AdminOrdersRoute,
   AdminPaymentAccountsRoute: AdminPaymentAccountsRoute,
+  AdminPointsMallRoute: AdminPointsMallRoute,
   AdminProductsRoute: AdminProductsRoute,
   AdminRefundsRoute: AdminRefundsRoute,
   LogisticsIdRoute: LogisticsIdRoute,

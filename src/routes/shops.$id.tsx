@@ -116,6 +116,7 @@ function ShopDetail() {
 
   const products = useMemo(() => {
     let list = allProducts;
+    if (newFilter === "new") list = list.filter((p) => p.isNew);
     if (discountFilter === "sale") list = list.filter((p) => p.discount);
     if (selectedDates.length > 0)
       list = list.filter((p) => selectedDates.includes(p.uploadedAt));
@@ -123,7 +124,7 @@ function ShopDetail() {
       const diff = +new Date(b.uploadedAt) - +new Date(a.uploadedAt);
       return sortBy === "newest" ? diff : -diff;
     });
-  }, [allProducts, discountFilter, selectedDates, sortBy]);
+  }, [allProducts, newFilter, discountFilter, selectedDates, sortBy]);
 
   const toggleDate = (d: string) => {
     setSelectedDates((prev) =>

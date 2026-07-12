@@ -23,6 +23,7 @@ import {
   Loader2,
   QrCode,
   Upload,
+  ChevronDown,
 } from "lucide-react";
 
 export const Route = createFileRoute("/checkout")({
@@ -36,12 +37,31 @@ const ITEMS = [
   { product: PRODUCTS[2]!, qty: 1, color: "黑", size: "M" },
 ];
 
+// 商家后台填写的「韩国→国内」单件基础物流服务费（示例）
+// 实际项目中来自商品资料；此处以 product.id 稳定映射，做 demo。
+const INTL_SHIP_MAP: Record<string, number> = {
+  p1: 8,
+  p2: 6,
+  p3: 5,
+  p4: 7,
+  p5: 10,
+  p6: 4,
+  p7: 15,
+  p8: 9,
+  p9: 4,
+  p10: 6,
+};
+function intlShipFor(productId: string) {
+  return INTL_SHIP_MAP[productId] ?? 6;
+}
+
 type PayStep = "qr" | "confirming" | "done";
 
 function Checkout() {
   const navigate = useNavigate();
   const totalKRW = ITEMS.reduce((s, i) => s + i.product.priceKRW * i.qty, 0);
-  const totalCNY = krwToCny(totalKRW) + 28;
+  const intlShipCNY = ITEMS.reduce((s, i) => s + intlShipFor(i.product.id) * i.qty, 0);
+  const totalCNY = krwToCny(totalKRW) + intlShipCNY;
   // 模拟"剩余额度最大"分配
   const assigned = PAYMENT_ACCOUNTS.filter((a) => a.status === "active")
     .sort((a, b) => b.dailyLimit - b.todayReceived - (a.dailyLimit - a.todayReceived))[0]!;
@@ -54,6 +74,7 @@ function Checkout() {
   const [step, setStep] = useState<PayStep>("qr");
   const [channel, setChannel] = useState<"wechat" | "alipay">(assigned.channel);
   const [seconds, setSeconds] = useState(15 * 60);
+  const [shipOpen, setShipOpen] = useState(false);
   const mockAccountNo = channel === "wechat" ? "wxid_ddm888" : "6221****3520";
 
   useEffect(() => {
@@ -153,10 +174,43 @@ function Checkout() {
         <Row k="商品总额 (韩币)" v={formatKRW(totalKRW)} />
         <Row k="参考汇率" v={`1 KRW ≈ ${REFERENCE_RATE} CNY`} sub />
         <Row k="预估人民币" v={formatCNY(krwToCny(totalKRW))} />
-        <Row k="基础物流服务费" v={formatCNY(28)} />
-        <Row k="国内派送" v="顺丰到付" sub />
+        <button
+          type="button"
+          onClick={() => setShipOpen((v) => !v)}
+          className="flex w-full items-center justify-between py-1 text-left"
+        >
+          <span className="flex items-center gap-1">
+            基础物流服务费
+            <span className="text-[10px] text-muted-foreground">(韩国→国内)</span>
+            <ChevronDown
+              className={`h-3 w-3 text-muted-foreground transition-transform ${shipOpen ? "rotate-180" : ""}`}
+            />
+          </span>
+          <span>{formatCNY(intlShipCNY)}</span>
+        </button>
+        {shipOpen && (
+          <div className="mb-1 space-y-1 rounded-md bg-muted/40 p-2 text-[11px] text-muted-foreground">
+            {ITEMS.map((i) => (
+              <div key={i.product.id} className="flex justify-between">
+                <span className="line-clamp-1 pr-2">
+                  {i.product.name} × {i.qty}
+                </span>
+                <span className="whitespace-nowrap">
+                  {formatCNY(intlShipFor(i.product.id))} × {i.qty} ={" "}
+                  <span className="text-foreground">
+                    {formatCNY(intlShipFor(i.product.id) * i.qty)}
+                  </span>
+                </span>
+              </div>
+            ))}
+            <div className="mt-1 border-t border-border/60 pt-1 text-[10px]">
+              费用由各档口商家在商家后台按款式设置,系统按下单件数汇总。
+            </div>
+          </div>
+        )}
+        <Row k="国内派送" v="顺丰包邮" sub />
         <div className="my-2 border-t border-border" />
-        <Row k="合计 (预估)" v={formatCNY(krwToCny(totalKRW) + 28)} bold />
+        <Row k="合计 (预估)" v={formatCNY(totalCNY)} bold />
         <div className="mt-1 text-[11px] text-muted-foreground">
           实际人民币金额 = 平台代付时锁定汇率 × 韩币 + 服务费,以订单详情为准。
         </div>

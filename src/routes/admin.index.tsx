@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AdminShell } from "@/components/AdminShell";
-import { ORDERS, PAYMENT_ACCOUNTS, REFUNDS, formatCNY } from "@/lib/mock-data";
+import { ORDERS, MERCHANT_ACCOUNTS, REFUNDS, formatCNY } from "@/lib/mock-data";
 import { Card } from "@/components/ui/card";
 
 export const Route = createFileRoute("/admin/")({
@@ -9,7 +9,7 @@ export const Route = createFileRoute("/admin/")({
 });
 
 function AdminHome() {
-  const todayReceived = PAYMENT_ACCOUNTS.reduce((s, a) => s + a.todayReceived, 0);
+  const todayReceived = MERCHANT_ACCOUNTS.reduce((s, a) => s + a.todayReceived, 0);
   const csPending = REFUNDS.filter((r) => r.status === "cs_pending").length;
   const finPending = REFUNDS.filter((r) => r.status === "finance_pending").length;
   const pendingProxy = ORDERS.filter((o) => o.status === "paid_pending_proxy" || o.status === "pending_payment").length;
@@ -18,24 +18,24 @@ function AdminHome() {
     <AdminShell>
       <h1 className="mb-4 text-xl font-semibold">今日概览</h1>
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <Stat label="今日收款" value={formatCNY(todayReceived)} hint="所有账户合计" />
-        <Stat label="待代付订单" value={String(pendingProxy)} hint="需上传小票 + 锁汇率" />
+        <Stat label="今日收款" value={formatCNY(todayReceived)} hint="全部商户号合计" />
+        <Stat label="待代付订单" value={String(pendingProxy)} hint="平台向档口付款环节" />
         <Stat label="待客服处理退款" value={String(csPending)} />
         <Stat label="待财务复核退款" value={String(finPending)} />
       </div>
 
       <div className="mt-6 grid gap-4 md:grid-cols-2">
         <Card className="p-4">
-          <div className="mb-2 text-sm font-semibold">收款账户健康度</div>
+          <div className="mb-2 text-sm font-semibold">商户号入账</div>
           <div className="space-y-2">
-            {PAYMENT_ACCOUNTS.map((a) => {
-              const pct = Math.min(100, Math.round((a.todayReceived / a.dailyLimit) * 100));
+            {MERCHANT_ACCOUNTS.map((a) => {
+              const pct = Math.min(100, Math.round((a.todayReceived / a.dailyAlert) * 100));
               return (
                 <div key={a.id} className="text-xs">
                   <div className="flex justify-between">
-                    <span>{a.channel === "wechat" ? "微信" : "支付宝"} · {a.holder}</span>
+                    <span>{a.channel === "wechat" ? "微信" : "支付宝"} · {a.merchantName}</span>
                     <span className={pct >= 100 ? "text-rose-500" : "text-muted-foreground"}>
-                      {formatCNY(a.todayReceived)} / {formatCNY(a.dailyLimit)} ({pct}%)
+                      {formatCNY(a.todayReceived)} / {formatCNY(a.dailyAlert)} ({pct}%)
                     </span>
                   </div>
                   <div className="mt-1 h-1.5 overflow-hidden rounded bg-muted">
@@ -45,7 +45,7 @@ function AdminHome() {
               );
             })}
           </div>
-          <Link to="/admin/payment-accounts" className="mt-3 inline-block text-xs text-primary">管理收款账户 →</Link>
+          <Link to="/admin/payment-accounts" className="mt-3 inline-block text-xs text-primary">管理商户号 →</Link>
         </Card>
 
         <Card className="p-4">

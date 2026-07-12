@@ -28,7 +28,7 @@ const NAV: NavItem[] = [
   { to: "/admin/logistics", icon: Truck, label: "物流导入", group: "商品" },
   { to: "/admin/users", icon: Users2, label: "用户 / KYC", group: "用户与增长" },
   { to: "/admin/points-mall", icon: Gift, label: "积分商城", group: "用户与增长" },
-  { to: "/admin/payment-accounts", icon: Wallet, label: "收款账户", group: "资金" },
+  { to: "/admin/payment-accounts", icon: Wallet, label: "商户号", group: "资金" },
   { to: "/admin/config", icon: Settings2, label: "汇率与配置", group: "系统" },
 ];
 

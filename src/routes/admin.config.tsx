@@ -39,7 +39,6 @@ function AdminConfig() {
                   <div className="text-sm font-medium">{m.label}</div>
                   <div className="text-[11px] text-muted-foreground">
                     {m.kind === "online" && "在线商户号 · 自动到账"}
-                    {m.kind === "transfer" && "转账到指定账户 · 多账户轮询 + 上传小票人工核验"}
                     {m.kind === "balance" && "平台积分/预付余额抵扣"}
                     {m.kind === "applepay" && "iOS Safari / 微信内不可用"}
                   </div>
@@ -54,7 +53,7 @@ function AdminConfig() {
             ))}
           </div>
           <div className="mt-2 text-[11px] text-muted-foreground">
-            在线支付走「商户号」自动入账；转账支付走「收款账户」页配置的多账户轮询。两者可并存。
+            在线支付走「商户号」自动入账，商户号在「商户号管理」维护。
           </div>
         </Card>
 

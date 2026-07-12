@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
-import { PRODUCTS, SHOPS, PAYMENT_ACCOUNTS, PAY_METHODS, REFERENCE_RATE, formatKRW, formatCNY, krwToCny, type PayMethodId } from "@/lib/mock-data";
+import { PRODUCTS, SHOPS, PAY_METHODS, REFERENCE_RATE, formatKRW, formatCNY, krwToCny, type PayMethodId } from "@/lib/mock-data";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +15,6 @@ import { useState, useEffect } from "react";
 import {
   ChevronRight,
   MapPin,
-  Wallet,
   Truck,
   CheckCircle2,
   Loader2,
@@ -57,7 +56,6 @@ type PayStep = "qr" | "confirming" | "done";
 const ICON: Record<PayMethodId, { icon: string; bg: string }> = {
   wechat_online: { icon: "微", bg: "bg-[#09BB07]" },
   alipay_online: { icon: "支", bg: "bg-[#1677FF]" },
-  transfer: { icon: "转", bg: "bg-amber-500" },
   balance: { icon: "余", bg: "bg-muted-foreground/40" },
   applepay: { icon: "🍎", bg: "bg-muted-foreground/40" },
 };
@@ -67,9 +65,6 @@ function Checkout() {
   const totalKRW = ITEMS.reduce((s, i) => s + i.product.priceKRW * i.qty, 0);
   const intlShipCNY = ITEMS.reduce((s, i) => s + intlShipFor(i.product.id) * i.qty, 0);
   const totalCNY = krwToCny(totalKRW) + intlShipCNY;
-  // 模拟"剩余额度最大"分配
-  const assigned = PAYMENT_ACCOUNTS.filter((a) => a.status === "active")
-    .sort((a, b) => b.dailyLimit - b.todayReceived - (a.dailyLimit - a.todayReceived))[0]!;
   const grouped = SHOPS.map((s) => ({
     shop: s,
     items: ITEMS.filter((i) => i.product.shopId === s.id),
@@ -147,24 +142,6 @@ function Checkout() {
           </Card>
         ))}
       </div>
-
-      <Card className="mx-4 mt-3 p-3 text-sm">
-        <div className="flex items-center gap-2 font-medium">
-          <Wallet className="h-4 w-4" /> 分配收款账户
-        </div>
-        <div className="mt-2 flex items-center gap-3 rounded-md bg-muted/40 p-2 text-xs">
-          <div className="flex h-10 w-10 items-center justify-center rounded bg-background text-[9px] text-muted-foreground">QR</div>
-          <div className="flex-1">
-            <div className="font-medium">
-              {assigned.channel === "wechat" ? "微信" : "支付宝"} · {assigned.holder}
-            </div>
-            <div className="text-muted-foreground">
-              今日剩余额度 {formatCNY(assigned.dailyLimit - assigned.todayReceived)}
-            </div>
-          </div>
-        </div>
-        <div className="mt-1 text-[11px] text-muted-foreground">系统按「剩余额度最大」策略自动分配,达上限将切换。</div>
-      </Card>
 
       <Card className="mx-4 mt-3 p-3 text-xs">
         <Row k="商品总额 (韩币)" v={formatKRW(totalKRW)} />
@@ -277,11 +254,6 @@ function Checkout() {
                     );
                   })}
                 </div>
-                {channel === "transfer" && (
-                  <div className="mt-2 rounded-md bg-amber-50 p-2 text-[11px] text-amber-700 dark:bg-amber-950/30 dark:text-amber-400">
-                    将分配至 {assigned.channel === "wechat" ? "微信" : "支付宝"} · {assigned.holder}（今日剩余额度 {formatCNY(assigned.dailyLimit - assigned.todayReceived)}），付款后上传小票由平台核验。
-                  </div>
-                )}
               </div>
 
               <DrawerFooter className="pb-6">

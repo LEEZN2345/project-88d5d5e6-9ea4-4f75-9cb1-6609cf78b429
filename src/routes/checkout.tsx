@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
-import { PRODUCTS, SHOPS, PAYMENT_ACCOUNTS, REFERENCE_RATE, formatKRW, formatCNY, krwToCny } from "@/lib/mock-data";
+import { PRODUCTS, SHOPS, PAYMENT_ACCOUNTS, PAY_METHODS, REFERENCE_RATE, formatKRW, formatCNY, krwToCny, type PayMethodId } from "@/lib/mock-data";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -53,21 +53,14 @@ function intlShipFor(productId: string) {
 }
 
 type PayStep = "qr" | "confirming" | "done";
-type PayChannel = "wechat" | "alipay" | "balance" | "applepay";
 
-const CHANNELS: {
-  id: PayChannel;
-  name: string;
-  icon: string;
-  iconBg: string;
-  disabled?: boolean;
-  right?: string;
-}[] = [
-  { id: "wechat", name: "微信支付", icon: "微", iconBg: "bg-[#09BB07]" },
-  { id: "alipay", name: "支付宝支付", icon: "支", iconBg: "bg-[#1677FF]" },
-  { id: "balance", name: "余额支付", icon: "余", iconBg: "bg-muted-foreground/40", disabled: true, right: "余额: ¥0.00" },
-  { id: "applepay", name: "Apple Pay", icon: "", iconBg: "bg-muted-foreground/40", disabled: true },
-];
+const ICON: Record<PayMethodId, { icon: string; bg: string }> = {
+  wechat_online: { icon: "微", bg: "bg-[#09BB07]" },
+  alipay_online: { icon: "支", bg: "bg-[#1677FF]" },
+  transfer: { icon: "转", bg: "bg-amber-500" },
+  balance: { icon: "余", bg: "bg-muted-foreground/40" },
+  applepay: { icon: "🍎", bg: "bg-muted-foreground/40" },
+};
 
 function Checkout() {
   const navigate = useNavigate();
@@ -84,7 +77,8 @@ function Checkout() {
 
   const [payOpen, setPayOpen] = useState(false);
   const [step, setStep] = useState<PayStep>("qr");
-  const [channel, setChannel] = useState<PayChannel>(assigned.channel);
+  const enabledMethods = PAY_METHODS.filter((m) => m.enabled);
+  const [channel, setChannel] = useState<PayMethodId>(enabledMethods[0]?.id ?? "wechat_online");
   const [seconds, setSeconds] = useState(15 * 60);
   const [shipOpen, setShipOpen] = useState(false);
 

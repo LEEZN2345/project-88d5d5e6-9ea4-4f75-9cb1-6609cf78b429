@@ -191,11 +191,18 @@ function AdminOrders() {
                           <th className="px-2 py-1 text-left font-normal">数量</th>
                           <th className="px-2 py-1 text-left font-normal">单价</th>
                           <th className="px-2 py-1 text-left font-normal">小计</th>
+                          <th className="px-2 py-1 text-left font-normal">现货 / 首单</th>
                         </tr>
                       </thead>
                       <tbody>
                         {o.items.map((it, idx) => {
                           const shop = shopOf(it.product.shopId);
+                          const isBulkShop = shop?.minOrderQty === 2;
+                          const isSoloFromBulk = isBulkShop && it.qty === 1;
+                          const firstOrder = isFirstOrderForProduct(it.product.id);
+                          const stock = findStockMatch(it.product.id, it.color, it.size);
+                          const key = `${o.id}#${idx}`;
+                          const chose = useStock[key];
                           return (
                             <tr key={idx} className="border-t border-border/60">
                               <td className="px-2 py-1.5">
@@ -214,6 +221,48 @@ function AdminOrders() {
                               <td className="px-2 py-1.5">× {it.qty}</td>
                               <td className="px-2 py-1.5">{formatKRW(it.product.priceKRW)}</td>
                               <td className="px-2 py-1.5">{formatKRW(it.product.priceKRW * it.qty)}</td>
+                              <td className="px-2 py-1.5">
+                                {isSoloFromBulk && firstOrder && !stock && (
+                                  <div className="inline-flex items-start gap-1 rounded-md border border-amber-400/60 bg-amber-50 px-1.5 py-1 text-[10px] leading-tight text-amber-700 dark:bg-amber-950/30 dark:text-amber-300">
+                                    <Sparkles className="mt-0.5 h-3 w-3 shrink-0" />
+                                    <span>
+                                      <b>首次下单</b> · 需订购 2 件<br />1 件自动纳入现货库
+                                    </span>
+                                  </div>
+                                )}
+                                {isSoloFromBulk && stock && (
+                                  <div className="flex flex-col gap-1">
+                                    <div className="inline-flex items-center gap-1 rounded-md border border-emerald-400/60 bg-emerald-50 px-1.5 py-0.5 text-[10px] text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-300">
+                                      <PackageCheck className="h-3 w-3" /> 现货库有货（{stock.qty}）
+                                    </div>
+                                    <div className="text-[10px] text-muted-foreground">是否发现货？</div>
+                                    <div className="flex gap-1">
+                                      <Button
+                                        size="sm"
+                                        variant={chose === true ? "default" : "outline"}
+                                        className="h-6 px-2 text-[10px]"
+                                        onClick={() => setStockChoice(key, true)}
+                                      >
+                                        是
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant={chose === false ? "default" : "outline"}
+                                        className="h-6 px-2 text-[10px]"
+                                        onClick={() => setStockChoice(key, false)}
+                                      >
+                                        否
+                                      </Button>
+                                    </div>
+                                    {chose === true && (
+                                      <div className="text-[10px] text-emerald-600">→ 已通知发货管理走现货库</div>
+                                    )}
+                                  </div>
+                                )}
+                                {!isSoloFromBulk && (
+                                  <span className="text-[10px] text-muted-foreground">—</span>
+                                )}
+                              </td>
                             </tr>
                           );
                         })}

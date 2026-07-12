@@ -17,29 +17,25 @@ function AdminProducts() {
     const headers = [
       "档口名称",
       "档口位置",
-      "商店ID",
+      "商品ID",
       "标题",
       "商品图片(多张用 | 分隔)",
       "价格(KRW)",
-      "详情信息",
       "制造国",
       "颜色(多个用 / 分隔)",
       "尺寸(多个用 / 分隔)",
-      "成分",
       "购买条件",
     ];
     const sample = [
-      "MILK 女装",
+      "MILK / 밀크",
       "Migliore 2F-A41",
-      "s1",
+      "DD-2025-0114",
       "羊毛混纺翻领长大衣",
       "https://.../a.jpg|https://.../b.jpg",
       "168000",
-      "落肩廓形 / 内里加绒 / 建议搭配高领针织",
       "韩国",
       "奶白/燕麦/炭灰",
       "FREE",
-      "羊毛 70% 涤纶 30%",
       "2件起订 · 不可换色 · 到货 7 天内可退",
     ];
     const csv = "\ufeff" + [headers, sample].map((r) => r.map((c) => `"${c.replace(/"/g, '""')}"`).join(",")).join("\n");

@@ -182,11 +182,11 @@ function ShopDetail() {
         </div>
       </div>
 
-      {/* 排序 & 打折 独立下拉 */}
+      {/* 排序 & 筛选 */}
       <div className="mt-4 flex gap-2 px-4">
         <Popover>
           <PopoverTrigger asChild>
-            <button className="flex items-center gap-1 rounded-full border border-border bg-muted/40 px-3 py-1 text-xs">
+            <button className="flex shrink-0 items-center gap-1 rounded-full border border-border bg-muted/40 px-3 py-1 text-xs">
               排序：{sortBy === "newest" ? "最新上架" : "最早上架"}
               <ChevronDown className="h-3 w-3" />
             </button>
@@ -213,41 +213,31 @@ function ShopDetail() {
           </PopoverContent>
         </Popover>
 
-        <Popover>
-          <PopoverTrigger asChild>
-            <button
-              className={cn(
-                "flex items-center gap-1 rounded-full border px-3 py-1 text-xs",
-                discountFilter === "sale"
-                  ? "border-rose-500 bg-rose-50 text-rose-600"
-                  : "border-border bg-muted/40",
-              )}
-            >
-              {discountFilter === "sale" ? "仅看档口打折" : "档口打折"}
-              <ChevronDown className="h-3 w-3" />
-            </button>
-          </PopoverTrigger>
-          <PopoverContent className="w-36 p-1" align="start">
-            {(
-              [
-                { k: "all", label: "全部商品" },
-                { k: "sale", label: "仅看打折" },
-              ] as { k: DiscountFilter; label: string }[]
-            ).map((o) => (
-              <button
-                key={o.k}
-                onClick={() => setDiscountFilter(o.k)}
-                className={cn(
-                  "flex w-full items-center justify-between rounded px-2 py-1.5 text-xs hover:bg-muted",
-                  discountFilter === o.k && "font-medium",
-                )}
-              >
-                {o.label}
-                {discountFilter === o.k && <Check className="h-3 w-3" />}
-              </button>
-            ))}
-          </PopoverContent>
-        </Popover>
+        <button
+          onClick={() => setNewFilter((v) => (v === "new" ? "all" : "new"))}
+          className={cn(
+            "flex shrink-0 items-center gap-1 rounded-full border px-3 py-1 text-xs",
+            newFilter === "new"
+              ? "border-blue-500 bg-blue-50 text-blue-600"
+              : "border-border bg-muted/40",
+          )}
+        >
+          档口新款
+        </button>
+
+        <button
+          onClick={() =>
+            setDiscountFilter((v) => (v === "sale" ? "all" : "sale"))
+          }
+          className={cn(
+            "flex shrink-0 items-center gap-1 rounded-full border px-3 py-1 text-xs",
+            discountFilter === "sale"
+              ? "border-rose-500 bg-rose-50 text-rose-600"
+              : "border-border bg-muted/40",
+          )}
+        >
+          档口打折
+        </button>
       </div>
 
       {/* 按新款日期 */}

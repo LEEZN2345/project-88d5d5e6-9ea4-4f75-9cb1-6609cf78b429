@@ -38,13 +38,14 @@ function AdminOrders() {
                 <Td>{o.items.reduce((s, i) => s + i.qty, 0)}</Td>
                 <Td>{formatKRW(o.totalKRW)}</Td>
                 <Td className="text-xs">
-                  {o.snapshotRate ? (
-                    <span className="font-mono">{o.snapshotRate}</span>
-                  ) : (
-                    <span className="text-muted-foreground">待支付</span>
+                  {o.snapshotRate && (
+                    <div className="flex flex-col gap-0.5">
+                      <Badge variant="secondary" className="w-fit">已收款</Badge>
+                      <span className="font-mono">{o.snapshotRate}</span>
+                    </div>
                   )}
                 </Td>
-                <Td>{o.totalCNY ? formatCNY(o.totalCNY) : "—"}</Td>
+                <Td>{o.totalCNY ? formatCNY(o.totalCNY) : ""}</Td>
                 <Td className="text-xs">
                   <Badge variant={pc.kind === "online" ? "default" : "outline"}>{pc.label}</Badge>
                 </Td>

@@ -240,11 +240,6 @@ function AdminFeedback() {
                     <div className="text-muted-foreground">{formatKRW(order.totalKRW)}</div>
                   </Td>
                   <Td>
-                    <Badge variant="outline" className="text-[11px]">
-                      {STATUS_LABEL[fb.status]}
-                    </Badge>
-                  </Td>
-                  <Td>
                     {fb.receiptUrl ? (
                       <a
                         href={fb.receiptUrl}

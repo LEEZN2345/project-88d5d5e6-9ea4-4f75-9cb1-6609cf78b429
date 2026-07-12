@@ -283,15 +283,41 @@ function AdminFeedback() {
                     </Select>
                   </Td>
                   <Td>
-                    <div className="flex items-center gap-1">
-                      <Input
-                        type="number"
-                        min={1}
-                        value={fb.cycleDays}
-                        onChange={(e) => patch(order.id, { cycleDays: Number(e.target.value) || 0 })}
-                        className="h-7 w-16 text-xs"
-                      />
-                      <span className="text-xs text-muted-foreground">天</span>
+                    <div className="flex flex-col gap-1">
+                      <Select
+                        value={fb.goodsType}
+                        onValueChange={(v) =>
+                          patch(order.id, {
+                            goodsType: v as GoodsType,
+                            ...(v === "in_stock" ? { shipDate: undefined } : {}),
+                          })
+                        }
+                      >
+                        <SelectTrigger
+                          className={`h-7 w-24 text-xs ${
+                            fb.goodsType === "in_stock"
+                              ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300"
+                              : "bg-sky-500/15 text-sky-700 dark:text-sky-300"
+                          }`}
+                        >
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="in_stock">现货</SelectItem>
+                          <SelectItem value="reserve">预定</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {fb.goodsType === "reserve" && (
+                        <div className="flex flex-col gap-0.5">
+                          <Input
+                            type="date"
+                            value={fb.shipDate ?? ""}
+                            onChange={(e) => patch(order.id, { shipDate: e.target.value })}
+                            className="h-7 w-36 text-xs"
+                          />
+                          <CountdownBadge date={fb.shipDate} />
+                        </div>
+                      )}
                     </div>
                   </Td>
                   <Td className="text-[11px] text-muted-foreground">

@@ -42,6 +42,7 @@ import { Route as AdminPaymentAccountsRouteImport } from './routes/admin.payment
 import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 import { Route as AdminLogisticsRouteImport } from './routes/admin.logistics'
 import { Route as AdminGroupsRouteImport } from './routes/admin.groups'
+import { Route as AdminFeedbackRouteImport } from './routes/admin.feedback'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
 
 const SupportRoute = SupportRouteImport.update({
@@ -209,6 +210,11 @@ const AdminGroupsRoute = AdminGroupsRouteImport.update({
   path: '/admin/groups',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminFeedbackRoute = AdminFeedbackRouteImport.update({
+  id: '/admin/feedback',
+  path: '/admin/feedback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminConfigRoute = AdminConfigRouteImport.update({
   id: '/admin/config',
   path: '/admin/config',
@@ -233,6 +239,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/admin/config': typeof AdminConfigRoute
+  '/admin/feedback': typeof AdminFeedbackRoute
   '/admin/groups': typeof AdminGroupsRoute
   '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
@@ -269,6 +276,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/admin/config': typeof AdminConfigRoute
+  '/admin/feedback': typeof AdminFeedbackRoute
   '/admin/groups': typeof AdminGroupsRoute
   '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
@@ -306,6 +314,7 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/admin/config': typeof AdminConfigRoute
+  '/admin/feedback': typeof AdminFeedbackRoute
   '/admin/groups': typeof AdminGroupsRoute
   '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
@@ -344,6 +353,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/support'
     | '/admin/config'
+    | '/admin/feedback'
     | '/admin/groups'
     | '/admin/logistics'
     | '/admin/orders'
@@ -380,6 +390,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/support'
     | '/admin/config'
+    | '/admin/feedback'
     | '/admin/groups'
     | '/admin/logistics'
     | '/admin/orders'
@@ -416,6 +427,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/support'
     | '/admin/config'
+    | '/admin/feedback'
     | '/admin/groups'
     | '/admin/logistics'
     | '/admin/orders'
@@ -453,6 +465,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   SupportRoute: typeof SupportRoute
   AdminConfigRoute: typeof AdminConfigRoute
+  AdminFeedbackRoute: typeof AdminFeedbackRoute
   AdminGroupsRoute: typeof AdminGroupsRoute
   AdminLogisticsRoute: typeof AdminLogisticsRoute
   AdminOrdersRoute: typeof AdminOrdersRoute
@@ -704,6 +717,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminGroupsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/feedback': {
+      id: '/admin/feedback'
+      path: '/admin/feedback'
+      fullPath: '/admin/feedback'
+      preLoaderRoute: typeof AdminFeedbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/config': {
       id: '/admin/config'
       path: '/admin/config'
@@ -743,6 +763,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   SupportRoute: SupportRoute,
   AdminConfigRoute: AdminConfigRoute,
+  AdminFeedbackRoute: AdminFeedbackRoute,
   AdminGroupsRoute: AdminGroupsRoute,
   AdminLogisticsRoute: AdminLogisticsRoute,
   AdminOrdersRoute: AdminOrdersRoute,

@@ -68,6 +68,19 @@ export type Order = {
   paymentProofUrl?: string;
   receiptUrl?: string; // 韩币小票
   logisticsNo?: string;
+  channel: OrderChannel; // 下单渠道
+  buyer: { name: string; phone: string; address: string };
+};
+
+// 下单渠道
+// single = 单件购买（档口支持 minOrderQty=1）
+// group  = 拼单购买（多人拼团凑起订量）
+// moq2   = 2 件起订（同款同色 ≥2 件）
+export type OrderChannel = "single" | "group" | "moq2";
+export const CHANNEL_LABEL: Record<OrderChannel, string> = {
+  single: "单件购买",
+  group: "拼单购买",
+  moq2: "2件起订",
 };
 
 export type ShipmentEvent = {
@@ -378,6 +391,8 @@ export const ORDERS: Order[] = [
     paymentProofUrl: img("proof1", 400, 600),
     receiptUrl: img("receipt1", 400, 600),
     logisticsNo: "DDKR202511280001",
+    channel: "moq2",
+    buyer: { name: "陈**", phone: "138****2211", address: "浙江省杭州市余杭区五常街道 XX 路 12 号 3-802" },
   },
   {
     id: "DD20251127014",
@@ -391,6 +406,8 @@ export const ORDERS: Order[] = [
     paymentProofUrl: img("proof2", 400, 600),
     receiptUrl: img("receipt2", 400, 600),
     logisticsNo: "DDKR202511270014",
+    channel: "single",
+    buyer: { name: "林**", phone: "139****8802", address: "广东省广州市天河区珠江新城 XX 大厦 A 座 1806" },
   },
   {
     id: "DD20251126008",
@@ -399,6 +416,8 @@ export const ORDERS: Order[] = [
     totalKRW: 39000 * 5,
     status: "pending_payment",
     paymentAccount: { name: "微信收款 01", channel: "wechat", holder: "王**" },
+    channel: "group",
+    buyer: { name: "王**", phone: "137****5566", address: "上海市静安区南京西路 XX 号 15F" },
   },
 ];
 

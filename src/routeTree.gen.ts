@@ -42,7 +42,6 @@ import { Route as AdminProductsRouteImport } from './routes/admin.products'
 import { Route as AdminPointsMallRouteImport } from './routes/admin.points-mall'
 import { Route as AdminPaymentAccountsRouteImport } from './routes/admin.payment-accounts'
 import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
-import { Route as AdminLogisticsRouteImport } from './routes/admin.logistics'
 import { Route as AdminGroupsRouteImport } from './routes/admin.groups'
 import { Route as AdminFeedbackRouteImport } from './routes/admin.feedback'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
@@ -212,11 +211,6 @@ const AdminOrdersRoute = AdminOrdersRouteImport.update({
   path: '/admin/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminLogisticsRoute = AdminLogisticsRouteImport.update({
-  id: '/admin/logistics',
-  path: '/admin/logistics',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminGroupsRoute = AdminGroupsRouteImport.update({
   id: '/admin/groups',
   path: '/admin/groups',
@@ -253,7 +247,6 @@ export interface FileRoutesByFullPath {
   '/admin/config': typeof AdminConfigRoute
   '/admin/feedback': typeof AdminFeedbackRoute
   '/admin/groups': typeof AdminGroupsRoute
-  '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
   '/admin/points-mall': typeof AdminPointsMallRoute
@@ -292,7 +285,6 @@ export interface FileRoutesByTo {
   '/admin/config': typeof AdminConfigRoute
   '/admin/feedback': typeof AdminFeedbackRoute
   '/admin/groups': typeof AdminGroupsRoute
-  '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
   '/admin/points-mall': typeof AdminPointsMallRoute
@@ -332,7 +324,6 @@ export interface FileRoutesById {
   '/admin/config': typeof AdminConfigRoute
   '/admin/feedback': typeof AdminFeedbackRoute
   '/admin/groups': typeof AdminGroupsRoute
-  '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
   '/admin/points-mall': typeof AdminPointsMallRoute
@@ -373,7 +364,6 @@ export interface FileRouteTypes {
     | '/admin/config'
     | '/admin/feedback'
     | '/admin/groups'
-    | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
     | '/admin/points-mall'
@@ -412,7 +402,6 @@ export interface FileRouteTypes {
     | '/admin/config'
     | '/admin/feedback'
     | '/admin/groups'
-    | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
     | '/admin/points-mall'
@@ -451,7 +440,6 @@ export interface FileRouteTypes {
     | '/admin/config'
     | '/admin/feedback'
     | '/admin/groups'
-    | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
     | '/admin/points-mall'
@@ -491,7 +479,6 @@ export interface RootRouteChildren {
   AdminConfigRoute: typeof AdminConfigRoute
   AdminFeedbackRoute: typeof AdminFeedbackRoute
   AdminGroupsRoute: typeof AdminGroupsRoute
-  AdminLogisticsRoute: typeof AdminLogisticsRoute
   AdminOrdersRoute: typeof AdminOrdersRoute
   AdminPaymentAccountsRoute: typeof AdminPaymentAccountsRoute
   AdminPointsMallRoute: typeof AdminPointsMallRoute
@@ -743,13 +730,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminOrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/logistics': {
-      id: '/admin/logistics'
-      path: '/admin/logistics'
-      fullPath: '/admin/logistics'
-      preLoaderRoute: typeof AdminLogisticsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/groups': {
       id: '/admin/groups'
       path: '/admin/groups'
@@ -805,7 +785,6 @@ const rootRouteChildren: RootRouteChildren = {
   AdminConfigRoute: AdminConfigRoute,
   AdminFeedbackRoute: AdminFeedbackRoute,
   AdminGroupsRoute: AdminGroupsRoute,
-  AdminLogisticsRoute: AdminLogisticsRoute,
   AdminOrdersRoute: AdminOrdersRoute,
   AdminPaymentAccountsRoute: AdminPaymentAccountsRoute,
   AdminPointsMallRoute: AdminPointsMallRoute,

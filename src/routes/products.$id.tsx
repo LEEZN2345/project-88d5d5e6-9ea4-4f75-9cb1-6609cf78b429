@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { PRODUCTS, SHOPS, formatKRW, formatCNY, REFERENCE_RATE } from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
@@ -87,6 +87,7 @@ const INTL_SHIPPING_KRW = 4500;
 
 function ProductDetail() {
   const { id } = Route.useParams();
+  const navigate = useNavigate();
   const p = PRODUCTS.find((x) => x.id === id);
   if (!p) throw notFound();
   const shop = SHOPS.find((s) => s.id === p.shopId)!;
@@ -217,6 +218,7 @@ function ProductDetail() {
                     e.stopPropagation();
                     setTierKey(t.key);
                     setShowPurchaseOptions(false);
+                    navigate({ to: "/checkout" });
                   }}
                 >
                   {t.cta(formatCNY(tTotalCNY), formatCNY(tUnitCNY))}

@@ -39,6 +39,13 @@ const img = (seed: string) => `https://picsum.photos/seed/${seed}/400/300`;
 
 const HERO_IMG = (b: string) => `https://picsum.photos/seed/hero-${b}/800/420`;
 
+// 部分档口支持单件购买（示例数据：档口名 hash 决定）
+function supportsSingleBuy(name: string): boolean {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) | 0;
+  return h % 3 !== 0; // 约 2/3 支持单件
+}
+
 type TabKey = "area" | "rank";
 
 function ShopsIndex() {

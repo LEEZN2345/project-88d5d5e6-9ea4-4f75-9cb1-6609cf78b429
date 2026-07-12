@@ -326,56 +326,92 @@ function AdminShipping() {
         </>
       )}
 
-      {tab === "stock" && (
-        <Card className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-muted/50 text-xs text-muted-foreground">
-              <tr>
-                <Th>商品</Th>
-                <Th>档口</Th>
-                <Th>颜色 / 尺寸</Th>
-                <Th>库存数量</Th>
-                <Th>来源订单</Th>
-                <Th>入库时间</Th>
-              </tr>
-            </thead>
-            <tbody>
-              {STOCK_ITEMS.map((s) => {
-                const shop = SHOPS.find((x) => x.id === s.shopId);
-                return (
-                  <tr key={s.id} className="border-t border-border">
-                    <Td>
-                      <div className="text-xs">
-                        <div className="font-mono text-[10px] text-muted-foreground">{s.productId}</div>
-                      </div>
-                    </Td>
-                    <Td className="text-xs">
-                      <div>{shop?.name}</div>
-                      <div className="text-muted-foreground">{shop?.building} · {shop?.floor}</div>
-                    </Td>
-                    <Td className="text-xs">
-                      {s.color} / {s.size}
-                    </Td>
-                    <Td>
-                      <span className="rounded-md bg-emerald-500/15 px-1.5 py-0.5 text-[11px] text-emerald-700 dark:text-emerald-300">
-                        {s.qty}
-                      </span>
-                    </Td>
-                    <Td className="font-mono text-xs">{s.sourceOrderId}</Td>
-                    <Td className="text-xs text-muted-foreground">{s.createdAt}</Td>
-                  </tr>
-                );
-              })}
-              {STOCK_ITEMS.length === 0 && (
+      {tab === "import" && (
+        <div className="grid gap-4 md:grid-cols-2">
+          <Card className="p-6">
+            <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/30 px-4 py-10 text-center">
+              <Upload className="mb-2 h-8 w-8 text-muted-foreground" />
+              <div className="text-sm font-medium">拖拽 Excel 文件到此处</div>
+              <div className="mt-1 text-xs text-muted-foreground">
+                支持 .xlsx / .xls，单次最多 5000 行 · 用于批量给「已打包 / 已发货」任务回填运单号 & 物流节点
+              </div>
+              <Button className="mt-4" size="sm">选择文件</Button>
+            </div>
+            <div className="mt-4 flex items-center justify-between text-xs">
+              <span className="text-muted-foreground">需要模板？</span>
+              <Button variant="outline" size="sm">
+                <Download className="mr-1 h-3 w-3" />下载模板 v1
+              </Button>
+            </div>
+            <div className="mt-4 rounded-md bg-muted/60 p-3 text-[11px] leading-relaxed text-muted-foreground">
+              <b className="text-foreground">导入逻辑：</b>系统按「订单号」匹配发货任务，将「运单号 / 物流商」写入发货队列并推进状态至<b className="text-foreground">已发货</b>；同一订单号后续行只更新「物流节点 / 时间」到订单时间线。异常行（订单不存在、状态非法、节点枚举错误）打包成错误报告可下载。
+            </div>
+          </Card>
+
+          <Card className="p-4">
+            <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
+              <FileSpreadsheet className="h-4 w-4" /> 模板 v1 字段
+            </div>
+            <table className="w-full text-xs">
+              <thead className="text-muted-foreground">
                 <tr>
-                  <td colSpan={6} className="px-3 py-8 text-center text-xs text-muted-foreground">
-                    暂无现货
-                  </td>
+                  <th className="py-1 text-left">字段</th>
+                  <th className="py-1 text-left">必填</th>
+                  <th className="py-1 text-left">示例</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </Card>
+              </thead>
+              <tbody>
+                {TEMPLATE_FIELDS.map((f) => (
+                  <tr key={f.name} className="border-t border-border">
+                    <td className="py-1 font-medium">{f.name}</td>
+                    <td className="py-1">{f.required ? "是" : "否"}</td>
+                    <td className="py-1 font-mono text-muted-foreground">{f.example}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="mt-3 text-[11px] text-muted-foreground">
+              「当前节点」枚举值：{NODE_ENUM.join(" / ")}
+            </div>
+          </Card>
+
+          <Card className="p-4 md:col-span-2">
+            <div className="text-sm font-semibold">近期上传记录</div>
+            <table className="mt-2 w-full text-xs">
+              <thead className="text-muted-foreground">
+                <tr>
+                  <th className="py-1 text-left">文件名</th>
+                  <th className="py-1 text-left">上传时间</th>
+                  <th className="py-1 text-left">总行数</th>
+                  <th className="py-1 text-left">成功</th>
+                  <th className="py-1 text-left">异常</th>
+                  <th className="py-1 text-left">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { f: "logistics_1128.xlsx", t: "2025-11-28 19:42", total: 412, ok: 408, err: 4 },
+                  { f: "logistics_1127.xlsx", t: "2025-11-27 18:30", total: 356, ok: 356, err: 0 },
+                ].map((r) => (
+                  <tr key={r.f} className="border-t border-border">
+                    <td className="py-1">{r.f}</td>
+                    <td className="py-1">{r.t}</td>
+                    <td className="py-1">{r.total}</td>
+                    <td className="py-1 text-emerald-600">{r.ok}</td>
+                    <td className="py-1 text-rose-500">{r.err}</td>
+                    <td className="py-1">
+                      {r.err > 0 ? (
+                        <Button size="sm" variant="outline">下载异常报告</Button>
+                      ) : (
+                        "—"
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </Card>
+        </div>
       )}
 
       <Card className="mt-4 p-4 text-xs text-muted-foreground">
@@ -384,6 +420,8 @@ function AdminShipping() {
           <li><b>新订单代订</b>：档口 2 件起拍时用户下 1 件，系统代订 2 件；1 件出库给买手，另 1 件自动入现货库。</li>
           <li><b>现货库出库</b>：在<span className="text-foreground">新订单管理</span>点「是否发现货 · 是」后，该 SKU 会自动切换到现货库出库，无需再向档口下单。</li>
           <li><b>批量操作</b>：勾选后可批量推进拣货中 / 已打包 / 已发货。</li>
+          <li><b>批量物流导入</b>：通关社回单 Excel 上传后，系统按订单号匹配任务并回填运单号 / 推进物流节点。也可在发货队列的「运单号」列手动填写。</li>
+          <li><b>现货库</b>请到<span className="text-foreground">现货管理</span>页维护。</li>
         </ul>
       </Card>
     </AdminShell>

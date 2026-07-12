@@ -27,6 +27,7 @@ import { Route as ShopsIndexRouteImport } from './routes/shops.index'
 import { Route as OrdersIndexRouteImport } from './routes/orders.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ShopsIdRouteImport } from './routes/shops.$id'
+import { Route as ProductsIdRouteImport } from './routes/products.$id'
 import { Route as OrdersIdRouteImport } from './routes/orders.$id'
 import { Route as LogisticsIdRouteImport } from './routes/logistics.$id'
 import { Route as AdminRefundsRouteImport } from './routes/admin.refunds'
@@ -125,6 +126,11 @@ const ShopsIdRoute = ShopsIdRouteImport.update({
   path: '/shops/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProductsIdRoute = ProductsIdRouteImport.update({
+  id: '/products/$id',
+  path: '/products/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OrdersIdRoute = OrdersIdRouteImport.update({
   id: '/orders/$id',
   path: '/orders/$id',
@@ -183,6 +189,7 @@ export interface FileRoutesByFullPath {
   '/admin/refunds': typeof AdminRefundsRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
+  '/products/$id': typeof ProductsIdRoute
   '/shops/$id': typeof ShopsIdRoute
   '/admin/': typeof AdminIndexRoute
   '/orders/': typeof OrdersIndexRoute
@@ -210,6 +217,7 @@ export interface FileRoutesByTo {
   '/admin/refunds': typeof AdminRefundsRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
+  '/products/$id': typeof ProductsIdRoute
   '/shops/$id': typeof ShopsIdRoute
   '/admin': typeof AdminIndexRoute
   '/orders': typeof OrdersIndexRoute
@@ -238,6 +246,7 @@ export interface FileRoutesById {
   '/admin/refunds': typeof AdminRefundsRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
+  '/products/$id': typeof ProductsIdRoute
   '/shops/$id': typeof ShopsIdRoute
   '/admin/': typeof AdminIndexRoute
   '/orders/': typeof OrdersIndexRoute
@@ -267,6 +276,7 @@ export interface FileRouteTypes {
     | '/admin/refunds'
     | '/logistics/$id'
     | '/orders/$id'
+    | '/products/$id'
     | '/shops/$id'
     | '/admin/'
     | '/orders/'
@@ -294,6 +304,7 @@ export interface FileRouteTypes {
     | '/admin/refunds'
     | '/logistics/$id'
     | '/orders/$id'
+    | '/products/$id'
     | '/shops/$id'
     | '/admin'
     | '/orders'
@@ -321,6 +332,7 @@ export interface FileRouteTypes {
     | '/admin/refunds'
     | '/logistics/$id'
     | '/orders/$id'
+    | '/products/$id'
     | '/shops/$id'
     | '/admin/'
     | '/orders/'
@@ -349,6 +361,7 @@ export interface RootRouteChildren {
   AdminRefundsRoute: typeof AdminRefundsRoute
   LogisticsIdRoute: typeof LogisticsIdRoute
   OrdersIdRoute: typeof OrdersIdRoute
+  ProductsIdRoute: typeof ProductsIdRoute
   ShopsIdRoute: typeof ShopsIdRoute
   AdminIndexRoute: typeof AdminIndexRoute
   OrdersIndexRoute: typeof OrdersIndexRoute
@@ -483,6 +496,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShopsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/products/$id': {
+      id: '/products/$id'
+      path: '/products/$id'
+      fullPath: '/products/$id'
+      preLoaderRoute: typeof ProductsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/orders/$id': {
       id: '/orders/$id'
       path: '/orders/$id'
@@ -557,6 +577,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRefundsRoute: AdminRefundsRoute,
   LogisticsIdRoute: LogisticsIdRoute,
   OrdersIdRoute: OrdersIdRoute,
+  ProductsIdRoute: ProductsIdRoute,
   ShopsIdRoute: ShopsIdRoute,
   AdminIndexRoute: AdminIndexRoute,
   OrdersIndexRoute: OrdersIndexRoute,

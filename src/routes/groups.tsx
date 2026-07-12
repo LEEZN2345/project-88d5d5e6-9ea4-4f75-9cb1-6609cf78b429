@@ -11,16 +11,6 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Users, Clock, Share2, Flame, Store, User as UserIcon, Copy, Check } from "lucide-react";
@@ -50,13 +40,10 @@ function GroupsPlaza() {
   const navigate = useNavigate();
   const [groups, setGroups] = useState<GroupItem[]>(INITIAL_GROUPS);
   const [shareOf, setShareOf] = useState<GroupItem | null>(null);
-  const [joinOf, setJoinOf] = useState<GroupItem | null>(null);
   const [copied, setCopied] = useState(false);
 
   const shareUrl = shareOf ? `https://ddm.app/groups/${shareOf.productId}` : "";
   const shareProduct = shareOf ? PRODUCTS.find((x) => x.id === shareOf.productId) : null;
-  const joinProduct = joinOf ? PRODUCTS.find((x) => x.id === joinOf.productId) : null;
-  const joinPriceCNY = joinProduct ? krwToCny(joinProduct.priceKRW) * 1.15 : 0;
 
   const handleCopy = async () => {
     try {
@@ -67,14 +54,6 @@ function GroupsPlaza() {
     } catch {
       toast.error("复制失败，请手动选择");
     }
-  };
-
-  const confirmJoin = () => {
-    if (!joinOf) return;
-    const productId = joinOf.productId;
-    setJoinOf(null);
-    toast.success("进入拼单付款页");
-    navigate({ to: "/products/$id", params: { id: productId }, search: { tier: "group" } });
   };
 
   return (
@@ -215,22 +194,6 @@ function GroupsPlaza() {
         </DialogContent>
       </Dialog>
 
-      {/* 加入拼单 */}
-      <AlertDialog open={!!joinOf} onOpenChange={(o) => !o && setJoinOf(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>加入{joinProduct ? ` ${joinProduct.name} ` : ""}拼单</AlertDialogTitle>
-            <AlertDialogDescription>
-              拼单价 <b className="text-sky-600">{formatCNY(joinPriceCNY)}</b>
-              ，成团后统一扣款；24 小时未成团系统自动全额退款。
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>再看看</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmJoin}>确认加入</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </MobileShell>
   );
 }

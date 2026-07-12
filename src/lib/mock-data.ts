@@ -6,10 +6,11 @@ export type Shop = {
   nameKo: string;
   brand?: string; // 主打品牌名
   building: string; // 例如 doota / migliore / apm
-  floor: string;
+  floor: string; // 楼层，例如 2F / B1
+  position: string; // 档口铺位号，例如 A41
   tags: string[];
   minOrderQty: 1 | 2; // 起订件数：1=支持单件购买，2=同款 2 件起批
-  cover: string;
+  cover: string; // 档口背景图
   productCount: number;
 };
 
@@ -189,7 +190,8 @@ export const SHOPS: Shop[] = [
     nameKo: "밀크",
     brand: "MILK",
     building: "Migliore",
-    floor: "2F-A41",
+    floor: "2F",
+    position: "A41",
     tags: ["女装", "上新快"],
     minOrderQty: 2,
     cover: img("milk", 600, 400),
@@ -201,7 +203,8 @@ export const SHOPS: Shop[] = [
     nameKo: "블루라벨",
     brand: "BLUE LABEL",
     building: "Doota",
-    floor: "5F-B12",
+    floor: "5F",
+    position: "B12",
     tags: ["设计师", "外套"],
     minOrderQty: 2,
     cover: img("blue", 600, 400),
@@ -213,7 +216,8 @@ export const SHOPS: Shop[] = [
     nameKo: "스텔라",
     brand: "STELLA",
     building: "apM",
-    floor: "B1-22",
+    floor: "B1",
+    position: "22",
     tags: ["鞋包", "新品"],
     minOrderQty: 1,
     cover: img("stella", 600, 400),
@@ -225,7 +229,8 @@ export const SHOPS: Shop[] = [
     nameKo: "라운드하우스",
     brand: "ROUND HOUSE",
     building: "Migliore",
-    floor: "3F-C08",
+    floor: "3F",
+    position: "C08",
     tags: ["男装", "基础款"],
     minOrderQty: 2,
     cover: img("round", 600, 400),

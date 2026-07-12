@@ -154,7 +154,7 @@ function AdminProducts() {
         <div className="mt-3 space-y-0.5">
           <div>· 内部款号由系统自动生成（DD-YYYY-XXXX）,同档口重复标题会提示合并。</div>
           <div>· 图片上传后统一走 CDN + 平台水印,原图仅运营可下载。</div>
-          <div>· 档口位置和商店ID 二选一即可,系统优先匹配 ID。</div>
+          <div>· 商品ID用于更新已有商品,新品留空;档口位置用于匹配档口。</div>
         </div>
       </Card>
     </AdminShell>

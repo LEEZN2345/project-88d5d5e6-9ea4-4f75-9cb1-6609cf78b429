@@ -19,10 +19,10 @@ type GroupItem = {
 };
 
 const GROUPS: GroupItem[] = [
-  { productId: "p1", joined: 3, need: 4, endsIn: "23:59:12", leader: "小美" },
-  { productId: "p2", joined: 2, need: 3, endsIn: "05:12:44", leader: "阿龙" },
+  { productId: "p1", joined: 1, need: 2, endsIn: "23:59:12", leader: "小美" },
+  { productId: "p2", joined: 1, need: 2, endsIn: "05:12:44", leader: "阿龙" },
   { productId: "p3", joined: 1, need: 2, endsIn: "11:03:28", leader: "Lily" },
-  { productId: "p4", joined: 4, need: 5, endsIn: "02:20:07", leader: "老王" },
+  { productId: "p4", joined: 1, need: 2, endsIn: "02:20:07", leader: "老王" },
 ];
 
 function GroupsPlaza() {
@@ -31,7 +31,7 @@ function GroupsPlaza() {
       <MobileHeader title="拼单广场" />
       <div className="bg-gradient-to-br from-sky-500 to-indigo-500 px-4 py-4 text-white">
         <div className="flex items-center gap-2 text-sm font-semibold">
-          <Flame className="h-4 w-4" /> 正在拼的团 · 差 1 人即可成团享 13% 毛利价
+          <Flame className="h-4 w-4" /> 正在拼的团 · 满 2 人即可成团享拼单价
         </div>
         <div className="mt-1 text-xs opacity-90">加入他人的拼团,无需自己开团、无需邀请好友</div>
       </div>

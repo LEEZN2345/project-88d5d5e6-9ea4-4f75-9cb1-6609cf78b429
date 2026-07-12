@@ -26,9 +26,7 @@ export type Product = {
   uploadedAt: string; // YYYY-MM-DD 上新日期
   colors: string[];
   sizes: string[];
-  detail?: string; // 详情信息（面料/版型/搭配建议等自由描述）
   originCountry?: string; // 制造国 e.g. 韩国 / 中国
-  composition?: string; // 成分 e.g. 羊毛 70% 涤纶 30%
   purchaseCondition?: string; // 购买条件（起订量/是否可换色/是否可退等，人工填写）
 };
 

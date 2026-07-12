@@ -90,9 +90,6 @@ const TIERS: Tier[] = [
 ];
 
 function getAvailableTiers(minOrderQty: 1 | 2) {
-  if (minOrderQty === 2) {
-    return TIERS.filter((t) => t.key !== "solo");
-  }
   return TIERS;
 }
 
@@ -153,8 +150,9 @@ function ProductDetail() {
   const purchaseOptions = (
     <div className="space-y-2">
       {minOrderQty === 2 && (
-        <div className="rounded-lg bg-amber-50/60 px-3 py-2 text-[11px] text-amber-700 dark:bg-amber-950/20 dark:text-amber-300">
-          该档口同款 2 件起拍，单件直购已隐藏
+        <div className="rounded-lg bg-amber-50/60 px-3 py-2 text-[11px] leading-relaxed text-amber-700 dark:bg-amber-950/20 dark:text-amber-300">
+          该档口同款 2 件起拍。选择「单件直购」时，平台会代订 2 件，
+          <b>其中 1 件发给你，另 1 件自动纳入平台现货库</b>，不影响你的付款金额。
         </div>
       )}
       {availableTiers.map((t) => {

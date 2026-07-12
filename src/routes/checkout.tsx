@@ -238,80 +238,60 @@ function Checkout() {
         <DrawerContent className="mx-auto max-w-[480px]">
           {step === "qr" && (
             <>
-              <DrawerHeader className="text-left">
-                <DrawerTitle className="flex items-center justify-between">
-                  <span>请完成支付</span>
-                  <span className="text-sm font-normal text-rose-500">
-                    {mm}:{ss}
-                  </span>
-                </DrawerTitle>
-                <DrawerDescription>
-                  向平台指定账户支付 <b className="text-foreground">{formatCNY(totalCNY)}</b>
-                  ，付款完成后点击下方按钮
-                </DrawerDescription>
+              <DrawerHeader className="items-center pt-6 text-center">
+                <DrawerTitle className="sr-only">收银台</DrawerTitle>
+                <DrawerDescription className="sr-only">选择支付方式</DrawerDescription>
+                <div className="text-sm text-muted-foreground">收银台</div>
+                <div className="mt-3 text-3xl font-semibold text-[#FF4D2E]">
+                  ¥ {totalCNY.toFixed(2)}
+                </div>
+                <div className="mt-1 text-xs text-muted-foreground">
+                  剩余支付时间 {mm}:{ss}
+                </div>
               </DrawerHeader>
 
               <div className="px-4">
-                <div className="mb-3 flex gap-2">
-                  {(["wechat", "alipay"] as const).map((c) => (
-                    <button
-                      key={c}
-                      onClick={() => setChannel(c)}
-                      className={`flex-1 rounded-lg border-2 px-3 py-2 text-sm ${
-                        channel === c
-                          ? "border-primary bg-primary/5 font-medium"
-                          : "border-border"
-                      }`}
-                    >
-                      {c === "wechat" ? "💚 微信支付" : "🅰️ 支付宝"}
-                    </button>
-                  ))}
-                </div>
-
-                <div className="rounded-xl border border-border bg-card p-4">
-                  <div className="mx-auto grid h-44 w-44 place-items-center rounded-lg border-2 border-dashed border-border bg-muted/40">
-                    <div className="flex flex-col items-center gap-1 text-muted-foreground">
-                      <QrCode className="h-16 w-16" />
-                      <span className="text-[10px]">扫码支付（Demo）</span>
-                    </div>
-                  </div>
-                  <div className="mt-3 space-y-1 text-xs">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">收款方</span>
-                      <span>{assigned.holder}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-muted-foreground">账号</span>
+                <div className="mb-2 text-xs text-muted-foreground">选择支付方式</div>
+                <div className="divide-y divide-border rounded-xl border border-border bg-card">
+                  {CHANNELS.map((c) => {
+                    const selected = channel === c.id;
+                    return (
                       <button
-                        onClick={copyAccount}
-                        className="flex items-center gap-1 text-primary"
+                        key={c.id}
+                        disabled={c.disabled}
+                        onClick={() => !c.disabled && setChannel(c.id)}
+                        className={`flex w-full items-center gap-3 px-4 py-3.5 text-left ${
+                          c.disabled ? "opacity-50" : ""
+                        }`}
                       >
-                        {mockAccountNo}
-                        <Copy className="h-3 w-3" />
+                        <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-medium text-white ${c.iconBg}`}>
+                          {c.icon || "🍎"}
+                        </div>
+                        <span className="flex-1 text-sm">{c.name}</span>
+                        {c.right && (
+                          <span className="text-xs text-muted-foreground">{c.right}</span>
+                        )}
+                        <div
+                          className={`flex h-5 w-5 items-center justify-center rounded-full border ${
+                            selected
+                              ? "border-[#FF4D2E] bg-[#FF4D2E]"
+                              : "border-muted-foreground/40"
+                          }`}
+                        >
+                          {selected && <Check className="h-3 w-3 text-white" strokeWidth={3} />}
+                        </div>
                       </button>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">备注</span>
-                      <span>DD20251128001</span>
-                    </div>
-                  </div>
+                    );
+                  })}
                 </div>
-
-                <button className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-border py-2 text-xs text-muted-foreground">
-                  <Upload className="h-3.5 w-3.5" /> 上传付款截图（可选）
-                </button>
               </div>
 
-              <DrawerFooter>
-                <Button className="h-11" onClick={confirmPaid}>
-                  我已完成支付
-                </Button>
+              <DrawerFooter className="pb-6">
                 <Button
-                  variant="ghost"
-                  className="h-9 text-xs"
-                  onClick={() => setPayOpen(false)}
+                  className="h-12 rounded-full bg-gradient-to-r from-[#FF6B3D] to-[#FF3D2E] text-base font-medium text-white shadow-md hover:opacity-95"
+                  onClick={confirmPaid}
                 >
-                  稍后再付
+                  立即支付
                 </Button>
               </DrawerFooter>
             </>

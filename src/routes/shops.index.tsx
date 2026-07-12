@@ -160,147 +160,143 @@ function AreaView() {
         </div>
       </div>
 
-      <div className="flex min-h-[560px]">
-        {/* Left rail */}
-        <aside className="w-24 shrink-0 overflow-y-auto border-r border-border bg-muted/40">
-          <nav className="flex flex-col">
-            {buildings.map((b) => {
-              const isActive = b.name === activeBuilding;
+      {/* Top building chip strip (replaces left rail) */}
+      <div className="border-b border-border bg-background">
+        <div className="scrollbar-none flex gap-2 overflow-x-auto px-3 py-2.5">
+          {buildings.map((b) => {
+            const isActive = b.name === activeBuilding;
+            const has = buildingHasShops(b.name);
+            return (
+              <button
+                key={b.name}
+                onClick={() => onPickBuilding(b.name)}
+                className={cn(
+                  "relative shrink-0 rounded-full border px-3.5 py-1.5 text-[12px] font-bold uppercase tracking-tight transition",
+                  isActive
+                    ? "border-foreground bg-foreground text-background"
+                    : "border-border bg-muted/40 text-muted-foreground"
+                )}
+              >
+                {b.name}
+                {has && !isActive && (
+                  <span className="ml-1 inline-block h-1 w-1 rounded-full bg-amber-500 align-middle" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Full-width content */}
+      <section className="bg-background">
+        {/* Hero banner full-width */}
+        <div className="relative h-36 overflow-hidden bg-muted">
+          <img
+            src={HERO_IMG(activeBuilding)}
+            alt={activeBuilding}
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/60 via-black/15 to-transparent p-4">
+            <h2 className="text-lg font-bold text-white">
+              {activeBuilding} 购物中心
+            </h2>
+            <p className="text-[10px] uppercase tracking-widest text-white/80">
+              Market Premium Select
+            </p>
+          </div>
+        </div>
+
+        {/* Secondary floor strip (kept) */}
+        <div className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
+          <div className="scrollbar-none flex gap-1.5 overflow-x-auto px-3 py-2">
+            {current.floors.map((f) => {
+              const fa = f === activeFloor;
+              const has = shopsByBuildingFloor(activeBuilding, f).length > 0;
               return (
-                <div
-                  key={b.name}
+                <button
+                  key={f}
+                  onClick={() => setActiveFloor(f)}
                   className={cn(
-                    isActive && "border-l-4 border-foreground bg-background"
+                    "shrink-0 rounded-md px-2.5 py-1 text-[12px] font-bold tabular-nums transition",
+                    fa
+                      ? "bg-foreground text-background"
+                      : "bg-muted/50 text-muted-foreground"
                   )}
                 >
-                  <button
-                    onClick={() => onPickBuilding(b.name)}
-                    className={cn(
-                      "w-full px-3 py-3.5 text-left text-[12px] uppercase tracking-tight",
-                      isActive
-                        ? "font-bold text-foreground"
-                        : "text-muted-foreground hover:text-foreground"
-                    )}
-                  >
-                    <span className="block truncate">{b.name}</span>
-                  </button>
-                  {isActive && (
-                    <div className="flex flex-col bg-muted/40">
-                      {b.floors.map((f) => {
-                        const fa = f === activeFloor;
-                        const has = shopsByBuildingFloor(b.name, f).length > 0;
-                        return (
-                          <button
-                            key={f}
-                            onClick={() => setActiveFloor(f)}
-                            className={cn(
-                              "px-4 py-2 text-left text-[11px]",
-                              fa
-                                ? "bg-background font-bold text-foreground"
-                                : "text-muted-foreground"
-                            )}
-                          >
-                            {f}
-                            {has && (
-                              <span className="ml-1 inline-block h-1 w-1 rounded-full bg-amber-500 align-middle" />
-                            )}
-                          </button>
-                        );
-                      })}
-                    </div>
+                  {f}
+                  {has && !fa && (
+                    <span className="ml-1 inline-block h-1 w-1 rounded-full bg-amber-500 align-middle" />
                   )}
-                </div>
+                </button>
               );
             })}
-          </nav>
-        </aside>
-
-        {/* Right pane */}
-        <section className="flex-1 overflow-y-auto bg-background">
-          {/* Hero banner */}
-          <div className="p-3">
-            <div className="relative h-28 overflow-hidden rounded-xl bg-muted">
-              <img
-                src={HERO_IMG(activeBuilding)}
-                alt={activeBuilding}
-                className="h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/55 via-black/10 to-transparent p-3">
-                <h2 className="text-base font-bold text-white">
-                  {activeBuilding} 购物中心
-                </h2>
-                <p className="text-[10px] uppercase tracking-widest text-white/80">
-                  Market Premium Select
-                </p>
-              </div>
-            </div>
           </div>
+        </div>
 
-          {/* Sticky floor header */}
-          <div className="sticky top-0 z-10 flex items-baseline justify-between bg-background px-3 py-2">
-            <div className="flex items-baseline gap-2">
-              <h3 className="text-sm font-black text-foreground">{activeFloor}</h3>
-              <span className="text-[10px] text-muted-foreground">
-                {shopCount > 0 ? `已收录 ${shopCount} 个档口` : "暂未收录档口"}
-              </span>
-            </div>
-            <span className="text-[9px] font-bold uppercase tracking-tighter text-muted-foreground/70">
-              Sorted by rank
+        {/* Floor meta */}
+        <div className="flex items-baseline justify-between px-3 pb-1 pt-3">
+          <div className="flex items-baseline gap-2">
+            <h3 className="text-base font-black text-foreground">{activeFloor}</h3>
+            <span className="text-[10px] text-muted-foreground">
+              {shopCount > 0 ? `已收录 ${shopCount} 个档口` : "暂未收录档口"}
             </span>
           </div>
+          <span className="text-[9px] font-bold uppercase tracking-tighter text-muted-foreground/70">
+            Sorted by rank
+          </span>
+        </div>
 
-          {/* 3-col shop grid */}
-          {shops.length > 0 ? (
-            <div className="grid grid-cols-3 gap-x-2 gap-y-4 px-3 pb-6 pt-1">
-              {shops.map((s: IndexedShop) => (
-                <Link
-                  key={`${s.building}-${s.floor}-${s.code}`}
-                  to="/shops/$id"
-                  params={{ id: "s1" }}
-                  className="group flex flex-col gap-1.5"
-                >
-                  <div className="relative aspect-square overflow-hidden rounded-md border border-border bg-muted">
-                    <img
-                      src={img(`${s.building}-${s.code}-${s.name}`)}
-                      alt={s.name}
-                      className="h-full w-full object-cover transition group-active:scale-95"
-                    />
-                    {s.rank && s.rank <= 10 && (
-                      <span className="absolute left-1 top-1 rounded bg-gradient-to-br from-amber-400 to-orange-500 px-1 py-0.5 text-[9px] font-black text-white shadow">
-                        TOP{s.rank}
-                      </span>
-                    )}
-                    {s.hot && (
-                      <span className="absolute right-1 top-1 rounded bg-rose-500 px-1 py-0.5 text-[8px] font-bold text-white">
-                        实体热
-                      </span>
-                    )}
-                  </div>
-                  <div className="leading-tight">
-                    <p className="truncate text-[11px] font-bold text-foreground">
-                      {s.name}
-                    </p>
-                    <p className="text-[9px] font-medium tracking-tight text-muted-foreground">
-                      {s.code}
-                    </p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <div className="mx-3 mb-6 mt-2 rounded-xl border border-dashed border-border bg-muted/30 px-4 py-10 text-center">
-              <p className="text-[12px] font-semibold text-foreground">
-                本层档口正在收录中
-              </p>
-              <p className="mt-1 text-[10px] text-muted-foreground">
-                {hasIndexed
-                  ? `${activeBuilding} 已收录楼层: ${[...floorsCovered].join(" · ")}`
-                  : "该商场尚未录入档口数据,敬请期待"}
-              </p>
-            </div>
-          )}
-        </section>
-      </div>
+        {/* Full-width shop grid */}
+        {shops.length > 0 ? (
+          <div className="grid grid-cols-3 gap-x-2 gap-y-4 px-3 pb-6 pt-2">
+            {shops.map((s: IndexedShop) => (
+              <Link
+                key={`${s.building}-${s.floor}-${s.code}`}
+                to="/shops/$id"
+                params={{ id: "s1" }}
+                className="group flex flex-col gap-1.5"
+              >
+                <div className="relative aspect-square overflow-hidden rounded-md border border-border bg-muted">
+                  <img
+                    src={img(`${s.building}-${s.code}-${s.name}`)}
+                    alt={s.name}
+                    className="h-full w-full object-cover transition group-active:scale-95"
+                  />
+                  {s.rank && s.rank <= 10 && (
+                    <span className="absolute left-1 top-1 rounded bg-gradient-to-br from-amber-400 to-orange-500 px-1 py-0.5 text-[9px] font-black text-white shadow">
+                      TOP{s.rank}
+                    </span>
+                  )}
+                  {s.hot && (
+                    <span className="absolute right-1 top-1 rounded bg-rose-500 px-1 py-0.5 text-[8px] font-bold text-white">
+                      实体热
+                    </span>
+                  )}
+                </div>
+                <div className="leading-tight">
+                  <p className="truncate text-[12px] font-bold text-foreground">
+                    {s.name}
+                  </p>
+                  <p className="text-[10px] font-medium tracking-tight text-muted-foreground">
+                    {s.code}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="mx-3 mb-6 mt-2 rounded-xl border border-dashed border-border bg-muted/30 px-4 py-10 text-center">
+            <p className="text-[12px] font-semibold text-foreground">
+              本层档口正在收录中
+            </p>
+            <p className="mt-1 text-[10px] text-muted-foreground">
+              {hasIndexed
+                ? `${activeBuilding} 已收录楼层: ${[...floorsCovered].join(" · ")}`
+                : "该商场尚未录入档口数据,敬请期待"}
+            </p>
+          </div>
+        )}
+      </section>
     </>
   );
 }

@@ -302,7 +302,7 @@ function AdminFeedback() {
             })}
             {list.length === 0 && (
               <tr>
-                <td colSpan={11} className="px-3 py-10 text-center text-sm text-muted-foreground">
+                <td colSpan={10} className="px-3 py-10 text-center text-sm text-muted-foreground">
                   暂无匹配订单
                 </td>
               </tr>

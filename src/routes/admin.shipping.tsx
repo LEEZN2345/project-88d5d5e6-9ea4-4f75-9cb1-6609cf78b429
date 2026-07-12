@@ -13,6 +13,23 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { toast } from "sonner";
 import { useMemo, useState } from "react";
 import {
   PackageCheck,
@@ -93,6 +110,7 @@ const TEMPLATE_FIELDS = [
   { name: "备注", required: false, example: "航班 KE5523" },
 ];
 const NODE_ENUM = ["韩国仓入库", "打包出库", "起运", "到港清关", "国内派送", "已签收"];
+const CARRIERS = ["顺丰速运", "圆通速递", "中通快递", "韵达快递", "京东物流", "EMS", "通关社A", "通关社B"];
 
 function AdminShipping() {
   const [tab, setTab] = useState<"queue" | "import">("queue");
@@ -100,6 +118,42 @@ function AdminShipping() {
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [srcFilter, setSrcFilter] = useState<ShipSource | "all">("all");
   const [stFilter, setStFilter] = useState<ShipStatus | "all">("all");
+  const [confirmRow, setConfirmRow] = useState<ShipRow | null>(null);
+  const [formTracking, setFormTracking] = useState("");
+  const [formCarrier, setFormCarrier] = useState("");
+  const [formErr, setFormErr] = useState<{ t?: string; c?: string }>({});
+
+  const openConfirm = (r: ShipRow) => {
+    setConfirmRow(r);
+    setFormTracking(r.trackingNo ?? "");
+    setFormCarrier(r.carrier ?? "");
+    setFormErr({});
+  };
+
+  const submitConfirm = () => {
+    const t = formTracking.trim();
+    const c = formCarrier.trim();
+    const err: { t?: string; c?: string } = {};
+    if (!t) err.t = "请填写运单号";
+    else if (t.length > 64) err.t = "运单号过长";
+    if (!c) err.c = "请选择物流方式";
+    if (err.t || err.c) {
+      setFormErr(err);
+      return;
+    }
+    if (!confirmRow) return;
+    setRows((rs) =>
+      rs.map((x) =>
+        x.key === confirmRow.key
+          ? { ...x, trackingNo: t, carrier: c, status: "shipped" }
+          : x,
+      ),
+    );
+    toast.success("已确认发货", {
+      description: `订单 ${confirmRow.orderId} · ${c} · ${t}，已同步至用户后台`,
+    });
+    setConfirmRow(null);
+  };
 
   const filtered = useMemo(
     () =>
@@ -284,13 +338,7 @@ function AdminShipping() {
                           <Button
                             size="sm"
                             className="h-7 text-[11px]"
-                            onClick={() =>
-                              setRows((rs) =>
-                                rs.map((x) =>
-                                  x.key === r.key ? { ...x, status: "shipped" } : x,
-                                ),
-                              )
-                            }
+                            onClick={() => openConfirm(r)}
                           >
                             确认发货
                           </Button>
@@ -417,6 +465,68 @@ function AdminShipping() {
           <li><b>现货库</b>请到<span className="text-foreground">现货管理</span>页维护。</li>
         </ul>
       </Card>
+
+      <Dialog open={!!confirmRow} onOpenChange={(o) => !o && setConfirmRow(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>确认发货</DialogTitle>
+            <DialogDescription>
+              {confirmRow ? `订单 ${confirmRow.orderId} · ${confirmRow.productName}` : ""}
+              <br />
+              填写运单号与物流方式后，将同步到用户订单后台。
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-3 py-2">
+            <div className="grid gap-1.5">
+              <Label htmlFor="tracking">
+                运单号<span className="text-rose-500">*</span>
+              </Label>
+              <Input
+                id="tracking"
+                value={formTracking}
+                maxLength={64}
+                onChange={(e) => {
+                  setFormTracking(e.target.value);
+                  if (formErr.t) setFormErr((s) => ({ ...s, t: undefined }));
+                }}
+                placeholder="例如 DDKR202511280001"
+                className="font-mono text-sm"
+              />
+              {formErr.t && <p className="text-xs text-rose-500">{formErr.t}</p>}
+            </div>
+            <div className="grid gap-1.5">
+              <Label htmlFor="carrier">
+                物流方式<span className="text-rose-500">*</span>
+              </Label>
+              <Select
+                value={formCarrier}
+                onValueChange={(v) => {
+                  setFormCarrier(v);
+                  if (formErr.c) setFormErr((s) => ({ ...s, c: undefined }));
+                }}
+              >
+                <SelectTrigger id="carrier">
+                  <SelectValue placeholder="请选择物流方式" />
+                </SelectTrigger>
+                <SelectContent>
+                  {CARRIERS.map((c) => (
+                    <SelectItem key={c} value={c}>
+                      {c}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {formErr.c && <p className="text-xs text-rose-500">{formErr.c}</p>}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmRow(null)}>
+              取消
+            </Button>
+            <Button onClick={submitConfirm}>确认发货并同步</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AdminShell>
   );
 }

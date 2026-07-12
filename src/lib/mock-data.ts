@@ -26,9 +26,7 @@ export type Product = {
   uploadedAt: string; // YYYY-MM-DD 上新日期
   colors: string[];
   sizes: string[];
-  detail?: string; // 详情信息（面料/版型/搭配建议等自由描述）
   originCountry?: string; // 制造国 e.g. 韩国 / 中国
-  composition?: string; // 成分 e.g. 羊毛 70% 涤纶 30%
   purchaseCondition?: string; // 购买条件（起订量/是否可换色/是否可退等，人工填写）
 };
 
@@ -187,7 +185,7 @@ const img = (seed: string, w = 600, h = 800) =>
 export const SHOPS: Shop[] = [
   {
     id: "s1",
-    name: "MILK 女装",
+    name: "MILK",
     nameKo: "밀크",
     brand: "MILK",
     building: "Migliore",
@@ -249,8 +247,6 @@ export const PRODUCTS: Product[] = [
     colors: ["奶白", "燕麦", "炭灰"],
     sizes: ["FREE"],
     originCountry: "韩国",
-    composition: "羊毛 70% 涤纶 30%",
-    detail: "落肩廓形 / 内里加绒 / 建议搭配高领针织",
     purchaseCondition: "2件起订 · 不可换色 · 到货 7 天内可退",
   },
   {
@@ -266,7 +262,6 @@ export const PRODUCTS: Product[] = [
     colors: ["米色", "黑"],
     sizes: ["FREE"],
     originCountry: "韩国",
-    composition: "羊毛 40% 腈纶 60%",
     purchaseCondition: "2件起订 · 同色同码",
   },
   {

@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, Upload, ImagePlus, Download } from "lucide-react";
 
 export const Route = createFileRoute("/admin/products")({
-  head: () => ({ meta: [{ title: "商品 / 档口录入 · 运营后台" }] }),
+  head: () => ({ meta: [{ title: "商品管理 · 运营后台" }] }),
   component: AdminProducts,
 });
 
@@ -28,7 +28,7 @@ function AdminProducts() {
     ];
     const sample = [
       "MILK / 밀크",
-      "Migliore 2F-A41",
+      "Migliore 2F A41",
       "DD-2025-0114",
       "羊毛混纺翻领长大衣",
       "https://.../a.jpg|https://.../b.jpg",
@@ -50,8 +50,8 @@ function AdminProducts() {
     <AdminShell>
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold">商品 / 档口录入</h1>
-          <p className="text-xs text-muted-foreground">内部款号唯一,一码一商品。支持批量上传 + 自动加水印。</p>
+          <h1 className="text-xl font-semibold">商品管理</h1>
+          <p className="text-xs text-muted-foreground">内部款号唯一,一码一商品。支持批量上传 + 自动加水印。档口维护在「档口管理」。</p>
         </div>
         <div className="flex gap-2">
           <Button size="sm" variant="outline" onClick={downloadTemplate}><Download className="mr-1 h-4 w-4" />下载导入模板</Button>
@@ -97,7 +97,7 @@ function AdminProducts() {
                     <Td className="font-mono text-xs">{p.internalCode}</Td>
                     <Td className="max-w-[200px] truncate">{p.name}</Td>
                     <Td className="text-xs">{shop ? `${shop.name} / ${shop.nameKo}` : "—"}</Td>
-                    <Td className="text-[11px] text-muted-foreground">{shop?.building} {shop?.floor}</Td>
+                    <Td className="text-[11px] text-muted-foreground">{shop ? `${shop.building} ${shop.floor}-${shop.position}` : "—"}</Td>
                     <Td className="text-xs">{p.category}</Td>
                     <Td>{formatKRW(p.priceKRW)}</Td>
                     <Td className="text-xs">{p.colors.join(" / ")}</Td>

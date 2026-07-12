@@ -5,15 +5,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, type ReactNode } from "react";
 import {
-  Heart,
   Store,
-  MessageCircle,
   Calendar,
   Flame,
   ChevronDown,
   ChevronRight,
   Headset,
   Package,
+  X,
 } from "lucide-react";
 import {
   Carousel,
@@ -96,6 +95,7 @@ function ProductDetail() {
   const [tierKey, setTierKey] = useState<TierKey>("solo");
   const [expanded, setExpanded] = useState<TierKey | null>("solo");
   const [flowOpen, setFlowOpen] = useState(false);
+  const [showPurchaseOptions, setShowPurchaseOptions] = useState(false);
   const [api, setApi] = useState<CarouselApi>();
   const [slide, setSlide] = useState(0);
 
@@ -117,6 +117,117 @@ function ProductDetail() {
   const soloUnitCNY = costCNY * (1 + TIERS[0]!.margin);
   const tierUnitCNY = costCNY * (1 + tier.margin);
   const totalCNY = tierUnitCNY * tier.qty;
+
+  const purchaseOptions = (
+    <div className="space-y-2">
+      {TIERS.map((t) => {
+        const selected = t.key === tierKey;
+        const isOpen = expanded === t.key;
+        const tUnitCNY = costCNY * (1 + t.margin);
+        const tTotalCNY = tUnitCNY * t.qty;
+        const saved = (soloUnitCNY - tUnitCNY) * t.qty;
+        const multiplier = (1 + t.margin).toFixed(2);
+        return (
+          <div
+            key={t.key}
+            className={`rounded-xl border-2 transition ${selected ? `${t.accentBorder} ${t.accentBg}` : "border-border bg-card"}`}
+          >
+            <button
+              onClick={() => {
+                setTierKey(t.key);
+              }}
+              className="flex w-full items-center gap-3 p-3 text-left"
+            >
+              <span
+                className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border-2 ${selected ? t.accentBorder : "border-muted-foreground/40"}`}
+              >
+                {selected && (
+                  <span className={`h-2.5 w-2.5 rounded-full ${t.accentChip}`} />
+                )}
+              </span>
+              <div className="flex-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-sm font-medium">{t.label}</span>
+                  <span
+                    className={`rounded-full px-1.5 py-0.5 text-[9px] ${selected ? t.accentChip : "bg-muted text-muted-foreground"}`}
+                  >
+                    {t.tag}
+                  </span>
+                  {t.key !== "solo" && saved > 0 && (
+                    <span className="text-[10px] text-rose-500">
+                      省 {formatCNY(saved)}
+                    </span>
+                  )}
+                </div>
+                <div className="mt-0.5 text-xs text-muted-foreground">
+                  到手价 <b className="text-foreground">{formatCNY(tUnitCNY)}</b>/件
+                  {t.qty > 1 && <span className="ml-1">· 共 {t.qty} 件</span>}
+                </div>
+              </div>
+              <span
+                role="button"
+                tabIndex={0}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setTierKey(t.key);
+                  setExpanded(isOpen ? null : t.key);
+                }}
+                className="flex items-center gap-0.5 text-[11px] text-muted-foreground"
+              >
+                计价明细
+                {isOpen ? (
+                  <ChevronDown className="h-3.5 w-3.5" />
+                ) : (
+                  <ChevronRight className="h-3.5 w-3.5" />
+                )}
+              </span>
+            </button>
+
+            {selected && (
+              <div className="mx-3 mb-3 rounded-lg bg-background/70 p-3 text-xs">
+                {isOpen && (
+                  <>
+                    <div className="mb-1 font-medium">📊 价格明细</div>
+                    <Row label="档口批发价" value={`${baseKRW.toLocaleString()} KRW`} />
+                    <Row label="国际运费" value={`+${INTL_SHIPPING_KRW.toLocaleString()} KRW`} />
+                    <Divider />
+                    <Row label="小计" value={`${subtotalKRW.toLocaleString()} KRW`} />
+                    <Row label="实时汇率" value={krwPerCny.toFixed(2)} />
+                    <Divider />
+                    <Row label="人民币成本" value={formatCNY(costCNY)} />
+                    <Row
+                      label={`加成系数（毛利 ${Math.round(t.margin * 100)}%）`}
+                      value={`${multiplier}×`}
+                    />
+                    <Divider />
+                    <Row
+                      label="最终报价"
+                      value={<b className={t.accentText}>{formatCNY(tUnitCNY)}</b>}
+                    />
+                    <Row label="国内运费" value="包邮" />
+                    <div className="mt-2 rounded-md bg-muted/60 px-2 py-1.5 text-[11px] text-muted-foreground">
+                      计算公式：({baseKRW.toLocaleString()} + {INTL_SHIPPING_KRW.toLocaleString()}) ÷ {krwPerCny.toFixed(2)} × {multiplier} = {formatCNY(tUnitCNY)}
+                    </div>
+                  </>
+                )}
+                <Button
+                  size="sm"
+                  className={`${isOpen ? "mt-3" : ""} h-11 w-full text-sm font-semibold`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setTierKey(t.key);
+                    setShowPurchaseOptions(false);
+                  }}
+                >
+                  {t.cta(formatCNY(tTotalCNY), formatCNY(tUnitCNY))}
+                </Button>
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
 
   return (
     <MobileShell>
@@ -238,122 +349,6 @@ function ProductDetail() {
         </div>
       </div>
 
-      {/* 购买方式：可展开计价明细 */}
-      <div className="mt-5 px-4">
-        <div className="mb-2 flex items-center justify-between">
-          <div className="text-sm font-medium">选择购买方式</div>
-          <div className="text-[10px] text-muted-foreground">点击展开价格明细</div>
-        </div>
-        <div className="space-y-2">
-          {TIERS.map((t) => {
-            const selected = t.key === tierKey;
-            const isOpen = expanded === t.key;
-            const tUnitCNY = costCNY * (1 + t.margin);
-            const tTotalCNY = tUnitCNY * t.qty;
-            const saved = (soloUnitCNY - tUnitCNY) * t.qty;
-            const multiplier = (1 + t.margin).toFixed(2);
-            return (
-              <div
-                key={t.key}
-                className={`rounded-xl border-2 transition ${selected ? `${t.accentBorder} ${t.accentBg}` : "border-border bg-card"}`}
-              >
-                <button
-                  onClick={() => {
-                    setTierKey(t.key);
-                  }}
-                  className="flex w-full items-center gap-3 p-3 text-left"
-                >
-                  <span
-                    className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border-2 ${selected ? t.accentBorder : "border-muted-foreground/40"}`}
-                  >
-                    {selected && (
-                      <span className={`h-2.5 w-2.5 rounded-full ${t.accentChip}`} />
-                    )}
-                  </span>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-sm font-medium">{t.label}</span>
-                      <span
-                        className={`rounded-full px-1.5 py-0.5 text-[9px] ${selected ? t.accentChip : "bg-muted text-muted-foreground"}`}
-                      >
-                        {t.tag}
-                      </span>
-                      {t.key !== "solo" && saved > 0 && (
-                        <span className="text-[10px] text-rose-500">
-                          省 {formatCNY(saved)}
-                        </span>
-                      )}
-                    </div>
-                    <div className="mt-0.5 text-xs text-muted-foreground">
-                      到手价 <b className="text-foreground">{formatCNY(tUnitCNY)}</b>/件
-                      {t.qty > 1 && <span className="ml-1">· 共 {t.qty} 件</span>}
-                    </div>
-                  </div>
-                  <span
-                    role="button"
-                    tabIndex={0}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setTierKey(t.key);
-                      setExpanded(isOpen ? null : t.key);
-                    }}
-                    className="flex items-center gap-0.5 text-[11px] text-muted-foreground"
-                  >
-                    计价明细
-                    {isOpen ? (
-                      <ChevronDown className="h-3.5 w-3.5" />
-                    ) : (
-                      <ChevronRight className="h-3.5 w-3.5" />
-                    )}
-                  </span>
-                </button>
-
-                {selected && (
-                  <div className="mx-3 mb-3 rounded-lg bg-background/70 p-3 text-xs">
-                    {isOpen && (
-                      <>
-                    <div className="mb-1 font-medium">📊 价格明细</div>
-                    <Row label="档口批发价" value={`${baseKRW.toLocaleString()} KRW`} />
-                    <Row label="国际运费" value={`+${INTL_SHIPPING_KRW.toLocaleString()} KRW`} />
-                    <Divider />
-                    <Row label="小计" value={`${subtotalKRW.toLocaleString()} KRW`} />
-                    <Row label="实时汇率" value={krwPerCny.toFixed(2)} />
-                    <Divider />
-                    <Row label="人民币成本" value={formatCNY(costCNY)} />
-                    <Row
-                      label={`加成系数（毛利 ${Math.round(t.margin * 100)}%）`}
-                      value={`${multiplier}×`}
-                    />
-                    <Divider />
-                    <Row
-                      label="最终报价"
-                      value={<b className={t.accentText}>{formatCNY(tUnitCNY)}</b>}
-                    />
-                    <Row label="国内运费" value="包邮" />
-                    <div className="mt-2 rounded-md bg-muted/60 px-2 py-1.5 text-[11px] text-muted-foreground">
-                      计算公式：({baseKRW.toLocaleString()} + {INTL_SHIPPING_KRW.toLocaleString()}) ÷ {krwPerCny.toFixed(2)} × {multiplier} = {formatCNY(tUnitCNY)}
-                    </div>
-                      </>
-                    )}
-                    <Button
-                      size="sm"
-                      className={`${isOpen ? "mt-3" : ""} h-11 w-full text-sm font-semibold`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setTierKey(t.key);
-                        setExpanded(null);
-                      }}
-                    >
-                      {t.cta(formatCNY(tTotalCNY), formatCNY(tUnitCNY))}
-                    </Button>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
       {/* 实体店/大宗批发 */}
       <div className="mx-4 mt-4 flex items-center gap-3 rounded-xl border border-dashed border-border bg-card p-3">
         <div className="grid h-9 w-9 place-items-center rounded-full bg-muted text-base">🏬</div>
@@ -387,18 +382,29 @@ function ProductDetail() {
         )}
       </div>
 
-      <div className="fixed bottom-16 left-1/2 z-40 w-full max-w-[480px] -translate-x-1/2 border-t border-border bg-background/95 px-4 py-2 backdrop-blur">
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon">
-            <Heart className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" className="gap-1 px-3">
-            <MessageCircle className="h-4 w-4" /> 客服
-          </Button>
-          <Button className="flex-1 h-11 text-sm font-semibold">
-            {tier.cta(formatCNY(totalCNY), formatCNY(tierUnitCNY))}
-          </Button>
+      {/* 购买方式面板：点击立即下单后展开 */}
+      {showPurchaseOptions && (
+        <div className="fixed bottom-32 left-1/2 z-40 w-full max-w-[480px] -translate-x-1/2 rounded-xl border border-border bg-background px-4 pb-4 pt-3 shadow-lg">
+          <div className="mb-2 flex items-center justify-between">
+            <div className="text-sm font-medium">选择购买方式</div>
+            <button
+              onClick={() => setShowPurchaseOptions(false)}
+              className="rounded-full p-1 hover:bg-muted"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+          {purchaseOptions}
         </div>
+      )}
+
+      <div className="fixed bottom-16 left-1/2 z-50 w-full max-w-[480px] -translate-x-1/2 border-t border-border bg-background/95 px-4 py-2 backdrop-blur">
+        <Button
+          className="h-11 w-full text-sm font-semibold"
+          onClick={() => setShowPurchaseOptions((v) => !v)}
+        >
+          立即下单 {formatCNY(totalCNY)}
+        </Button>
         <div className="mt-1 text-center text-[10px] text-muted-foreground">
           {tierKey === "group"
             ? "若拼团失败，系统将自动全额退款"

@@ -34,12 +34,6 @@ type FeedbackRow = {
   updatedAt?: string;
 };
 
-const STOCK_LABEL: Record<StockState, string> = {
-  pending: "待入库",
-  in_stock: "已入库",
-  out_of_stock: "缺货",
-};
-
 const STOCK_BADGE: Record<StockState, string> = {
   pending: "bg-amber-500/15 text-amber-700 dark:text-amber-300",
   in_stock: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",

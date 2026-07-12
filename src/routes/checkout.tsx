@@ -12,7 +12,6 @@ import {
   DrawerFooter,
 } from "@/components/ui/drawer";
 import { useState, useEffect } from "react";
-import { toast } from "sonner";
 import {
   ChevronRight,
   MapPin,

@@ -51,6 +51,7 @@ function setFavShops(ids: string[]) {
 
 type SortKey = "newest" | "oldest";
 type DiscountFilter = "all" | "sale";
+type NewFilter = "all" | "new";
 
 function fmtDateLabel(d: string) {
   const dt = new Date(d);

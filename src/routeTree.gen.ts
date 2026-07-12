@@ -37,6 +37,7 @@ import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminStockRouteImport } from './routes/admin.stock'
 import { Route as AdminShopsRouteImport } from './routes/admin.shops'
 import { Route as AdminShippingRouteImport } from './routes/admin.shipping'
+import { Route as AdminStockRouteImport } from './routes/admin.stock'
 import { Route as AdminRefundsRouteImport } from './routes/admin.refunds'
 import { Route as AdminProductsRouteImport } from './routes/admin.products'
 import { Route as AdminPointsMallRouteImport } from './routes/admin.points-mall'
@@ -185,6 +186,11 @@ const AdminShopsRoute = AdminShopsRouteImport.update({
 const AdminShippingRoute = AdminShippingRouteImport.update({
   id: '/admin/shipping',
   path: '/admin/shipping',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminStockRoute = AdminStockRouteImport.update({
+  id: '/admin/stock',
+  path: '/admin/stock',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRefundsRoute = AdminRefundsRouteImport.update({

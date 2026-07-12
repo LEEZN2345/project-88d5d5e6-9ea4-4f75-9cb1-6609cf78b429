@@ -1,11 +1,21 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { AdminShell } from "@/components/AdminShell";
-import { ORDERS, STATUS_LABEL, CHANNEL_LABEL, formatKRW, formatCNY, SHOPS, type OrderChannel } from "@/lib/mock-data";
+import {
+  ORDERS,
+  STATUS_LABEL,
+  CHANNEL_LABEL,
+  formatKRW,
+  formatCNY,
+  SHOPS,
+  type OrderChannel,
+  isFirstOrderForProduct,
+  findStockMatch,
+} from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useState, Fragment } from "react";
-import { ChevronRight, ChevronDown, Download } from "lucide-react";
+import { ChevronRight, ChevronDown, Download, Sparkles, PackageCheck } from "lucide-react";
 
 export const Route = createFileRoute("/admin/orders")({
   head: () => ({ meta: [{ title: "新订单管理 · 运营后台" }] }),
@@ -18,6 +28,9 @@ function AdminOrders() {
     idx % 2 === 0 ? { label: "微信 · 在线" } : { label: "支付宝 · 在线" };
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [channelFilter, setChannelFilter] = useState<OrderChannel | "all">("all");
+  // 记录每个「命中现货」的 item 是否选择从现货库出库。key = `${orderId}#${idx}`
+  const [useStock, setUseStock] = useState<Record<string, boolean>>({});
+  const setStockChoice = (k: string, v: boolean) => setUseStock((s) => ({ ...s, [k]: v }));
   const toggle = (id: string) => setExpanded((e) => ({ ...e, [id]: !e[id] }));
   const shopOf = (shopId: string) => SHOPS.find((s) => s.id === shopId);
   const paidOrders = ORDERS.filter((o) => o.status !== "pending_payment");
@@ -178,11 +191,18 @@ function AdminOrders() {
                           <th className="px-2 py-1 text-left font-normal">数量</th>
                           <th className="px-2 py-1 text-left font-normal">单价</th>
                           <th className="px-2 py-1 text-left font-normal">小计</th>
+                          <th className="px-2 py-1 text-left font-normal">现货 / 首单</th>
                         </tr>
                       </thead>
                       <tbody>
                         {o.items.map((it, idx) => {
                           const shop = shopOf(it.product.shopId);
+                          const isBulkShop = shop?.minOrderQty === 2;
+                          const isSoloFromBulk = isBulkShop && it.qty === 1;
+                          const firstOrder = isFirstOrderForProduct(it.product.id);
+                          const stock = findStockMatch(it.product.id, it.color, it.size);
+                          const key = `${o.id}#${idx}`;
+                          const chose = useStock[key];
                           return (
                             <tr key={idx} className="border-t border-border/60">
                               <td className="px-2 py-1.5">
@@ -201,6 +221,48 @@ function AdminOrders() {
                               <td className="px-2 py-1.5">× {it.qty}</td>
                               <td className="px-2 py-1.5">{formatKRW(it.product.priceKRW)}</td>
                               <td className="px-2 py-1.5">{formatKRW(it.product.priceKRW * it.qty)}</td>
+                              <td className="px-2 py-1.5">
+                                {isSoloFromBulk && firstOrder && !stock && (
+                                  <div className="inline-flex items-start gap-1 rounded-md border border-amber-400/60 bg-amber-50 px-1.5 py-1 text-[10px] leading-tight text-amber-700 dark:bg-amber-950/30 dark:text-amber-300">
+                                    <Sparkles className="mt-0.5 h-3 w-3 shrink-0" />
+                                    <span>
+                                      <b>首次下单</b> · 需订购 2 件<br />1 件自动纳入现货库
+                                    </span>
+                                  </div>
+                                )}
+                                {isSoloFromBulk && stock && (
+                                  <div className="flex flex-col gap-1">
+                                    <div className="inline-flex items-center gap-1 rounded-md border border-emerald-400/60 bg-emerald-50 px-1.5 py-0.5 text-[10px] text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-300">
+                                      <PackageCheck className="h-3 w-3" /> 现货库有货（{stock.qty}）
+                                    </div>
+                                    <div className="text-[10px] text-muted-foreground">是否发现货？</div>
+                                    <div className="flex gap-1">
+                                      <Button
+                                        size="sm"
+                                        variant={chose === true ? "default" : "outline"}
+                                        className="h-6 px-2 text-[10px]"
+                                        onClick={() => setStockChoice(key, true)}
+                                      >
+                                        是
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant={chose === false ? "default" : "outline"}
+                                        className="h-6 px-2 text-[10px]"
+                                        onClick={() => setStockChoice(key, false)}
+                                      >
+                                        否
+                                      </Button>
+                                    </div>
+                                    {chose === true && (
+                                      <div className="text-[10px] text-emerald-600">→ 已通知发货管理走现货库</div>
+                                    )}
+                                  </div>
+                                )}
+                                {!isSoloFromBulk && (
+                                  <span className="text-[10px] text-muted-foreground">—</span>
+                                )}
+                              </td>
                             </tr>
                           );
                         })}
@@ -225,6 +287,8 @@ function AdminOrders() {
           <li><b>在线支付</b>（微信/支付宝商户号）：买手支付后回调自动写入订单，进入待代付。</li>
           <li><b>锁定汇率</b>已自动化：支付成功时按「汇率与配置」当前生效汇率快照到 order.snapshotRate，人工无需干预。</li>
           <li><b>标记已代付</b>：平台向韩国档口付款后，上传韩币付款小票 + 真实购汇成本（仅用于对账，不影响买手结算金额）。</li>
+          <li><b>首单标识</b>：档口 2 件起拍时，若用户下 1 件（单件直购），系统会代订 2 件。<span className="text-foreground">首次下单</span>会显示「首次下单 · 需订购 2 件 · 1 件自动纳入现货库」。</li>
+          <li><b>现货复用</b>：同款再次被下单时，若命中现货库会提示「是否发现货」。点「是」后，<Link to="/admin/shipping" className="text-primary underline">发货管理</Link>将从现货库出库，无需再向档口下单。</li>
         </ul>
       </Card>
     </AdminShell>

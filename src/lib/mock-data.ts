@@ -522,3 +522,72 @@ export const krwToCny = (krw: number, rate = REFERENCE_RATE) =>
 
 export const formatKRW = (n: number) => `₩${n.toLocaleString("ko-KR")}`;
 export const formatCNY = (n: number) => `¥${n.toFixed(2)}`;
+
+// ========== 现货库 / 发货管理 ==========
+// 逻辑：档口起订 2 件时，买手若选择「单件直购」，平台会为该 SKU 下 2 件订单，
+// 其中 1 件发货给买手，另 1 件自动纳入现货库 STOCK_ITEMS。
+// 下一次同款订单命中现货库时，可点「发现货」直接从库存出库。
+
+export type StockItem = {
+  id: string;
+  productId: string;
+  shopId: string;
+  color: string;
+  size: string;
+  qty: number;
+  sourceOrderId: string; // 由哪一笔「首单 2 件」入库
+  createdAt: string;
+};
+
+export const STOCK_ITEMS: StockItem[] = [
+  {
+    id: "stk1",
+    productId: "p2",
+    shopId: "s1",
+    color: "米色",
+    size: "FREE",
+    qty: 1,
+    sourceOrderId: "DD20251020007",
+    createdAt: "2025-10-20 12:30",
+  },
+  {
+    id: "stk2",
+    productId: "p5",
+    shopId: "s4",
+    color: "白",
+    size: "L",
+    qty: 2,
+    sourceOrderId: "DD20251015003",
+    createdAt: "2025-10-15 09:10",
+  },
+];
+
+// 判定：该 productId 是否首次被下单（用于订单后台特殊标识）。
+// mock：只要 STOCK_ITEMS / ORDERS 里都没出现过该 productId 的历史订单，就是「首次」。
+const HISTORY_ORDERED = new Set<string>([
+  ...STOCK_ITEMS.map((s) => s.productId),
+  // 假定 DD20251127014 之前已下过 p4（第 3 单），不再是首单
+  "p4",
+]);
+export const isFirstOrderForProduct = (productId: string) =>
+  !HISTORY_ORDERED.has(productId);
+
+// 现货库匹配：给定订单 item，是否命中现货（同 productId + color + size 且 qty ≥ 1）
+export const findStockMatch = (
+  productId: string,
+  color: string,
+  size: string,
+) =>
+  STOCK_ITEMS.find(
+    (s) => s.productId === productId && s.color === color && s.size === size && s.qty > 0,
+  );
+
+// 发货渠道
+export type ShipSource = "new_order" | "stock"; // 新订单代订 / 现货库出库
+export type ShipStatus = "pending" | "picking" | "packed" | "shipped";
+export const SHIP_STATUS_LABEL: Record<ShipStatus, string> = {
+  pending: "待处理",
+  picking: "拣货中",
+  packed: "已打包",
+  shipped: "已发货",
+};

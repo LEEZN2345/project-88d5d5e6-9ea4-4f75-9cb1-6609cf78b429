@@ -1,5 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { PRODUCTS, SHOPS, formatCNY, krwToCny } from "@/lib/mock-data";
 import { Button } from "@/components/ui/button";

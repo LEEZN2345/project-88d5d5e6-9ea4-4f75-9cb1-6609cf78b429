@@ -8,7 +8,7 @@ import { useState, Fragment } from "react";
 import { ChevronRight, ChevronDown, Download } from "lucide-react";
 
 export const Route = createFileRoute("/admin/orders")({
-  head: () => ({ meta: [{ title: "订单管理 · 运营后台" }] }),
+  head: () => ({ meta: [{ title: "新订单管理 · 运营后台" }] }),
   component: AdminOrders,
 });
 
@@ -83,7 +83,7 @@ function AdminOrders() {
   return (
     <AdminShell>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-xl font-semibold">订单管理</h1>
+        <h1 className="text-xl font-semibold">新订单管理</h1>
         <Button size="sm" variant="outline" onClick={exportCSV}>
           <Download className="mr-1 h-4 w-4" />导出 CSV（拆分明细）
         </Button>

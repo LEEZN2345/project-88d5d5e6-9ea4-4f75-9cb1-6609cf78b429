@@ -33,11 +33,15 @@ import { Route as ProductsIdRouteImport } from './routes/products.$id'
 import { Route as PointsHistoryRouteImport } from './routes/points.history'
 import { Route as OrdersIdRouteImport } from './routes/orders.$id'
 import { Route as LogisticsIdRouteImport } from './routes/logistics.$id'
+import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminRefundsRouteImport } from './routes/admin.refunds'
 import { Route as AdminProductsRouteImport } from './routes/admin.products'
+import { Route as AdminPointsMallRouteImport } from './routes/admin.points-mall'
 import { Route as AdminPaymentAccountsRouteImport } from './routes/admin.payment-accounts'
 import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 import { Route as AdminLogisticsRouteImport } from './routes/admin.logistics'
+import { Route as AdminGroupsRouteImport } from './routes/admin.groups'
+import { Route as AdminConfigRouteImport } from './routes/admin.config'
 
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
@@ -159,6 +163,11 @@ const LogisticsIdRoute = LogisticsIdRouteImport.update({
   path: '/logistics/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/admin/users',
+  path: '/admin/users',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminRefundsRoute = AdminRefundsRouteImport.update({
   id: '/admin/refunds',
   path: '/admin/refunds',
@@ -167,6 +176,11 @@ const AdminRefundsRoute = AdminRefundsRouteImport.update({
 const AdminProductsRoute = AdminProductsRouteImport.update({
   id: '/admin/products',
   path: '/admin/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminPointsMallRoute = AdminPointsMallRouteImport.update({
+  id: '/admin/points-mall',
+  path: '/admin/points-mall',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminPaymentAccountsRoute = AdminPaymentAccountsRouteImport.update({
@@ -182,6 +196,16 @@ const AdminOrdersRoute = AdminOrdersRouteImport.update({
 const AdminLogisticsRoute = AdminLogisticsRouteImport.update({
   id: '/admin/logistics',
   path: '/admin/logistics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminGroupsRoute = AdminGroupsRouteImport.update({
+  id: '/admin/groups',
+  path: '/admin/groups',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminConfigRoute = AdminConfigRouteImport.update({
+  id: '/admin/config',
+  path: '/admin/config',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -202,11 +226,15 @@ export interface FileRoutesByFullPath {
   '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
+  '/admin/config': typeof AdminConfigRoute
+  '/admin/groups': typeof AdminGroupsRoute
   '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
+  '/admin/points-mall': typeof AdminPointsMallRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/refunds': typeof AdminRefundsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
   '/points/history': typeof PointsHistoryRoute
@@ -233,11 +261,15 @@ export interface FileRoutesByTo {
   '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
+  '/admin/config': typeof AdminConfigRoute
+  '/admin/groups': typeof AdminGroupsRoute
   '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
+  '/admin/points-mall': typeof AdminPointsMallRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/refunds': typeof AdminRefundsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
   '/points/history': typeof PointsHistoryRoute
@@ -265,11 +297,15 @@ export interface FileRoutesById {
   '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
+  '/admin/config': typeof AdminConfigRoute
+  '/admin/groups': typeof AdminGroupsRoute
   '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
+  '/admin/points-mall': typeof AdminPointsMallRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/refunds': typeof AdminRefundsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
   '/points/history': typeof PointsHistoryRoute
@@ -298,11 +334,15 @@ export interface FileRouteTypes {
     | '/points-rules'
     | '/settings'
     | '/support'
+    | '/admin/config'
+    | '/admin/groups'
     | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
+    | '/admin/points-mall'
     | '/admin/products'
     | '/admin/refunds'
+    | '/admin/users'
     | '/logistics/$id'
     | '/orders/$id'
     | '/points/history'
@@ -329,11 +369,15 @@ export interface FileRouteTypes {
     | '/points-rules'
     | '/settings'
     | '/support'
+    | '/admin/config'
+    | '/admin/groups'
     | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
+    | '/admin/points-mall'
     | '/admin/products'
     | '/admin/refunds'
+    | '/admin/users'
     | '/logistics/$id'
     | '/orders/$id'
     | '/points/history'
@@ -360,11 +404,15 @@ export interface FileRouteTypes {
     | '/points-rules'
     | '/settings'
     | '/support'
+    | '/admin/config'
+    | '/admin/groups'
     | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
+    | '/admin/points-mall'
     | '/admin/products'
     | '/admin/refunds'
+    | '/admin/users'
     | '/logistics/$id'
     | '/orders/$id'
     | '/points/history'
@@ -392,11 +440,15 @@ export interface RootRouteChildren {
   PointsRulesRoute: typeof PointsRulesRoute
   SettingsRoute: typeof SettingsRoute
   SupportRoute: typeof SupportRoute
+  AdminConfigRoute: typeof AdminConfigRoute
+  AdminGroupsRoute: typeof AdminGroupsRoute
   AdminLogisticsRoute: typeof AdminLogisticsRoute
   AdminOrdersRoute: typeof AdminOrdersRoute
   AdminPaymentAccountsRoute: typeof AdminPaymentAccountsRoute
+  AdminPointsMallRoute: typeof AdminPointsMallRoute
   AdminProductsRoute: typeof AdminProductsRoute
   AdminRefundsRoute: typeof AdminRefundsRoute
+  AdminUsersRoute: typeof AdminUsersRoute
   LogisticsIdRoute: typeof LogisticsIdRoute
   OrdersIdRoute: typeof OrdersIdRoute
   ProductsIdRoute: typeof ProductsIdRoute
@@ -576,6 +628,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LogisticsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/refunds': {
       id: '/admin/refunds'
       path: '/admin/refunds'
@@ -588,6 +647,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/products'
       fullPath: '/admin/products'
       preLoaderRoute: typeof AdminProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/points-mall': {
+      id: '/admin/points-mall'
+      path: '/admin/points-mall'
+      fullPath: '/admin/points-mall'
+      preLoaderRoute: typeof AdminPointsMallRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/payment-accounts': {
@@ -609,6 +675,20 @@ declare module '@tanstack/react-router' {
       path: '/admin/logistics'
       fullPath: '/admin/logistics'
       preLoaderRoute: typeof AdminLogisticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/groups': {
+      id: '/admin/groups'
+      path: '/admin/groups'
+      fullPath: '/admin/groups'
+      preLoaderRoute: typeof AdminGroupsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/config': {
+      id: '/admin/config'
+      path: '/admin/config'
+      fullPath: '/admin/config'
+      preLoaderRoute: typeof AdminConfigRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -642,11 +722,15 @@ const rootRouteChildren: RootRouteChildren = {
   PointsRulesRoute: PointsRulesRoute,
   SettingsRoute: SettingsRoute,
   SupportRoute: SupportRoute,
+  AdminConfigRoute: AdminConfigRoute,
+  AdminGroupsRoute: AdminGroupsRoute,
   AdminLogisticsRoute: AdminLogisticsRoute,
   AdminOrdersRoute: AdminOrdersRoute,
   AdminPaymentAccountsRoute: AdminPaymentAccountsRoute,
+  AdminPointsMallRoute: AdminPointsMallRoute,
   AdminProductsRoute: AdminProductsRoute,
   AdminRefundsRoute: AdminRefundsRoute,
+  AdminUsersRoute: AdminUsersRoute,
   LogisticsIdRoute: LogisticsIdRoute,
   OrdersIdRoute: OrdersIdRoute,
   ProductsIdRoute: ProductsIdRoute,

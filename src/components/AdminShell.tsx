@@ -7,6 +7,9 @@ import {
   Wallet,
   Undo2,
   Truck,
+  Users2,
+  Gift,
+  Settings2,
 } from "lucide-react";
 
 type NavItem = {
@@ -14,15 +17,22 @@ type NavItem = {
   icon: typeof LayoutDashboard;
   label: string;
   exact?: boolean;
+  group?: string;
 };
 const NAV: NavItem[] = [
-  { to: "/admin", icon: LayoutDashboard, label: "概览", exact: true },
-  { to: "/admin/products", icon: Package, label: "商品/档口" },
-  { to: "/admin/orders", icon: ClipboardList, label: "订单" },
-  { to: "/admin/payment-accounts", icon: Wallet, label: "收款账户" },
-  { to: "/admin/refunds", icon: Undo2, label: "退款工单" },
-  { to: "/admin/logistics", icon: Truck, label: "物流导入" },
+  { to: "/admin", icon: LayoutDashboard, label: "概览", exact: true, group: "经营" },
+  { to: "/admin/orders", icon: ClipboardList, label: "订单", group: "经营" },
+  { to: "/admin/groups", icon: Users2, label: "拼单管理", group: "经营" },
+  { to: "/admin/refunds", icon: Undo2, label: "退款工单", group: "经营" },
+  { to: "/admin/products", icon: Package, label: "商品/档口", group: "商品" },
+  { to: "/admin/logistics", icon: Truck, label: "物流导入", group: "商品" },
+  { to: "/admin/users", icon: Users2, label: "用户 / KYC", group: "用户与增长" },
+  { to: "/admin/points-mall", icon: Gift, label: "积分商城", group: "用户与增长" },
+  { to: "/admin/payment-accounts", icon: Wallet, label: "收款账户", group: "资金" },
+  { to: "/admin/config", icon: Settings2, label: "汇率与配置", group: "系统" },
 ];
+
+const GROUP_ORDER = ["经营", "商品", "用户与增长", "资金", "系统"] as const;
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -33,25 +43,32 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           <div className="text-sm font-semibold">东大门订货通</div>
           <div className="text-xs text-muted-foreground">运营后台 · M1</div>
         </div>
-        <nav className="flex flex-col gap-1 p-2">
-          {NAV.map(({ to, icon: Icon, label, exact }) => {
-            const active = exact ? pathname === to : pathname.startsWith(to);
-            return (
-              <Link
-                key={to}
-                to={to as string}
-                className={cn(
-                  "flex items-center gap-2 rounded-md px-3 py-2 text-sm transition",
-                  active
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-accent hover:text-foreground",
-                )}
-              >
-                <Icon className="h-4 w-4" />
-                {label}
-              </Link>
-            );
-          })}
+        <nav className="flex flex-col gap-3 p-2">
+          {GROUP_ORDER.map((g) => (
+            <div key={g}>
+              <div className="px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                {g}
+              </div>
+              {NAV.filter((n) => n.group === g).map(({ to, icon: Icon, label, exact }) => {
+                const active = exact ? pathname === to : pathname.startsWith(to);
+                return (
+                  <Link
+                    key={to}
+                    to={to as string}
+                    className={cn(
+                      "flex items-center gap-2 rounded-md px-3 py-2 text-sm transition",
+                      active
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                    )}
+                  >
+                    <Icon className="h-4 w-4" />
+                    {label}
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
         </nav>
       </aside>
       <div className="flex-1 overflow-x-hidden">

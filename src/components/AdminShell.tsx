@@ -9,7 +9,6 @@ import {
   Truck,
   Users2,
   Gift,
-  Sparkles,
   Settings2,
 } from "lucide-react";
 

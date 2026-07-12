@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as PointsRulesRouteImport } from './routes/points-rules'
+import { Route as PointsRouteImport } from './routes/points'
 import { Route as NewArrivalsRouteImport } from './routes/new-arrivals'
 import { Route as MeRouteImport } from './routes/me'
 import { Route as KycRouteImport } from './routes/kyc'
@@ -29,6 +30,7 @@ import { Route as OrdersIndexRouteImport } from './routes/orders.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ShopsIdRouteImport } from './routes/shops.$id'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
+import { Route as PointsHistoryRouteImport } from './routes/points.history'
 import { Route as OrdersIdRouteImport } from './routes/orders.$id'
 import { Route as LogisticsIdRouteImport } from './routes/logistics.$id'
 import { Route as AdminRefundsRouteImport } from './routes/admin.refunds'
@@ -50,6 +52,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const PointsRulesRoute = PointsRulesRouteImport.update({
   id: '/points-rules',
   path: '/points-rules',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PointsRoute = PointsRouteImport.update({
+  id: '/points',
+  path: '/points',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NewArrivalsRoute = NewArrivalsRouteImport.update({
@@ -137,6 +144,11 @@ const ProductsIdRoute = ProductsIdRouteImport.update({
   path: '/products/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PointsHistoryRoute = PointsHistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => PointsRoute,
+} as any)
 const OrdersIdRoute = OrdersIdRouteImport.update({
   id: '/orders/$id',
   path: '/orders/$id',
@@ -186,6 +198,7 @@ export interface FileRoutesByFullPath {
   '/kyc': typeof KycRoute
   '/me': typeof MeRoute
   '/new-arrivals': typeof NewArrivalsRoute
+  '/points': typeof PointsRouteWithChildren
   '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
@@ -196,6 +209,7 @@ export interface FileRoutesByFullPath {
   '/admin/refunds': typeof AdminRefundsRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
+  '/points/history': typeof PointsHistoryRoute
   '/products/$id': typeof ProductsIdRoute
   '/shops/$id': typeof ShopsIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -215,6 +229,7 @@ export interface FileRoutesByTo {
   '/kyc': typeof KycRoute
   '/me': typeof MeRoute
   '/new-arrivals': typeof NewArrivalsRoute
+  '/points': typeof PointsRouteWithChildren
   '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
@@ -225,6 +240,7 @@ export interface FileRoutesByTo {
   '/admin/refunds': typeof AdminRefundsRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
+  '/points/history': typeof PointsHistoryRoute
   '/products/$id': typeof ProductsIdRoute
   '/shops/$id': typeof ShopsIdRoute
   '/admin': typeof AdminIndexRoute
@@ -245,6 +261,7 @@ export interface FileRoutesById {
   '/kyc': typeof KycRoute
   '/me': typeof MeRoute
   '/new-arrivals': typeof NewArrivalsRoute
+  '/points': typeof PointsRouteWithChildren
   '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
@@ -255,6 +272,7 @@ export interface FileRoutesById {
   '/admin/refunds': typeof AdminRefundsRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
+  '/points/history': typeof PointsHistoryRoute
   '/products/$id': typeof ProductsIdRoute
   '/shops/$id': typeof ShopsIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -276,6 +294,7 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/me'
     | '/new-arrivals'
+    | '/points'
     | '/points-rules'
     | '/settings'
     | '/support'
@@ -286,6 +305,7 @@ export interface FileRouteTypes {
     | '/admin/refunds'
     | '/logistics/$id'
     | '/orders/$id'
+    | '/points/history'
     | '/products/$id'
     | '/shops/$id'
     | '/admin/'
@@ -305,6 +325,7 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/me'
     | '/new-arrivals'
+    | '/points'
     | '/points-rules'
     | '/settings'
     | '/support'
@@ -315,6 +336,7 @@ export interface FileRouteTypes {
     | '/admin/refunds'
     | '/logistics/$id'
     | '/orders/$id'
+    | '/points/history'
     | '/products/$id'
     | '/shops/$id'
     | '/admin'
@@ -334,6 +356,7 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/me'
     | '/new-arrivals'
+    | '/points'
     | '/points-rules'
     | '/settings'
     | '/support'
@@ -344,6 +367,7 @@ export interface FileRouteTypes {
     | '/admin/refunds'
     | '/logistics/$id'
     | '/orders/$id'
+    | '/points/history'
     | '/products/$id'
     | '/shops/$id'
     | '/admin/'
@@ -364,6 +388,7 @@ export interface RootRouteChildren {
   KycRoute: typeof KycRoute
   MeRoute: typeof MeRoute
   NewArrivalsRoute: typeof NewArrivalsRoute
+  PointsRoute: typeof PointsRouteWithChildren
   PointsRulesRoute: typeof PointsRulesRoute
   SettingsRoute: typeof SettingsRoute
   SupportRoute: typeof SupportRoute
@@ -402,6 +427,13 @@ declare module '@tanstack/react-router' {
       path: '/points-rules'
       fullPath: '/points-rules'
       preLoaderRoute: typeof PointsRulesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/points': {
+      id: '/points'
+      path: '/points'
+      fullPath: '/points'
+      preLoaderRoute: typeof PointsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/new-arrivals': {
@@ -523,6 +555,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/points/history': {
+      id: '/points/history'
+      path: '/history'
+      fullPath: '/points/history'
+      preLoaderRoute: typeof PointsHistoryRouteImport
+      parentRoute: typeof PointsRoute
+    }
     '/orders/$id': {
       id: '/orders/$id'
       path: '/orders/$id'
@@ -575,6 +614,17 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface PointsRouteChildren {
+  PointsHistoryRoute: typeof PointsHistoryRoute
+}
+
+const PointsRouteChildren: PointsRouteChildren = {
+  PointsHistoryRoute: PointsHistoryRoute,
+}
+
+const PointsRouteWithChildren =
+  PointsRoute._addFileChildren(PointsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AddressesRoute: AddressesRoute,
@@ -588,6 +638,7 @@ const rootRouteChildren: RootRouteChildren = {
   KycRoute: KycRoute,
   MeRoute: MeRoute,
   NewArrivalsRoute: NewArrivalsRoute,
+  PointsRoute: PointsRouteWithChildren,
   PointsRulesRoute: PointsRulesRoute,
   SettingsRoute: SettingsRoute,
   SupportRoute: SupportRoute,

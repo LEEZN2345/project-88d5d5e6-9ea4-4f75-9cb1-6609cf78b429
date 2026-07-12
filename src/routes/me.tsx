@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { SHOPS } from "@/lib/mock-data";
-import { ChevronRight, MapPin, Heart, MessageSquare, Settings, Shield, Gift, ShoppingBag, ClipboardList, Store } from "lucide-react";
+import { ChevronRight, MapPin, Heart, MessageSquare, Settings, Shield, Gift, ShoppingBag, ClipboardList, Store, Sparkles, Share2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/me")({
@@ -50,13 +50,54 @@ function Me() {
         </div>
       </div>
 
+      {/* 我的积分卡片 */}
+      <div className="px-4 pt-4">
+        <div className="rounded-2xl border border-rose-200 bg-gradient-to-br from-rose-50 to-orange-50 p-4">
+          <div className="flex items-start justify-between">
+            <div>
+              <div className="flex items-center gap-1 text-[11px] text-rose-500">
+                <Sparkles className="h-3 w-3" /> 我的积分
+              </div>
+              <div className="mt-1 text-3xl font-semibold tabular-nums text-rose-600">2,580</div>
+              <div className="mt-0.5 text-[11px] text-muted-foreground">100 积分 = ¥10 等值商品</div>
+            </div>
+            <div className="flex flex-col items-end gap-1">
+              <Link
+                to="/points/history"
+                className="rounded-full border border-rose-300 bg-white px-2.5 py-1 text-[10px] text-rose-500"
+              >
+                积分明细 →
+              </Link>
+              <Link
+                to="/points-rules"
+                className="rounded-full border border-rose-300 bg-white px-2.5 py-1 text-[10px] text-rose-500"
+              >
+                兑换攻略 →
+              </Link>
+            </div>
+          </div>
+
+          <div className="mt-3 rounded-lg bg-amber-100/70 px-2.5 py-1.5 text-[11px] text-amber-700">
+            ⚠️ 830 积分将于 2026-10-31 过期，请尽早使用
+          </div>
+
+          <Link
+            to="/points"
+            className="mt-3 flex items-center justify-center gap-1.5 rounded-xl bg-rose-500 py-2.5 text-sm font-semibold text-white shadow-sm active:scale-[0.99]"
+          >
+            <Gift className="h-4 w-4" /> 进入积分广场兑换
+          </Link>
+        </div>
+      </div>
+
       <div className="space-y-2 px-4 pt-4">
         <Item to="/orders" icon={ClipboardList} label="我的订单" right="全部" />
         <Item to="/cart" icon={ShoppingBag} label="购物车" />
         <Item to="/addresses" icon={MapPin} label="收货地址" />
         <Item to="/favorites" icon={Heart} label="我的收藏" />
+        <Item to="/points" icon={Gift} label="积分广场" right="2,580 分" />
+        <Item to="/points-rules" icon={Share2} label="邀请好友赚积分" right="已邀 4 人" />
         <Item to="/invite-rules" icon={Gift} label="邀请分销规则（实体店）" right="最低 2.5%" />
-        <Item to="/points-rules" icon={Gift} label="邀请赚积分（散客）" right="最高 15%" />
         <Item to="/support" icon={MessageSquare} label="联系客服" />
         <Item to="/kyc" icon={Shield} label="实名认证" right="未认证" />
         <Item to="/settings" icon={Settings} label="设置" />

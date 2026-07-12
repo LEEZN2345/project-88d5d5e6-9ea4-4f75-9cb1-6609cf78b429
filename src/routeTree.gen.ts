@@ -34,6 +34,7 @@ import { Route as PointsHistoryRouteImport } from './routes/points.history'
 import { Route as OrdersIdRouteImport } from './routes/orders.$id'
 import { Route as LogisticsIdRouteImport } from './routes/logistics.$id'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminShopsRouteImport } from './routes/admin.shops'
 import { Route as AdminRefundsRouteImport } from './routes/admin.refunds'
 import { Route as AdminProductsRouteImport } from './routes/admin.products'
 import { Route as AdminPointsMallRouteImport } from './routes/admin.points-mall'
@@ -168,6 +169,11 @@ const AdminUsersRoute = AdminUsersRouteImport.update({
   path: '/admin/users',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminShopsRoute = AdminShopsRouteImport.update({
+  id: '/admin/shops',
+  path: '/admin/shops',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminRefundsRoute = AdminRefundsRouteImport.update({
   id: '/admin/refunds',
   path: '/admin/refunds',
@@ -234,6 +240,7 @@ export interface FileRoutesByFullPath {
   '/admin/points-mall': typeof AdminPointsMallRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/refunds': typeof AdminRefundsRoute
+  '/admin/shops': typeof AdminShopsRoute
   '/admin/users': typeof AdminUsersRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
@@ -269,6 +276,7 @@ export interface FileRoutesByTo {
   '/admin/points-mall': typeof AdminPointsMallRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/refunds': typeof AdminRefundsRoute
+  '/admin/shops': typeof AdminShopsRoute
   '/admin/users': typeof AdminUsersRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
@@ -305,6 +313,7 @@ export interface FileRoutesById {
   '/admin/points-mall': typeof AdminPointsMallRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/refunds': typeof AdminRefundsRoute
+  '/admin/shops': typeof AdminShopsRoute
   '/admin/users': typeof AdminUsersRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
@@ -342,6 +351,7 @@ export interface FileRouteTypes {
     | '/admin/points-mall'
     | '/admin/products'
     | '/admin/refunds'
+    | '/admin/shops'
     | '/admin/users'
     | '/logistics/$id'
     | '/orders/$id'
@@ -377,6 +387,7 @@ export interface FileRouteTypes {
     | '/admin/points-mall'
     | '/admin/products'
     | '/admin/refunds'
+    | '/admin/shops'
     | '/admin/users'
     | '/logistics/$id'
     | '/orders/$id'
@@ -412,6 +423,7 @@ export interface FileRouteTypes {
     | '/admin/points-mall'
     | '/admin/products'
     | '/admin/refunds'
+    | '/admin/shops'
     | '/admin/users'
     | '/logistics/$id'
     | '/orders/$id'
@@ -448,6 +460,7 @@ export interface RootRouteChildren {
   AdminPointsMallRoute: typeof AdminPointsMallRoute
   AdminProductsRoute: typeof AdminProductsRoute
   AdminRefundsRoute: typeof AdminRefundsRoute
+  AdminShopsRoute: typeof AdminShopsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   LogisticsIdRoute: typeof LogisticsIdRoute
   OrdersIdRoute: typeof OrdersIdRoute
@@ -635,6 +648,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/shops': {
+      id: '/admin/shops'
+      path: '/admin/shops'
+      fullPath: '/admin/shops'
+      preLoaderRoute: typeof AdminShopsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/refunds': {
       id: '/admin/refunds'
       path: '/admin/refunds'
@@ -730,6 +750,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminPointsMallRoute: AdminPointsMallRoute,
   AdminProductsRoute: AdminProductsRoute,
   AdminRefundsRoute: AdminRefundsRoute,
+  AdminShopsRoute: AdminShopsRoute,
   AdminUsersRoute: AdminUsersRoute,
   LogisticsIdRoute: LogisticsIdRoute,
   OrdersIdRoute: OrdersIdRoute,

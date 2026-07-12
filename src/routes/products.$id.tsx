@@ -89,6 +89,18 @@ const TIERS: Tier[] = [
   },
 ];
 
+function getAvailableTiers(minOrderQty: 1 | 2) {
+  if (minOrderQty === 2) {
+    return TIERS.filter((t) => t.key !== "solo");
+  }
+  return TIERS;
+}
+
+function getDefaultTier(minOrderQty: 1 | 2, tierParam?: TierKey): TierKey {
+  if (tierParam) return tierParam;
+  return minOrderQty === 2 ? "bulk" : "solo";
+}
+
 const INTL_SHIPPING_KRW = 4500;
 
 function ProductDetail() {

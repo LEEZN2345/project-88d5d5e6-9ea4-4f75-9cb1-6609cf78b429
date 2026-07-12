@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as PointsRulesRouteImport } from './routes/points-rules'
 import { Route as NewArrivalsRouteImport } from './routes/new-arrivals'
 import { Route as MeRouteImport } from './routes/me'
 import { Route as KycRouteImport } from './routes/kyc'
@@ -44,6 +45,11 @@ const SupportRoute = SupportRouteImport.update({
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PointsRulesRoute = PointsRulesRouteImport.update({
+  id: '/points-rules',
+  path: '/points-rules',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NewArrivalsRoute = NewArrivalsRouteImport.update({
@@ -180,6 +186,7 @@ export interface FileRoutesByFullPath {
   '/kyc': typeof KycRoute
   '/me': typeof MeRoute
   '/new-arrivals': typeof NewArrivalsRoute
+  '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/admin/logistics': typeof AdminLogisticsRoute
@@ -208,6 +215,7 @@ export interface FileRoutesByTo {
   '/kyc': typeof KycRoute
   '/me': typeof MeRoute
   '/new-arrivals': typeof NewArrivalsRoute
+  '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/admin/logistics': typeof AdminLogisticsRoute
@@ -237,6 +245,7 @@ export interface FileRoutesById {
   '/kyc': typeof KycRoute
   '/me': typeof MeRoute
   '/new-arrivals': typeof NewArrivalsRoute
+  '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/admin/logistics': typeof AdminLogisticsRoute
@@ -267,6 +276,7 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/me'
     | '/new-arrivals'
+    | '/points-rules'
     | '/settings'
     | '/support'
     | '/admin/logistics'
@@ -295,6 +305,7 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/me'
     | '/new-arrivals'
+    | '/points-rules'
     | '/settings'
     | '/support'
     | '/admin/logistics'
@@ -323,6 +334,7 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/me'
     | '/new-arrivals'
+    | '/points-rules'
     | '/settings'
     | '/support'
     | '/admin/logistics'
@@ -352,6 +364,7 @@ export interface RootRouteChildren {
   KycRoute: typeof KycRoute
   MeRoute: typeof MeRoute
   NewArrivalsRoute: typeof NewArrivalsRoute
+  PointsRulesRoute: typeof PointsRulesRoute
   SettingsRoute: typeof SettingsRoute
   SupportRoute: typeof SupportRoute
   AdminLogisticsRoute: typeof AdminLogisticsRoute
@@ -382,6 +395,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/points-rules': {
+      id: '/points-rules'
+      path: '/points-rules'
+      fullPath: '/points-rules'
+      preLoaderRoute: typeof PointsRulesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/new-arrivals': {
@@ -568,6 +588,7 @@ const rootRouteChildren: RootRouteChildren = {
   KycRoute: KycRoute,
   MeRoute: MeRoute,
   NewArrivalsRoute: NewArrivalsRoute,
+  PointsRulesRoute: PointsRulesRoute,
   SettingsRoute: SettingsRoute,
   SupportRoute: SupportRoute,
   AdminLogisticsRoute: AdminLogisticsRoute,
@@ -586,13 +607,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

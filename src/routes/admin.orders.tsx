@@ -11,6 +11,13 @@ export const Route = createFileRoute("/admin/orders")({
 });
 
 function AdminOrders() {
+  // Demo: 前 1/3 走在线支付，其余走转账制
+  const payChannelOf = (idx: number): { label: string; kind: "online" | "transfer" } =>
+    idx % 3 === 0
+      ? { label: "微信 · 在线", kind: "online" }
+      : idx % 3 === 1
+        ? { label: "支付宝 · 在线", kind: "online" }
+        : { label: "转账 · 待核验", kind: "transfer" };
   return (
     <AdminShell>
       <h1 className="mb-4 text-xl font-semibold">订单管理</h1>
@@ -18,11 +25,13 @@ function AdminOrders() {
         <table className="w-full text-sm">
           <thead className="bg-muted/50 text-xs text-muted-foreground">
             <tr>
-              <Th>订单号</Th><Th>下单时间</Th><Th>件数</Th><Th>韩币</Th><Th>汇率</Th><Th>人民币</Th><Th>收款账户</Th><Th>状态</Th><Th>操作</Th>
+              <Th>订单号</Th><Th>下单时间</Th><Th>件数</Th><Th>韩币</Th><Th>汇率</Th><Th>人民币</Th><Th>支付渠道</Th><Th>收款账户</Th><Th>状态</Th><Th>操作</Th>
             </tr>
           </thead>
           <tbody>
-            {ORDERS.map((o) => (
+            {ORDERS.map((o, i) => {
+              const pc = payChannelOf(i);
+              return (
               <tr key={o.id} className="border-t border-border">
                 <Td className="font-mono text-xs">{o.id}</Td>
                 <Td className="text-xs">{o.createdAt}</Td>
@@ -30,23 +39,37 @@ function AdminOrders() {
                 <Td>{formatKRW(o.totalKRW)}</Td>
                 <Td>{o.snapshotRate ?? "—"}</Td>
                 <Td>{o.totalCNY ? formatCNY(o.totalCNY) : "—"}</Td>
+                <Td className="text-xs">
+                  <Badge variant={pc.kind === "online" ? "default" : "outline"}>{pc.label}</Badge>
+                </Td>
                 <Td className="text-xs">{o.paymentAccount.name}</Td>
                 <Td><Badge>{STATUS_LABEL[o.status]}</Badge></Td>
                 <Td>
-                  {!o.snapshotRate ? (
-                    <Button size="sm">代付 + 锁汇率</Button>
-                  ) : (
-                    <Button size="sm" variant="outline">查看</Button>
-                  )}
+                  <div className="flex gap-1">
+                    {pc.kind === "transfer" && !o.snapshotRate && (
+                      <Button size="sm" variant="outline">核验小票</Button>
+                    )}
+                    {!o.snapshotRate ? (
+                      <Button size="sm">代付 + 锁汇率</Button>
+                    ) : (
+                      <Button size="sm" variant="outline">查看</Button>
+                    )}
+                  </div>
                 </Td>
               </tr>
-            ))}
+              );
+            })}
           </tbody>
         </table>
       </Card>
 
       <Card className="mt-4 p-4 text-xs text-muted-foreground">
-        点击「代付 + 锁汇率」会弹窗:上传韩币付款小票图片 → 输入当时实际汇率 → 系统写入 order.snapshot_rate + payment_receipt_url,买手端订单详情立刻显示。
+        <div className="font-medium text-foreground">两种支付通道并存</div>
+        <ul className="mt-1 list-disc space-y-0.5 pl-5">
+          <li><b>在线支付</b>（微信/支付宝商户号）：支付回调自动写入订单，无需人工核验，直接进入待代付。</li>
+          <li><b>转账支付</b>（多账户轮询）：买手上传付款小票 → 客服「核验小票」通过 → 进入待代付。</li>
+          <li>「代付 + 锁汇率」是平台向韩国档口付款环节：上传韩币付款小票 + 输入当时实际汇率 → 写入 order.snapshot_rate。</li>
+        </ul>
       </Card>
     </AdminShell>
   );

@@ -163,7 +163,13 @@ function GroupsPlaza() {
                   size="sm"
                   className="flex-1"
                   disabled={full}
-                  onClick={() => setJoinOf(g)}
+                  onClick={() =>
+                    navigate({
+                      to: "/products/$id",
+                      params: { id: g.productId },
+                      search: { tier: "group" },
+                    })
+                  }
                 >
                   {full ? "已成团" : "加入拼单"}
                 </Button>

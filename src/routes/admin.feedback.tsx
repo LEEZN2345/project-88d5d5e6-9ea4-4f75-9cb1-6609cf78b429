@@ -1,10 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { AdminShell } from "@/components/AdminShell";
-import { ORDERS, SHOPS, STATUS_LABEL, formatKRW, type OrderStatus } from "@/lib/mock-data";
+import { ORDERS, SHOPS, formatKRW, type OrderStatus } from "@/lib/mock-data";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -42,7 +41,7 @@ const STOCK_BADGE: Record<StockState, string> = {
 
 function initRows(): Record<string, FeedbackRow> {
   const m: Record<string, FeedbackRow> = {};
-  ORDERS.forEach((o, i) => {
+  PAID_ORDERS.forEach((o, i) => {
     const stock: StockState =
       o.status === "in_transit" || o.status === "delivered"
         ? "in_stock"
@@ -62,6 +61,8 @@ function initRows(): Record<string, FeedbackRow> {
   return m;
 }
 
+const PAID_ORDERS = ORDERS.filter((o) => o.status !== "pending_payment");
+
 function AdminFeedback() {
   const [rows, setRows] = useState<Record<string, FeedbackRow>>(() => initRows());
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -73,7 +74,7 @@ function AdminFeedback() {
   const [bulkCycle, setBulkCycle] = useState<number | "">("");
 
   const list = useMemo(() => {
-    return ORDERS.map((o) => ({ order: o, fb: rows[o.id] })).filter(({ order, fb }) => {
+    return PAID_ORDERS.map((o) => ({ order: o, fb: rows[o.id] })).filter(({ order, fb }) => {
       if (stockFilter !== "all" && fb.stock !== stockFilter) return false;
       if (keyword && !order.id.toLowerCase().includes(keyword.toLowerCase()) && !order.buyer.name.includes(keyword))
         return false;
@@ -131,14 +132,14 @@ function AdminFeedback() {
   };
 
   const stats = {
-    total: ORDERS.length,
+    total: PAID_ORDERS.length,
     pending: Object.values(rows).filter((r) => r.stock === "pending").length,
     in_stock: Object.values(rows).filter((r) => r.stock === "in_stock").length,
     with_receipt: Object.values(rows).filter((r) => r.receiptUrl).length,
   };
 
   const editRow = editing ? rows[editing] : null;
-  const editOrder = editing ? ORDERS.find((o) => o.id === editing) : null;
+  const editOrder = editing ? PAID_ORDERS.find((o) => o.id === editing) : null;
 
   return (
     <AdminShell>

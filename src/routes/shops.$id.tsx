@@ -86,12 +86,7 @@ function ShopDetail() {
   return (
     <MobileShell>
       <MobileHeader title={shop.name} back />
-      <div className="relative h-44">
-        <img src={shop.cover} alt="" className="h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
-      </div>
-
-      <div className="-mt-10 px-4">
+      <div className="px-4 pt-3">
         <div className="rounded-xl border border-border bg-card p-4">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">

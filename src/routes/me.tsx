@@ -62,6 +62,41 @@ function Me() {
       </div>
 
       <div className="px-4 pt-4">
+        <div className="mb-2 flex items-center justify-between">
+          <div className="flex items-center gap-1.5 text-sm font-medium">
+            <Store className="h-4 w-4 text-rose-500" />
+            收藏档口
+          </div>
+          <Link to="/favorites" className="text-xs text-muted-foreground">
+            查看全部
+          </Link>
+        </div>
+        {favShopIds.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-border bg-card p-4 text-center text-xs text-muted-foreground">
+            暂无收藏档口，去档口详情页点击收藏
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {SHOPS.filter((s) => favShopIds.includes(s.id)).map((s) => (
+              <Link
+                key={s.id}
+                to="/shops/$id"
+                params={{ id: s.id }}
+                className="flex items-center gap-3 rounded-xl border border-border bg-card p-3"
+              >
+                <img src={s.cover} alt="" className="h-12 w-12 rounded-lg object-cover" />
+                <div className="min-w-0 flex-1">
+                  <div className="text-sm font-medium">{s.brand || s.name}</div>
+                  <div className="text-xs text-muted-foreground">{s.building} · {s.floor}</div>
+                </div>
+                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="px-4 pt-4">
         <Link to="/admin" className="block rounded-xl border border-dashed border-border bg-card p-3 text-center text-xs text-muted-foreground">
           (内部入口) 进入运营后台 →
         </Link>

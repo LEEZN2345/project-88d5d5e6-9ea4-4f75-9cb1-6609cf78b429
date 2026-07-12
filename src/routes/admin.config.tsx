@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { PAY_METHODS } from "@/lib/mock-data";
+import { PAY_METHODS, PLATFORM_RATE_CONFIG, effectiveRate } from "@/lib/mock-data";
 import { useState } from "react";
 
 export const Route = createFileRoute("/admin/config")({
@@ -66,15 +66,27 @@ function AdminConfig() {
           </div>
           <div className="space-y-3">
             <Field label="今日 KRW → CNY">
-              <Input defaultValue="0.00525" className="max-w-[160px]" />
+              <Input defaultValue={String(PLATFORM_RATE_CONFIG.base)} className="max-w-[160px]" />
               <span className="text-xs text-muted-foreground">即 1 万韩币 ≈ ¥52.5</span>
             </Field>
             <Field label="展示浮动缓冲">
-              <Input defaultValue="1.5" className="max-w-[80px]" />
+              <Input defaultValue={String(PLATFORM_RATE_CONFIG.bufferPct)} className="max-w-[80px]" />
               <span className="text-xs text-muted-foreground">% · 用于 ≈RMB 展示，避免代付时倒挂</span>
             </Field>
+            <div className="rounded-md bg-primary/5 p-2 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">当前生效锁定汇率</span>
+                <span className="font-mono text-sm font-semibold">1 KRW = {effectiveRate()} CNY</span>
+              </div>
+              <div className="mt-1 text-[10px] text-muted-foreground">
+                = 基础汇率 × (1 + 缓冲%)。买手下单看到的价 = 支付成功锁定价 = 此值。
+              </div>
+            </div>
             <Button size="sm">保存今日汇率</Button>
-            <div className="mt-2 text-xs text-muted-foreground">近 7 日：0.00521 / 0.00523 / 0.00524 / 0.00522 / 0.00525 / 0.00525 / 0.00525</div>
+            <div className="mt-2 rounded-md bg-amber-50 p-2 text-[11px] text-amber-700 dark:bg-amber-950/30 dark:text-amber-400">
+              ⚠️ 保存后立即生效，仅影响<b>新订单</b>的锁定汇率；已支付订单的 snapshotRate 不追溯变更。
+            </div>
+            <div className="text-[11px] text-muted-foreground">近 7 日基础汇率：0.00521 / 0.00523 / 0.00524 / 0.00522 / 0.00525 / 0.00525 / 0.00525</div>
           </div>
         </Card>
 

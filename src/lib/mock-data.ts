@@ -61,7 +61,7 @@ export type Order = {
   createdAt: string;
   items: { product: Product; qty: number; color: string; size: string }[];
   totalKRW: number;
-  snapshotRate?: number; // KRW -> CNY,代付时锁定
+  snapshotRate?: number; // KRW -> CNY,支付成功时按平台生效汇率快照(effectiveRate)
   totalCNY?: number;
   status: OrderStatus;
   paymentAccount: { name: string; channel: "wechat" | "alipay"; holder: string };
@@ -352,7 +352,18 @@ export const PRODUCTS: Product[] = [
   },
 ];
 
-export const REFERENCE_RATE = 0.0053; // 1 KRW ≈ 0.0053 CNY (参考)
+// 平台汇率配置（后台「汇率与配置」维护）
+// 展示价 = base × (1 + buffer%)。支付成功时快照该「生效汇率」写入 order.snapshotRate。
+// 已锁单不追溯：配置更新后仅对新订单生效。
+export const PLATFORM_RATE_CONFIG = {
+  base: 0.00525, // 后台录入的东大门实时汇率
+  bufferPct: 1.5, // 缓冲百分比，防止购汇成本倒挂
+};
+export const effectiveRate = (cfg = PLATFORM_RATE_CONFIG) =>
+  Math.round(cfg.base * (1 + cfg.bufferPct / 100) * 100000) / 100000;
+
+// 兼容旧代码：REFERENCE_RATE = 当前生效汇率
+export const REFERENCE_RATE = effectiveRate();
 
 export const ORDERS: Order[] = [
   {

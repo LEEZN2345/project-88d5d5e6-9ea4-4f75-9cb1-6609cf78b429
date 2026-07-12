@@ -278,8 +278,18 @@ function AreaView() {
                     {s.name}
                   </p>
                   <p className="text-[10px] font-medium tracking-tight text-muted-foreground">
-                    {s.code}
+                    {s.building} · {s.floor}-{s.code}
                   </p>
+                  <span
+                    className={cn(
+                      "mt-1 inline-block rounded px-1 py-0.5 text-[9px] font-bold",
+                      supportsSingleBuy(s.name)
+                        ? "bg-emerald-500/15 text-emerald-600"
+                        : "bg-amber-500/15 text-amber-600",
+                    )}
+                  >
+                    {supportsSingleBuy(s.name) ? "1件可购" : "2件起批"}
+                  </span>
                 </div>
               </Link>
             ))}

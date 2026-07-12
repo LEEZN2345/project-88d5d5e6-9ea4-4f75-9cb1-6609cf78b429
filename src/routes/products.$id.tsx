@@ -110,22 +110,26 @@ function ProductDetail() {
   const p = PRODUCTS.find((x) => x.id === id);
   if (!p) throw notFound();
   const shop = SHOPS.find((s) => s.id === p.shopId)!;
+  const minOrderQty = shop.minOrderQty;
+  const availableTiers = getAvailableTiers(minOrderQty);
+  const defaultTier = getDefaultTier(minOrderQty, tierParam);
+
   const [color, setColor] = useState(p.colors[0]);
   const [size, setSize] = useState(p.sizes[0]);
-  const [tierKey, setTierKey] = useState<TierKey>(tierParam ?? "solo");
-  const [expanded, setExpanded] = useState<TierKey | null>(tierParam ?? "solo");
+  const [tierKey, setTierKey] = useState<TierKey>(defaultTier);
+  const [expanded, setExpanded] = useState<TierKey | null>(defaultTier);
   const [flowOpen, setFlowOpen] = useState(false);
   const [showPurchaseOptions, setShowPurchaseOptions] = useState(!!tierParam);
   const [api, setApi] = useState<CarouselApi>();
   const [slide, setSlide] = useState(0);
 
   useEffect(() => {
-    if (tierParam) {
+    if (tierParam && availableTiers.some((t) => t.key === tierParam)) {
       setTierKey(tierParam);
       setExpanded(tierParam);
       setShowPurchaseOptions(true);
     }
-  }, [tierParam]);
+  }, [tierParam, availableTiers]);
 
   useEffect(() => {
     if (!api) return;

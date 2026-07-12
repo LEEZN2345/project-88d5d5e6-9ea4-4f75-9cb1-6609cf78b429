@@ -203,7 +203,6 @@ function AdminFeedback() {
               <Th>会员</Th>
               <Th>档口</Th>
               <Th>件数 / 金额</Th>
-              <Th>订单状态</Th>
               <Th>购物小票</Th>
               <Th>是否入库</Th>
               <Th>预定周期</Th>

@@ -496,15 +496,31 @@ function AdminFeedback() {
               </Select>
             </div>
             <div>
-              <label className="mb-1 block text-xs text-muted-foreground">预定周期（天） · 留空表示不修改</label>
-              <Input
-                type="number"
-                min={1}
-                value={bulkCycle}
-                onChange={(e) => setBulkCycle(e.target.value === "" ? "" : Number(e.target.value))}
-                placeholder="例如 7"
-              />
+              <label className="mb-1 block text-xs text-muted-foreground">商品状态 · 留空不修改</label>
+              <Select
+                value={bulkGoodsType || "__none"}
+                onValueChange={(v) => setBulkGoodsType(v === "__none" ? "" : (v as GoodsType))}
+              >
+                <SelectTrigger className="h-9">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none">不修改</SelectItem>
+                  <SelectItem value="in_stock">现货</SelectItem>
+                  <SelectItem value="reserve">预定</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
+            {bulkGoodsType === "reserve" && (
+              <div>
+                <label className="mb-1 block text-xs text-muted-foreground">预定出货日期</label>
+                <Input
+                  type="date"
+                  value={bulkShipDate}
+                  onChange={(e) => setBulkShipDate(e.target.value)}
+                />
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setBulkOpen(false)}>取消</Button>
@@ -545,6 +561,45 @@ function nowStr() {
   const d = new Date();
   const pad = (n: number) => String(n).padStart(2, "0");
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function addDays(base: Date, days: number): string {
+  const d = new Date(base);
+  d.setDate(d.getDate() + days);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+function daysUntil(dateStr?: string): number | null {
+  if (!dateStr) return null;
+  const target = new Date(dateStr + "T00:00:00");
+  if (Number.isNaN(target.getTime())) return null;
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.round((target.getTime() - today.getTime()) / 86400000);
+}
+
+function CountdownBadge({ date }: { date?: string }) {
+  const d = daysUntil(date);
+  if (d === null)
+    return <span className="text-[11px] text-muted-foreground">未设置出货日期</span>;
+  if (d > 0)
+    return (
+      <span className="inline-flex w-fit items-center gap-1 rounded bg-sky-500/15 px-1.5 py-0.5 text-[11px] font-medium text-sky-700 dark:text-sky-300">
+        还有 {d} 天出货
+      </span>
+    );
+  if (d === 0)
+    return (
+      <span className="inline-flex w-fit items-center gap-1 rounded bg-amber-500/15 px-1.5 py-0.5 text-[11px] font-medium text-amber-700 dark:text-amber-300">
+        今日出货
+      </span>
+    );
+  return (
+    <span className="inline-flex w-fit items-center gap-1 rounded bg-rose-500/15 px-1.5 py-0.5 text-[11px] font-medium text-rose-700 dark:text-rose-300">
+      已逾期 {Math.abs(d)} 天
+    </span>
+  );
 }
 
 const Th = ({ children }: { children?: React.ReactNode }) => (

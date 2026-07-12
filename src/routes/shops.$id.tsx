@@ -141,21 +141,6 @@ function ShopDetail() {
             />
             {isFav ? "已收藏档口" : "收藏档口"}
           </Button>
-
-          {newestUpload && (
-            <div className="mt-3 flex items-center gap-3 text-[11px] text-muted-foreground">
-              <span className="flex items-center gap-1">
-                <Sparkles className="h-3.5 w-3.5 text-blue-500" />
-                最新上新 {daysAgo(newestUpload)} 天前
-              </span>
-              {saleCount > 0 && (
-                <span className="flex items-center gap-1">
-                  <Tag className="h-3.5 w-3.5 text-rose-500" />
-                  {saleCount} 款打折中
-                </span>
-              )}
-            </div>
-          )}
         </div>
       </div>
 

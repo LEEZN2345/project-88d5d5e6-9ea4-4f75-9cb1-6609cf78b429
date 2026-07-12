@@ -3,7 +3,6 @@ import { AdminShell } from "@/components/AdminShell";
 import {
   ORDERS,
   SHOPS,
-  SHIP_STATUS_LABEL,
   findStockMatch,
   type ShipStatus,
   type ShipSource,
@@ -179,13 +178,13 @@ function AdminShipping() {
               </button>
             ))}
             <span className="ml-3 text-muted-foreground">状态：</span>
-            {(["all", "pending", "picking", "packed", "shipped"] as const).map((k) => (
+            {(["all", "pending", "shipped"] as const).map((k) => (
               <button
                 key={k}
                 onClick={() => setStFilter(k)}
                 className={`rounded-full px-2.5 py-1 ${stFilter === k ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
               >
-                {k === "all" ? "全部" : SHIP_STATUS_LABEL[k]}
+                {k === "all" ? "全部" : k === "pending" ? "未发货" : "已发货"}
               </button>
             ))}
           </div>
@@ -194,14 +193,8 @@ function AdminShipping() {
             <span className="text-muted-foreground">
               已选 {Object.values(checked).filter(Boolean).length} 项
             </span>
-            <Button size="sm" variant="outline" disabled={!someChecked} onClick={() => bulkAdvance("picking")}>
-              批量：拣货中
-            </Button>
-            <Button size="sm" variant="outline" disabled={!someChecked} onClick={() => bulkAdvance("packed")}>
-              批量：已打包
-            </Button>
             <Button size="sm" disabled={!someChecked} onClick={() => bulkAdvance("shipped")}>
-              批量：标记已发货
+              批量：确认发货
             </Button>
           </div>
 
@@ -220,8 +213,8 @@ function AdminShipping() {
                   <Th>数量</Th>
                   <Th>发货来源</Th>
                   <Th>运单号 / 物流</Th>
-                  <Th>状态</Th>
                   <Th>操作</Th>
+                  <Th>状态</Th>
                 </tr>
               </thead>
               <tbody>
@@ -286,11 +279,6 @@ function AdminShipping() {
                       />
                     </Td>
                     <Td>
-                      <Badge variant={r.status === "shipped" ? "default" : "secondary"}>
-                        {SHIP_STATUS_LABEL[r.status]}
-                      </Badge>
-                    </Td>
-                    <Td>
                       <div className="flex flex-col gap-1">
                         {r.status !== "shipped" ? (
                           <Button
@@ -304,12 +292,17 @@ function AdminShipping() {
                               )
                             }
                           >
-                            标记已发货
+                            确认发货
                           </Button>
                         ) : (
                           <span className="text-[10px] text-muted-foreground">已完成</span>
                         )}
                       </div>
+                    </Td>
+                    <Td>
+                      <Badge variant={r.status === "shipped" ? "default" : "secondary"}>
+                        {r.status === "shipped" ? "已发货" : "未发货"}
+                      </Badge>
                     </Td>
                   </tr>
                 ))}

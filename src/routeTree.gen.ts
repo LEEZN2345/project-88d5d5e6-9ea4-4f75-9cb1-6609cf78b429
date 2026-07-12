@@ -38,6 +38,7 @@ import { Route as AdminProductsRouteImport } from './routes/admin.products'
 import { Route as AdminPaymentAccountsRouteImport } from './routes/admin.payment-accounts'
 import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 import { Route as AdminLogisticsRouteImport } from './routes/admin.logistics'
+import { Route as AdminGroupsRouteImport } from './routes/admin.groups'
 
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
@@ -184,6 +185,11 @@ const AdminLogisticsRoute = AdminLogisticsRouteImport.update({
   path: '/admin/logistics',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminGroupsRoute = AdminGroupsRouteImport.update({
+  id: '/admin/groups',
+  path: '/admin/groups',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -202,6 +208,7 @@ export interface FileRoutesByFullPath {
   '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
+  '/admin/groups': typeof AdminGroupsRoute
   '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
@@ -233,6 +240,7 @@ export interface FileRoutesByTo {
   '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
+  '/admin/groups': typeof AdminGroupsRoute
   '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
@@ -265,6 +273,7 @@ export interface FileRoutesById {
   '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
+  '/admin/groups': typeof AdminGroupsRoute
   '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
@@ -298,6 +307,7 @@ export interface FileRouteTypes {
     | '/points-rules'
     | '/settings'
     | '/support'
+    | '/admin/groups'
     | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
@@ -329,6 +339,7 @@ export interface FileRouteTypes {
     | '/points-rules'
     | '/settings'
     | '/support'
+    | '/admin/groups'
     | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
@@ -360,6 +371,7 @@ export interface FileRouteTypes {
     | '/points-rules'
     | '/settings'
     | '/support'
+    | '/admin/groups'
     | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
@@ -392,6 +404,7 @@ export interface RootRouteChildren {
   PointsRulesRoute: typeof PointsRulesRoute
   SettingsRoute: typeof SettingsRoute
   SupportRoute: typeof SupportRoute
+  AdminGroupsRoute: typeof AdminGroupsRoute
   AdminLogisticsRoute: typeof AdminLogisticsRoute
   AdminOrdersRoute: typeof AdminOrdersRoute
   AdminPaymentAccountsRoute: typeof AdminPaymentAccountsRoute
@@ -611,6 +624,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLogisticsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/groups': {
+      id: '/admin/groups'
+      path: '/admin/groups'
+      fullPath: '/admin/groups'
+      preLoaderRoute: typeof AdminGroupsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -642,6 +662,7 @@ const rootRouteChildren: RootRouteChildren = {
   PointsRulesRoute: PointsRulesRoute,
   SettingsRoute: SettingsRoute,
   SupportRoute: SupportRoute,
+  AdminGroupsRoute: AdminGroupsRoute,
   AdminLogisticsRoute: AdminLogisticsRoute,
   AdminOrdersRoute: AdminOrdersRoute,
   AdminPaymentAccountsRoute: AdminPaymentAccountsRoute,

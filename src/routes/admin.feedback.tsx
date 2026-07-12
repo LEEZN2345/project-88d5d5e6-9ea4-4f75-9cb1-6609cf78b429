@@ -394,15 +394,42 @@ function AdminFeedback() {
                   </Select>
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs text-muted-foreground">预定周期（天）</label>
-                  <Input
-                    type="number"
-                    min={1}
-                    value={editRow.cycleDays}
-                    onChange={(e) => patch(editing!, { cycleDays: Number(e.target.value) || 0 })}
-                  />
+                  <label className="mb-1 block text-xs text-muted-foreground">商品状态</label>
+                  <Select
+                    value={editRow.goodsType}
+                    onValueChange={(v) =>
+                      patch(editing!, {
+                        goodsType: v as GoodsType,
+                        ...(v === "in_stock" ? { shipDate: undefined } : {}),
+                      })
+                    }
+                  >
+                    <SelectTrigger className="h-9">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="in_stock">现货</SelectItem>
+                      <SelectItem value="reserve">预定</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
+              {editRow.goodsType === "reserve" && (
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="mb-1 block text-xs text-muted-foreground">出货日期</label>
+                    <Input
+                      type="date"
+                      value={editRow.shipDate ?? ""}
+                      onChange={(e) => patch(editing!, { shipDate: e.target.value })}
+                    />
+                  </div>
+                  <div className="flex items-end">
+                    <CountdownBadge date={editRow.shipDate} />
+                  </div>
+              </div>
+              )}
+              <div>
               <div>
                 <label className="mb-1 block text-xs text-muted-foreground">购物小票</label>
                 {editRow.receiptUrl ? (

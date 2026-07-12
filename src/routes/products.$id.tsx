@@ -448,12 +448,16 @@ function ProductDetail() {
           className="h-11 w-full text-sm font-semibold"
           onClick={() => setShowPurchaseOptions((v) => !v)}
         >
-          立即下单 {formatCNY(totalCNY)}
+          {minOrderQty === 2 && tierKey === "bulk"
+            ? `2件起拍 ${formatCNY(totalCNY)}`
+            : `立即下单 ${formatCNY(totalCNY)}`}
         </Button>
         <div className="mt-1 text-center text-[10px] text-muted-foreground">
           {tierKey === "group"
             ? "若拼团失败，系统将自动全额退款"
-            : "付款后平台代付韩币并锁定汇率"}
+            : minOrderQty === 2
+              ? "同款 2 件起拍，付款后平台代付韩币并锁定汇率"
+              : "付款后平台代付韩币并锁定汇率"}
         </div>
       </div>
       <div className="h-24" />

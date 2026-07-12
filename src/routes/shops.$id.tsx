@@ -378,10 +378,6 @@ function ShopDetail() {
                 <Badge className="absolute left-2 top-2 bg-rose-500 text-white">
                   -{p.discount}%
                 </Badge>
-              ) : p.isNew ? (
-                <Badge className="absolute left-2 top-2 bg-blue-500 text-white">
-                  新款
-                </Badge>
               ) : null}
               <span className="absolute bottom-1.5 left-1.5 rounded bg-black/60 px-1.5 py-0.5 text-[9px] font-medium text-white">
                 {daysAgo(p.uploadedAt) === 0

@@ -1,11 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "@/components/AdminShell";
-import { ORDERS, STATUS_LABEL, CHANNEL_LABEL, formatKRW, formatCNY, SHOPS, type OrderChannel } from "@/lib/mock-data";
+import {
+  ORDERS,
+  STATUS_LABEL,
+  CHANNEL_LABEL,
+  formatKRW,
+  formatCNY,
+  SHOPS,
+  type OrderChannel,
+  isFirstOrderForProduct,
+  findStockMatch,
+} from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useState, Fragment } from "react";
-import { ChevronRight, ChevronDown, Download } from "lucide-react";
+import { ChevronRight, ChevronDown, Download, Sparkles, PackageCheck } from "lucide-react";
 
 export const Route = createFileRoute("/admin/orders")({
   head: () => ({ meta: [{ title: "新订单管理 · 运营后台" }] }),
@@ -18,6 +28,9 @@ function AdminOrders() {
     idx % 2 === 0 ? { label: "微信 · 在线" } : { label: "支付宝 · 在线" };
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [channelFilter, setChannelFilter] = useState<OrderChannel | "all">("all");
+  // 记录每个「命中现货」的 item 是否选择从现货库出库。key = `${orderId}#${idx}`
+  const [useStock, setUseStock] = useState<Record<string, boolean>>({});
+  const setStockChoice = (k: string, v: boolean) => setUseStock((s) => ({ ...s, [k]: v }));
   const toggle = (id: string) => setExpanded((e) => ({ ...e, [id]: !e[id] }));
   const shopOf = (shopId: string) => SHOPS.find((s) => s.id === shopId);
   const paidOrders = ORDERS.filter((o) => o.status !== "pending_payment");

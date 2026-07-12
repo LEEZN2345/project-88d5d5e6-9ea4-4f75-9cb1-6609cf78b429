@@ -19,6 +19,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
+import { Crown, Sparkles } from "lucide-react";
+import catNewImg from "@/assets/cat-new.jpg";
+import catSaleImg from "@/assets/cat-sale.jpg";
 
 export const Route = createFileRoute("/shops/$id")({
   component: ShopDetail,
@@ -237,6 +240,90 @@ function ShopDetail() {
           )}
         >
           档口打折
+        </button>
+      </div>
+
+      {/* 会员专享 banner */}
+      <div className="mt-3 px-4">
+        <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-rose-500 via-rose-500 to-amber-500 p-3 text-white shadow-sm">
+          <div className="flex items-center gap-2">
+            <Crown className="h-5 w-5 shrink-0 text-amber-200" />
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1 text-[13px] font-bold">
+                <Sparkles className="h-3.5 w-3.5" />
+                快人一步，档口新款抢先预定
+              </div>
+              <div className="text-[10px] text-white/85">
+                会员专享 · 独家上新提前锁定
+              </div>
+            </div>
+            <span className="shrink-0 rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-medium backdrop-blur">
+              开通会员
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* 分类入口：档口新款 & 档口打折 */}
+      <div className="mt-3 grid grid-cols-2 gap-3 px-4">
+        <button
+          onClick={() => {
+            setNewFilter("new");
+            setDiscountFilter("all");
+          }}
+          className={cn(
+            "group relative aspect-[16/10] overflow-hidden rounded-xl border text-left",
+            newFilter === "new"
+              ? "border-blue-500 ring-2 ring-blue-500/40"
+              : "border-border",
+          )}
+        >
+          <img
+            src={catNewImg}
+            alt="档口新款"
+            loading="lazy"
+            width={768}
+            height={512}
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 p-2.5 text-white">
+            <div className="text-sm font-bold">档口新款</div>
+            <div className="text-[10px] text-white/80">最新上架 · 抢先预定</div>
+          </div>
+          <span className="absolute right-2 top-2 rounded-full bg-blue-500 px-2 py-0.5 text-[10px] font-medium text-white">
+            NEW
+          </span>
+        </button>
+
+        <button
+          onClick={() => {
+            setDiscountFilter("sale");
+            setNewFilter("all");
+          }}
+          className={cn(
+            "group relative aspect-[16/10] overflow-hidden rounded-xl border text-left",
+            discountFilter === "sale"
+              ? "border-rose-500 ring-2 ring-rose-500/40"
+              : "border-border",
+          )}
+        >
+          <img
+            src={catSaleImg}
+            alt="档口打折"
+            loading="lazy"
+            width={768}
+            height={512}
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 p-2.5 text-white">
+            <div className="text-sm font-bold">档口打折</div>
+            <div className="text-[10px] text-white/80">限时特惠 · 折扣好物</div>
+          </div>
+          <span className="absolute right-2 top-2 rounded-full bg-rose-500 px-2 py-0.5 text-[10px] font-medium text-white">
+            SALE
+          </span>
         </button>
       </div>
 

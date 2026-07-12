@@ -427,9 +427,8 @@ function AdminFeedback() {
                   <div className="flex items-end">
                     <CountdownBadge date={editRow.shipDate} />
                   </div>
-              </div>
+                </div>
               )}
-              <div>
               <div>
                 <label className="mb-1 block text-xs text-muted-foreground">购物小票</label>
                 {editRow.receiptUrl ? (

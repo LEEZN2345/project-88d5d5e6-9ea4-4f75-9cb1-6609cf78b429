@@ -372,7 +372,6 @@ export interface FileRouteTypes {
     | '/admin/refunds'
     | '/admin/shipping'
     | '/admin/shops'
-    | '/admin/shipping'
     | '/admin/users'
     | '/logistics/$id'
     | '/orders/$id'
@@ -411,7 +410,6 @@ export interface FileRouteTypes {
     | '/admin/refunds'
     | '/admin/shipping'
     | '/admin/shops'
-    | '/admin/shipping'
     | '/admin/users'
     | '/logistics/$id'
     | '/orders/$id'
@@ -450,7 +448,6 @@ export interface FileRouteTypes {
     | '/admin/refunds'
     | '/admin/shipping'
     | '/admin/shops'
-    | '/admin/shipping'
     | '/admin/users'
     | '/logistics/$id'
     | '/orders/$id'
@@ -490,6 +487,7 @@ export interface RootRouteChildren {
   AdminRefundsRoute: typeof AdminRefundsRoute
   AdminShippingRoute: typeof AdminShippingRoute
   AdminShopsRoute: typeof AdminShopsRoute
+  AdminShippingRoute: typeof AdminShippingRoute
   AdminUsersRoute: typeof AdminUsersRoute
   LogisticsIdRoute: typeof LogisticsIdRoute
   OrdersIdRoute: typeof OrdersIdRoute
@@ -691,6 +689,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminShippingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/shipping': {
+      id: '/admin/shipping'
+      path: '/admin/shipping'
+      fullPath: '/admin/shipping'
+      preLoaderRoute: typeof AdminShippingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/refunds': {
       id: '/admin/refunds'
       path: '/admin/refunds'
@@ -796,6 +801,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRefundsRoute: AdminRefundsRoute,
   AdminShippingRoute: AdminShippingRoute,
   AdminShopsRoute: AdminShopsRoute,
+  AdminShippingRoute: AdminShippingRoute,
   AdminUsersRoute: AdminUsersRoute,
   LogisticsIdRoute: LogisticsIdRoute,
   OrdersIdRoute: OrdersIdRoute,

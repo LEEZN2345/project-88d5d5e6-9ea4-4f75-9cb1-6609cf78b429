@@ -1,13 +1,29 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
-import { ChevronRight, MapPin, Heart, MessageSquare, Settings, Shield, Gift, ShoppingBag, ClipboardList } from "lucide-react";
+import { SHOPS } from "@/lib/mock-data";
+import { ChevronRight, MapPin, Heart, MessageSquare, Settings, Shield, Gift, ShoppingBag, ClipboardList, Store } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/me")({
   head: () => ({ meta: [{ title: "我的 · 东大门订货通" }] }),
   component: Me,
 });
 
+function getFavShopIds(): string[] {
+  if (typeof window === "undefined") return [];
+  try {
+    return JSON.parse(localStorage.getItem("fav_shops") || "[]") as string[];
+  } catch {
+    return [];
+  }
+}
+
 function Me() {
+  const [favShopIds, setFavShopIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    setFavShopIds(getFavShopIds());
+  }, []);
   return (
     <MobileShell>
       <MobileHeader title="我的" />

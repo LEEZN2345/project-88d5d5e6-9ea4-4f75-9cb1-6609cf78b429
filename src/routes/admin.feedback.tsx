@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useMemo, useState, Fragment } from "react";
 import { AdminShell } from "@/components/AdminShell";
 import { ORDERS, SHOPS, formatKRW, type OrderStatus } from "@/lib/mock-data";
 import { Card } from "@/components/ui/card";
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { CheckCircle2, Upload, PackageCheck, PackageX, Clock, ExternalLink } from "lucide-react";
+import { CheckCircle2, Upload, PackageCheck, PackageX, Clock, ExternalLink, ChevronRight, ChevronDown } from "lucide-react";
 
 export const Route = createFileRoute("/admin/feedback")({
   head: () => ({ meta: [{ title: "订单反馈管理 · 运营后台" }] }),
@@ -79,6 +79,8 @@ function AdminFeedback() {
   const [bulkStock, setBulkStock] = useState<StockState>("in_stock");
   const [bulkGoodsType, setBulkGoodsType] = useState<GoodsType | "">("");
   const [bulkShipDate, setBulkShipDate] = useState<string>("");
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const toggleExpand = (id: string) => setExpanded((e) => ({ ...e, [id]: !e[id] }));
 
   const list = useMemo(() => {
     return PAID_ORDERS.map((o) => ({ order: o, fb: rows[o.id] })).filter(({ order, fb }) => {
@@ -204,6 +206,7 @@ function AdminFeedback() {
         <table className="w-full text-sm">
           <thead className="bg-muted/50 text-xs text-muted-foreground">
             <tr>
+              <Th></Th>
               <Th>
                 <input
                   type="checkbox"

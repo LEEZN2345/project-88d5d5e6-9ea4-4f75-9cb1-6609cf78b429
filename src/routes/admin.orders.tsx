@@ -25,7 +25,7 @@ function AdminOrders() {
         <table className="w-full text-sm">
           <thead className="bg-muted/50 text-xs text-muted-foreground">
             <tr>
-              <Th>订单号</Th><Th>下单时间</Th><Th>件数</Th><Th>韩币</Th><Th>汇率</Th><Th>人民币</Th><Th>支付渠道</Th><Th>收款账户</Th><Th>状态</Th><Th>操作</Th>
+              <Th>订单号</Th><Th>下单时间</Th><Th>件数</Th><Th>韩币</Th><Th>锁定汇率</Th><Th>人民币</Th><Th>支付渠道</Th><Th>收款账户</Th><Th>状态</Th><Th>操作</Th>
             </tr>
           </thead>
           <tbody>
@@ -37,7 +37,13 @@ function AdminOrders() {
                 <Td className="text-xs">{o.createdAt}</Td>
                 <Td>{o.items.reduce((s, i) => s + i.qty, 0)}</Td>
                 <Td>{formatKRW(o.totalKRW)}</Td>
-                <Td>{o.snapshotRate ?? "—"}</Td>
+                <Td className="text-xs">
+                  {o.snapshotRate ? (
+                    <span className="font-mono">{o.snapshotRate}</span>
+                  ) : (
+                    <span className="text-muted-foreground">待支付</span>
+                  )}
+                </Td>
                 <Td>{o.totalCNY ? formatCNY(o.totalCNY) : "—"}</Td>
                 <Td className="text-xs">
                   <Badge variant={pc.kind === "online" ? "default" : "outline"}>{pc.label}</Badge>
@@ -49,11 +55,10 @@ function AdminOrders() {
                     {pc.kind === "transfer" && !o.snapshotRate && (
                       <Button size="sm" variant="outline">核验小票</Button>
                     )}
-                    {!o.snapshotRate ? (
-                      <Button size="sm">代付 + 锁汇率</Button>
-                    ) : (
-                      <Button size="sm" variant="outline">查看</Button>
+                    {o.snapshotRate && !o.receiptUrl && (
+                      <Button size="sm">标记已代付</Button>
                     )}
+                    <Button size="sm" variant="ghost">查看</Button>
                   </div>
                 </Td>
               </tr>
@@ -68,7 +73,8 @@ function AdminOrders() {
         <ul className="mt-1 list-disc space-y-0.5 pl-5">
           <li><b>在线支付</b>（微信/支付宝商户号）：支付回调自动写入订单，无需人工核验，直接进入待代付。</li>
           <li><b>转账支付</b>（多账户轮询）：买手上传付款小票 → 客服「核验小票」通过 → 进入待代付。</li>
-          <li>「代付 + 锁汇率」是平台向韩国档口付款环节：上传韩币付款小票 + 输入当时实际汇率 → 写入 order.snapshot_rate。</li>
+          <li><b>锁定汇率</b>已自动化：支付成功时按「汇率与配置」当前生效汇率快照到 order.snapshotRate，人工无需干预。</li>
+          <li><b>标记已代付</b>：平台向韩国档口付款后，上传韩币付款小票 + 真实购汇成本（仅用于对账，不影响买手结算金额）。</li>
         </ul>
       </Card>
     </AdminShell>

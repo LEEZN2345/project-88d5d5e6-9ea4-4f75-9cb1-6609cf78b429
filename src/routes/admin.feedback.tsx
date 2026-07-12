@@ -22,13 +22,15 @@ export const Route = createFileRoute("/admin/feedback")({
 });
 
 type StockState = "pending" | "in_stock" | "out_of_stock";
+type GoodsType = "in_stock" | "reserve"; // 现货 / 预定
 
 type FeedbackRow = {
   orderId: string;
   status: OrderStatus;
   receiptUrl?: string;
   stock: StockState;
-  cycleDays: number; // 预定周期（天）
+  goodsType: GoodsType; // 商品状态：现货 / 预定
+  shipDate?: string; // 预定时的出货日期 YYYY-MM-DD
   note: string;
   updatedAt?: string;
 };
@@ -48,12 +50,16 @@ function initRows(): Record<string, FeedbackRow> {
         : o.status === "paid_locked"
           ? "pending"
           : "pending";
+    const goodsType: GoodsType = i % 2 === 0 ? "in_stock" : "reserve";
+    const shipDate =
+      goodsType === "reserve" ? addDays(new Date(), 3 + (i % 5) * 2) : undefined;
     m[o.id] = {
       orderId: o.id,
       status: o.status,
       receiptUrl: o.receiptUrl,
       stock,
-      cycleDays: 5 + (i % 4) * 2,
+      goodsType,
+      shipDate,
       note: "",
       updatedAt: o.receiptUrl ? o.createdAt : undefined,
     };
@@ -71,7 +77,8 @@ function AdminFeedback() {
   const [editing, setEditing] = useState<string | null>(null);
   const [bulkOpen, setBulkOpen] = useState(false);
   const [bulkStock, setBulkStock] = useState<StockState>("in_stock");
-  const [bulkCycle, setBulkCycle] = useState<number | "">("");
+  const [bulkGoodsType, setBulkGoodsType] = useState<GoodsType | "">("");
+  const [bulkShipDate, setBulkShipDate] = useState<string>("");
 
   const list = useMemo(() => {
     return PAID_ORDERS.map((o) => ({ order: o, fb: rows[o.id] })).filter(({ order, fb }) => {
@@ -110,7 +117,12 @@ function AdminFeedback() {
         n[id] = {
           ...n[id],
           stock: bulkStock,
-          ...(typeof bulkCycle === "number" ? { cycleDays: bulkCycle } : {}),
+          ...(bulkGoodsType ? { goodsType: bulkGoodsType } : {}),
+          ...(bulkGoodsType === "in_stock"
+            ? { shipDate: undefined }
+            : bulkShipDate
+              ? { shipDate: bulkShipDate }
+              : {}),
           updatedAt: nowStr(),
         };
       });
@@ -271,15 +283,41 @@ function AdminFeedback() {
                     </Select>
                   </Td>
                   <Td>
-                    <div className="flex items-center gap-1">
-                      <Input
-                        type="number"
-                        min={1}
-                        value={fb.cycleDays}
-                        onChange={(e) => patch(order.id, { cycleDays: Number(e.target.value) || 0 })}
-                        className="h-7 w-16 text-xs"
-                      />
-                      <span className="text-xs text-muted-foreground">天</span>
+                    <div className="flex flex-col gap-1">
+                      <Select
+                        value={fb.goodsType}
+                        onValueChange={(v) =>
+                          patch(order.id, {
+                            goodsType: v as GoodsType,
+                            ...(v === "in_stock" ? { shipDate: undefined } : {}),
+                          })
+                        }
+                      >
+                        <SelectTrigger
+                          className={`h-7 w-24 text-xs ${
+                            fb.goodsType === "in_stock"
+                              ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300"
+                              : "bg-sky-500/15 text-sky-700 dark:text-sky-300"
+                          }`}
+                        >
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="in_stock">现货</SelectItem>
+                          <SelectItem value="reserve">预定</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {fb.goodsType === "reserve" && (
+                        <div className="flex flex-col gap-0.5">
+                          <Input
+                            type="date"
+                            value={fb.shipDate ?? ""}
+                            onChange={(e) => patch(order.id, { shipDate: e.target.value })}
+                            className="h-7 w-36 text-xs"
+                          />
+                          <CountdownBadge date={fb.shipDate} />
+                        </div>
+                      )}
                     </div>
                   </Td>
                   <Td className="text-[11px] text-muted-foreground">
@@ -356,15 +394,41 @@ function AdminFeedback() {
                   </Select>
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs text-muted-foreground">预定周期（天）</label>
-                  <Input
-                    type="number"
-                    min={1}
-                    value={editRow.cycleDays}
-                    onChange={(e) => patch(editing!, { cycleDays: Number(e.target.value) || 0 })}
-                  />
+                  <label className="mb-1 block text-xs text-muted-foreground">商品状态</label>
+                  <Select
+                    value={editRow.goodsType}
+                    onValueChange={(v) =>
+                      patch(editing!, {
+                        goodsType: v as GoodsType,
+                        ...(v === "in_stock" ? { shipDate: undefined } : {}),
+                      })
+                    }
+                  >
+                    <SelectTrigger className="h-9">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="in_stock">现货</SelectItem>
+                      <SelectItem value="reserve">预定</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
+              {editRow.goodsType === "reserve" && (
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="mb-1 block text-xs text-muted-foreground">出货日期</label>
+                    <Input
+                      type="date"
+                      value={editRow.shipDate ?? ""}
+                      onChange={(e) => patch(editing!, { shipDate: e.target.value })}
+                    />
+                  </div>
+                  <div className="flex items-end">
+                    <CountdownBadge date={editRow.shipDate} />
+                  </div>
+                </div>
+              )}
               <div>
                 <label className="mb-1 block text-xs text-muted-foreground">购物小票</label>
                 {editRow.receiptUrl ? (
@@ -432,15 +496,31 @@ function AdminFeedback() {
               </Select>
             </div>
             <div>
-              <label className="mb-1 block text-xs text-muted-foreground">预定周期（天） · 留空表示不修改</label>
-              <Input
-                type="number"
-                min={1}
-                value={bulkCycle}
-                onChange={(e) => setBulkCycle(e.target.value === "" ? "" : Number(e.target.value))}
-                placeholder="例如 7"
-              />
+              <label className="mb-1 block text-xs text-muted-foreground">商品状态 · 留空不修改</label>
+              <Select
+                value={bulkGoodsType || "__none"}
+                onValueChange={(v) => setBulkGoodsType(v === "__none" ? "" : (v as GoodsType))}
+              >
+                <SelectTrigger className="h-9">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none">不修改</SelectItem>
+                  <SelectItem value="in_stock">现货</SelectItem>
+                  <SelectItem value="reserve">预定</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
+            {bulkGoodsType === "reserve" && (
+              <div>
+                <label className="mb-1 block text-xs text-muted-foreground">预定出货日期</label>
+                <Input
+                  type="date"
+                  value={bulkShipDate}
+                  onChange={(e) => setBulkShipDate(e.target.value)}
+                />
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setBulkOpen(false)}>取消</Button>
@@ -481,6 +561,45 @@ function nowStr() {
   const d = new Date();
   const pad = (n: number) => String(n).padStart(2, "0");
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function addDays(base: Date, days: number): string {
+  const d = new Date(base);
+  d.setDate(d.getDate() + days);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+function daysUntil(dateStr?: string): number | null {
+  if (!dateStr) return null;
+  const target = new Date(dateStr + "T00:00:00");
+  if (Number.isNaN(target.getTime())) return null;
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.round((target.getTime() - today.getTime()) / 86400000);
+}
+
+function CountdownBadge({ date }: { date?: string }) {
+  const d = daysUntil(date);
+  if (d === null)
+    return <span className="text-[11px] text-muted-foreground">未设置出货日期</span>;
+  if (d > 0)
+    return (
+      <span className="inline-flex w-fit items-center gap-1 rounded bg-sky-500/15 px-1.5 py-0.5 text-[11px] font-medium text-sky-700 dark:text-sky-300">
+        还有 {d} 天出货
+      </span>
+    );
+  if (d === 0)
+    return (
+      <span className="inline-flex w-fit items-center gap-1 rounded bg-amber-500/15 px-1.5 py-0.5 text-[11px] font-medium text-amber-700 dark:text-amber-300">
+        今日出货
+      </span>
+    );
+  return (
+    <span className="inline-flex w-fit items-center gap-1 rounded bg-rose-500/15 px-1.5 py-0.5 text-[11px] font-medium text-rose-700 dark:text-rose-300">
+      已逾期 {Math.abs(d)} 天
+    </span>
+  );
 }
 
 const Th = ({ children }: { children?: React.ReactNode }) => (

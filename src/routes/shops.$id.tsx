@@ -79,6 +79,7 @@ function ShopDetail() {
 
   const [sortBy, setSortBy] = useState<SortKey>("newest");
   const [discountFilter, setDiscountFilter] = useState<DiscountFilter>("all");
+  const [newFilter, setNewFilter] = useState<NewFilter>("all");
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [dateListExpanded, setDateListExpanded] = useState(false);
   const [isFav, setIsFav] = useState(false);

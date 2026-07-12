@@ -185,7 +185,7 @@ const img = (seed: string, w = 600, h = 800) =>
 export const SHOPS: Shop[] = [
   {
     id: "s1",
-    name: "MILK 女装",
+    name: "MILK",
     nameKo: "밀크",
     brand: "MILK",
     building: "Migliore",

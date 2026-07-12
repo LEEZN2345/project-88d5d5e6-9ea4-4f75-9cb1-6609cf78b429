@@ -708,13 +708,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminShippingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/stock': {
-      id: '/admin/stock'
-      path: '/admin/stock'
-      fullPath: '/admin/stock'
-      preLoaderRoute: typeof AdminStockRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/refunds': {
       id: '/admin/refunds'
       path: '/admin/refunds'
@@ -819,7 +812,6 @@ const rootRouteChildren: RootRouteChildren = {
   AdminProductsRoute: AdminProductsRoute,
   AdminRefundsRoute: AdminRefundsRoute,
   AdminShippingRoute: AdminShippingRoute,
-  AdminStockRoute: AdminStockRoute,
   AdminShopsRoute: AdminShopsRoute,
   AdminStockRoute: AdminStockRoute,
   AdminUsersRoute: AdminUsersRoute,

@@ -100,10 +100,8 @@ function AdminProducts() {
                     <Td><img src={p.images[0]} className="h-12 w-12 rounded object-cover" alt="" /></Td>
                     <Td className="font-mono text-xs">{p.internalCode}</Td>
                     <Td className="max-w-[200px] truncate">{p.name}</Td>
-                    <Td className="text-xs">
-                      <div>{shop?.name}</div>
-                      <div className="text-[11px] text-muted-foreground">{shop?.building} {shop?.floor}</div>
-                    </Td>
+                    <Td className="text-xs">{shop?.name ?? "—"}</Td>
+                    <Td className="text-[11px] text-muted-foreground">{shop?.building} {shop?.floor}</Td>
                     <Td className="text-xs">{p.category}</Td>
                     <Td>{formatKRW(p.priceKRW)}</Td>
                     <Td className="text-xs">{p.colors.join(" / ")}</Td>

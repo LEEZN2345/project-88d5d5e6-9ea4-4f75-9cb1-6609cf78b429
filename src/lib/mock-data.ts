@@ -95,20 +95,18 @@ export type PaymentAccount = {
 
 // 支付方式配置（后台可控）
 // online = 微信/支付宝 商户号在线支付（有回调，自动入账）
-// transfer = 平台指定收款账户（人工二维码轮询，需上传小票核验）
 // balance = 平台余额
 // applepay = Apple Pay
 export type PayMethodId =
   | "wechat_online"
   | "alipay_online"
-  | "transfer"
   | "balance"
   | "applepay";
 
 export type PayMethodConfig = {
   id: PayMethodId;
   label: string;
-  kind: "online" | "transfer" | "balance" | "applepay";
+  kind: "online" | "balance" | "applepay";
   enabled: boolean; // 是否对买手端开放
   note?: string;
 };
@@ -116,7 +114,6 @@ export type PayMethodConfig = {
 export const PAY_METHODS: PayMethodConfig[] = [
   { id: "wechat_online", label: "微信支付", kind: "online", enabled: true, note: "商户号自动到账" },
   { id: "alipay_online", label: "支付宝支付", kind: "online", enabled: true, note: "商户号自动到账" },
-  { id: "transfer", label: "转账到指定账户", kind: "transfer", enabled: true, note: "多账户轮询 + 上传小票核验" },
   { id: "balance", label: "余额支付", kind: "balance", enabled: false },
   { id: "applepay", label: "Apple Pay", kind: "applepay", enabled: false },
 ];

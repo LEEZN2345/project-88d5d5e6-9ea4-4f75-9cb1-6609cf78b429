@@ -246,24 +246,24 @@ function Checkout() {
               <div className="px-4">
                 <div className="mb-2 text-xs text-muted-foreground">选择支付方式</div>
                 <div className="divide-y divide-border rounded-xl border border-border bg-card">
-                  {CHANNELS.map((c) => {
-                    const selected = channel === c.id;
+                  {enabledMethods.map((m) => {
+                    const selected = channel === m.id;
+                    const ic = ICON[m.id];
                     return (
                       <button
-                        key={c.id}
-                        disabled={c.disabled}
-                        onClick={() => !c.disabled && setChannel(c.id)}
-                        className={`flex w-full items-center gap-3 px-4 py-3.5 text-left ${
-                          c.disabled ? "opacity-50" : ""
-                        }`}
+                        key={m.id}
+                        onClick={() => setChannel(m.id)}
+                        className="flex w-full items-center gap-3 px-4 py-3.5 text-left"
                       >
-                        <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-medium text-white ${c.iconBg}`}>
-                          {c.icon || "🍎"}
+                        <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-medium text-white ${ic.bg}`}>
+                          {ic.icon}
                         </div>
-                        <span className="flex-1 text-sm">{c.name}</span>
-                        {c.right && (
-                          <span className="text-xs text-muted-foreground">{c.right}</span>
-                        )}
+                        <div className="flex-1">
+                          <div className="text-sm">{m.label}</div>
+                          {m.note && (
+                            <div className="text-[10px] text-muted-foreground">{m.note}</div>
+                          )}
+                        </div>
                         <div
                           className={`flex h-5 w-5 items-center justify-center rounded-full border ${
                             selected
@@ -277,6 +277,11 @@ function Checkout() {
                     );
                   })}
                 </div>
+                {channel === "transfer" && (
+                  <div className="mt-2 rounded-md bg-amber-50 p-2 text-[11px] text-amber-700 dark:bg-amber-950/30 dark:text-amber-400">
+                    将分配至 {assigned.channel === "wechat" ? "微信" : "支付宝"} · {assigned.holder}（今日剩余额度 {formatCNY(assigned.dailyLimit - assigned.todayReceived)}），付款后上传小票由平台核验。
+                  </div>
+                )}
               </div>
 
               <DrawerFooter className="pb-6">

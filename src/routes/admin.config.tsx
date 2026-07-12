@@ -14,9 +14,16 @@ export const Route = createFileRoute("/admin/config")({
 });
 
 function AdminConfig() {
-  const [methods, setMethods] = useState(PAY_METHODS);
+  // 只保留在线支付（微信/支付宝），其余渠道暂不开放
+  const [methods, setMethods] = useState(
+    PAY_METHODS.filter((m) => m.kind === "online"),
+  );
   const toggle = (id: string) =>
     setMethods((prev) => prev.map((m) => (m.id === id ? { ...m, enabled: !m.enabled } : m)));
+
+  // 展示用：CNY → KRW（1 CNY ≈ ? KRW）。内部 base 仍以 KRW→CNY 存储。
+  const cnyToKrw = PLATFORM_RATE_CONFIG.base > 0 ? 1 / PLATFORM_RATE_CONFIG.base : 0;
+  const cnyToKrwEff = effectiveRate() > 0 ? 1 / effectiveRate() : 0;
 
   return (
     <AdminShell>
@@ -39,8 +46,6 @@ function AdminConfig() {
                   <div className="text-sm font-medium">{m.label}</div>
                   <div className="text-[11px] text-muted-foreground">
                     {m.kind === "online" && "在线商户号 · 自动到账"}
-                    {m.kind === "balance" && "平台积分/预付余额抵扣"}
-                    {m.kind === "applepay" && "iOS Safari / 微信内不可用"}
                   </div>
                 </div>
                 <Badge variant={m.enabled ? "default" : "outline"}>
@@ -64,9 +69,9 @@ function AdminConfig() {
             <Badge variant="outline">今日已录入</Badge>
           </div>
           <div className="space-y-3">
-            <Field label="今日 KRW → CNY">
-              <Input defaultValue={String(PLATFORM_RATE_CONFIG.base)} className="max-w-[160px]" />
-              <span className="text-xs text-muted-foreground">即 1 万韩币 ≈ ¥52.5</span>
+            <Field label="今日 CNY → KRW">
+              <Input defaultValue={cnyToKrw.toFixed(2)} className="max-w-[160px]" />
+              <span className="text-xs text-muted-foreground">即 ¥1 ≈ ₩{cnyToKrw.toFixed(2)}</span>
             </Field>
             <Field label="展示浮动缓冲">
               <Input defaultValue={String(PLATFORM_RATE_CONFIG.bufferPct)} className="max-w-[80px]" />
@@ -75,7 +80,7 @@ function AdminConfig() {
             <div className="rounded-md bg-primary/5 p-2 text-xs">
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">当前生效锁定汇率</span>
-                <span className="font-mono text-sm font-semibold">1 KRW = {effectiveRate()} CNY</span>
+                <span className="font-mono text-sm font-semibold">1 CNY = {cnyToKrwEff.toFixed(2)} KRW</span>
               </div>
               <div className="mt-1 text-[10px] text-muted-foreground">
                 = 基础汇率 × (1 + 缓冲%)。买手下单看到的价 = 支付成功锁定价 = 此值。
@@ -85,7 +90,7 @@ function AdminConfig() {
             <div className="mt-2 rounded-md bg-amber-50 p-2 text-[11px] text-amber-700 dark:bg-amber-950/30 dark:text-amber-400">
               ⚠️ 保存后立即生效，仅影响<b>新订单</b>的锁定汇率；已支付订单的 snapshotRate 不追溯变更。
             </div>
-            <div className="text-[11px] text-muted-foreground">近 7 日基础汇率：0.00521 / 0.00523 / 0.00524 / 0.00522 / 0.00525 / 0.00525 / 0.00525</div>
+            <div className="text-[11px] text-muted-foreground">近 7 日（CNY→KRW）：191.94 / 191.20 / 190.84 / 191.57 / 190.48 / 190.48 / 190.48</div>
           </div>
         </Card>
 
@@ -97,12 +102,9 @@ function AdminConfig() {
               <Input defaultValue="2.9" className="max-w-[80px]" />
               <span className="text-xs text-muted-foreground">%</span>
             </Field>
-            <Field label="服务费封顶（单笔）">
-              <Input defaultValue="9000" className="max-w-[120px]" />
-              <span className="text-xs text-muted-foreground">CNY</span>
-            </Field>
-            <Field label="国际运费（¥/kg）">
-              <Input defaultValue="42" className="max-w-[80px]" />
+            <Field label="国际运费（₩/kg）">
+              <Input defaultValue="8000" className="max-w-[100px]" />
+              <span className="text-xs text-muted-foreground">KRW</span>
             </Field>
             <Field label="首重（kg）">
               <Input defaultValue="1" className="max-w-[80px]" />

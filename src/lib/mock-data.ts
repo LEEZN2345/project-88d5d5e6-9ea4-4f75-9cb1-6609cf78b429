@@ -4,9 +4,11 @@ export type Shop = {
   id: string;
   name: string;
   nameKo: string;
+  brand?: string; // 主打品牌名
   building: string; // 例如 doota / migliore / apm
   floor: string;
   tags: string[];
+  minOrderQty: 1 | 2; // 起订件数：1=支持单件购买，2=同款 2 件起批
   cover: string;
   productCount: number;
 };
@@ -21,6 +23,7 @@ export type Product = {
   category: string;
   isNew?: boolean;
   discount?: number; // 百分比
+  uploadedAt: string; // YYYY-MM-DD 上新日期
   colors: string[];
   sizes: string[];
 };
@@ -109,9 +112,11 @@ export const SHOPS: Shop[] = [
     id: "s1",
     name: "MILK 女装",
     nameKo: "밀크",
+    brand: "MILK",
     building: "Migliore",
     floor: "2F-A41",
     tags: ["女装", "上新快"],
+    minOrderQty: 1,
     cover: img("milk", 600, 400),
     productCount: 286,
   },
@@ -119,9 +124,11 @@ export const SHOPS: Shop[] = [
     id: "s2",
     name: "BLUE LABEL",
     nameKo: "블루라벨",
+    brand: "BLUE LABEL",
     building: "Doota",
     floor: "5F-B12",
     tags: ["设计师", "外套"],
+    minOrderQty: 2,
     cover: img("blue", 600, 400),
     productCount: 142,
   },
@@ -129,9 +136,11 @@ export const SHOPS: Shop[] = [
     id: "s3",
     name: "STELLA SHOES",
     nameKo: "스텔라",
+    brand: "STELLA",
     building: "apM",
     floor: "B1-22",
     tags: ["鞋包", "新品"],
+    minOrderQty: 1,
     cover: img("stella", 600, 400),
     productCount: 98,
   },
@@ -139,9 +148,11 @@ export const SHOPS: Shop[] = [
     id: "s4",
     name: "ROUND HOUSE",
     nameKo: "라운드하우스",
+    brand: "ROUND HOUSE",
     building: "Migliore",
     floor: "3F-C08",
     tags: ["男装", "基础款"],
+    minOrderQty: 2,
     cover: img("round", 600, 400),
     productCount: 211,
   },
@@ -157,6 +168,7 @@ export const PRODUCTS: Product[] = [
     images: [img("coat1"), img("coat2"), img("coat3")],
     category: "外套",
     isNew: true,
+    uploadedAt: "2026-07-10",
     colors: ["奶白", "燕麦", "炭灰"],
     sizes: ["FREE"],
   },
@@ -169,6 +181,7 @@ export const PRODUCTS: Product[] = [
     images: [img("knit1"), img("knit2")],
     category: "针织",
     discount: 15,
+    uploadedAt: "2026-07-05",
     colors: ["米色", "黑"],
     sizes: ["FREE"],
   },
@@ -181,6 +194,7 @@ export const PRODUCTS: Product[] = [
     images: [img("blazer1"), img("blazer2")],
     category: "外套",
     isNew: true,
+    uploadedAt: "2026-07-11",
     colors: ["黑", "驼"],
     sizes: ["S", "M", "L"],
   },
@@ -192,6 +206,7 @@ export const PRODUCTS: Product[] = [
     priceKRW: 132000,
     images: [img("shoe1"), img("shoe2")],
     category: "鞋",
+    uploadedAt: "2026-06-20",
     colors: ["黑", "棕"],
     sizes: ["230", "235", "240", "245"],
   },
@@ -204,6 +219,7 @@ export const PRODUCTS: Product[] = [
     images: [img("tee1")],
     category: "T 恤",
     discount: 20,
+    uploadedAt: "2026-06-15",
     colors: ["白", "黑", "米"],
     sizes: ["M", "L", "XL"],
   },
@@ -216,6 +232,7 @@ export const PRODUCTS: Product[] = [
     images: [img("jean1"), img("jean2")],
     category: "裤装",
     isNew: true,
+    uploadedAt: "2026-07-08",
     colors: ["原色", "深蓝"],
     sizes: ["25", "26", "27", "28"],
   },

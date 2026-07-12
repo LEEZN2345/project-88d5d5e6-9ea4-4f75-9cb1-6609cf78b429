@@ -39,6 +39,13 @@ const img = (seed: string) => `https://picsum.photos/seed/${seed}/400/300`;
 
 const HERO_IMG = (b: string) => `https://picsum.photos/seed/hero-${b}/800/420`;
 
+// 部分档口支持单件购买（示例数据：档口名 hash 决定）
+function supportsSingleBuy(name: string): boolean {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) | 0;
+  return h % 3 !== 0; // 约 2/3 支持单件
+}
+
 type TabKey = "area" | "rank";
 
 function ShopsIndex() {
@@ -278,8 +285,18 @@ function AreaView() {
                     {s.name}
                   </p>
                   <p className="text-[10px] font-medium tracking-tight text-muted-foreground">
-                    {s.code}
+                    {s.building} · {s.floor}-{s.code}
                   </p>
+                  <span
+                    className={cn(
+                      "mt-1 inline-block rounded px-1 py-0.5 text-[9px] font-bold",
+                      supportsSingleBuy(s.name)
+                        ? "bg-emerald-500/15 text-emerald-600"
+                        : "bg-amber-500/15 text-amber-600",
+                    )}
+                  >
+                    {supportsSingleBuy(s.name) ? "1件可购" : "2件起批"}
+                  </span>
                 </div>
               </Link>
             ))}

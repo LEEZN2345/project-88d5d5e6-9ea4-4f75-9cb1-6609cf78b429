@@ -107,7 +107,6 @@ function AdminProducts() {
                     <Td className="text-xs">{p.colors.join(" / ")}</Td>
                     <Td className="text-xs">{p.sizes.join(" / ")}</Td>
                     <Td className="text-xs">{p.originCountry ?? "—"}</Td>
-                    <Td className="max-w-[160px] truncate text-xs text-muted-foreground">{p.composition ?? "—"}</Td>
                     <Td>
                       {p.isNew && <Badge className="mr-1 bg-blue-500 text-white">新</Badge>}
                       {p.discount && <Badge className="bg-rose-500 text-white">-{p.discount}%</Badge>}

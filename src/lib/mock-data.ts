@@ -61,7 +61,7 @@ export type Order = {
   createdAt: string;
   items: { product: Product; qty: number; color: string; size: string }[];
   totalKRW: number;
-  snapshotRate?: number; // KRW -> CNY,代付时锁定
+  snapshotRate?: number; // KRW -> CNY,支付成功时按平台生效汇率快照(effectiveRate)
   totalCNY?: number;
   status: OrderStatus;
   paymentAccount: { name: string; channel: "wechat" | "alipay"; holder: string };

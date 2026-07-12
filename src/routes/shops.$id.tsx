@@ -71,10 +71,6 @@ function ShopDetail() {
     );
   }, [allProducts, filter]);
 
-  const newestUpload = allProducts
-    .map((p) => p.uploadedAt)
-    .sort()
-    .at(-1);
   const saleCount = allProducts.filter((p) => p.discount).length;
   const newCount = allProducts.filter(
     (p) => p.isNew || daysAgo(p.uploadedAt) <= 14,

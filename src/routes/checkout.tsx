@@ -18,12 +18,10 @@ import {
   MapPin,
   Wallet,
   Truck,
-  Copy,
   CheckCircle2,
   Loader2,
-  QrCode,
-  Upload,
   ChevronDown,
+  Check,
 } from "lucide-react";
 
 export const Route = createFileRoute("/checkout")({
@@ -56,6 +54,21 @@ function intlShipFor(productId: string) {
 }
 
 type PayStep = "qr" | "confirming" | "done";
+type PayChannel = "wechat" | "alipay" | "balance" | "applepay";
+
+const CHANNELS: {
+  id: PayChannel;
+  name: string;
+  icon: string;
+  iconBg: string;
+  disabled?: boolean;
+  right?: string;
+}[] = [
+  { id: "wechat", name: "微信支付", icon: "微", iconBg: "bg-[#09BB07]" },
+  { id: "alipay", name: "支付宝支付", icon: "支", iconBg: "bg-[#1677FF]" },
+  { id: "balance", name: "余额支付", icon: "余", iconBg: "bg-muted-foreground/40", disabled: true, right: "余额: ¥0.00" },
+  { id: "applepay", name: "Apple Pay", icon: "", iconBg: "bg-muted-foreground/40", disabled: true },
+];
 
 function Checkout() {
   const navigate = useNavigate();
@@ -72,10 +85,9 @@ function Checkout() {
 
   const [payOpen, setPayOpen] = useState(false);
   const [step, setStep] = useState<PayStep>("qr");
-  const [channel, setChannel] = useState<"wechat" | "alipay">(assigned.channel);
+  const [channel, setChannel] = useState<PayChannel>(assigned.channel);
   const [seconds, setSeconds] = useState(15 * 60);
   const [shipOpen, setShipOpen] = useState(false);
-  const mockAccountNo = channel === "wechat" ? "wxid_ddm888" : "6221****3520";
 
   useEffect(() => {
     if (!payOpen || step !== "qr") return;
@@ -98,15 +110,6 @@ function Checkout() {
         navigate({ to: "/orders/$id", params: { id: "DD20251128001" } });
       }, 1200);
     }, 1600);
-  };
-
-  const copyAccount = async () => {
-    try {
-      await navigator.clipboard.writeText(mockAccountNo);
-      toast.success("账号已复制");
-    } catch {
-      toast.error("复制失败");
-    }
   };
 
   const mm = String(Math.floor(seconds / 60)).padStart(2, "0");

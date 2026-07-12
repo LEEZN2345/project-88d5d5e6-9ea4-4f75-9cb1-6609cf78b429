@@ -152,7 +152,12 @@ function ProductDetail() {
 
   const purchaseOptions = (
     <div className="space-y-2">
-      {TIERS.map((t) => {
+      {minOrderQty === 2 && (
+        <div className="rounded-lg bg-amber-50/60 px-3 py-2 text-[11px] text-amber-700 dark:bg-amber-950/20 dark:text-amber-300">
+          该档口同款 2 件起拍，单件直购已隐藏
+        </div>
+      )}
+      {availableTiers.map((t) => {
         const selected = t.key === tierKey;
         const isOpen = expanded === t.key;
         const tUnitCNY = costCNY * (1 + t.margin);

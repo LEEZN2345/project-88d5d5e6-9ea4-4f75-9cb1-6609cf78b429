@@ -3,7 +3,6 @@ import { AdminShell } from "@/components/AdminShell";
 import {
   ORDERS,
   SHOPS,
-  STOCK_ITEMS,
   SHIP_STATUS_LABEL,
   findStockMatch,
   type ShipStatus,
@@ -14,8 +13,15 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import { useMemo, useState } from "react";
-import { PackageCheck, Truck, Warehouse } from "lucide-react";
+import {
+  PackageCheck,
+  Truck,
+  Upload,
+  Download,
+  FileSpreadsheet,
+} from "lucide-react";
 
 export const Route = createFileRoute("/admin/shipping")({
   head: () => ({ meta: [{ title: "发货管理 · 运营后台" }] }),
@@ -40,6 +46,8 @@ type ShipRow = {
   priceKRW: number;
   source: ShipSource;
   status: ShipStatus;
+  trackingNo?: string;
+  carrier?: string;
 };
 
 function buildRows(): ShipRow[] {
@@ -70,14 +78,25 @@ function buildRows(): ShipRow[] {
         priceKRW: it.product.priceKRW,
         source,
         status: "pending",
+        trackingNo: o.logisticsNo,
       });
     });
   });
   return rows;
 }
 
+const TEMPLATE_FIELDS = [
+  { name: "订单号", required: true, example: "DD20251128001" },
+  { name: "运单号", required: true, example: "DDKR202511280001" },
+  { name: "物流商", required: true, example: "通关社A" },
+  { name: "当前节点", required: true, example: "起运" },
+  { name: "节点时间", required: true, example: "2025-11-28 22:00" },
+  { name: "备注", required: false, example: "航班 KE5523" },
+];
+const NODE_ENUM = ["韩国仓入库", "打包出库", "起运", "到港清关", "国内派送", "已签收"];
+
 function AdminShipping() {
-  const [tab, setTab] = useState<"queue" | "stock">("queue");
+  const [tab, setTab] = useState<"queue" | "import">("queue");
   const [rows, setRows] = useState<ShipRow[]>(() => buildRows());
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [srcFilter, setSrcFilter] = useState<ShipSource | "all">("all");
@@ -114,6 +133,7 @@ function AdminShipping() {
       newOrder: rows.filter((r) => r.source === "new_order").length,
       stock: rows.filter((r) => r.source === "stock").length,
       shipped: rows.filter((r) => r.status === "shipped").length,
+      withTracking: rows.filter((r) => r.trackingNo).length,
     };
   }, [rows]);
 
@@ -129,18 +149,19 @@ function AdminShipping() {
             <Truck className="mr-1 inline h-3.5 w-3.5" /> 发货队列
           </button>
           <button
-            onClick={() => setTab("stock")}
-            className={`rounded-full px-3 py-1 ${tab === "stock" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+            onClick={() => setTab("import")}
+            className={`rounded-full px-3 py-1 ${tab === "import" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
           >
-            <Warehouse className="mr-1 inline h-3.5 w-3.5" /> 现货库
+            <Upload className="mr-1 inline h-3.5 w-3.5" /> 批量物流导入
           </button>
         </div>
       </div>
 
-      <div className="mb-3 grid grid-cols-2 gap-2 md:grid-cols-4">
+      <div className="mb-3 grid grid-cols-2 gap-2 md:grid-cols-5">
         <Stat label="待发货总数" value={stats.total} />
         <Stat label="新订单代订" value={stats.newOrder} />
         <Stat label="走现货库" value={stats.stock} tone="emerald" />
+        <Stat label="已回填运单" value={stats.withTracking} />
         <Stat label="已发货" value={stats.shipped} tone="sky" />
       </div>
 

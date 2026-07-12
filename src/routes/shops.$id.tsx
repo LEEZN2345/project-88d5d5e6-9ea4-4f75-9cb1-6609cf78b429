@@ -3,7 +3,7 @@ import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { SHOPS, PRODUCTS, formatKRW, krwToCny, formatCNY } from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MapPin, Package, Sparkles, Tag, Heart } from "lucide-react";
+import { MapPin, Package, Heart } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 

@@ -45,6 +45,7 @@ import { Route as AdminLogisticsRouteImport } from './routes/admin.logistics'
 import { Route as AdminGroupsRouteImport } from './routes/admin.groups'
 import { Route as AdminFeedbackRouteImport } from './routes/admin.feedback'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
+import { Route as AdminShippingRouteImport } from './routes/admin.shipping'
 
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
@@ -226,6 +227,11 @@ const AdminConfigRoute = AdminConfigRouteImport.update({
   path: '/admin/config',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminShippingRoute = AdminShippingRouteImport.update({
+  id: '/admin/shipping',
+  path: '/admin/shipping',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -255,6 +261,7 @@ export interface FileRoutesByFullPath {
   '/admin/refunds': typeof AdminRefundsRoute
   '/admin/shipping': typeof AdminShippingRoute
   '/admin/shops': typeof AdminShopsRoute
+  '/admin/shipping': typeof AdminShippingRoute
   '/admin/users': typeof AdminUsersRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
@@ -293,6 +300,7 @@ export interface FileRoutesByTo {
   '/admin/refunds': typeof AdminRefundsRoute
   '/admin/shipping': typeof AdminShippingRoute
   '/admin/shops': typeof AdminShopsRoute
+  '/admin/shipping': typeof AdminShippingRoute
   '/admin/users': typeof AdminUsersRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
@@ -332,6 +340,7 @@ export interface FileRoutesById {
   '/admin/refunds': typeof AdminRefundsRoute
   '/admin/shipping': typeof AdminShippingRoute
   '/admin/shops': typeof AdminShopsRoute
+  '/admin/shipping': typeof AdminShippingRoute
   '/admin/users': typeof AdminUsersRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute

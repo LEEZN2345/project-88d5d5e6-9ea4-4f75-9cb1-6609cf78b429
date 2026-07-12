@@ -3,7 +3,7 @@ import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { SHOPS, PRODUCTS, formatKRW, krwToCny, formatCNY } from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MapPin, Package, Sparkles, Tag, Heart } from "lucide-react";
+import { MapPin, Package, Heart } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
@@ -71,10 +71,6 @@ function ShopDetail() {
     );
   }, [allProducts, filter]);
 
-  const newestUpload = allProducts
-    .map((p) => p.uploadedAt)
-    .sort()
-    .at(-1);
   const saleCount = allProducts.filter((p) => p.discount).length;
   const newCount = allProducts.filter(
     (p) => p.isNew || daysAgo(p.uploadedAt) <= 14,
@@ -145,21 +141,6 @@ function ShopDetail() {
             />
             {isFav ? "已收藏档口" : "收藏档口"}
           </Button>
-
-          {newestUpload && (
-            <div className="mt-3 flex items-center gap-3 text-[11px] text-muted-foreground">
-              <span className="flex items-center gap-1">
-                <Sparkles className="h-3.5 w-3.5 text-blue-500" />
-                最新上新 {daysAgo(newestUpload)} 天前
-              </span>
-              {saleCount > 0 && (
-                <span className="flex items-center gap-1">
-                  <Tag className="h-3.5 w-3.5 text-rose-500" />
-                  {saleCount} 款打折中
-                </span>
-              )}
-            </div>
-          )}
         </div>
       </div>
 

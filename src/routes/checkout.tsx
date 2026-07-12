@@ -168,8 +168,8 @@ function Checkout() {
 
       <Card className="mx-4 mt-3 p-3 text-xs">
         <Row k="商品总额 (韩币)" v={formatKRW(totalKRW)} />
-        <Row k="参考汇率" v={`1 KRW ≈ ${REFERENCE_RATE} CNY`} sub />
-        <Row k="预估人民币" v={formatCNY(krwToCny(totalKRW))} />
+        <Row k="平台生效汇率" v={`1 KRW = ${REFERENCE_RATE} CNY`} sub />
+        <Row k="人民币" v={formatCNY(krwToCny(totalKRW))} />
         <button
           type="button"
           onClick={() => setShipOpen((v) => !v)}
@@ -206,9 +206,9 @@ function Checkout() {
         )}
         <Row k="国内派送" v="顺丰包邮" sub />
         <div className="my-2 border-t border-border" />
-        <Row k="合计 (预估)" v={formatCNY(totalCNY)} bold />
+        <Row k="合计" v={formatCNY(totalCNY)} bold />
         <div className="mt-1 text-[11px] text-muted-foreground">
-          实际人民币金额 = 平台代付时锁定汇率 × 韩币 + 服务费,以订单详情为准。
+          支付成功即按当前平台汇率锁定，不受后续汇率波动影响。
         </div>
       </Card>
 

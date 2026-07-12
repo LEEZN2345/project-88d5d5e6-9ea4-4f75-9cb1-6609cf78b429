@@ -219,6 +219,7 @@ function AdminShipping() {
                   <Th>颜色 / 尺寸</Th>
                   <Th>数量</Th>
                   <Th>发货来源</Th>
+                  <Th>运单号 / 物流</Th>
                   <Th>状态</Th>
                   <Th>操作</Th>
                 </tr>
@@ -270,6 +271,20 @@ function AdminShipping() {
                         </span>
                       )}
                     </Td>
+                    <Td className="text-xs">
+                      <Input
+                        value={r.trackingNo ?? ""}
+                        onChange={(e) =>
+                          setRows((rs) =>
+                            rs.map((x) =>
+                              x.key === r.key ? { ...x, trackingNo: e.target.value } : x,
+                            ),
+                          )
+                        }
+                        placeholder="待回填"
+                        className="h-7 w-36 font-mono text-[11px]"
+                      />
+                    </Td>
                     <Td>
                       <Badge variant={r.status === "shipped" ? "default" : "secondary"}>
                         {SHIP_STATUS_LABEL[r.status]}
@@ -300,7 +315,7 @@ function AdminShipping() {
                 ))}
                 {filtered.length === 0 && (
                   <tr>
-                    <td colSpan={10} className="px-3 py-8 text-center text-xs text-muted-foreground">
+                    <td colSpan={11} className="px-3 py-8 text-center text-xs text-muted-foreground">
                       没有符合条件的发货任务
                     </td>
                   </tr>

@@ -20,7 +20,8 @@ function AdminOrders() {
   const [channelFilter, setChannelFilter] = useState<OrderChannel | "all">("all");
   const toggle = (id: string) => setExpanded((e) => ({ ...e, [id]: !e[id] }));
   const shopOf = (shopId: string) => SHOPS.find((s) => s.id === shopId);
-  const rows = ORDERS.filter((o) => channelFilter === "all" || o.channel === channelFilter);
+  const paidOrders = ORDERS.filter((o) => o.status !== "pending_payment");
+  const rows = paidOrders.filter((o) => channelFilter === "all" || o.channel === channelFilter);
 
   const channelBadge = (c: OrderChannel) => {
     const map: Record<OrderChannel, string> = {
@@ -101,7 +102,7 @@ function AdminOrders() {
           >
             {f.label}
             <span className="ml-1 opacity-70">
-              ({f.id === "all" ? ORDERS.length : ORDERS.filter((o) => o.channel === f.id).length})
+              ({f.id === "all" ? paidOrders.length : paidOrders.filter((o) => o.channel === f.id).length})
             </span>
           </button>
         ))}
@@ -110,7 +111,7 @@ function AdminOrders() {
         <table className="w-full text-sm">
           <thead className="bg-muted/50 text-xs text-muted-foreground">
             <tr>
-              <Th></Th><Th>订单号</Th><Th>下单时间</Th><Th>下单渠道</Th><Th>会员 / 收货</Th><Th>件数</Th><Th>韩币</Th><Th>锁定汇率</Th><Th>人民币</Th><Th>支付</Th><Th>状态</Th><Th>操作</Th>
+              <Th></Th><Th>订单号</Th><Th>下单时间</Th><Th>下单渠道</Th><Th>会员 / 收货</Th><Th>件数</Th><Th>韩币</Th><Th>锁定汇率</Th><Th>人民币</Th><Th>支付</Th><Th>操作</Th>
             </tr>
           </thead>
           <tbody>
@@ -152,7 +153,6 @@ function AdminOrders() {
                   <Badge variant="outline">{pc.label}</Badge>
                   <div className="mt-0.5 text-muted-foreground">{o.paymentAccount.name}</div>
                 </Td>
-                <Td><Badge>{STATUS_LABEL[o.status]}</Badge></Td>
                 <Td>
                   <div className="flex gap-1">
                     {o.snapshotRate && !o.receiptUrl && (
@@ -165,7 +165,7 @@ function AdminOrders() {
               {open && (
                 <tr className="border-t border-border bg-muted/30">
                   <Td className="align-top"></Td>
-                  <Td colSpan={11} className="py-2">
+                  <Td colSpan={10} className="py-2">
                     <div className="mb-1 text-[11px] font-medium text-muted-foreground">订单明细（拆分二级）</div>
                     <table className="w-full text-xs">
                       <thead className="text-muted-foreground">

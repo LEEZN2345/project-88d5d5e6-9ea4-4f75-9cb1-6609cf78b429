@@ -55,7 +55,8 @@ function Me() {
         <Item to="/cart" icon={ShoppingBag} label="购物车" />
         <Item to="/addresses" icon={MapPin} label="收货地址" />
         <Item to="/favorites" icon={Heart} label="我的收藏" />
-        <Item to="/invite-rules" icon={Gift} label="邀请分销规则" right="最低 2.5%" />
+        <Item to="/invite-rules" icon={Gift} label="邀请分销规则（实体店）" right="最低 2.5%" />
+        <Item to="/points-rules" icon={Gift} label="邀请赚积分（散客）" right="最高 15%" />
         <Item to="/support" icon={MessageSquare} label="联系客服" />
         <Item to="/kyc" icon={Shield} label="实名认证" right="未认证" />
         <Item to="/settings" icon={Settings} label="设置" />

@@ -11,6 +11,7 @@ import {
   Gift,
   Settings2,
   MessageSquare,
+  Warehouse,
 } from "lucide-react";
 
 type NavItem = {
@@ -25,6 +26,7 @@ const NAV: NavItem[] = [
   { to: "/admin/orders", icon: ClipboardList, label: "新订单管理", group: "经营" },
   { to: "/admin/feedback", icon: MessageSquare, label: "订单反馈管理", group: "经营" },
   { to: "/admin/shipping", icon: Truck, label: "发货管理", group: "经营" },
+  { to: "/admin/stock", icon: Warehouse, label: "现货管理", group: "经营" },
   { to: "/admin/groups", icon: Users2, label: "拼单管理", group: "经营" },
   { to: "/admin/refunds", icon: Undo2, label: "退款工单", group: "经营" },
   { to: "/admin/products", icon: Package, label: "商品管理", group: "商品" },

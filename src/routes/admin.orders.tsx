@@ -20,7 +20,8 @@ function AdminOrders() {
   const [channelFilter, setChannelFilter] = useState<OrderChannel | "all">("all");
   const toggle = (id: string) => setExpanded((e) => ({ ...e, [id]: !e[id] }));
   const shopOf = (shopId: string) => SHOPS.find((s) => s.id === shopId);
-  const rows = ORDERS.filter((o) => channelFilter === "all" || o.channel === channelFilter);
+  const paidOrders = ORDERS.filter((o) => o.status !== "pending_payment");
+  const rows = paidOrders.filter((o) => channelFilter === "all" || o.channel === channelFilter);
 
   const channelBadge = (c: OrderChannel) => {
     const map: Record<OrderChannel, string> = {
@@ -101,7 +102,7 @@ function AdminOrders() {
           >
             {f.label}
             <span className="ml-1 opacity-70">
-              ({f.id === "all" ? ORDERS.length : ORDERS.filter((o) => o.channel === f.id).length})
+              ({f.id === "all" ? paidOrders.length : paidOrders.filter((o) => o.channel === f.id).length})
             </span>
           </button>
         ))}

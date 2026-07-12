@@ -1,9 +1,29 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { PRODUCTS, SHOPS, PAYMENT_ACCOUNTS, REFERENCE_RATE, formatKRW, formatCNY, krwToCny } from "@/lib/mock-data";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, MapPin, Wallet, Truck } from "lucide-react";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
+  DrawerFooter,
+} from "@/components/ui/drawer";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
+import {
+  ChevronRight,
+  MapPin,
+  Wallet,
+  Truck,
+  Copy,
+  CheckCircle2,
+  Loader2,
+  QrCode,
+  Upload,
+} from "lucide-react";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({ meta: [{ title: "提交订单 · 东大门订货通" }] }),
@@ -16,8 +36,12 @@ const ITEMS = [
   { product: PRODUCTS[2]!, qty: 1, color: "黑", size: "M" },
 ];
 
+type PayStep = "qr" | "confirming" | "done";
+
 function Checkout() {
+  const navigate = useNavigate();
   const totalKRW = ITEMS.reduce((s, i) => s + i.product.priceKRW * i.qty, 0);
+  const totalCNY = krwToCny(totalKRW) + 28;
   // 模拟"剩余额度最大"分配
   const assigned = PAYMENT_ACCOUNTS.filter((a) => a.status === "active")
     .sort((a, b) => b.dailyLimit - b.todayReceived - (a.dailyLimit - a.todayReceived))[0]!;
@@ -25,6 +49,47 @@ function Checkout() {
     shop: s,
     items: ITEMS.filter((i) => i.product.shopId === s.id),
   })).filter((g) => g.items.length > 0);
+
+  const [payOpen, setPayOpen] = useState(false);
+  const [step, setStep] = useState<PayStep>("qr");
+  const [channel, setChannel] = useState<"wechat" | "alipay">(assigned.channel);
+  const [seconds, setSeconds] = useState(15 * 60);
+  const mockAccountNo = channel === "wechat" ? "wxid_ddm888" : "6221****3520";
+
+  useEffect(() => {
+    if (!payOpen || step !== "qr") return;
+    const t = setInterval(() => setSeconds((s) => Math.max(0, s - 1)), 1000);
+    return () => clearInterval(t);
+  }, [payOpen, step]);
+
+  const openPay = () => {
+    setStep("qr");
+    setSeconds(15 * 60);
+    setPayOpen(true);
+  };
+
+  const confirmPaid = () => {
+    setStep("confirming");
+    setTimeout(() => {
+      setStep("done");
+      setTimeout(() => {
+        setPayOpen(false);
+        navigate({ to: "/orders/$id", params: { id: "DD20251128001" } });
+      }, 1200);
+    }, 1600);
+  };
+
+  const copyAccount = async () => {
+    try {
+      await navigator.clipboard.writeText(mockAccountNo);
+      toast.success("账号已复制");
+    } catch {
+      toast.error("复制失败");
+    }
+  };
+
+  const mm = String(Math.floor(seconds / 60)).padStart(2, "0");
+  const ss = String(seconds % 60).padStart(2, "0");
 
   return (
     <MobileShell>
@@ -104,13 +169,118 @@ function Checkout() {
 
       <div className="fixed bottom-16 left-1/2 z-40 flex w-full max-w-[480px] -translate-x-1/2 items-center gap-3 border-t border-border bg-background/95 px-4 py-2 backdrop-blur">
         <div className="text-right text-xs">
-          <div className="text-base font-semibold">≈ {formatCNY(krwToCny(totalKRW) + 28)}</div>
+          <div className="text-base font-semibold">≈ {formatCNY(totalCNY)}</div>
           <div className="text-[10px] text-muted-foreground">{formatKRW(totalKRW)} + 服务费</div>
         </div>
-        <Button className="ml-auto flex-1" asChild>
-          <Link to="/orders/$id" params={{ id: "DD20251128001" }}>提交订单</Link>
+        <Button className="ml-auto flex-1" onClick={openPay}>
+          提交并支付
         </Button>
       </div>
+
+      <Drawer open={payOpen} onOpenChange={setPayOpen}>
+        <DrawerContent className="mx-auto max-w-[480px]">
+          {step === "qr" && (
+            <>
+              <DrawerHeader className="text-left">
+                <DrawerTitle className="flex items-center justify-between">
+                  <span>请完成支付</span>
+                  <span className="text-sm font-normal text-rose-500">
+                    {mm}:{ss}
+                  </span>
+                </DrawerTitle>
+                <DrawerDescription>
+                  向平台指定账户支付 <b className="text-foreground">{formatCNY(totalCNY)}</b>
+                  ，付款完成后点击下方按钮
+                </DrawerDescription>
+              </DrawerHeader>
+
+              <div className="px-4">
+                <div className="mb-3 flex gap-2">
+                  {(["wechat", "alipay"] as const).map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => setChannel(c)}
+                      className={`flex-1 rounded-lg border-2 px-3 py-2 text-sm ${
+                        channel === c
+                          ? "border-primary bg-primary/5 font-medium"
+                          : "border-border"
+                      }`}
+                    >
+                      {c === "wechat" ? "💚 微信支付" : "🅰️ 支付宝"}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="rounded-xl border border-border bg-card p-4">
+                  <div className="mx-auto grid h-44 w-44 place-items-center rounded-lg border-2 border-dashed border-border bg-muted/40">
+                    <div className="flex flex-col items-center gap-1 text-muted-foreground">
+                      <QrCode className="h-16 w-16" />
+                      <span className="text-[10px]">扫码支付（Demo）</span>
+                    </div>
+                  </div>
+                  <div className="mt-3 space-y-1 text-xs">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">收款方</span>
+                      <span>{assigned.holder}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">账号</span>
+                      <button
+                        onClick={copyAccount}
+                        className="flex items-center gap-1 text-primary"
+                      >
+                        {mockAccountNo}
+                        <Copy className="h-3 w-3" />
+                      </button>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">备注</span>
+                      <span>DD20251128001</span>
+                    </div>
+                  </div>
+                </div>
+
+                <button className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-border py-2 text-xs text-muted-foreground">
+                  <Upload className="h-3.5 w-3.5" /> 上传付款截图（可选）
+                </button>
+              </div>
+
+              <DrawerFooter>
+                <Button className="h-11" onClick={confirmPaid}>
+                  我已完成支付
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="h-9 text-xs"
+                  onClick={() => setPayOpen(false)}
+                >
+                  稍后再付
+                </Button>
+              </DrawerFooter>
+            </>
+          )}
+
+          {step === "confirming" && (
+            <div className="flex flex-col items-center gap-3 px-6 py-14 text-center">
+              <Loader2 className="h-10 w-10 animate-spin text-primary" />
+              <div className="text-sm font-medium">正在核对付款…</div>
+              <div className="text-xs text-muted-foreground">
+                系统正在向收款账户核对入账信息，请稍候
+              </div>
+            </div>
+          )}
+
+          {step === "done" && (
+            <div className="flex flex-col items-center gap-3 px-6 py-14 text-center">
+              <CheckCircle2 className="h-12 w-12 text-emerald-500" />
+              <div className="text-base font-semibold">支付成功</div>
+              <div className="text-xs text-muted-foreground">
+                平台将锁定汇率并代付韩币，正在跳转订单详情…
+              </div>
+            </div>
+          )}
+        </DrawerContent>
+      </Drawer>
     </MobileShell>
   );
 }

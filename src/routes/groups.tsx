@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { PRODUCTS, SHOPS, formatCNY, krwToCny } from "@/lib/mock-data";
 import { Button } from "@/components/ui/button";
@@ -47,6 +48,7 @@ const INITIAL_GROUPS: GroupItem[] = [
 ];
 
 function GroupsPlaza() {
+  const navigate = useNavigate();
   const [groups, setGroups] = useState<GroupItem[]>(INITIAL_GROUPS);
   const [shareOf, setShareOf] = useState<GroupItem | null>(null);
   const [joinOf, setJoinOf] = useState<GroupItem | null>(null);
@@ -70,17 +72,10 @@ function GroupsPlaza() {
 
   const confirmJoin = () => {
     if (!joinOf) return;
-    const key = joinOf.productId;
-    setGroups((prev) =>
-      prev.map((g) => (g.productId === key ? { ...g, joined: Math.min(g.need, g.joined + 1) } : g)),
-    );
-    const after = Math.min(joinOf.need, joinOf.joined + 1);
-    if (after >= joinOf.need) {
-      toast.success("🎉 拼团成功！平台将统一下单");
-    } else {
-      toast.success(`已加入拼单，还差 ${joinOf.need - after} 人`);
-    }
+    const productId = joinOf.productId;
     setJoinOf(null);
+    toast.success("进入拼单付款页");
+    navigate({ to: "/products/$id", params: { id: productId }, search: { tier: "group" } });
   };
 
   return (

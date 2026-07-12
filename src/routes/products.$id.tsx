@@ -23,6 +23,12 @@ import {
 
 export const Route = createFileRoute("/products/$id")({
   component: ProductDetail,
+  validateSearch: (search: Record<string, unknown>) => {
+    const tier = search.tier;
+    return {
+      tier: tier === "group" || tier === "bulk" || tier === "solo" ? (tier as TierKey) : undefined,
+    };
+  },
   notFoundComponent: () => (
     <MobileShell>
       <div className="p-8 text-center text-sm">商品不存在</div>
@@ -87,18 +93,27 @@ const INTL_SHIPPING_KRW = 4500;
 
 function ProductDetail() {
   const { id } = Route.useParams();
+  const { tier: tierParam } = Route.useSearch();
   const navigate = useNavigate();
   const p = PRODUCTS.find((x) => x.id === id);
   if (!p) throw notFound();
   const shop = SHOPS.find((s) => s.id === p.shopId)!;
   const [color, setColor] = useState(p.colors[0]);
   const [size, setSize] = useState(p.sizes[0]);
-  const [tierKey, setTierKey] = useState<TierKey>("solo");
-  const [expanded, setExpanded] = useState<TierKey | null>("solo");
+  const [tierKey, setTierKey] = useState<TierKey>(tierParam ?? "solo");
+  const [expanded, setExpanded] = useState<TierKey | null>(tierParam ?? "solo");
   const [flowOpen, setFlowOpen] = useState(false);
-  const [showPurchaseOptions, setShowPurchaseOptions] = useState(false);
+  const [showPurchaseOptions, setShowPurchaseOptions] = useState(!!tierParam);
   const [api, setApi] = useState<CarouselApi>();
   const [slide, setSlide] = useState(0);
+
+  useEffect(() => {
+    if (tierParam) {
+      setTierKey(tierParam);
+      setExpanded(tierParam);
+      setShowPurchaseOptions(true);
+    }
+  }, [tierParam]);
 
   useEffect(() => {
     if (!api) return;

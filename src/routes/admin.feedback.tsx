@@ -22,13 +22,15 @@ export const Route = createFileRoute("/admin/feedback")({
 });
 
 type StockState = "pending" | "in_stock" | "out_of_stock";
+type GoodsType = "in_stock" | "reserve"; // 现货 / 预定
 
 type FeedbackRow = {
   orderId: string;
   status: OrderStatus;
   receiptUrl?: string;
   stock: StockState;
-  cycleDays: number; // 预定周期（天）
+  goodsType: GoodsType; // 商品状态：现货 / 预定
+  shipDate?: string; // 预定时的出货日期 YYYY-MM-DD
   note: string;
   updatedAt?: string;
 };
@@ -48,12 +50,16 @@ function initRows(): Record<string, FeedbackRow> {
         : o.status === "paid_locked"
           ? "pending"
           : "pending";
+    const goodsType: GoodsType = i % 2 === 0 ? "in_stock" : "reserve";
+    const shipDate =
+      goodsType === "reserve" ? addDays(new Date(), 3 + (i % 5) * 2) : undefined;
     m[o.id] = {
       orderId: o.id,
       status: o.status,
       receiptUrl: o.receiptUrl,
       stock,
-      cycleDays: 5 + (i % 4) * 2,
+      goodsType,
+      shipDate,
       note: "",
       updatedAt: o.receiptUrl ? o.createdAt : undefined,
     };
@@ -71,7 +77,8 @@ function AdminFeedback() {
   const [editing, setEditing] = useState<string | null>(null);
   const [bulkOpen, setBulkOpen] = useState(false);
   const [bulkStock, setBulkStock] = useState<StockState>("in_stock");
-  const [bulkCycle, setBulkCycle] = useState<number | "">("");
+  const [bulkGoodsType, setBulkGoodsType] = useState<GoodsType | "">("");
+  const [bulkShipDate, setBulkShipDate] = useState<string>("");
 
   const list = useMemo(() => {
     return PAID_ORDERS.map((o) => ({ order: o, fb: rows[o.id] })).filter(({ order, fb }) => {
@@ -110,7 +117,12 @@ function AdminFeedback() {
         n[id] = {
           ...n[id],
           stock: bulkStock,
-          ...(typeof bulkCycle === "number" ? { cycleDays: bulkCycle } : {}),
+          ...(bulkGoodsType ? { goodsType: bulkGoodsType } : {}),
+          ...(bulkGoodsType === "in_stock"
+            ? { shipDate: undefined }
+            : bulkShipDate
+              ? { shipDate: bulkShipDate }
+              : {}),
           updatedAt: nowStr(),
         };
       });

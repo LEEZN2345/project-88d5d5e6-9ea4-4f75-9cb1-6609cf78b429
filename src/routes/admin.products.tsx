@@ -89,7 +89,7 @@ function AdminProducts() {
           <table className="w-full text-sm">
             <thead className="bg-muted/50 text-xs text-muted-foreground">
               <tr>
-                <Th>图</Th><Th>内部款号</Th><Th>名称</Th><Th>档口名称</Th><Th>档口位置</Th><Th>品类</Th><Th>价格</Th><Th>颜色</Th><Th>尺寸</Th><Th>制造国</Th><Th>成分</Th><Th>状态</Th><Th>操作</Th>
+                <Th>图</Th><Th>内部款号</Th><Th>名称</Th><Th>档口名称</Th><Th>档口位置</Th><Th>品类</Th><Th>价格</Th><Th>颜色</Th><Th>尺寸</Th><Th>制造国</Th><Th>状态</Th><Th>操作</Th>
               </tr>
             </thead>
             <tbody>
@@ -107,7 +107,6 @@ function AdminProducts() {
                     <Td className="text-xs">{p.colors.join(" / ")}</Td>
                     <Td className="text-xs">{p.sizes.join(" / ")}</Td>
                     <Td className="text-xs">{p.originCountry ?? "—"}</Td>
-                    <Td className="max-w-[160px] truncate text-xs text-muted-foreground">{p.composition ?? "—"}</Td>
                     <Td>
                       {p.isNew && <Badge className="mr-1 bg-blue-500 text-white">新</Badge>}
                       {p.discount && <Badge className="bg-rose-500 text-white">-{p.discount}%</Badge>}

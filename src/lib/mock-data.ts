@@ -248,6 +248,10 @@ export const PRODUCTS: Product[] = [
     uploadedAt: "2026-07-10",
     colors: ["奶白", "燕麦", "炭灰"],
     sizes: ["FREE"],
+    originCountry: "韩国",
+    composition: "羊毛 70% 涤纶 30%",
+    detail: "落肩廓形 / 内里加绒 / 建议搭配高领针织",
+    purchaseCondition: "2件起订 · 不可换色 · 到货 7 天内可退",
   },
   {
     id: "p2",
@@ -261,6 +265,9 @@ export const PRODUCTS: Product[] = [
     uploadedAt: "2026-07-05",
     colors: ["米色", "黑"],
     sizes: ["FREE"],
+    originCountry: "韩国",
+    composition: "羊毛 40% 腈纶 60%",
+    purchaseCondition: "2件起订 · 同色同码",
   },
   {
     id: "p2a",

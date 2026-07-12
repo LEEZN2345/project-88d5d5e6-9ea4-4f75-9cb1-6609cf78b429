@@ -159,7 +159,7 @@ function ProductDetail() {
       {/* 上架 / 限时折扣 */}
       <div className="mx-4 mt-3 flex flex-wrap items-center gap-2 text-[11px]">
         <div className="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-1 text-muted-foreground">
-          <Calendar className="h-3 w-3" /> 上架 {p.createdAt}
+          <Calendar className="h-3 w-3" /> 上架 {p.uploadedAt}
         </div>
         {p.discount && (
           <div className="inline-flex items-center gap-1 rounded-md bg-rose-500/10 px-2 py-1 font-medium text-rose-600 dark:text-rose-400">

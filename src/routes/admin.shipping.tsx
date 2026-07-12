@@ -465,6 +465,68 @@ function AdminShipping() {
           <li><b>现货库</b>请到<span className="text-foreground">现货管理</span>页维护。</li>
         </ul>
       </Card>
+
+      <Dialog open={!!confirmRow} onOpenChange={(o) => !o && setConfirmRow(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>确认发货</DialogTitle>
+            <DialogDescription>
+              {confirmRow ? `订单 ${confirmRow.orderId} · ${confirmRow.productName}` : ""}
+              <br />
+              填写运单号与物流方式后，将同步到用户订单后台。
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-3 py-2">
+            <div className="grid gap-1.5">
+              <Label htmlFor="tracking">
+                运单号<span className="text-rose-500">*</span>
+              </Label>
+              <Input
+                id="tracking"
+                value={formTracking}
+                maxLength={64}
+                onChange={(e) => {
+                  setFormTracking(e.target.value);
+                  if (formErr.t) setFormErr((s) => ({ ...s, t: undefined }));
+                }}
+                placeholder="例如 DDKR202511280001"
+                className="font-mono text-sm"
+              />
+              {formErr.t && <p className="text-xs text-rose-500">{formErr.t}</p>}
+            </div>
+            <div className="grid gap-1.5">
+              <Label htmlFor="carrier">
+                物流方式<span className="text-rose-500">*</span>
+              </Label>
+              <Select
+                value={formCarrier}
+                onValueChange={(v) => {
+                  setFormCarrier(v);
+                  if (formErr.c) setFormErr((s) => ({ ...s, c: undefined }));
+                }}
+              >
+                <SelectTrigger id="carrier">
+                  <SelectValue placeholder="请选择物流方式" />
+                </SelectTrigger>
+                <SelectContent>
+                  {CARRIERS.map((c) => (
+                    <SelectItem key={c} value={c}>
+                      {c}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {formErr.c && <p className="text-xs text-rose-500">{formErr.c}</p>}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmRow(null)}>
+              取消
+            </Button>
+            <Button onClick={submitConfirm}>确认发货并同步</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AdminShell>
   );
 }

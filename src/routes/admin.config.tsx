@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { PAY_METHODS } from "@/lib/mock-data";
+import { useState } from "react";
 
 export const Route = createFileRoute("/admin/config")({
   head: () => ({ meta: [{ title: "汇率与配置 · 运营后台" }] }),
@@ -12,6 +14,10 @@ export const Route = createFileRoute("/admin/config")({
 });
 
 function AdminConfig() {
+  const [methods, setMethods] = useState(PAY_METHODS);
+  const toggle = (id: string) =>
+    setMethods((prev) => prev.map((m) => (m.id === id ? { ...m, enabled: !m.enabled } : m)));
+
   return (
     <AdminShell>
       <div className="mb-4">
@@ -20,6 +26,38 @@ function AdminConfig() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
+        {/* 支付方式开关 */}
+        <Card className="p-4 md:col-span-2">
+          <div className="mb-3 flex items-center justify-between">
+            <div className="text-sm font-semibold">买手端支付方式</div>
+            <span className="text-xs text-muted-foreground">开启/关闭后立即对买手端生效</span>
+          </div>
+          <div className="divide-y divide-border rounded-md border border-border">
+            {methods.map((m) => (
+              <div key={m.id} className="flex items-center gap-3 px-3 py-3">
+                <div className="flex-1">
+                  <div className="text-sm font-medium">{m.label}</div>
+                  <div className="text-[11px] text-muted-foreground">
+                    {m.kind === "online" && "在线商户号 · 自动到账"}
+                    {m.kind === "transfer" && "转账到指定账户 · 多账户轮询 + 上传小票人工核验"}
+                    {m.kind === "balance" && "平台积分/预付余额抵扣"}
+                    {m.kind === "applepay" && "iOS Safari / 微信内不可用"}
+                  </div>
+                </div>
+                <Badge variant={m.enabled ? "default" : "outline"}>
+                  {m.enabled ? "已开启" : "已关闭"}
+                </Badge>
+                <Button size="sm" variant="outline" onClick={() => toggle(m.id)}>
+                  {m.enabled ? "关闭" : "开启"}
+                </Button>
+              </div>
+            ))}
+          </div>
+          <div className="mt-2 text-[11px] text-muted-foreground">
+            在线支付走「商户号」自动入账；转账支付走「收款账户」页配置的多账户轮询。两者可并存。
+          </div>
+        </Card>
+
         {/* 汇率 */}
         <Card className="p-4">
           <div className="mb-3 flex items-center justify-between">

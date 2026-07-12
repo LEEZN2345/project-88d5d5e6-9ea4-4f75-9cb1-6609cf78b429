@@ -349,11 +349,11 @@ function ProductDetail() {
         </div>
       </div>
 
-      {/* 实体店/大宗批发 */}
+      {/* 实体店/二批 */}
       <div className="mx-4 mt-4 flex items-center gap-3 rounded-xl border border-dashed border-border bg-card p-3">
         <div className="grid h-9 w-9 place-items-center rounded-full bg-muted text-base">🏬</div>
         <div className="flex-1">
-          <div className="text-sm font-medium">实体店 / 大宗批发（单款 10 件起）</div>
+          <div className="text-sm font-medium">实体店 / 二批</div>
           <div className="text-[11px] text-muted-foreground">联系专属客服获取底价</div>
         </div>
         <Button size="sm" variant="outline" className="gap-1">

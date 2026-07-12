@@ -314,11 +314,11 @@ function ProductDetail() {
             {formatKRW(baseKRW)}
           </span>
           <span className="text-xs text-muted-foreground">
-            ≈ {formatCNY(costCNY)}（含国际运费）
+            ≈ {formatCNY(baseKRW * REFERENCE_RATE)}
           </span>
         </div>
         <div className="mt-1.5 text-[11px] text-muted-foreground">
-          💱 实时汇率 {krwPerCny.toFixed(2)}（1 CNY = {krwPerCny.toFixed(2)} KRW）· 付款时锁定
+          💱 东大门实时汇率 {krwPerCny.toFixed(2)}（1 CNY = {krwPerCny.toFixed(2)} KRW）· 付款时锁定
         </div>
       </div>
 

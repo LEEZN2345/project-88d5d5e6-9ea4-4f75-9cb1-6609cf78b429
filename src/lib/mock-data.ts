@@ -262,7 +262,6 @@ export const PRODUCTS: Product[] = [
     colors: ["米色", "黑"],
     sizes: ["FREE"],
     originCountry: "韩国",
-    composition: "羊毛 40% 腈纶 60%",
     purchaseCondition: "2件起订 · 同色同码",
   },
   {

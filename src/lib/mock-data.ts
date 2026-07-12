@@ -116,7 +116,7 @@ export const SHOPS: Shop[] = [
     building: "Migliore",
     floor: "2F-A41",
     tags: ["女装", "上新快"],
-    minOrderQty: 1,
+    minOrderQty: 2,
     cover: img("milk", 600, 400),
     productCount: 286,
   },

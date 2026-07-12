@@ -89,6 +89,18 @@ const TIERS: Tier[] = [
   },
 ];
 
+function getAvailableTiers(minOrderQty: 1 | 2) {
+  if (minOrderQty === 2) {
+    return TIERS.filter((t) => t.key !== "solo");
+  }
+  return TIERS;
+}
+
+function getDefaultTier(minOrderQty: 1 | 2, tierParam?: TierKey): TierKey {
+  if (tierParam) return tierParam;
+  return minOrderQty === 2 ? "bulk" : "solo";
+}
+
 const INTL_SHIPPING_KRW = 4500;
 
 function ProductDetail() {
@@ -98,22 +110,26 @@ function ProductDetail() {
   const p = PRODUCTS.find((x) => x.id === id);
   if (!p) throw notFound();
   const shop = SHOPS.find((s) => s.id === p.shopId)!;
+  const minOrderQty = shop.minOrderQty;
+  const availableTiers = getAvailableTiers(minOrderQty);
+  const defaultTier = getDefaultTier(minOrderQty, tierParam);
+
   const [color, setColor] = useState(p.colors[0]);
   const [size, setSize] = useState(p.sizes[0]);
-  const [tierKey, setTierKey] = useState<TierKey>(tierParam ?? "solo");
-  const [expanded, setExpanded] = useState<TierKey | null>(tierParam ?? "solo");
+  const [tierKey, setTierKey] = useState<TierKey>(defaultTier);
+  const [expanded, setExpanded] = useState<TierKey | null>(defaultTier);
   const [flowOpen, setFlowOpen] = useState(false);
   const [showPurchaseOptions, setShowPurchaseOptions] = useState(!!tierParam);
   const [api, setApi] = useState<CarouselApi>();
   const [slide, setSlide] = useState(0);
 
   useEffect(() => {
-    if (tierParam) {
+    if (tierParam && availableTiers.some((t) => t.key === tierParam)) {
       setTierKey(tierParam);
       setExpanded(tierParam);
       setShowPurchaseOptions(true);
     }
-  }, [tierParam]);
+  }, [tierParam, availableTiers]);
 
   useEffect(() => {
     if (!api) return;
@@ -136,7 +152,12 @@ function ProductDetail() {
 
   const purchaseOptions = (
     <div className="space-y-2">
-      {TIERS.map((t) => {
+      {minOrderQty === 2 && (
+        <div className="rounded-lg bg-amber-50/60 px-3 py-2 text-[11px] text-amber-700 dark:bg-amber-950/20 dark:text-amber-300">
+          该档口同款 2 件起拍，单件直购已隐藏
+        </div>
+      )}
+      {availableTiers.map((t) => {
         const selected = t.key === tierKey;
         const isOpen = expanded === t.key;
         const tUnitCNY = costCNY * (1 + t.margin);
@@ -306,8 +327,15 @@ function ProductDetail() {
 
       {/* 档口批发价卡 */}
       <div className="mx-4 mt-3 rounded-xl border border-amber-500/40 bg-amber-50/60 p-3 dark:bg-amber-950/20">
-        <div className="text-[11px] font-medium text-amber-700 dark:text-amber-300">
-          🇰🇷 档口批发价
+        <div className="flex items-center justify-between">
+          <div className="text-[11px] font-medium text-amber-700 dark:text-amber-300">
+            🇰🇷 档口批发价
+          </div>
+          {minOrderQty === 2 && (
+            <span className="rounded-full bg-amber-500 px-2 py-0.5 text-[9px] font-medium text-white">
+              同款 2 件起拍
+            </span>
+          )}
         </div>
         <div className="mt-1 flex items-end justify-between">
           <span className="text-3xl font-extrabold tracking-tight">
@@ -420,12 +448,16 @@ function ProductDetail() {
           className="h-11 w-full text-sm font-semibold"
           onClick={() => setShowPurchaseOptions((v) => !v)}
         >
-          立即下单 {formatCNY(totalCNY)}
+          {minOrderQty === 2 && tierKey === "bulk"
+            ? `2件起拍 ${formatCNY(totalCNY)}`
+            : `立即下单 ${formatCNY(totalCNY)}`}
         </Button>
         <div className="mt-1 text-center text-[10px] text-muted-foreground">
           {tierKey === "group"
             ? "若拼团失败，系统将自动全额退款"
-            : "付款后平台代付韩币并锁定汇率"}
+            : minOrderQty === 2
+              ? "同款 2 件起拍，付款后平台代付韩币并锁定汇率"
+              : "付款后平台代付韩币并锁定汇率"}
         </div>
       </div>
       <div className="h-24" />

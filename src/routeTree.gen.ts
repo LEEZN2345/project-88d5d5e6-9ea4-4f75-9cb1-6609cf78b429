@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as PointsRulesRouteImport } from './routes/points-rules'
+import { Route as PointsRouteImport } from './routes/points'
 import { Route as NewArrivalsRouteImport } from './routes/new-arrivals'
 import { Route as MeRouteImport } from './routes/me'
 import { Route as KycRouteImport } from './routes/kyc'
@@ -50,6 +51,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const PointsRulesRoute = PointsRulesRouteImport.update({
   id: '/points-rules',
   path: '/points-rules',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PointsRoute = PointsRouteImport.update({
+  id: '/points',
+  path: '/points',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NewArrivalsRoute = NewArrivalsRouteImport.update({
@@ -186,6 +192,7 @@ export interface FileRoutesByFullPath {
   '/kyc': typeof KycRoute
   '/me': typeof MeRoute
   '/new-arrivals': typeof NewArrivalsRoute
+  '/points': typeof PointsRoute
   '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
@@ -215,6 +222,7 @@ export interface FileRoutesByTo {
   '/kyc': typeof KycRoute
   '/me': typeof MeRoute
   '/new-arrivals': typeof NewArrivalsRoute
+  '/points': typeof PointsRoute
   '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
@@ -245,6 +253,7 @@ export interface FileRoutesById {
   '/kyc': typeof KycRoute
   '/me': typeof MeRoute
   '/new-arrivals': typeof NewArrivalsRoute
+  '/points': typeof PointsRoute
   '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
@@ -276,6 +285,7 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/me'
     | '/new-arrivals'
+    | '/points'
     | '/points-rules'
     | '/settings'
     | '/support'
@@ -305,6 +315,7 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/me'
     | '/new-arrivals'
+    | '/points'
     | '/points-rules'
     | '/settings'
     | '/support'
@@ -334,6 +345,7 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/me'
     | '/new-arrivals'
+    | '/points'
     | '/points-rules'
     | '/settings'
     | '/support'
@@ -364,6 +376,7 @@ export interface RootRouteChildren {
   KycRoute: typeof KycRoute
   MeRoute: typeof MeRoute
   NewArrivalsRoute: typeof NewArrivalsRoute
+  PointsRoute: typeof PointsRoute
   PointsRulesRoute: typeof PointsRulesRoute
   SettingsRoute: typeof SettingsRoute
   SupportRoute: typeof SupportRoute
@@ -402,6 +415,13 @@ declare module '@tanstack/react-router' {
       path: '/points-rules'
       fullPath: '/points-rules'
       preLoaderRoute: typeof PointsRulesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/points': {
+      id: '/points'
+      path: '/points'
+      fullPath: '/points'
+      preLoaderRoute: typeof PointsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/new-arrivals': {
@@ -588,6 +608,7 @@ const rootRouteChildren: RootRouteChildren = {
   KycRoute: KycRoute,
   MeRoute: MeRoute,
   NewArrivalsRoute: NewArrivalsRoute,
+  PointsRoute: PointsRoute,
   PointsRulesRoute: PointsRulesRoute,
   SettingsRoute: SettingsRoute,
   SupportRoute: SupportRoute,

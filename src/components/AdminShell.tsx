@@ -13,6 +13,7 @@ import {
   MessageSquare,
   Warehouse,
 } from "lucide-react";
+import { Image as ImageIcon } from "lucide-react";
 
 type NavItem = {
   to: string;
@@ -35,6 +36,7 @@ const NAV: NavItem[] = [
   { to: "/admin/points-mall", icon: Gift, label: "积分商城", group: "用户与增长" },
   { to: "/admin/payment-accounts", icon: Wallet, label: "商户号", group: "资金" },
   { to: "/admin/config", icon: Settings2, label: "汇率与配置", group: "系统" },
+  { to: "/admin/banners", icon: ImageIcon, label: "Banner 管理", group: "系统" },
 ];
 
 const GROUP_ORDER = ["经营", "商品", "用户与增长", "资金", "系统"] as const;

@@ -52,15 +52,27 @@ function AdminOrders() {
   // 提货单汇总（当前筛选下）
   const pickup = (() => {
     let newItems = 0, reserveItems = 0;
-    const shopSet = new Set<string>();
+    const newShops = new Set<string>();
+    const reserveShops = new Set<string>();
     rows.forEach((o) => {
       const k = kindOf(o.id);
       o.items.forEach((it) => {
-        if (k === "new") newItems += it.qty; else reserveItems += it.qty;
-        shopSet.add(it.product.shopId);
+        if (k === "new") {
+          newItems += it.qty;
+          newShops.add(it.product.shopId);
+        } else {
+          reserveItems += it.qty;
+          reserveShops.add(it.product.shopId);
+        }
       });
     });
-    return { newItems, reserveItems, totalItems: newItems + reserveItems, shops: shopSet.size };
+    return {
+      newItems,
+      reserveItems,
+      totalItems: newItems + reserveItems,
+      newShops: newShops.size,
+      reserveShops: reserveShops.size,
+    };
   })();
 
   const channelBadge = (c: OrderChannel) => {

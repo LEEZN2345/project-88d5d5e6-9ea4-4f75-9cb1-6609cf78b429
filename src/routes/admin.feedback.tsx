@@ -13,8 +13,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { CheckCircle2, Upload, PackageCheck, PackageX, Clock, ExternalLink, ChevronRight, ChevronDown } from "lucide-react";
+import { Upload, PackageCheck, ExternalLink, ChevronRight, ChevronDown, Truck, CalendarClock, Warehouse, Lock } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/admin/feedback")({
   head: () => ({ meta: [{ title: "订单反馈管理 · 运营后台" }] }),
@@ -23,6 +23,7 @@ export const Route = createFileRoute("/admin/feedback")({
 
 type StockState = "pending" | "in_stock" | "out_of_stock";
 type GoodsType = "in_stock" | "reserve"; // 现货 / 预定
+type ItemAction = "wait_ship" | "reserve" | "to_stock";
 
 type FeedbackRow = {
   orderId: string;
@@ -33,12 +34,26 @@ type FeedbackRow = {
   shipDate?: string; // 预定时的出货日期 YYYY-MM-DD
   note: string;
   updatedAt?: string;
+  // 每个 SKU 行的锁定操作：入库等待发货 / 预定 / 现货入库
+  itemActions?: Record<number, ItemAction | undefined>;
 };
 
-const STOCK_BADGE: Record<StockState, string> = {
-  pending: "bg-amber-500/15 text-amber-700 dark:text-amber-300",
-  in_stock: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
-  out_of_stock: "bg-rose-500/15 text-rose-700 dark:text-rose-300",
+const ACTION_META: Record<ItemAction, { label: string; icon: typeof Truck; color: string }> = {
+  wait_ship: {
+    label: "入库等待发货",
+    icon: Truck,
+    color: "bg-amber-500/15 text-amber-700 border-amber-500/40 dark:text-amber-300",
+  },
+  reserve: {
+    label: "预定",
+    icon: CalendarClock,
+    color: "bg-sky-500/15 text-sky-700 border-sky-500/40 dark:text-sky-300",
+  },
+  to_stock: {
+    label: "现货数量 1 入现货库",
+    icon: Warehouse,
+    color: "bg-emerald-500/15 text-emerald-700 border-emerald-500/40 dark:text-emerald-300",
+  },
 };
 
 function initRows(): Record<string, FeedbackRow> {
@@ -74,7 +89,6 @@ function AdminFeedback() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [stockFilter, setStockFilter] = useState<StockState | "all">("all");
   const [keyword, setKeyword] = useState("");
-  const [editing, setEditing] = useState<string | null>(null);
   const [bulkOpen, setBulkOpen] = useState(false);
   const [bulkStock, setBulkStock] = useState<StockState>("in_stock");
   const [bulkGoodsType, setBulkGoodsType] = useState<GoodsType | "">("");
@@ -105,6 +119,14 @@ function AdminFeedback() {
 
   const patch = (id: string, p: Partial<FeedbackRow>) =>
     setRows((r) => ({ ...r, [id]: { ...r[id], ...p, updatedAt: nowStr() } }));
+
+  const toggleItemAction = (id: string, idx: number, act: ItemAction) =>
+    setRows((r) => {
+      const cur = r[id]!;
+      const map = { ...(cur.itemActions ?? {}) };
+      map[idx] = map[idx] === act ? undefined : act;
+      return { ...r, [id]: { ...cur, itemActions: map, updatedAt: nowStr() } };
+    });
 
   const uploadReceipt = (id: string) => {
     // 模拟上传：随机图片
@@ -147,13 +169,11 @@ function AdminFeedback() {
 
   const stats = {
     total: PAID_ORDERS.length,
-    pending: Object.values(rows).filter((r) => r.stock === "pending").length,
-    in_stock: Object.values(rows).filter((r) => r.stock === "in_stock").length,
     with_receipt: Object.values(rows).filter((r) => r.receiptUrl).length,
+    locked: Object.values(rows).filter((r) =>
+      Object.values(r.itemActions ?? {}).some(Boolean),
+    ).length,
   };
-
-  const editRow = editing ? rows[editing] : null;
-  const editOrder = editing ? PAID_ORDERS.find((o) => o.id === editing) : null;
 
   return (
     <AdminShell>
@@ -166,11 +186,10 @@ function AdminFeedback() {
         </div>
       </div>
 
-      <div className="mb-4 grid gap-3 sm:grid-cols-4">
+      <div className="mb-4 grid gap-3 sm:grid-cols-3">
         <Stat label="订单总数" value={stats.total} />
-        <Stat label="待入库" value={stats.pending} tone="amber" />
-        <Stat label="已入库" value={stats.in_stock} tone="emerald" />
         <Stat label="已上传小票" value={stats.with_receipt} tone="sky" />
+        <Stat label="已锁定订单" value={stats.locked} tone="emerald" />
       </div>
 
       <Card className="mb-3 flex flex-wrap items-center gap-2 p-3">
@@ -219,10 +238,6 @@ function AdminFeedback() {
               <Th>档口</Th>
               <Th>件数 / 金额</Th>
               <Th>购物小票</Th>
-              <Th>是否入库</Th>
-              <Th>预定周期</Th>
-              <Th>最近更新</Th>
-              <Th>操作</Th>
             </tr>
           </thead>
           <tbody>
@@ -281,79 +296,11 @@ function AdminFeedback() {
                       </Button>
                     )}
                   </Td>
-                  <Td>
-                    <Select
-                      value={fb.stock}
-                      onValueChange={(v) => patch(order.id, { stock: v as StockState })}
-                    >
-                      <SelectTrigger className={`h-7 w-28 text-xs ${STOCK_BADGE[fb.stock]}`}>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="pending">待入库</SelectItem>
-                        <SelectItem value="in_stock">已入库</SelectItem>
-                        <SelectItem value="out_of_stock">缺货</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </Td>
-                  <Td>
-                    <div className="flex flex-col gap-1">
-                      <Select
-                        value={fb.goodsType}
-                        onValueChange={(v) =>
-                          patch(order.id, {
-                            goodsType: v as GoodsType,
-                            ...(v === "in_stock" ? { shipDate: undefined } : {}),
-                          })
-                        }
-                      >
-                        <SelectTrigger
-                          className={`h-7 w-24 text-xs ${
-                            fb.goodsType === "in_stock"
-                              ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300"
-                              : "bg-sky-500/15 text-sky-700 dark:text-sky-300"
-                          }`}
-                        >
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="in_stock">现货</SelectItem>
-                          <SelectItem value="reserve">预定</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      {fb.goodsType === "reserve" && (
-                        <div className="flex flex-col gap-0.5">
-                          <Input
-                            type="date"
-                            value={fb.shipDate ?? ""}
-                            onChange={(e) => patch(order.id, { shipDate: e.target.value })}
-                            className="h-7 w-36 text-xs"
-                          />
-                          <CountdownBadge date={fb.shipDate} />
-                        </div>
-                      )}
-                    </div>
-                  </Td>
-                  <Td className="text-[11px] text-muted-foreground">
-                    {fb.updatedAt ? (
-                      <span className="inline-flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {fb.updatedAt}
-                      </span>
-                    ) : (
-                      "—"
-                    )}
-                  </Td>
-                  <Td>
-                    <Button size="sm" variant="ghost" onClick={() => setEditing(order.id)}>
-                      编辑
-                    </Button>
-                  </Td>
                 </tr>
                 {open && (
                   <tr className="border-t border-border bg-muted/30">
                     <Td></Td>
-                    <Td colSpan={10} className="py-2">
+                    <Td colSpan={6} className="py-2">
                       <div className="mb-1 text-[11px] font-medium text-muted-foreground">
                         订单明细（共 {order.items.length} 个 SKU · {order.items.reduce((s, i) => s + i.qty, 0)} 件）
                       </div>
@@ -368,11 +315,14 @@ function AdminFeedback() {
                             <th className="px-2 py-1 text-left font-normal">数量</th>
                             <th className="px-2 py-1 text-left font-normal">单价</th>
                             <th className="px-2 py-1 text-left font-normal">小计</th>
+                            <th className="px-2 py-1 text-left font-normal">操作</th>
                           </tr>
                         </thead>
                         <tbody>
                           {order.items.map((it, idx) => {
                             const shop = SHOPS.find((s) => s.id === it.product.shopId);
+                            const act = fb.itemActions?.[idx];
+                            const locked = !!act;
                             return (
                               <tr key={idx} className="border-t border-border/60">
                                 <td className="px-2 py-1.5">
@@ -402,6 +352,13 @@ function AdminFeedback() {
                                 <td className="px-2 py-1.5">
                                   {formatKRW(it.product.priceKRW * it.qty)}
                                 </td>
+                                <td className="px-2 py-1.5">
+                                  <ActionCell
+                                    action={act}
+                                    locked={locked}
+                                    onPick={(a) => toggleItemAction(order.id, idx, a)}
+                                  />
+                                </td>
                               </tr>
                             );
                           })}
@@ -415,7 +372,7 @@ function AdminFeedback() {
             })}
             {list.length === 0 && (
               <tr>
-                <td colSpan={11} className="px-3 py-10 text-center text-sm text-muted-foreground">
+                <td colSpan={7} className="px-3 py-10 text-center text-sm text-muted-foreground">
                   暂无匹配订单
                 </td>
               </tr>
@@ -428,127 +385,15 @@ function AdminFeedback() {
         <div className="font-medium text-foreground">使用说明</div>
         <ul className="mt-1 list-disc space-y-0.5 pl-5">
           <li>
-            <b>手动操作</b>：直接在行内修改「是否入库 / 预定周期」，或点击「上传」补充购物小票；改动会实时同步给下单买手。
+            <b>逐条操作</b>：展开订单明细后，在每个 SKU 的「操作」列点击
+            「入库等待发货 / 预定 / 现货数量 1 入现货库」中的一个按钮即可
+            <b>锁定该行状态</b>；再次点击同一按钮可解除锁定。改动会实时同步给下单买手。
           </li>
           <li>
             <b>批量操作</b>：勾选左侧复选框后使用「批量更新入库 / 周期」或「批量上传小票」；适合同一批到货、同一档口拿货的场景。
           </li>
-          <li>
-            <b>编辑</b>：可写入内部备注（仅运营可见）与详细状态调整。
-          </li>
         </ul>
       </Card>
-
-      {/* 编辑弹窗 */}
-      <Dialog open={!!editing} onOpenChange={(v) => !v && setEditing(null)}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader>
-            <DialogTitle>反馈详情 · {editing}</DialogTitle>
-          </DialogHeader>
-          {editRow && editOrder && (
-            <div className="space-y-3 text-sm">
-              <div className="rounded-md bg-muted/50 p-3 text-xs">
-                <div>会员：{editOrder.buyer.name} · {editOrder.buyer.phone}</div>
-                <div className="text-muted-foreground">地址：{editOrder.buyer.address}</div>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="mb-1 block text-xs text-muted-foreground">是否入库</label>
-                  <Select
-                    value={editRow.stock}
-                    onValueChange={(v) => patch(editing!, { stock: v as StockState })}
-                  >
-                    <SelectTrigger className="h-9">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="pending">待入库</SelectItem>
-                      <SelectItem value="in_stock">已入库</SelectItem>
-                      <SelectItem value="out_of_stock">缺货</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <label className="mb-1 block text-xs text-muted-foreground">商品状态</label>
-                  <Select
-                    value={editRow.goodsType}
-                    onValueChange={(v) =>
-                      patch(editing!, {
-                        goodsType: v as GoodsType,
-                        ...(v === "in_stock" ? { shipDate: undefined } : {}),
-                      })
-                    }
-                  >
-                    <SelectTrigger className="h-9">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="in_stock">现货</SelectItem>
-                      <SelectItem value="reserve">预定</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              {editRow.goodsType === "reserve" && (
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="mb-1 block text-xs text-muted-foreground">出货日期</label>
-                    <Input
-                      type="date"
-                      value={editRow.shipDate ?? ""}
-                      onChange={(e) => patch(editing!, { shipDate: e.target.value })}
-                    />
-                  </div>
-                  <div className="flex items-end">
-                    <CountdownBadge date={editRow.shipDate} />
-                  </div>
-                </div>
-              )}
-              <div>
-                <label className="mb-1 block text-xs text-muted-foreground">购物小票</label>
-                {editRow.receiptUrl ? (
-                  <div className="flex items-center gap-3">
-                    <img src={editRow.receiptUrl} alt="" className="h-24 w-24 rounded object-cover" />
-                    <div className="flex gap-2">
-                      <Button size="sm" variant="outline" onClick={() => uploadReceipt(editing!)}>
-                        <Upload className="mr-1 h-3.5 w-3.5" />替换
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => patch(editing!, { receiptUrl: undefined })}
-                      >
-                        <PackageX className="mr-1 h-3.5 w-3.5" />移除
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <Button size="sm" variant="outline" onClick={() => uploadReceipt(editing!)}>
-                    <Upload className="mr-1 h-3.5 w-3.5" />上传小票
-                  </Button>
-                )}
-              </div>
-              <div>
-                <label className="mb-1 block text-xs text-muted-foreground">内部备注</label>
-                <Textarea
-                  rows={3}
-                  value={editRow.note}
-                  onChange={(e) => patch(editing!, { note: e.target.value })}
-                  placeholder="仅运营可见"
-                />
-              </div>
-            </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditing(null)}>
-              关闭
-            </Button>
-            <Button onClick={() => setEditing(null)}>
-              <CheckCircle2 className="mr-1 h-4 w-4" />保存
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
 
       {/* 批量弹窗 */}
       <Dialog open={bulkOpen} onOpenChange={setBulkOpen}>
@@ -693,3 +538,44 @@ const Td = ({
     {children}
   </td>
 );
+
+function ActionCell({
+  action,
+  locked,
+  onPick,
+}: {
+  action: ItemAction | undefined;
+  locked: boolean;
+  onPick: (a: ItemAction) => void;
+}) {
+  const opts: ItemAction[] = ["wait_ship", "reserve", "to_stock"];
+  return (
+    <div className="flex flex-wrap items-center gap-1.5">
+      {opts.map((a) => {
+        const meta = ACTION_META[a];
+        const Icon = meta.icon;
+        const isActive = action === a;
+        const disabled = locked && !isActive;
+        return (
+          <button
+            key={a}
+            type="button"
+            onClick={() => onPick(a)}
+            disabled={disabled}
+            title={isActive ? "已锁定 · 点击解除" : meta.label}
+            className={cn(
+              "inline-flex items-center gap-1 rounded-md border px-2 py-1 text-[11px] transition",
+              isActive
+                ? `${meta.color} font-medium shadow-sm`
+                : "border-border bg-background text-muted-foreground hover:bg-muted",
+              disabled && "cursor-not-allowed opacity-40 hover:bg-background",
+            )}
+          >
+            {isActive ? <Lock className="h-3 w-3" /> : <Icon className="h-3 w-3" />}
+            {meta.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}

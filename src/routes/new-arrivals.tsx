@@ -32,7 +32,7 @@ function NewArrivals() {
           >
             <div className="relative aspect-[3/4]">
               <img src={p.images[0]} alt={p.name} className="h-full w-full object-cover" />
-              <Badge className="absolute left-2 top-2 bg-blue-500 text-white">新款</Badge>
+              <Badge className="absolute left-2 top-2 bg-primary text-primary-foreground">新款</Badge>
             </div>
             <div className="p-2">
               <div className="line-clamp-1 text-xs">{p.name}</div>

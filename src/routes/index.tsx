@@ -90,7 +90,7 @@ function Index() {
       <div className="mt-4 grid grid-cols-3 gap-2 px-4">
         {[
           { to: "/shops", icon: Flame, label: "热门档口", color: "text-orange-500" },
-          { to: "/new-arrivals", icon: Sparkles, label: "今日上新", color: "text-blue-500" },
+          { to: "/new-arrivals", icon: Sparkles, label: "今日上新", color: "text-primary" },
           { to: "/discounts", icon: TicketPercent, label: "档口折扣", color: "text-rose-500" },
         ].map(({ to, icon: Icon, label, color }) => (
           <Link key={label} to={to} className="flex flex-col items-center justify-center rounded-xl border border-border bg-card py-3">
@@ -154,7 +154,7 @@ function ProductCard({ p }: { p: (typeof PRODUCTS)[number] }) {
     <Link to="/products/$id" params={{ id: p.id }} className="block overflow-hidden rounded-xl border border-border bg-card">
       <div className="relative aspect-[3/4]">
         <img src={p.images[0]} alt={p.name} className="h-full w-full object-cover" />
-        {p.isNew && <Badge className="absolute left-2 top-2 bg-blue-500 text-white">新款</Badge>}
+        {p.isNew && <Badge className="absolute left-2 top-2 bg-primary text-primary-foreground">新款</Badge>}
         {p.discount && <Badge className="absolute left-2 top-2 bg-rose-500 text-white">-{p.discount}%</Badge>}
       </div>
       <div className="p-2">

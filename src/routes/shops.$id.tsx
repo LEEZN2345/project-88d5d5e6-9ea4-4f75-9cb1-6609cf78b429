@@ -223,7 +223,7 @@ function ShopDetail() {
           className={cn(
             "flex shrink-0 items-center gap-1 rounded-full border px-3 py-1 text-xs",
             newFilter === "new"
-              ? "border-blue-500 bg-blue-50 text-blue-600"
+              ? "border-primary bg-primary/10 text-primary"
               : "border-border bg-muted/40",
           )}
         >
@@ -304,7 +304,7 @@ function ShopDetail() {
             <div className="text-sm font-bold">档口新款</div>
             <div className="text-[10px] text-white/80">最新上架 · 抢先预定</div>
           </div>
-          <span className="absolute right-2 top-2 rounded-full bg-blue-500 px-2 py-0.5 text-[10px] font-medium text-white">
+          <span className="absolute right-2 top-2 rounded-full bg-primary px-2 py-0.5 text-[10px] font-medium text-primary-foreground">
             NEW
           </span>
         </button>

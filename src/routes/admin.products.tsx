@@ -104,7 +104,7 @@ function AdminProducts() {
                     <Td className="text-xs">{p.sizes.join(" / ")}</Td>
                     <Td className="text-xs">{p.originCountry ?? "—"}</Td>
                     <Td>
-                      {p.isNew && <Badge className="mr-1 bg-blue-500 text-white">新</Badge>}
+                      {p.isNew && <Badge className="mr-1 bg-primary text-primary-foreground">新</Badge>}
                       {p.discount && <Badge className="bg-rose-500 text-white">-{p.discount}%</Badge>}
                     </Td>
                     <Td>

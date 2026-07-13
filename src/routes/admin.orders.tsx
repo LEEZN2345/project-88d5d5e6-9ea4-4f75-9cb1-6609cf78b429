@@ -38,8 +38,9 @@ function AdminOrders() {
   // Mock: 按订单号末位区分「今日新订单」与「预定出货」（预定单今天到货，需一起去档口取）
   const kindOf = (id: string): "new" | "reserve" =>
     Number.parseInt(id.slice(-1), 10) % 2 === 0 ? "reserve" : "new";
-  const rows = paidOrders
-    .filter((o) => channelFilter === "all" || o.channel === channelFilter)
+  const channelRows = paidOrders
+    .filter((o) => channelFilter === "all" || o.channel === channelFilter);
+  const rows = channelRows
     .filter((o) => kindFilter === "all" || kindOf(o.id) === kindFilter);
 
   const kindBadge = (k: "new" | "reserve") =>
@@ -54,7 +55,7 @@ function AdminOrders() {
     let newItems = 0, reserveItems = 0;
     const newShops = new Set<string>();
     const reserveShops = new Set<string>();
-    rows.forEach((o) => {
+    channelRows.forEach((o) => {
       const k = kindOf(o.id);
       o.items.forEach((it) => {
         if (k === "new") {
@@ -148,8 +149,22 @@ function AdminOrders() {
 
       {/* 提货单汇总 */}
       <div className="mb-3 grid grid-cols-2 gap-2">
-        <SummaryCard label="今日新订单（涉及档口数）" items={pickup.newItems} shops={pickup.newShops} tone="blue" />
-        <SummaryCard label="预定出货（涉及档口）" items={pickup.reserveItems} shops={pickup.reserveShops} tone="purple" />
+        <SummaryCard
+          label="今日新订单（涉及档口数）"
+          items={pickup.newItems}
+          shops={pickup.newShops}
+          tone="blue"
+          active={kindFilter === "new"}
+          onClick={() => setKindFilter((k) => k === "new" ? "all" : "new")}
+        />
+        <SummaryCard
+          label="预定出货（涉及档口）"
+          items={pickup.reserveItems}
+          shops={pickup.reserveShops}
+          tone="purple"
+          active={kindFilter === "reserve"}
+          onClick={() => setKindFilter((k) => k === "reserve" ? "all" : "reserve")}
+        />
       </div>
 
       {/* 一级：类型 */}
@@ -381,11 +396,15 @@ function SummaryCard({
   items,
   shops,
   tone,
+  active,
+  onClick,
 }: {
   label: string;
   items: number;
   shops: number;
   tone: "blue" | "purple" | "foreground" | "muted";
+  active?: boolean;
+  onClick?: () => void;
 }) {
   const toneCls: Record<string, string> = {
     blue: "text-blue-600 dark:text-blue-400",
@@ -393,8 +412,12 @@ function SummaryCard({
     foreground: "text-foreground",
     muted: "text-muted-foreground",
   };
+  const activeRing = active ? "ring-2 ring-offset-1 ring-current" : "";
   return (
-    <Card className="p-3">
+    <Card
+      className={`cursor-pointer p-3 transition hover:bg-muted/40 ${onClick ? "hover:shadow-sm" : ""} ${activeRing}`}
+      onClick={onClick}
+    >
       <div className="text-[11px] text-muted-foreground">{label}</div>
       <div className={`mt-1 flex items-baseline gap-2 text-xl font-semibold ${toneCls[tone]}`}>
         <span>

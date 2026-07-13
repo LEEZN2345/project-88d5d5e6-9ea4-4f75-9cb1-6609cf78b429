@@ -54,7 +54,7 @@ const TIERS: Tier[] = [
   {
     key: "solo",
     label: "单件直购",
-    margin: 0.1,
+    margin: 0.2,
     qty: 1,
     tag: "推荐",
     cta: (total) => `立即下单 ${total}`,

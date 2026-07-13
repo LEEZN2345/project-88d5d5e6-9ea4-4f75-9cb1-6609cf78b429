@@ -538,3 +538,44 @@ const Td = ({
     {children}
   </td>
 );
+
+function ActionCell({
+  action,
+  locked,
+  onPick,
+}: {
+  action: ItemAction | undefined;
+  locked: boolean;
+  onPick: (a: ItemAction) => void;
+}) {
+  const opts: ItemAction[] = ["wait_ship", "reserve", "to_stock"];
+  return (
+    <div className="flex flex-wrap items-center gap-1.5">
+      {opts.map((a) => {
+        const meta = ACTION_META[a];
+        const Icon = meta.icon;
+        const isActive = action === a;
+        const disabled = locked && !isActive;
+        return (
+          <button
+            key={a}
+            type="button"
+            onClick={() => onPick(a)}
+            disabled={disabled}
+            title={isActive ? "已锁定 · 点击解除" : meta.label}
+            className={cn(
+              "inline-flex items-center gap-1 rounded-md border px-2 py-1 text-[11px] transition",
+              isActive
+                ? `${meta.color} font-medium shadow-sm`
+                : "border-border bg-background text-muted-foreground hover:bg-muted",
+              disabled && "cursor-not-allowed opacity-40 hover:bg-background",
+            )}
+          >
+            {isActive ? <Lock className="h-3 w-3" /> : <Icon className="h-3 w-3" />}
+            {meta.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}

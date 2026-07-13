@@ -395,11 +395,15 @@ function SummaryCard({
   items,
   shops,
   tone,
+  active,
+  onClick,
 }: {
   label: string;
   items: number;
   shops: number;
   tone: "blue" | "purple" | "foreground" | "muted";
+  active?: boolean;
+  onClick?: () => void;
 }) {
   const toneCls: Record<string, string> = {
     blue: "text-blue-600 dark:text-blue-400",
@@ -407,8 +411,12 @@ function SummaryCard({
     foreground: "text-foreground",
     muted: "text-muted-foreground",
   };
+  const activeRing = active ? "ring-2 ring-offset-1 ring-current" : "";
   return (
-    <Card className="p-3">
+    <Card
+      className={`cursor-pointer p-3 transition hover:bg-muted/40 ${onClick ? "hover:shadow-sm" : ""} ${activeRing}`}
+      onClick={onClick}
+    >
       <div className="text-[11px] text-muted-foreground">{label}</div>
       <div className={`mt-1 flex items-baseline gap-2 text-xl font-semibold ${toneCls[tone]}`}>
         <span>

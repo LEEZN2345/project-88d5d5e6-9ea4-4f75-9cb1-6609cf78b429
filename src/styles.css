@@ -89,9 +89,9 @@
   --accent-foreground: oklch(0.208 0.042 265.755);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
+  --border: oklch(0.9 0.02 260);
+  --input: oklch(0.9 0.02 260);
+  --ring: oklch(0.36 0.18 264);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -230,4 +230,17 @@
       rgba(0, 0, 0, 0.05) 2px
     ),
     linear-gradient(180deg, #3a3d44 0%, #24272c 100%);
+}
+
+/* Text link — apM blue, underline on hover */
+@utility link {
+  color: var(--apm);
+  text-underline-offset: 4px;
+  transition: color 0.15s ease;
+}
+@utility link {
+  &:hover {
+    text-decoration: underline;
+    color: var(--apm-ink);
+  }
 }

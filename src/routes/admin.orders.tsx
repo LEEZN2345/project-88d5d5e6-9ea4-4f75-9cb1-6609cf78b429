@@ -148,8 +148,22 @@ function AdminOrders() {
 
       {/* 提货单汇总 */}
       <div className="mb-3 grid grid-cols-2 gap-2">
-        <SummaryCard label="今日新订单（涉及档口数）" items={pickup.newItems} shops={pickup.newShops} tone="blue" />
-        <SummaryCard label="预定出货（涉及档口）" items={pickup.reserveItems} shops={pickup.reserveShops} tone="purple" />
+        <SummaryCard
+          label="今日新订单（涉及档口数）"
+          items={pickup.newItems}
+          shops={pickup.newShops}
+          tone="blue"
+          active={kindFilter === "new"}
+          onClick={() => setKindFilter((k) => k === "new" ? "all" : "new")}
+        />
+        <SummaryCard
+          label="预定出货（涉及档口）"
+          items={pickup.reserveItems}
+          shops={pickup.reserveShops}
+          tone="purple"
+          active={kindFilter === "reserve"}
+          onClick={() => setKindFilter((k) => k === "reserve" ? "all" : "reserve")}
+        />
       </div>
 
       {/* 一级：类型 */}

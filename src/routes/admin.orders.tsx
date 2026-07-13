@@ -18,7 +18,7 @@ import { useState, Fragment } from "react";
 import { ChevronRight, ChevronDown, Download, Sparkles, PackageCheck } from "lucide-react";
 
 export const Route = createFileRoute("/admin/orders")({
-  head: () => ({ meta: [{ title: "新订单管理 · 运营后台" }] }),
+  head: () => ({ meta: [{ title: "新订单 + 预定管理 · 运营后台" }] }),
   component: AdminOrders,
 });
 
@@ -28,13 +28,40 @@ function AdminOrders() {
     idx % 2 === 0 ? { label: "微信 · 在线" } : { label: "支付宝 · 在线" };
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [channelFilter, setChannelFilter] = useState<OrderChannel | "all">("all");
+  const [kindFilter, setKindFilter] = useState<"all" | "new" | "reserve">("all");
   // 记录每个「命中现货」的 item 是否选择从现货库出库。key = `${orderId}#${idx}`
   const [useStock, setUseStock] = useState<Record<string, boolean>>({});
   const setStockChoice = (k: string, v: boolean) => setUseStock((s) => ({ ...s, [k]: v }));
   const toggle = (id: string) => setExpanded((e) => ({ ...e, [id]: !e[id] }));
   const shopOf = (shopId: string) => SHOPS.find((s) => s.id === shopId);
   const paidOrders = ORDERS.filter((o) => o.status !== "pending_payment");
-  const rows = paidOrders.filter((o) => channelFilter === "all" || o.channel === channelFilter);
+  // Mock: 按订单号末位区分「今日新订单」与「预定出货」（预定单今天到货，需一起去档口取）
+  const kindOf = (id: string): "new" | "reserve" =>
+    Number.parseInt(id.slice(-1), 10) % 2 === 0 ? "reserve" : "new";
+  const rows = paidOrders
+    .filter((o) => channelFilter === "all" || o.channel === channelFilter)
+    .filter((o) => kindFilter === "all" || kindOf(o.id) === kindFilter);
+
+  const kindBadge = (k: "new" | "reserve") =>
+    k === "new" ? (
+      <span className="rounded px-1.5 py-0.5 text-[11px] bg-blue-500/15 text-blue-700 dark:text-blue-300">今日新订单</span>
+    ) : (
+      <span className="rounded px-1.5 py-0.5 text-[11px] bg-purple-500/15 text-purple-700 dark:text-purple-300">预定出货</span>
+    );
+
+  // 提货单汇总（当前筛选下）
+  const pickup = (() => {
+    let newItems = 0, reserveItems = 0;
+    const shopSet = new Set<string>();
+    rows.forEach((o) => {
+      const k = kindOf(o.id);
+      o.items.forEach((it) => {
+        if (k === "new") newItems += it.qty; else reserveItems += it.qty;
+        shopSet.add(it.product.shopId);
+      });
+    });
+    return { newItems, reserveItems, totalItems: newItems + reserveItems, shops: shopSet.size };
+  })();
 
   const channelBadge = (c: OrderChannel) => {
     const map: Record<OrderChannel, string> = {
@@ -46,12 +73,13 @@ function AdminOrders() {
   };
 
   const exportCSV = () => {
-    const header = ["订单号","下单时间","下单渠道","会员","电话","收货地址","档口号","内部款号","商品","颜色","尺寸","数量","单价(KRW)","小计(KRW)","订单总额(KRW)","订单总额(CNY)","锁定汇率","状态"];
+    const header = ["类型","订单号","下单时间","下单渠道","会员","电话","收货地址","档口号","内部款号","商品","颜色","尺寸","数量","单价(KRW)","小计(KRW)","订单总额(KRW)","订单总额(CNY)","锁定汇率","状态"];
     const lines: string[] = [header.join(",")];
     rows.forEach((o) => {
       o.items.forEach((it) => {
         const shop = shopOf(it.product.shopId);
         const cells = [
+          kindOf(o.id) === "new" ? "今日新订单" : "预定出货",
           o.id,
           o.createdAt,
           CHANNEL_LABEL[o.channel],
@@ -82,7 +110,7 @@ function AdminOrders() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `orders_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `提货单_${kindFilter === "all" ? "新订单+预定" : kindFilter === "new" ? "今日新订单" : "预定出货"}_${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -97,11 +125,50 @@ function AdminOrders() {
   return (
     <AdminShell>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-xl font-semibold">新订单管理</h1>
+        <div>
+          <h1 className="text-xl font-semibold">新订单 + 预定管理</h1>
+          <p className="mt-0.5 text-xs text-muted-foreground">当日下单 + 预定到货合并生成提货单，交付付款提货师傅一并去档口取货。</p>
+        </div>
         <Button size="sm" variant="outline" onClick={exportCSV}>
-          <Download className="mr-1 h-4 w-4" />导出 CSV（拆分明细）
+          <Download className="mr-1 h-4 w-4" />导出提货单 CSV
         </Button>
       </div>
+
+      {/* 提货单汇总 */}
+      <div className="mb-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <SummaryCard label="今日新订单" value={pickup.newItems} suffix="件" tone="blue" />
+        <SummaryCard label="预定出货" value={pickup.reserveItems} suffix="件" tone="purple" />
+        <SummaryCard label="合计件数" value={pickup.totalItems} suffix="件" tone="foreground" />
+        <SummaryCard label="涉及档口" value={pickup.shops} suffix="家" tone="muted" />
+      </div>
+
+      {/* 一级：类型 */}
+      <div className="mb-2 flex flex-wrap gap-2">
+        {([
+          { id: "all", label: "全部（合并提货单）" },
+          { id: "new", label: "今日新订单" },
+          { id: "reserve", label: "预定出货" },
+        ] as const).map((f) => {
+          const cnt = f.id === "all" ? paidOrders.length : paidOrders.filter((o) => kindOf(o.id) === f.id).length;
+          const active = kindFilter === f.id;
+          return (
+            <button
+              key={f.id}
+              onClick={() => setKindFilter(f.id)}
+              className={`rounded-md border px-3 py-1.5 text-xs transition ${
+                active
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-border bg-background text-foreground hover:bg-muted"
+              }`}
+            >
+              {f.label}
+              <span className="ml-1 opacity-70">({cnt})</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* 二级：渠道 */}
       <div className="mb-3 flex flex-wrap gap-2">
         {filters.map((f) => (
           <button
@@ -124,7 +191,7 @@ function AdminOrders() {
         <table className="w-full text-sm">
           <thead className="bg-muted/50 text-xs text-muted-foreground">
             <tr>
-              <Th></Th><Th>订单号</Th><Th>下单时间</Th><Th>下单渠道</Th><Th>会员 / 收货</Th><Th>件数</Th><Th>韩币</Th><Th>锁定汇率</Th><Th>人民币</Th><Th>支付</Th><Th>操作</Th>
+              <Th></Th><Th>类型</Th><Th>订单号</Th><Th>下单时间</Th><Th>下单渠道</Th><Th>会员 / 收货</Th><Th>件数</Th><Th>韩币</Th><Th>锁定汇率</Th><Th>人民币</Th><Th>支付</Th><Th>操作</Th>
             </tr>
           </thead>
           <tbody>
@@ -143,6 +210,7 @@ function AdminOrders() {
                     {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                   </button>
                 </Td>
+                <Td>{kindBadge(kindOf(o.id))}</Td>
                 <Td className="font-mono text-xs">{o.id}</Td>
                 <Td className="text-xs">{o.createdAt}</Td>
                 <Td>{channelBadge(o.channel)}</Td>
@@ -178,7 +246,7 @@ function AdminOrders() {
               {open && (
                 <tr className="border-t border-border bg-muted/30">
                   <Td className="align-top"></Td>
-                  <Td colSpan={10} className="py-2">
+                  <Td colSpan={11} className="py-2">
                     <div className="mb-1 text-[11px] font-medium text-muted-foreground">订单明细（拆分二级）</div>
                     <table className="w-full text-xs">
                       <thead className="text-muted-foreground">

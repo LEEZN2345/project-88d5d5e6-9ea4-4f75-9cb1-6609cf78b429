@@ -223,6 +223,7 @@ function AdminOrders() {
             {rows.map((o, i) => {
               const pc = payChannelOf(i);
               const open = expanded[o.id];
+              const hasStock = o.items.some((it) => findStockMatch(it.product.id, it.color, it.size));
               return (
               <Fragment key={o.id}>
               <tr key={o.id} className="border-t border-border">
@@ -235,7 +236,16 @@ function AdminOrders() {
                     {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                   </button>
                 </Td>
-                <Td>{kindBadge(kindOf(o.id))}</Td>
+                <Td>
+                  <div className="flex flex-col gap-1">
+                    {kindBadge(kindOf(o.id))}
+                    {hasStock && (
+                      <span className="inline-flex w-fit items-center gap-1 rounded border border-emerald-400/60 bg-emerald-50 px-1.5 py-0.5 text-[10px] text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-300">
+                        <PackageCheck className="h-3 w-3" /> 有现货
+                      </span>
+                    )}
+                  </div>
+                </Td>
                 <Td className="font-mono text-xs">{o.id}</Td>
                 <Td className="text-xs">{o.createdAt}</Td>
                 <Td>{channelBadge(o.channel)}</Td>

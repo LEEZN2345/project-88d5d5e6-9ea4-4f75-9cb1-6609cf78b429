@@ -38,8 +38,9 @@ function AdminOrders() {
   // Mock: 按订单号末位区分「今日新订单」与「预定出货」（预定单今天到货，需一起去档口取）
   const kindOf = (id: string): "new" | "reserve" =>
     Number.parseInt(id.slice(-1), 10) % 2 === 0 ? "reserve" : "new";
-  const rows = paidOrders
-    .filter((o) => channelFilter === "all" || o.channel === channelFilter)
+  const channelRows = paidOrders
+    .filter((o) => channelFilter === "all" || o.channel === channelFilter);
+  const rows = channelRows
     .filter((o) => kindFilter === "all" || kindOf(o.id) === kindFilter);
 
   const kindBadge = (k: "new" | "reserve") =>

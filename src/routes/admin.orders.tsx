@@ -365,3 +365,31 @@ function AdminOrders() {
 
 const Th = ({ children }: { children?: React.ReactNode }) => <th className="px-3 py-2 text-left font-medium">{children}</th>;
 const Td = ({ children, className = "", colSpan }: { children?: React.ReactNode; className?: string; colSpan?: number }) => <td colSpan={colSpan} className={`px-3 py-2 ${className}`}>{children}</td>;
+
+function SummaryCard({
+  label,
+  value,
+  suffix,
+  tone,
+}: {
+  label: string;
+  value: number;
+  suffix?: string;
+  tone: "blue" | "purple" | "foreground" | "muted";
+}) {
+  const toneCls: Record<string, string> = {
+    blue: "text-blue-600 dark:text-blue-400",
+    purple: "text-purple-600 dark:text-purple-400",
+    foreground: "text-foreground",
+    muted: "text-muted-foreground",
+  };
+  return (
+    <Card className="p-3">
+      <div className="text-[11px] text-muted-foreground">{label}</div>
+      <div className={`mt-1 text-xl font-semibold ${toneCls[tone]}`}>
+        {value}
+        {suffix && <span className="ml-0.5 text-xs font-normal text-muted-foreground">{suffix}</span>}
+      </div>
+    </Card>
+  );
+}

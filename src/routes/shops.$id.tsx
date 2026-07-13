@@ -87,6 +87,7 @@ function ShopDetail() {
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [dateListExpanded, setDateListExpanded] = useState(false);
   const [isFav, setIsFav] = useState(false);
+  const memberBanner = useBanner("shop_member");
 
   useEffect(() => {
     setIsFav(getFavShops().includes(id));
@@ -245,25 +246,36 @@ function ShopDetail() {
       </div>
 
       {/* 会员专享 banner */}
+      {memberBanner?.enabled !== false && (
       <div className="mt-3 px-4">
         <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-rose-500 via-rose-500 to-amber-500 p-3 text-white shadow-sm">
+          {memberBanner?.image && (
+            <img
+              src={memberBanner.image}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover opacity-40"
+            />
+          )}
+          <div className="relative">
           <div className="flex items-center gap-2">
             <Crown className="h-5 w-5 shrink-0 text-amber-200" />
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1 text-[13px] font-bold">
                 <Sparkles className="h-3.5 w-3.5" />
-                快人一步，档口新款抢先预定
+                {memberBanner?.title || "快人一步，档口新款抢先预定"}
               </div>
               <div className="text-[10px] text-white/85">
-                会员专享 · 独家上新提前锁定
+                {memberBanner?.subtitle || "会员专享 · 独家上新提前锁定"}
               </div>
             </div>
             <span className="shrink-0 rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-medium backdrop-blur">
               开通会员
             </span>
           </div>
+          </div>
         </div>
       </div>
+      )}
 
       {/* 分类入口：档口新款 & 档口打折 */}
       <div className="mt-3 grid grid-cols-2 gap-3 px-4">

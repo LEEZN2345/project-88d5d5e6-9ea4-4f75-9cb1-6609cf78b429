@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Search, Flame, Sparkles, TicketPercent, TrendingUp } from "lucide-react";
 import { useBanner } from "@/lib/banners";
+import { BrandPlate, SignBoard } from "@/components/SignBoard";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -28,9 +29,19 @@ function Index() {
   return (
     <MobileShell>
       <MobileHeader
-        title="东大门订货通"
+        title="apM 订货通"
         right={<Link to="/admin" className="text-xs text-muted-foreground">运营后台</Link>}
       />
+      {/* apM brand hero — bag-style plate */}
+      <div className="mx-4 mt-3 grid grid-cols-3 gap-2">
+        <BrandPlate brand="apM" tagline="Worldwide Market" className="col-span-2" />
+        <BrandPlate brand="Place" tagline="Wholesale" variant="place" />
+      </div>
+      <div className="mx-4 mt-2 flex flex-wrap gap-1.5">
+        <SignBoard label="apM" code="7F" size="sm" variant="apm" />
+        <SignBoard label="Place" code="8F" size="sm" variant="place" />
+        <SignBoard label="Luxe" code="7F" size="sm" variant="luxe" />
+      </div>
       {homeHero?.enabled !== false && homeHero?.image && (
         <Link
           to={homeHero.link || "/shops"}

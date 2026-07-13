@@ -25,6 +25,14 @@ import {
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useBanner } from "@/lib/banners";
+import { SignBoard } from "@/components/SignBoard";
+
+function brandVariant(name: string): "apm" | "place" | "luxe" {
+  const n = name.toLowerCase();
+  if (n.includes("place")) return "place";
+  if (n.includes("luxe")) return "luxe";
+  return "apm";
+}
 
 export const Route = createFileRoute("/shops/")({
   head: () => ({
@@ -168,27 +176,22 @@ function AreaView() {
       </div>
 
       {/* Top building chip strip (replaces left rail) */}
-      <div className="border-b border-border bg-background">
-        <div className="flex flex-wrap gap-1.5 px-3 py-2.5">
+      {/* Building signboard strip — mimics physical stall plates */}
+      <div className="border-b border-border bg-neutral-950">
+        <div className="scrollbar-none flex gap-2 overflow-x-auto px-3 py-3">
           {buildings.map((b) => {
             const isActive = b.name === activeBuilding;
             const has = buildingHasShops(b.name);
             return (
-              <button
+              <SignBoard
                 key={b.name}
+                label={b.name.replace(/^APM\s*/i, "").trim() || "apM"}
+                code={has ? "●" : undefined}
+                variant={brandVariant(b.name)}
+                active={isActive}
                 onClick={() => onPickBuilding(b.name)}
-                className={cn(
-                  "relative rounded-full border px-3 py-1.5 text-[11px] font-bold uppercase tracking-tight transition",
-                  isActive
-                    ? "border-foreground bg-foreground text-background"
-                    : "border-border bg-muted/40 text-muted-foreground"
-                )}
-              >
-                {b.name}
-                {has && !isActive && (
-                  <span className="ml-1 inline-block h-1 w-1 rounded-full bg-amber-500 align-middle" />
-                )}
-              </button>
+                className="shrink-0"
+              />
             );
           })}
         </div>

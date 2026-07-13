@@ -22,6 +22,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Crown, Sparkles } from "lucide-react";
 import catNewImg from "@/assets/cat-new.jpg";
 import catSaleImg from "@/assets/cat-sale.jpg";
+import { useBanner } from "@/lib/banners";
 
 export const Route = createFileRoute("/shops/$id")({
   component: ShopDetail,

@@ -600,10 +600,14 @@ function ActionCell({
   action,
   locked,
   onPick,
+  shipDate,
+  onShipDateChange,
 }: {
   action: ItemAction | undefined;
   locked: boolean;
   onPick: (a: ItemAction) => void;
+  shipDate?: string;
+  onShipDateChange: (d: string) => void;
 }) {
   const opts: ItemAction[] = ["wait_ship", "reserve", "to_stock"];
   return (
@@ -633,6 +637,17 @@ function ActionCell({
           </button>
         );
       })}
+      {action === "reserve" && (
+        <div className="flex items-center gap-1.5">
+          <Input
+            type="date"
+            value={shipDate ?? ""}
+            onChange={(e) => onShipDateChange(e.target.value)}
+            className="h-7 w-[140px] text-[11px]"
+          />
+          <CountdownBadge date={shipDate} />
+        </div>
+      )}
     </div>
   );
 }

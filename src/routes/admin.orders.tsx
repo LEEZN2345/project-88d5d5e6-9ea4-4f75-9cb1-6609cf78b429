@@ -55,7 +55,7 @@ function AdminOrders() {
     let newItems = 0, reserveItems = 0;
     const newShops = new Set<string>();
     const reserveShops = new Set<string>();
-    rows.forEach((o) => {
+    channelRows.forEach((o) => {
       const k = kindOf(o.id);
       o.items.forEach((it) => {
         if (k === "new") {

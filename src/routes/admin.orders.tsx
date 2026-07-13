@@ -378,13 +378,13 @@ const Td = ({ children, className = "", colSpan }: { children?: React.ReactNode;
 
 function SummaryCard({
   label,
-  value,
-  suffix,
+  items,
+  shops,
   tone,
 }: {
   label: string;
-  value: number;
-  suffix?: string;
+  items: number;
+  shops: number;
   tone: "blue" | "purple" | "foreground" | "muted";
 }) {
   const toneCls: Record<string, string> = {
@@ -396,9 +396,14 @@ function SummaryCard({
   return (
     <Card className="p-3">
       <div className="text-[11px] text-muted-foreground">{label}</div>
-      <div className={`mt-1 text-xl font-semibold ${toneCls[tone]}`}>
-        {value}
-        {suffix && <span className="ml-0.5 text-xs font-normal text-muted-foreground">{suffix}</span>}
+      <div className={`mt-1 flex items-baseline gap-2 text-xl font-semibold ${toneCls[tone]}`}>
+        <span>
+          {items}
+          <span className="ml-0.5 text-xs font-normal text-muted-foreground">件</span>
+        </span>
+        <span className="text-sm font-medium text-muted-foreground">
+          / {shops} 家档口
+        </span>
       </div>
     </Card>
   );

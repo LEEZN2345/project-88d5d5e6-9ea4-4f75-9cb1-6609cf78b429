@@ -5,6 +5,7 @@ import { SHOPS, PRODUCTS, REFERENCE_RATE, formatKRW, krwToCny, formatCNY } from 
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Search, Flame, Sparkles, TicketPercent, TrendingUp } from "lucide-react";
+import { useBanner } from "@/lib/banners";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -23,12 +24,29 @@ function Index() {
   const dealProducts = PRODUCTS.filter((p) => p.discount);
   const today = new Date().toLocaleDateString("zh-CN", { month: "2-digit", day: "2-digit" });
   const krwPerCny = 1 / REFERENCE_RATE; // 1 CNY ≈ ? KRW
+  const homeHero = useBanner("home_hero");
   return (
     <MobileShell>
       <MobileHeader
         title="东大门订货通"
         right={<Link to="/admin" className="text-xs text-muted-foreground">运营后台</Link>}
       />
+      {homeHero?.enabled !== false && homeHero?.image && (
+        <Link
+          to={homeHero.link || "/shops"}
+          className="mx-4 mt-3 block overflow-hidden rounded-xl border border-border"
+        >
+          <div className="relative aspect-[5/2] bg-muted">
+            <img src={homeHero.image} alt={homeHero.title || ""} className="h-full w-full object-cover" />
+            {(homeHero.title || homeHero.subtitle) && (
+              <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/60 via-black/10 to-transparent p-3 text-white">
+                {homeHero.title && <div className="text-base font-bold">{homeHero.title}</div>}
+                {homeHero.subtitle && <div className="text-[11px] opacity-90">{homeHero.subtitle}</div>}
+              </div>
+            )}
+          </div>
+        </Link>
+      )}
       <div className="mx-4 mt-3 rounded-xl border border-border bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

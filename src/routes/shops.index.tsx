@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
+import { useBanner } from "@/lib/banners";
 
 export const Route = createFileRoute("/shops/")({
   head: () => ({
@@ -36,8 +37,6 @@ export const Route = createFileRoute("/shops/")({
 });
 
 const img = (seed: string) => `https://picsum.photos/seed/${seed}/400/300`;
-
-const HERO_IMG = (b: string) => `https://picsum.photos/seed/hero-${b}/800/420`;
 
 // 部分档口支持单件购买（示例数据：档口名 hash 决定）
 function supportsSingleBuy(name: string): boolean {

@@ -147,11 +147,9 @@ function AdminOrders() {
       </div>
 
       {/* 提货单汇总 */}
-      <div className="mb-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-        <SummaryCard label="今日新订单" value={pickup.newItems} suffix="件" tone="blue" />
-        <SummaryCard label="预定出货" value={pickup.reserveItems} suffix="件" tone="purple" />
-        <SummaryCard label="合计件数" value={pickup.totalItems} suffix="件" tone="foreground" />
-        <SummaryCard label="涉及档口" value={pickup.shops} suffix="家" tone="muted" />
+      <div className="mb-3 grid grid-cols-2 gap-2">
+        <SummaryCard label="今日新订单（涉及档口数）" items={pickup.newItems} shops={pickup.newShops} tone="blue" />
+        <SummaryCard label="预定出货（涉及档口）" items={pickup.reserveItems} shops={pickup.reserveShops} tone="purple" />
       </div>
 
       {/* 一级：类型 */}

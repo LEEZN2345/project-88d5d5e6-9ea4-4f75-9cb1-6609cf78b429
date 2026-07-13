@@ -45,7 +45,7 @@ function AdminOrders() {
 
   const kindBadge = (k: "new" | "reserve") =>
     k === "new" ? (
-      <span className="rounded px-1.5 py-0.5 text-[11px] bg-blue-500/15 text-blue-700 dark:text-blue-300">今日新订单</span>
+      <span className="rounded px-1.5 py-0.5 text-[11px] bg-primary/15 text-primary">今日新订单</span>
     ) : (
       <span className="rounded px-1.5 py-0.5 text-[11px] bg-purple-500/15 text-purple-700 dark:text-purple-300">预定出货</span>
     );

@@ -22,7 +22,7 @@ export function MobileShell({ children }: { children: React.ReactNode }) {
               key={to}
               to={to as string}
               className={cn(
-                "flex flex-1 flex-col items-center gap-0.5 py-1 text-xs transition",
+                "flex flex-1 flex-col items-center gap-0.5 py-1 text-[11px] font-display font-bold uppercase tracking-tight transition",
                 active ? "text-primary" : "text-muted-foreground",
               )}
             >
@@ -51,12 +51,12 @@ export function MobileHeader({
         {back && (
           <button
             onClick={() => history.back()}
-            className="text-sm text-muted-foreground"
+            className="text-sm text-muted-foreground hover:text-primary transition-colors"
           >
             ←
           </button>
         )}
-        <h1 className="text-base font-semibold">{title}</h1>
+        <h1 className="font-display text-base font-black tracking-tight uppercase">{title}</h1>
       </div>
       <div>{right}</div>
     </header>

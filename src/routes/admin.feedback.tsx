@@ -36,6 +36,8 @@ type FeedbackRow = {
   updatedAt?: string;
   // 每个 SKU 行的锁定操作：入库等待发货 / 预定 / 现货入库
   itemActions?: Record<number, ItemAction | undefined>;
+  // 每个 SKU 行的预定出货日期（仅当 itemActions[idx] === 'reserve' 时使用）
+  itemShipDates?: Record<number, string | undefined>;
 };
 
 const ACTION_META: Record<ItemAction, { label: string; icon: typeof Truck; color: string }> = {
@@ -124,8 +126,25 @@ function AdminFeedback() {
     setRows((r) => {
       const cur = r[id]!;
       const map = { ...(cur.itemActions ?? {}) };
-      map[idx] = map[idx] === act ? undefined : act;
-      return { ...r, [id]: { ...cur, itemActions: map, updatedAt: nowStr() } };
+      const dates = { ...(cur.itemShipDates ?? {}) };
+      if (map[idx] === act) {
+        map[idx] = undefined;
+        if (act === "reserve") dates[idx] = undefined;
+      } else {
+        map[idx] = act;
+        if (act === "reserve" && !dates[idx]) {
+          dates[idx] = addDays(new Date(), 5);
+        }
+      }
+      return { ...r, [id]: { ...cur, itemActions: map, itemShipDates: dates, updatedAt: nowStr() } };
+    });
+
+  const setItemShipDate = (id: string, idx: number, date: string) =>
+    setRows((r) => {
+      const cur = r[id]!;
+      const dates = { ...(cur.itemShipDates ?? {}) };
+      dates[idx] = date;
+      return { ...r, [id]: { ...cur, itemShipDates: dates, updatedAt: nowStr() } };
     });
 
   const uploadReceipt = (id: string) => {
@@ -167,13 +186,30 @@ function AdminFeedback() {
     setSelected(new Set());
   };
 
-  const stats = {
-    total: PAID_ORDERS.length,
-    with_receipt: Object.values(rows).filter((r) => r.receiptUrl).length,
-    locked: Object.values(rows).filter((r) =>
-      Object.values(r.itemActions ?? {}).some(Boolean),
-    ).length,
-  };
+  const stats = (() => {
+    let inStockOrders = 0;
+    let reserveOrders = 0;
+    let inStockItems = 0;
+    let reserveItems = 0;
+    Object.values(rows).forEach((r) => {
+      const acts = Object.values(r.itemActions ?? {});
+      const hasStock = acts.some((a) => a === "wait_ship" || a === "to_stock");
+      const hasReserve = acts.some((a) => a === "reserve");
+      if (hasStock) inStockOrders += 1;
+      if (hasReserve) reserveOrders += 1;
+      acts.forEach((a) => {
+        if (a === "wait_ship" || a === "to_stock") inStockItems += 1;
+        if (a === "reserve") reserveItems += 1;
+      });
+    });
+    return {
+      total: PAID_ORDERS.length,
+      inStockOrders,
+      reserveOrders,
+      inStockItems,
+      reserveItems,
+    };
+  })();
 
   return (
     <AdminShell>
@@ -186,10 +222,29 @@ function AdminFeedback() {
         </div>
       </div>
 
-      <div className="mb-4 grid gap-3 sm:grid-cols-3">
-        <Stat label="订单总数" value={stats.total} />
-        <Stat label="已上传小票" value={stats.with_receipt} tone="sky" />
-        <Stat label="已锁定订单" value={stats.locked} tone="emerald" />
+      <div className="mb-4 grid gap-3 sm:grid-cols-2">
+        <Card className="p-3">
+          <div className="text-xs text-muted-foreground">现货订单详情</div>
+          <div className="mt-1 flex items-baseline gap-3">
+            <div className="text-2xl font-semibold text-emerald-600 dark:text-emerald-400">
+              {stats.inStockOrders}
+            </div>
+            <div className="text-xs text-muted-foreground">
+              单 · 共 <b className="text-foreground">{stats.inStockItems}</b> 件（含入库等待发货 / 现货入库）
+            </div>
+          </div>
+        </Card>
+        <Card className="p-3">
+          <div className="text-xs text-muted-foreground">预定单详情</div>
+          <div className="mt-1 flex items-baseline gap-3">
+            <div className="text-2xl font-semibold text-sky-600 dark:text-sky-400">
+              {stats.reserveOrders}
+            </div>
+            <div className="text-xs text-muted-foreground">
+              单 · 共 <b className="text-foreground">{stats.reserveItems}</b> 件预定商品
+            </div>
+          </div>
+        </Card>
       </div>
 
       <Card className="mb-3 flex flex-wrap items-center gap-2 p-3">
@@ -357,6 +412,8 @@ function AdminFeedback() {
                                     action={act}
                                     locked={locked}
                                     onPick={(a) => toggleItemAction(order.id, idx, a)}
+                                    shipDate={fb.itemShipDates?.[idx]}
+                                    onShipDateChange={(d) => setItemShipDate(order.id, idx, d)}
                                   />
                                 </td>
                               </tr>
@@ -543,10 +600,14 @@ function ActionCell({
   action,
   locked,
   onPick,
+  shipDate,
+  onShipDateChange,
 }: {
   action: ItemAction | undefined;
   locked: boolean;
   onPick: (a: ItemAction) => void;
+  shipDate?: string;
+  onShipDateChange: (d: string) => void;
 }) {
   const opts: ItemAction[] = ["wait_ship", "reserve", "to_stock"];
   return (
@@ -576,6 +637,17 @@ function ActionCell({
           </button>
         );
       })}
+      {action === "reserve" && (
+        <div className="flex items-center gap-1.5">
+          <Input
+            type="date"
+            value={shipDate ?? ""}
+            onChange={(e) => onShipDateChange(e.target.value)}
+            className="h-7 w-[140px] text-[11px]"
+          />
+          <CountdownBadge date={shipDate} />
+        </div>
+      )}
     </div>
   );
 }

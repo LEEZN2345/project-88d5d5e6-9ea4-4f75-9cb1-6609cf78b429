@@ -133,6 +133,7 @@ function TabCard({
 
 function AreaView() {
   const dongdaemun = MALLS.find((m) => m.city === "东大门")!;
+  const heroBanner = useBanner("shops_hero");
   // Only include buildings that actually have floors for this UI
   const buildings = useMemo(
     () => dongdaemun.buildings.filter((b) => b.floors.length > 0),
@@ -196,21 +197,23 @@ function AreaView() {
       {/* Full-width content */}
       <section className="bg-background">
         {/* Hero banner full-width */}
+        {heroBanner?.enabled !== false && (
         <div className="relative h-36 overflow-hidden bg-muted">
           <img
-            src={HERO_IMG(activeBuilding)}
+            src={heroBanner?.image || `https://picsum.photos/seed/hero-${activeBuilding}/800/420`}
             alt={activeBuilding}
             className="h-full w-full object-cover"
           />
           <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/60 via-black/15 to-transparent p-4">
             <h2 className="text-lg font-bold text-white">
-              {activeBuilding} 购物中心
+              {activeBuilding} {heroBanner?.title || "购物中心"}
             </h2>
             <p className="text-[10px] uppercase tracking-widest text-white/80">
-              Market Premium Select
+              {heroBanner?.subtitle || "Market Premium Select"}
             </p>
           </div>
         </div>
+        )}
 
         {/* Secondary floor strip (kept) */}
         <div className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">

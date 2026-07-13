@@ -45,6 +45,7 @@ import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 import { Route as AdminGroupsRouteImport } from './routes/admin.groups'
 import { Route as AdminFeedbackRouteImport } from './routes/admin.feedback'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
+import { Route as AdminBannersRouteImport } from './routes/admin.banners'
 
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
@@ -226,6 +227,11 @@ const AdminConfigRoute = AdminConfigRouteImport.update({
   path: '/admin/config',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminBannersRoute = AdminBannersRouteImport.update({
+  id: '/admin/banners',
+  path: '/admin/banners',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -244,6 +250,7 @@ export interface FileRoutesByFullPath {
   '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
+  '/admin/banners': typeof AdminBannersRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/feedback': typeof AdminFeedbackRoute
   '/admin/groups': typeof AdminGroupsRoute
@@ -282,6 +289,7 @@ export interface FileRoutesByTo {
   '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
+  '/admin/banners': typeof AdminBannersRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/feedback': typeof AdminFeedbackRoute
   '/admin/groups': typeof AdminGroupsRoute
@@ -321,6 +329,7 @@ export interface FileRoutesById {
   '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
+  '/admin/banners': typeof AdminBannersRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/feedback': typeof AdminFeedbackRoute
   '/admin/groups': typeof AdminGroupsRoute
@@ -361,6 +370,7 @@ export interface FileRouteTypes {
     | '/points-rules'
     | '/settings'
     | '/support'
+    | '/admin/banners'
     | '/admin/config'
     | '/admin/feedback'
     | '/admin/groups'
@@ -399,6 +409,7 @@ export interface FileRouteTypes {
     | '/points-rules'
     | '/settings'
     | '/support'
+    | '/admin/banners'
     | '/admin/config'
     | '/admin/feedback'
     | '/admin/groups'
@@ -437,6 +448,7 @@ export interface FileRouteTypes {
     | '/points-rules'
     | '/settings'
     | '/support'
+    | '/admin/banners'
     | '/admin/config'
     | '/admin/feedback'
     | '/admin/groups'
@@ -476,6 +488,7 @@ export interface RootRouteChildren {
   PointsRulesRoute: typeof PointsRulesRoute
   SettingsRoute: typeof SettingsRoute
   SupportRoute: typeof SupportRoute
+  AdminBannersRoute: typeof AdminBannersRoute
   AdminConfigRoute: typeof AdminConfigRoute
   AdminFeedbackRoute: typeof AdminFeedbackRoute
   AdminGroupsRoute: typeof AdminGroupsRoute
@@ -751,6 +764,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminConfigRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/banners': {
+      id: '/admin/banners'
+      path: '/admin/banners'
+      fullPath: '/admin/banners'
+      preLoaderRoute: typeof AdminBannersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -782,6 +802,7 @@ const rootRouteChildren: RootRouteChildren = {
   PointsRulesRoute: PointsRulesRoute,
   SettingsRoute: SettingsRoute,
   SupportRoute: SupportRoute,
+  AdminBannersRoute: AdminBannersRoute,
   AdminConfigRoute: AdminConfigRoute,
   AdminFeedbackRoute: AdminFeedbackRoute,
   AdminGroupsRoute: AdminGroupsRoute,

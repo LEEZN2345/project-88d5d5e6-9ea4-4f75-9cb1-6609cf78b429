@@ -13,8 +13,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { CheckCircle2, Upload, PackageCheck, PackageX, Clock, ExternalLink, ChevronRight, ChevronDown } from "lucide-react";
+import { Upload, PackageCheck, ExternalLink, ChevronRight, ChevronDown, Truck, CalendarClock, Warehouse, Lock } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/admin/feedback")({
   head: () => ({ meta: [{ title: "订单反馈管理 · 运营后台" }] }),
@@ -38,10 +38,22 @@ type FeedbackRow = {
   itemActions?: Record<number, ItemAction | undefined>;
 };
 
-const STOCK_BADGE: Record<StockState, string> = {
-  pending: "bg-amber-500/15 text-amber-700 dark:text-amber-300",
-  in_stock: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
-  out_of_stock: "bg-rose-500/15 text-rose-700 dark:text-rose-300",
+const ACTION_META: Record<ItemAction, { label: string; icon: typeof Truck; color: string }> = {
+  wait_ship: {
+    label: "入库等待发货",
+    icon: Truck,
+    color: "bg-amber-500/15 text-amber-700 border-amber-500/40 dark:text-amber-300",
+  },
+  reserve: {
+    label: "预定",
+    icon: CalendarClock,
+    color: "bg-sky-500/15 text-sky-700 border-sky-500/40 dark:text-sky-300",
+  },
+  to_stock: {
+    label: "现货数量 1 入现货库",
+    icon: Warehouse,
+    color: "bg-emerald-500/15 text-emerald-700 border-emerald-500/40 dark:text-emerald-300",
+  },
 };
 
 function initRows(): Record<string, FeedbackRow> {

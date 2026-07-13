@@ -237,8 +237,6 @@
   color: var(--apm);
   text-underline-offset: 4px;
   transition: color 0.15s ease;
-}
-@utility link {
   &:hover {
     text-decoration: underline;
     color: var(--apm-ink);

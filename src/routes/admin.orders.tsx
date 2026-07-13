@@ -52,15 +52,27 @@ function AdminOrders() {
   // 提货单汇总（当前筛选下）
   const pickup = (() => {
     let newItems = 0, reserveItems = 0;
-    const shopSet = new Set<string>();
+    const newShops = new Set<string>();
+    const reserveShops = new Set<string>();
     rows.forEach((o) => {
       const k = kindOf(o.id);
       o.items.forEach((it) => {
-        if (k === "new") newItems += it.qty; else reserveItems += it.qty;
-        shopSet.add(it.product.shopId);
+        if (k === "new") {
+          newItems += it.qty;
+          newShops.add(it.product.shopId);
+        } else {
+          reserveItems += it.qty;
+          reserveShops.add(it.product.shopId);
+        }
       });
     });
-    return { newItems, reserveItems, totalItems: newItems + reserveItems, shops: shopSet.size };
+    return {
+      newItems,
+      reserveItems,
+      totalItems: newItems + reserveItems,
+      newShops: newShops.size,
+      reserveShops: reserveShops.size,
+    };
   })();
 
   const channelBadge = (c: OrderChannel) => {
@@ -135,11 +147,9 @@ function AdminOrders() {
       </div>
 
       {/* 提货单汇总 */}
-      <div className="mb-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-        <SummaryCard label="今日新订单" value={pickup.newItems} suffix="件" tone="blue" />
-        <SummaryCard label="预定出货" value={pickup.reserveItems} suffix="件" tone="purple" />
-        <SummaryCard label="合计件数" value={pickup.totalItems} suffix="件" tone="foreground" />
-        <SummaryCard label="涉及档口" value={pickup.shops} suffix="家" tone="muted" />
+      <div className="mb-3 grid grid-cols-2 gap-2">
+        <SummaryCard label="今日新订单（涉及档口数）" items={pickup.newItems} shops={pickup.newShops} tone="blue" />
+        <SummaryCard label="预定出货（涉及档口）" items={pickup.reserveItems} shops={pickup.reserveShops} tone="purple" />
       </div>
 
       {/* 一级：类型 */}
@@ -368,13 +378,13 @@ const Td = ({ children, className = "", colSpan }: { children?: React.ReactNode;
 
 function SummaryCard({
   label,
-  value,
-  suffix,
+  items,
+  shops,
   tone,
 }: {
   label: string;
-  value: number;
-  suffix?: string;
+  items: number;
+  shops: number;
   tone: "blue" | "purple" | "foreground" | "muted";
 }) {
   const toneCls: Record<string, string> = {
@@ -386,9 +396,14 @@ function SummaryCard({
   return (
     <Card className="p-3">
       <div className="text-[11px] text-muted-foreground">{label}</div>
-      <div className={`mt-1 text-xl font-semibold ${toneCls[tone]}`}>
-        {value}
-        {suffix && <span className="ml-0.5 text-xs font-normal text-muted-foreground">{suffix}</span>}
+      <div className={`mt-1 flex items-baseline gap-2 text-xl font-semibold ${toneCls[tone]}`}>
+        <span>
+          {items}
+          <span className="ml-0.5 text-xs font-normal text-muted-foreground">件</span>
+        </span>
+        <span className="text-sm font-medium text-muted-foreground">
+          / {shops} 家档口
+        </span>
       </div>
     </Card>
   );

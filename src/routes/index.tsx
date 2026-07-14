@@ -4,7 +4,7 @@ import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { SHOPS, PRODUCTS, REFERENCE_RATE, formatKRW, krwToCny, formatCNY } from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Search, Sparkles, TicketPercent, TrendingUp } from "lucide-react";
+import { Search, Flame, Sparkles, TicketPercent, TrendingUp } from "lucide-react";
 import { useBanner } from "@/lib/banners";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { useCategories } from "@/lib/categories";
@@ -89,8 +89,9 @@ function Index() {
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-2 gap-2 px-4">
+      <div className="mt-4 grid grid-cols-3 gap-2 px-4">
         {[
+          { to: "/shops", icon: Flame, label: "热门档口", color: "text-orange-500" },
           { to: "/new-arrivals", icon: Sparkles, label: "今日上新", color: "text-primary" },
           { to: "/discounts", icon: TicketPercent, label: "档口折扣", color: "text-rose-500" },
         ].map(({ to, icon: Icon, label, color }) => (

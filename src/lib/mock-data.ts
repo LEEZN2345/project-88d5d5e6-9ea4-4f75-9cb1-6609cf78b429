@@ -29,6 +29,7 @@ export type Product = {
   sizes: string[];
   originCountry?: string; // 制造国 e.g. 韩国 / 中国
   purchaseCondition?: string; // 购买条件（起订量/是否可换色/是否可退等，人工填写）
+  weightGrams?: number; // 单件净重（克），用于国际运费计算
 };
 
 export type CartItem = {
@@ -253,6 +254,7 @@ export const PRODUCTS: Product[] = [
     sizes: ["FREE"],
     originCountry: "韩国",
     purchaseCondition: "2件起订 · 不可换色 · 到货 7 天内可退",
+    weightGrams: 1450,
   },
   {
     id: "p2",
@@ -268,6 +270,7 @@ export const PRODUCTS: Product[] = [
     sizes: ["FREE"],
     originCountry: "韩国",
     purchaseCondition: "2件起订 · 同色同码",
+    weightGrams: 620,
   },
   {
     id: "p2a",
@@ -281,6 +284,7 @@ export const PRODUCTS: Product[] = [
     uploadedAt: "2026-07-12",
     colors: ["白", "浅蓝"],
     sizes: ["FREE"],
+    weightGrams: 280,
   },
   {
     id: "p2b",
@@ -294,6 +298,7 @@ export const PRODUCTS: Product[] = [
     uploadedAt: "2026-07-12",
     colors: ["棕格", "黑格"],
     sizes: ["S", "M"],
+    weightGrams: 380,
   },
   {
     id: "p2c",
@@ -307,6 +312,7 @@ export const PRODUCTS: Product[] = [
     discount: 10,
     colors: ["白", "粉"],
     sizes: ["S", "M", "L"],
+    weightGrams: 720,
   },
   {
     id: "p2d",
@@ -319,6 +325,7 @@ export const PRODUCTS: Product[] = [
     uploadedAt: "2026-07-08",
     colors: ["米", "黑", "卡其"],
     sizes: ["S", "M", "L"],
+    weightGrams: 460,
   },
   {
     id: "p3",
@@ -332,6 +339,7 @@ export const PRODUCTS: Product[] = [
     uploadedAt: "2026-07-11",
     colors: ["黑", "驼"],
     sizes: ["S", "M", "L"],
+    weightGrams: 1180,
   },
   {
     id: "p4",
@@ -344,6 +352,7 @@ export const PRODUCTS: Product[] = [
     uploadedAt: "2026-06-20",
     colors: ["黑", "棕"],
     sizes: ["230", "235", "240", "245"],
+    weightGrams: 950,
   },
   {
     id: "p5",
@@ -357,6 +366,7 @@ export const PRODUCTS: Product[] = [
     uploadedAt: "2026-06-15",
     colors: ["白", "黑", "米"],
     sizes: ["M", "L", "XL"],
+    weightGrams: 240,
   },
   {
     id: "p6",
@@ -370,6 +380,7 @@ export const PRODUCTS: Product[] = [
     uploadedAt: "2026-07-08",
     colors: ["原色", "深蓝"],
     sizes: ["25", "26", "27", "28"],
+    weightGrams: 680,
   },
 ];
 

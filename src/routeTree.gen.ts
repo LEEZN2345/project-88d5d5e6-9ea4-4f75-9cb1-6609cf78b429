@@ -30,12 +30,14 @@ import { Route as AddressesRouteImport } from './routes/addresses'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ShopsIndexRouteImport } from './routes/shops.index'
 import { Route as OrdersIndexRouteImport } from './routes/orders.index'
+import { Route as ExchangesIndexRouteImport } from './routes/exchanges.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ShopsIdRouteImport } from './routes/shops.$id'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
 import { Route as PointsHistoryRouteImport } from './routes/points.history'
 import { Route as OrdersIdRouteImport } from './routes/orders.$id'
 import { Route as LogisticsIdRouteImport } from './routes/logistics.$id'
+import { Route as ExchangesIdRouteImport } from './routes/exchanges.$id'
 import { Route as CategoriesIdRouteImport } from './routes/categories.$id'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminStockRouteImport } from './routes/admin.stock'
@@ -53,10 +55,12 @@ import { Route as AdminInvitesRouteImport } from './routes/admin.invites'
 import { Route as AdminGuideRouteImport } from './routes/admin.guide'
 import { Route as AdminGroupsRouteImport } from './routes/admin.groups'
 import { Route as AdminFeedbackRouteImport } from './routes/admin.feedback'
+import { Route as AdminExchangesRouteImport } from './routes/admin.exchanges'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
 import { Route as AdminBuildingsRouteImport } from './routes/admin.buildings'
 import { Route as AdminBannersRouteImport } from './routes/admin.banners'
+import { Route as OrdersIdExchangeRouteImport } from './routes/orders.$id.exchange'
 import { Route as AdminUsersIdRouteImport } from './routes/admin.users.$id'
 import { Route as AdminShopsIdRouteImport } from './routes/admin.shops.$id'
 import { Route as AdminRefundsIdRouteImport } from './routes/admin.refunds.$id'
@@ -64,6 +68,7 @@ import { Route as AdminProductsIdRouteImport } from './routes/admin.products.$id
 import { Route as AdminPaymentAccountsIdRouteImport } from './routes/admin.payment-accounts.$id'
 import { Route as AdminOrdersIdRouteImport } from './routes/admin.orders.$id'
 import { Route as AdminFeedbackIdRouteImport } from './routes/admin.feedback.$id'
+import { Route as AdminExchangesIdRouteImport } from './routes/admin.exchanges.$id'
 import { Route as AdminBannersNewRouteImport } from './routes/admin.banners.new'
 import { Route as AdminBannersIdRouteImport } from './routes/admin.banners.$id'
 
@@ -172,6 +177,11 @@ const OrdersIndexRoute = OrdersIndexRouteImport.update({
   path: '/orders/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExchangesIndexRoute = ExchangesIndexRouteImport.update({
+  id: '/exchanges/',
+  path: '/exchanges/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
@@ -200,6 +210,11 @@ const OrdersIdRoute = OrdersIdRouteImport.update({
 const LogisticsIdRoute = LogisticsIdRouteImport.update({
   id: '/logistics/$id',
   path: '/logistics/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExchangesIdRoute = ExchangesIdRouteImport.update({
+  id: '/exchanges/$id',
+  path: '/exchanges/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CategoriesIdRoute = CategoriesIdRouteImport.update({
@@ -287,6 +302,11 @@ const AdminFeedbackRoute = AdminFeedbackRouteImport.update({
   path: '/admin/feedback',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminExchangesRoute = AdminExchangesRouteImport.update({
+  id: '/admin/exchanges',
+  path: '/admin/exchanges',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminConfigRoute = AdminConfigRouteImport.update({
   id: '/admin/config',
   path: '/admin/config',
@@ -306,6 +326,11 @@ const AdminBannersRoute = AdminBannersRouteImport.update({
   id: '/admin/banners',
   path: '/admin/banners',
   getParentRoute: () => rootRouteImport,
+} as any)
+const OrdersIdExchangeRoute = OrdersIdExchangeRouteImport.update({
+  id: '/exchange',
+  path: '/exchange',
+  getParentRoute: () => OrdersIdRoute,
 } as any)
 const AdminUsersIdRoute = AdminUsersIdRouteImport.update({
   id: '/$id',
@@ -342,6 +367,11 @@ const AdminFeedbackIdRoute = AdminFeedbackIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AdminFeedbackRoute,
 } as any)
+const AdminExchangesIdRoute = AdminExchangesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminExchangesRoute,
+} as any)
 const AdminBannersNewRoute = AdminBannersNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -377,6 +407,7 @@ export interface FileRoutesByFullPath {
   '/admin/buildings': typeof AdminBuildingsRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/config': typeof AdminConfigRoute
+  '/admin/exchanges': typeof AdminExchangesRouteWithChildren
   '/admin/feedback': typeof AdminFeedbackRouteWithChildren
   '/admin/groups': typeof AdminGroupsRoute
   '/admin/guide': typeof AdminGuideRoute
@@ -394,16 +425,19 @@ export interface FileRoutesByFullPath {
   '/admin/stock': typeof AdminStockRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/categories/$id': typeof CategoriesIdRoute
+  '/exchanges/$id': typeof ExchangesIdRoute
   '/logistics/$id': typeof LogisticsIdRoute
-  '/orders/$id': typeof OrdersIdRoute
+  '/orders/$id': typeof OrdersIdRouteWithChildren
   '/points/history': typeof PointsHistoryRoute
   '/products/$id': typeof ProductsIdRoute
   '/shops/$id': typeof ShopsIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/exchanges/': typeof ExchangesIndexRoute
   '/orders/': typeof OrdersIndexRoute
   '/shops/': typeof ShopsIndexRoute
   '/admin/banners/$id': typeof AdminBannersIdRoute
   '/admin/banners/new': typeof AdminBannersNewRoute
+  '/admin/exchanges/$id': typeof AdminExchangesIdRoute
   '/admin/feedback/$id': typeof AdminFeedbackIdRoute
   '/admin/orders/$id': typeof AdminOrdersIdRoute
   '/admin/payment-accounts/$id': typeof AdminPaymentAccountsIdRoute
@@ -411,6 +445,7 @@ export interface FileRoutesByFullPath {
   '/admin/refunds/$id': typeof AdminRefundsIdRoute
   '/admin/shops/$id': typeof AdminShopsIdRoute
   '/admin/users/$id': typeof AdminUsersIdRoute
+  '/orders/$id/exchange': typeof OrdersIdExchangeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -436,6 +471,7 @@ export interface FileRoutesByTo {
   '/admin/buildings': typeof AdminBuildingsRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/config': typeof AdminConfigRoute
+  '/admin/exchanges': typeof AdminExchangesRouteWithChildren
   '/admin/feedback': typeof AdminFeedbackRouteWithChildren
   '/admin/groups': typeof AdminGroupsRoute
   '/admin/guide': typeof AdminGuideRoute
@@ -453,16 +489,19 @@ export interface FileRoutesByTo {
   '/admin/stock': typeof AdminStockRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/categories/$id': typeof CategoriesIdRoute
+  '/exchanges/$id': typeof ExchangesIdRoute
   '/logistics/$id': typeof LogisticsIdRoute
-  '/orders/$id': typeof OrdersIdRoute
+  '/orders/$id': typeof OrdersIdRouteWithChildren
   '/points/history': typeof PointsHistoryRoute
   '/products/$id': typeof ProductsIdRoute
   '/shops/$id': typeof ShopsIdRoute
   '/admin': typeof AdminIndexRoute
+  '/exchanges': typeof ExchangesIndexRoute
   '/orders': typeof OrdersIndexRoute
   '/shops': typeof ShopsIndexRoute
   '/admin/banners/$id': typeof AdminBannersIdRoute
   '/admin/banners/new': typeof AdminBannersNewRoute
+  '/admin/exchanges/$id': typeof AdminExchangesIdRoute
   '/admin/feedback/$id': typeof AdminFeedbackIdRoute
   '/admin/orders/$id': typeof AdminOrdersIdRoute
   '/admin/payment-accounts/$id': typeof AdminPaymentAccountsIdRoute
@@ -470,6 +509,7 @@ export interface FileRoutesByTo {
   '/admin/refunds/$id': typeof AdminRefundsIdRoute
   '/admin/shops/$id': typeof AdminShopsIdRoute
   '/admin/users/$id': typeof AdminUsersIdRoute
+  '/orders/$id/exchange': typeof OrdersIdExchangeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -496,6 +536,7 @@ export interface FileRoutesById {
   '/admin/buildings': typeof AdminBuildingsRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/config': typeof AdminConfigRoute
+  '/admin/exchanges': typeof AdminExchangesRouteWithChildren
   '/admin/feedback': typeof AdminFeedbackRouteWithChildren
   '/admin/groups': typeof AdminGroupsRoute
   '/admin/guide': typeof AdminGuideRoute
@@ -513,16 +554,19 @@ export interface FileRoutesById {
   '/admin/stock': typeof AdminStockRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/categories/$id': typeof CategoriesIdRoute
+  '/exchanges/$id': typeof ExchangesIdRoute
   '/logistics/$id': typeof LogisticsIdRoute
-  '/orders/$id': typeof OrdersIdRoute
+  '/orders/$id': typeof OrdersIdRouteWithChildren
   '/points/history': typeof PointsHistoryRoute
   '/products/$id': typeof ProductsIdRoute
   '/shops/$id': typeof ShopsIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/exchanges/': typeof ExchangesIndexRoute
   '/orders/': typeof OrdersIndexRoute
   '/shops/': typeof ShopsIndexRoute
   '/admin/banners/$id': typeof AdminBannersIdRoute
   '/admin/banners/new': typeof AdminBannersNewRoute
+  '/admin/exchanges/$id': typeof AdminExchangesIdRoute
   '/admin/feedback/$id': typeof AdminFeedbackIdRoute
   '/admin/orders/$id': typeof AdminOrdersIdRoute
   '/admin/payment-accounts/$id': typeof AdminPaymentAccountsIdRoute
@@ -530,6 +574,7 @@ export interface FileRoutesById {
   '/admin/refunds/$id': typeof AdminRefundsIdRoute
   '/admin/shops/$id': typeof AdminShopsIdRoute
   '/admin/users/$id': typeof AdminUsersIdRoute
+  '/orders/$id/exchange': typeof OrdersIdExchangeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -557,6 +602,7 @@ export interface FileRouteTypes {
     | '/admin/buildings'
     | '/admin/categories'
     | '/admin/config'
+    | '/admin/exchanges'
     | '/admin/feedback'
     | '/admin/groups'
     | '/admin/guide'
@@ -574,16 +620,19 @@ export interface FileRouteTypes {
     | '/admin/stock'
     | '/admin/users'
     | '/categories/$id'
+    | '/exchanges/$id'
     | '/logistics/$id'
     | '/orders/$id'
     | '/points/history'
     | '/products/$id'
     | '/shops/$id'
     | '/admin/'
+    | '/exchanges/'
     | '/orders/'
     | '/shops/'
     | '/admin/banners/$id'
     | '/admin/banners/new'
+    | '/admin/exchanges/$id'
     | '/admin/feedback/$id'
     | '/admin/orders/$id'
     | '/admin/payment-accounts/$id'
@@ -591,6 +640,7 @@ export interface FileRouteTypes {
     | '/admin/refunds/$id'
     | '/admin/shops/$id'
     | '/admin/users/$id'
+    | '/orders/$id/exchange'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -616,6 +666,7 @@ export interface FileRouteTypes {
     | '/admin/buildings'
     | '/admin/categories'
     | '/admin/config'
+    | '/admin/exchanges'
     | '/admin/feedback'
     | '/admin/groups'
     | '/admin/guide'
@@ -633,16 +684,19 @@ export interface FileRouteTypes {
     | '/admin/stock'
     | '/admin/users'
     | '/categories/$id'
+    | '/exchanges/$id'
     | '/logistics/$id'
     | '/orders/$id'
     | '/points/history'
     | '/products/$id'
     | '/shops/$id'
     | '/admin'
+    | '/exchanges'
     | '/orders'
     | '/shops'
     | '/admin/banners/$id'
     | '/admin/banners/new'
+    | '/admin/exchanges/$id'
     | '/admin/feedback/$id'
     | '/admin/orders/$id'
     | '/admin/payment-accounts/$id'
@@ -650,6 +704,7 @@ export interface FileRouteTypes {
     | '/admin/refunds/$id'
     | '/admin/shops/$id'
     | '/admin/users/$id'
+    | '/orders/$id/exchange'
   id:
     | '__root__'
     | '/'
@@ -675,6 +730,7 @@ export interface FileRouteTypes {
     | '/admin/buildings'
     | '/admin/categories'
     | '/admin/config'
+    | '/admin/exchanges'
     | '/admin/feedback'
     | '/admin/groups'
     | '/admin/guide'
@@ -692,16 +748,19 @@ export interface FileRouteTypes {
     | '/admin/stock'
     | '/admin/users'
     | '/categories/$id'
+    | '/exchanges/$id'
     | '/logistics/$id'
     | '/orders/$id'
     | '/points/history'
     | '/products/$id'
     | '/shops/$id'
     | '/admin/'
+    | '/exchanges/'
     | '/orders/'
     | '/shops/'
     | '/admin/banners/$id'
     | '/admin/banners/new'
+    | '/admin/exchanges/$id'
     | '/admin/feedback/$id'
     | '/admin/orders/$id'
     | '/admin/payment-accounts/$id'
@@ -709,6 +768,7 @@ export interface FileRouteTypes {
     | '/admin/refunds/$id'
     | '/admin/shops/$id'
     | '/admin/users/$id'
+    | '/orders/$id/exchange'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -735,6 +795,7 @@ export interface RootRouteChildren {
   AdminBuildingsRoute: typeof AdminBuildingsRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminConfigRoute: typeof AdminConfigRoute
+  AdminExchangesRoute: typeof AdminExchangesRouteWithChildren
   AdminFeedbackRoute: typeof AdminFeedbackRouteWithChildren
   AdminGroupsRoute: typeof AdminGroupsRoute
   AdminGuideRoute: typeof AdminGuideRoute
@@ -752,11 +813,13 @@ export interface RootRouteChildren {
   AdminStockRoute: typeof AdminStockRoute
   AdminUsersRoute: typeof AdminUsersRouteWithChildren
   CategoriesIdRoute: typeof CategoriesIdRoute
+  ExchangesIdRoute: typeof ExchangesIdRoute
   LogisticsIdRoute: typeof LogisticsIdRoute
-  OrdersIdRoute: typeof OrdersIdRoute
+  OrdersIdRoute: typeof OrdersIdRouteWithChildren
   ProductsIdRoute: typeof ProductsIdRoute
   ShopsIdRoute: typeof ShopsIdRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  ExchangesIndexRoute: typeof ExchangesIndexRoute
   OrdersIndexRoute: typeof OrdersIndexRoute
   ShopsIndexRoute: typeof ShopsIndexRoute
 }
@@ -910,6 +973,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrdersIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/exchanges/': {
+      id: '/exchanges/'
+      path: '/exchanges'
+      fullPath: '/exchanges/'
+      preLoaderRoute: typeof ExchangesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/': {
       id: '/admin/'
       path: '/admin'
@@ -950,6 +1020,13 @@ declare module '@tanstack/react-router' {
       path: '/logistics/$id'
       fullPath: '/logistics/$id'
       preLoaderRoute: typeof LogisticsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/exchanges/$id': {
+      id: '/exchanges/$id'
+      path: '/exchanges/$id'
+      fullPath: '/exchanges/$id'
+      preLoaderRoute: typeof ExchangesIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/categories/$id': {
@@ -1071,6 +1148,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminFeedbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/exchanges': {
+      id: '/admin/exchanges'
+      path: '/admin/exchanges'
+      fullPath: '/admin/exchanges'
+      preLoaderRoute: typeof AdminExchangesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/config': {
       id: '/admin/config'
       path: '/admin/config'
@@ -1098,6 +1182,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/banners'
       preLoaderRoute: typeof AdminBannersRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/orders/$id/exchange': {
+      id: '/orders/$id/exchange'
+      path: '/exchange'
+      fullPath: '/orders/$id/exchange'
+      preLoaderRoute: typeof OrdersIdExchangeRouteImport
+      parentRoute: typeof OrdersIdRoute
     }
     '/admin/users/$id': {
       id: '/admin/users/$id'
@@ -1148,6 +1239,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminFeedbackIdRouteImport
       parentRoute: typeof AdminFeedbackRoute
     }
+    '/admin/exchanges/$id': {
+      id: '/admin/exchanges/$id'
+      path: '/$id'
+      fullPath: '/admin/exchanges/$id'
+      preLoaderRoute: typeof AdminExchangesIdRouteImport
+      parentRoute: typeof AdminExchangesRoute
+    }
     '/admin/banners/new': {
       id: '/admin/banners/new'
       path: '/new'
@@ -1188,6 +1286,18 @@ const AdminBannersRouteChildren: AdminBannersRouteChildren = {
 
 const AdminBannersRouteWithChildren = AdminBannersRoute._addFileChildren(
   AdminBannersRouteChildren,
+)
+
+interface AdminExchangesRouteChildren {
+  AdminExchangesIdRoute: typeof AdminExchangesIdRoute
+}
+
+const AdminExchangesRouteChildren: AdminExchangesRouteChildren = {
+  AdminExchangesIdRoute: AdminExchangesIdRoute,
+}
+
+const AdminExchangesRouteWithChildren = AdminExchangesRoute._addFileChildren(
+  AdminExchangesRouteChildren,
 )
 
 interface AdminFeedbackRouteChildren {
@@ -1273,6 +1383,18 @@ const AdminUsersRouteWithChildren = AdminUsersRoute._addFileChildren(
   AdminUsersRouteChildren,
 )
 
+interface OrdersIdRouteChildren {
+  OrdersIdExchangeRoute: typeof OrdersIdExchangeRoute
+}
+
+const OrdersIdRouteChildren: OrdersIdRouteChildren = {
+  OrdersIdExchangeRoute: OrdersIdExchangeRoute,
+}
+
+const OrdersIdRouteWithChildren = OrdersIdRoute._addFileChildren(
+  OrdersIdRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AddressesRoute: AddressesRoute,
@@ -1297,6 +1419,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminBuildingsRoute: AdminBuildingsRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminConfigRoute: AdminConfigRoute,
+  AdminExchangesRoute: AdminExchangesRouteWithChildren,
   AdminFeedbackRoute: AdminFeedbackRouteWithChildren,
   AdminGroupsRoute: AdminGroupsRoute,
   AdminGuideRoute: AdminGuideRoute,
@@ -1314,11 +1437,13 @@ const rootRouteChildren: RootRouteChildren = {
   AdminStockRoute: AdminStockRoute,
   AdminUsersRoute: AdminUsersRouteWithChildren,
   CategoriesIdRoute: CategoriesIdRoute,
+  ExchangesIdRoute: ExchangesIdRoute,
   LogisticsIdRoute: LogisticsIdRoute,
-  OrdersIdRoute: OrdersIdRoute,
+  OrdersIdRoute: OrdersIdRouteWithChildren,
   ProductsIdRoute: ProductsIdRoute,
   ShopsIdRoute: ShopsIdRoute,
   AdminIndexRoute: AdminIndexRoute,
+  ExchangesIndexRoute: ExchangesIndexRoute,
   OrdersIndexRoute: OrdersIndexRoute,
   ShopsIndexRoute: ShopsIndexRoute,
 }

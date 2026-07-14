@@ -8,16 +8,21 @@ export const Route = createFileRoute("/orders/")({
   component: OrdersIndex,
 });
 
-const TABS = ["全部", "待付款", "待发货", "在途", "已签收", "售后"];
 
 function OrdersIndex() {
   return (
     <MobileShell>
       <MobileHeader title="订单" />
       <div className="sticky top-12 z-30 flex gap-2 overflow-x-auto border-b border-border bg-background px-4 py-2">
-        {TABS.map((t, i) => (
+        {(["全部", "待付款", "待发货", "在途", "已签收"] as const).map((t, i) => (
           <button key={t} className={`shrink-0 rounded-full px-3 py-1 text-xs ${i === 0 ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>{t}</button>
         ))}
+        <Link
+          to="/exchanges"
+          className="shrink-0 rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground"
+        >
+          售后 / 换货
+        </Link>
       </div>
 
       <div className="space-y-3 px-4 pt-3">

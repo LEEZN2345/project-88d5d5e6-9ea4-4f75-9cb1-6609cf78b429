@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { SHOPS } from "@/lib/mock-data";
-import { ChevronRight, MapPin, Heart, MessageSquare, Settings, Shield, Gift, ShoppingBag, ClipboardList, Store, Sparkles, Share2, BookOpen, Crown } from "lucide-react";
+import { ChevronRight, MapPin, Heart, MessageSquare, Settings, Shield, Gift, ShoppingBag, ClipboardList, Store, Sparkles, Share2, BookOpen, Crown, RefreshCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/me")({
@@ -40,7 +40,7 @@ function Me() {
             { n: "1", l: "待付款" },
             { n: "2", l: "待发货" },
             { n: "3", l: "在途" },
-            { n: "0", l: "售后" },
+            { n: "1", l: "售后" },
           ].map((s) => (
             <div key={s.l} className="rounded-md bg-background/10 py-2">
               <div className="text-base font-semibold">{s.n}</div>
@@ -92,6 +92,7 @@ function Me() {
 
       <div className="space-y-2 px-4 pt-4">
         <Item to="/orders" icon={ClipboardList} label="我的订单" right="全部" />
+        <Item to="/exchanges" icon={RefreshCcw} label="售后 / 换货" right="仅支持换货" />
         <Item to="/cart" icon={ShoppingBag} label="购物车" />
         <Item to="/addresses" icon={MapPin} label="收货地址" />
         <Item to="/favorites" icon={Heart} label="我的收藏" />

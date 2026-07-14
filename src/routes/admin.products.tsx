@@ -72,8 +72,13 @@ function AdminProducts() {
           <div className="mt-1 text-2xl font-semibold">{SHOPS.length}</div>
         </Card>
         <Card className="p-4">
-          <div className="text-xs text-muted-foreground">本周上新</div>
-          <div className="mt-1 text-2xl font-semibold">{PRODUCTS.filter((p) => p.isNew).length}</div>
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>未填重量</span>
+            <span className="text-[10px]">国际运费无法核算</span>
+          </div>
+          <div className="mt-1 text-2xl font-semibold text-rose-500">
+            {PRODUCTS.filter((p) => !p.weightGrams).length}
+          </div>
         </Card>
       </div>
 

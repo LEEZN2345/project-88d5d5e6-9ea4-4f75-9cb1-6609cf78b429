@@ -44,11 +44,18 @@ import { Route as AdminProductsRouteImport } from './routes/admin.products'
 import { Route as AdminPointsMallRouteImport } from './routes/admin.points-mall'
 import { Route as AdminPaymentAccountsRouteImport } from './routes/admin.payment-accounts'
 import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
+import { Route as AdminLogisticsRouteImport } from './routes/admin.logistics'
 import { Route as AdminGroupsRouteImport } from './routes/admin.groups'
 import { Route as AdminFeedbackRouteImport } from './routes/admin.feedback'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
+import { Route as AdminBuildingsRouteImport } from './routes/admin.buildings'
 import { Route as AdminBannersRouteImport } from './routes/admin.banners'
+import { Route as AdminUsersIdRouteImport } from './routes/admin.users.$id'
+import { Route as AdminShopsIdRouteImport } from './routes/admin.shops.$id'
+import { Route as AdminProductsIdRouteImport } from './routes/admin.products.$id'
+import { Route as AdminOrdersIdRouteImport } from './routes/admin.orders.$id'
+import { Route as AdminFeedbackIdRouteImport } from './routes/admin.feedback.$id'
 
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
@@ -225,6 +232,11 @@ const AdminOrdersRoute = AdminOrdersRouteImport.update({
   path: '/admin/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminLogisticsRoute = AdminLogisticsRouteImport.update({
+  id: '/admin/logistics',
+  path: '/admin/logistics',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminGroupsRoute = AdminGroupsRouteImport.update({
   id: '/admin/groups',
   path: '/admin/groups',
@@ -245,10 +257,40 @@ const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
   path: '/admin/categories',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminBuildingsRoute = AdminBuildingsRouteImport.update({
+  id: '/admin/buildings',
+  path: '/admin/buildings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminBannersRoute = AdminBannersRouteImport.update({
   id: '/admin/banners',
   path: '/admin/banners',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminUsersIdRoute = AdminUsersIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminUsersRoute,
+} as any)
+const AdminShopsIdRoute = AdminShopsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminShopsRoute,
+} as any)
+const AdminProductsIdRoute = AdminProductsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminProductsRoute,
+} as any)
+const AdminOrdersIdRoute = AdminOrdersIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminOrdersRoute,
+} as any)
+const AdminFeedbackIdRoute = AdminFeedbackIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminFeedbackRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -270,19 +312,21 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/admin/banners': typeof AdminBannersRoute
+  '/admin/buildings': typeof AdminBuildingsRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/config': typeof AdminConfigRoute
-  '/admin/feedback': typeof AdminFeedbackRoute
+  '/admin/feedback': typeof AdminFeedbackRouteWithChildren
   '/admin/groups': typeof AdminGroupsRoute
-  '/admin/orders': typeof AdminOrdersRoute
+  '/admin/logistics': typeof AdminLogisticsRoute
+  '/admin/orders': typeof AdminOrdersRouteWithChildren
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
   '/admin/points-mall': typeof AdminPointsMallRoute
-  '/admin/products': typeof AdminProductsRoute
+  '/admin/products': typeof AdminProductsRouteWithChildren
   '/admin/refunds': typeof AdminRefundsRoute
   '/admin/shipping': typeof AdminShippingRoute
-  '/admin/shops': typeof AdminShopsRoute
+  '/admin/shops': typeof AdminShopsRouteWithChildren
   '/admin/stock': typeof AdminStockRoute
-  '/admin/users': typeof AdminUsersRoute
+  '/admin/users': typeof AdminUsersRouteWithChildren
   '/categories/$id': typeof CategoriesIdRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
@@ -292,6 +336,11 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/orders/': typeof OrdersIndexRoute
   '/shops/': typeof ShopsIndexRoute
+  '/admin/feedback/$id': typeof AdminFeedbackIdRoute
+  '/admin/orders/$id': typeof AdminOrdersIdRoute
+  '/admin/products/$id': typeof AdminProductsIdRoute
+  '/admin/shops/$id': typeof AdminShopsIdRoute
+  '/admin/users/$id': typeof AdminUsersIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -312,19 +361,21 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/admin/banners': typeof AdminBannersRoute
+  '/admin/buildings': typeof AdminBuildingsRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/config': typeof AdminConfigRoute
-  '/admin/feedback': typeof AdminFeedbackRoute
+  '/admin/feedback': typeof AdminFeedbackRouteWithChildren
   '/admin/groups': typeof AdminGroupsRoute
-  '/admin/orders': typeof AdminOrdersRoute
+  '/admin/logistics': typeof AdminLogisticsRoute
+  '/admin/orders': typeof AdminOrdersRouteWithChildren
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
   '/admin/points-mall': typeof AdminPointsMallRoute
-  '/admin/products': typeof AdminProductsRoute
+  '/admin/products': typeof AdminProductsRouteWithChildren
   '/admin/refunds': typeof AdminRefundsRoute
   '/admin/shipping': typeof AdminShippingRoute
-  '/admin/shops': typeof AdminShopsRoute
+  '/admin/shops': typeof AdminShopsRouteWithChildren
   '/admin/stock': typeof AdminStockRoute
-  '/admin/users': typeof AdminUsersRoute
+  '/admin/users': typeof AdminUsersRouteWithChildren
   '/categories/$id': typeof CategoriesIdRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
@@ -334,6 +385,11 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/orders': typeof OrdersIndexRoute
   '/shops': typeof ShopsIndexRoute
+  '/admin/feedback/$id': typeof AdminFeedbackIdRoute
+  '/admin/orders/$id': typeof AdminOrdersIdRoute
+  '/admin/products/$id': typeof AdminProductsIdRoute
+  '/admin/shops/$id': typeof AdminShopsIdRoute
+  '/admin/users/$id': typeof AdminUsersIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -355,19 +411,21 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/admin/banners': typeof AdminBannersRoute
+  '/admin/buildings': typeof AdminBuildingsRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/config': typeof AdminConfigRoute
-  '/admin/feedback': typeof AdminFeedbackRoute
+  '/admin/feedback': typeof AdminFeedbackRouteWithChildren
   '/admin/groups': typeof AdminGroupsRoute
-  '/admin/orders': typeof AdminOrdersRoute
+  '/admin/logistics': typeof AdminLogisticsRoute
+  '/admin/orders': typeof AdminOrdersRouteWithChildren
   '/admin/payment-accounts': typeof AdminPaymentAccountsRoute
   '/admin/points-mall': typeof AdminPointsMallRoute
-  '/admin/products': typeof AdminProductsRoute
+  '/admin/products': typeof AdminProductsRouteWithChildren
   '/admin/refunds': typeof AdminRefundsRoute
   '/admin/shipping': typeof AdminShippingRoute
-  '/admin/shops': typeof AdminShopsRoute
+  '/admin/shops': typeof AdminShopsRouteWithChildren
   '/admin/stock': typeof AdminStockRoute
-  '/admin/users': typeof AdminUsersRoute
+  '/admin/users': typeof AdminUsersRouteWithChildren
   '/categories/$id': typeof CategoriesIdRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/orders/$id': typeof OrdersIdRoute
@@ -377,6 +435,11 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/orders/': typeof OrdersIndexRoute
   '/shops/': typeof ShopsIndexRoute
+  '/admin/feedback/$id': typeof AdminFeedbackIdRoute
+  '/admin/orders/$id': typeof AdminOrdersIdRoute
+  '/admin/products/$id': typeof AdminProductsIdRoute
+  '/admin/shops/$id': typeof AdminShopsIdRoute
+  '/admin/users/$id': typeof AdminUsersIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -399,10 +462,12 @@ export interface FileRouteTypes {
     | '/settings'
     | '/support'
     | '/admin/banners'
+    | '/admin/buildings'
     | '/admin/categories'
     | '/admin/config'
     | '/admin/feedback'
     | '/admin/groups'
+    | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
     | '/admin/points-mall'
@@ -421,6 +486,11 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/orders/'
     | '/shops/'
+    | '/admin/feedback/$id'
+    | '/admin/orders/$id'
+    | '/admin/products/$id'
+    | '/admin/shops/$id'
+    | '/admin/users/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -441,10 +511,12 @@ export interface FileRouteTypes {
     | '/settings'
     | '/support'
     | '/admin/banners'
+    | '/admin/buildings'
     | '/admin/categories'
     | '/admin/config'
     | '/admin/feedback'
     | '/admin/groups'
+    | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
     | '/admin/points-mall'
@@ -463,6 +535,11 @@ export interface FileRouteTypes {
     | '/admin'
     | '/orders'
     | '/shops'
+    | '/admin/feedback/$id'
+    | '/admin/orders/$id'
+    | '/admin/products/$id'
+    | '/admin/shops/$id'
+    | '/admin/users/$id'
   id:
     | '__root__'
     | '/'
@@ -483,10 +560,12 @@ export interface FileRouteTypes {
     | '/settings'
     | '/support'
     | '/admin/banners'
+    | '/admin/buildings'
     | '/admin/categories'
     | '/admin/config'
     | '/admin/feedback'
     | '/admin/groups'
+    | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
     | '/admin/points-mall'
@@ -505,6 +584,11 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/orders/'
     | '/shops/'
+    | '/admin/feedback/$id'
+    | '/admin/orders/$id'
+    | '/admin/products/$id'
+    | '/admin/shops/$id'
+    | '/admin/users/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -526,19 +610,21 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   SupportRoute: typeof SupportRoute
   AdminBannersRoute: typeof AdminBannersRoute
+  AdminBuildingsRoute: typeof AdminBuildingsRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminConfigRoute: typeof AdminConfigRoute
-  AdminFeedbackRoute: typeof AdminFeedbackRoute
+  AdminFeedbackRoute: typeof AdminFeedbackRouteWithChildren
   AdminGroupsRoute: typeof AdminGroupsRoute
-  AdminOrdersRoute: typeof AdminOrdersRoute
+  AdminLogisticsRoute: typeof AdminLogisticsRoute
+  AdminOrdersRoute: typeof AdminOrdersRouteWithChildren
   AdminPaymentAccountsRoute: typeof AdminPaymentAccountsRoute
   AdminPointsMallRoute: typeof AdminPointsMallRoute
-  AdminProductsRoute: typeof AdminProductsRoute
+  AdminProductsRoute: typeof AdminProductsRouteWithChildren
   AdminRefundsRoute: typeof AdminRefundsRoute
   AdminShippingRoute: typeof AdminShippingRoute
-  AdminShopsRoute: typeof AdminShopsRoute
+  AdminShopsRoute: typeof AdminShopsRouteWithChildren
   AdminStockRoute: typeof AdminStockRoute
-  AdminUsersRoute: typeof AdminUsersRoute
+  AdminUsersRoute: typeof AdminUsersRouteWithChildren
   CategoriesIdRoute: typeof CategoriesIdRoute
   LogisticsIdRoute: typeof LogisticsIdRoute
   OrdersIdRoute: typeof OrdersIdRoute
@@ -796,6 +882,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminOrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/logistics': {
+      id: '/admin/logistics'
+      path: '/admin/logistics'
+      fullPath: '/admin/logistics'
+      preLoaderRoute: typeof AdminLogisticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/groups': {
       id: '/admin/groups'
       path: '/admin/groups'
@@ -824,12 +917,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCategoriesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/buildings': {
+      id: '/admin/buildings'
+      path: '/admin/buildings'
+      fullPath: '/admin/buildings'
+      preLoaderRoute: typeof AdminBuildingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/banners': {
       id: '/admin/banners'
       path: '/admin/banners'
       fullPath: '/admin/banners'
       preLoaderRoute: typeof AdminBannersRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/users/$id': {
+      id: '/admin/users/$id'
+      path: '/$id'
+      fullPath: '/admin/users/$id'
+      preLoaderRoute: typeof AdminUsersIdRouteImport
+      parentRoute: typeof AdminUsersRoute
+    }
+    '/admin/shops/$id': {
+      id: '/admin/shops/$id'
+      path: '/$id'
+      fullPath: '/admin/shops/$id'
+      preLoaderRoute: typeof AdminShopsIdRouteImport
+      parentRoute: typeof AdminShopsRoute
+    }
+    '/admin/products/$id': {
+      id: '/admin/products/$id'
+      path: '/$id'
+      fullPath: '/admin/products/$id'
+      preLoaderRoute: typeof AdminProductsIdRouteImport
+      parentRoute: typeof AdminProductsRoute
+    }
+    '/admin/orders/$id': {
+      id: '/admin/orders/$id'
+      path: '/$id'
+      fullPath: '/admin/orders/$id'
+      preLoaderRoute: typeof AdminOrdersIdRouteImport
+      parentRoute: typeof AdminOrdersRoute
+    }
+    '/admin/feedback/$id': {
+      id: '/admin/feedback/$id'
+      path: '/$id'
+      fullPath: '/admin/feedback/$id'
+      preLoaderRoute: typeof AdminFeedbackIdRouteImport
+      parentRoute: typeof AdminFeedbackRoute
     }
   }
 }
@@ -844,6 +979,66 @@ const PointsRouteChildren: PointsRouteChildren = {
 
 const PointsRouteWithChildren =
   PointsRoute._addFileChildren(PointsRouteChildren)
+
+interface AdminFeedbackRouteChildren {
+  AdminFeedbackIdRoute: typeof AdminFeedbackIdRoute
+}
+
+const AdminFeedbackRouteChildren: AdminFeedbackRouteChildren = {
+  AdminFeedbackIdRoute: AdminFeedbackIdRoute,
+}
+
+const AdminFeedbackRouteWithChildren = AdminFeedbackRoute._addFileChildren(
+  AdminFeedbackRouteChildren,
+)
+
+interface AdminOrdersRouteChildren {
+  AdminOrdersIdRoute: typeof AdminOrdersIdRoute
+}
+
+const AdminOrdersRouteChildren: AdminOrdersRouteChildren = {
+  AdminOrdersIdRoute: AdminOrdersIdRoute,
+}
+
+const AdminOrdersRouteWithChildren = AdminOrdersRoute._addFileChildren(
+  AdminOrdersRouteChildren,
+)
+
+interface AdminProductsRouteChildren {
+  AdminProductsIdRoute: typeof AdminProductsIdRoute
+}
+
+const AdminProductsRouteChildren: AdminProductsRouteChildren = {
+  AdminProductsIdRoute: AdminProductsIdRoute,
+}
+
+const AdminProductsRouteWithChildren = AdminProductsRoute._addFileChildren(
+  AdminProductsRouteChildren,
+)
+
+interface AdminShopsRouteChildren {
+  AdminShopsIdRoute: typeof AdminShopsIdRoute
+}
+
+const AdminShopsRouteChildren: AdminShopsRouteChildren = {
+  AdminShopsIdRoute: AdminShopsIdRoute,
+}
+
+const AdminShopsRouteWithChildren = AdminShopsRoute._addFileChildren(
+  AdminShopsRouteChildren,
+)
+
+interface AdminUsersRouteChildren {
+  AdminUsersIdRoute: typeof AdminUsersIdRoute
+}
+
+const AdminUsersRouteChildren: AdminUsersRouteChildren = {
+  AdminUsersIdRoute: AdminUsersIdRoute,
+}
+
+const AdminUsersRouteWithChildren = AdminUsersRoute._addFileChildren(
+  AdminUsersRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -864,19 +1059,21 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   SupportRoute: SupportRoute,
   AdminBannersRoute: AdminBannersRoute,
+  AdminBuildingsRoute: AdminBuildingsRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminConfigRoute: AdminConfigRoute,
-  AdminFeedbackRoute: AdminFeedbackRoute,
+  AdminFeedbackRoute: AdminFeedbackRouteWithChildren,
   AdminGroupsRoute: AdminGroupsRoute,
-  AdminOrdersRoute: AdminOrdersRoute,
+  AdminLogisticsRoute: AdminLogisticsRoute,
+  AdminOrdersRoute: AdminOrdersRouteWithChildren,
   AdminPaymentAccountsRoute: AdminPaymentAccountsRoute,
   AdminPointsMallRoute: AdminPointsMallRoute,
-  AdminProductsRoute: AdminProductsRoute,
+  AdminProductsRoute: AdminProductsRouteWithChildren,
   AdminRefundsRoute: AdminRefundsRoute,
   AdminShippingRoute: AdminShippingRoute,
-  AdminShopsRoute: AdminShopsRoute,
+  AdminShopsRoute: AdminShopsRouteWithChildren,
   AdminStockRoute: AdminStockRoute,
-  AdminUsersRoute: AdminUsersRoute,
+  AdminUsersRoute: AdminUsersRouteWithChildren,
   CategoriesIdRoute: CategoriesIdRoute,
   LogisticsIdRoute: LogisticsIdRoute,
   OrdersIdRoute: OrdersIdRoute,

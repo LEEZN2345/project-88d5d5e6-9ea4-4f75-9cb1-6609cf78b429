@@ -17,6 +17,7 @@ import { Route as NewArrivalsRouteImport } from './routes/new-arrivals'
 import { Route as MeRouteImport } from './routes/me'
 import { Route as KycRouteImport } from './routes/kyc'
 import { Route as InviteRulesRouteImport } from './routes/invite-rules'
+import { Route as HotShopsRouteImport } from './routes/hot-shops'
 import { Route as GroupsRouteImport } from './routes/groups'
 import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as DiscountsRouteImport } from './routes/discounts'
@@ -87,6 +88,11 @@ const KycRoute = KycRouteImport.update({
 const InviteRulesRoute = InviteRulesRouteImport.update({
   id: '/invite-rules',
   path: '/invite-rules',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HotShopsRoute = HotShopsRouteImport.update({
+  id: '/hot-shops',
+  path: '/hot-shops',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GroupsRoute = GroupsRouteImport.update({
@@ -254,6 +260,7 @@ export interface FileRoutesByFullPath {
   '/discounts': typeof DiscountsRoute
   '/favorites': typeof FavoritesRoute
   '/groups': typeof GroupsRoute
+  '/hot-shops': typeof HotShopsRoute
   '/invite-rules': typeof InviteRulesRoute
   '/kyc': typeof KycRoute
   '/me': typeof MeRoute
@@ -295,6 +302,7 @@ export interface FileRoutesByTo {
   '/discounts': typeof DiscountsRoute
   '/favorites': typeof FavoritesRoute
   '/groups': typeof GroupsRoute
+  '/hot-shops': typeof HotShopsRoute
   '/invite-rules': typeof InviteRulesRoute
   '/kyc': typeof KycRoute
   '/me': typeof MeRoute
@@ -337,6 +345,7 @@ export interface FileRoutesById {
   '/discounts': typeof DiscountsRoute
   '/favorites': typeof FavoritesRoute
   '/groups': typeof GroupsRoute
+  '/hot-shops': typeof HotShopsRoute
   '/invite-rules': typeof InviteRulesRoute
   '/kyc': typeof KycRoute
   '/me': typeof MeRoute
@@ -380,6 +389,7 @@ export interface FileRouteTypes {
     | '/discounts'
     | '/favorites'
     | '/groups'
+    | '/hot-shops'
     | '/invite-rules'
     | '/kyc'
     | '/me'
@@ -421,6 +431,7 @@ export interface FileRouteTypes {
     | '/discounts'
     | '/favorites'
     | '/groups'
+    | '/hot-shops'
     | '/invite-rules'
     | '/kyc'
     | '/me'
@@ -462,6 +473,7 @@ export interface FileRouteTypes {
     | '/discounts'
     | '/favorites'
     | '/groups'
+    | '/hot-shops'
     | '/invite-rules'
     | '/kyc'
     | '/me'
@@ -504,6 +516,7 @@ export interface RootRouteChildren {
   DiscountsRoute: typeof DiscountsRoute
   FavoritesRoute: typeof FavoritesRoute
   GroupsRoute: typeof GroupsRoute
+  HotShopsRoute: typeof HotShopsRoute
   InviteRulesRoute: typeof InviteRulesRoute
   KycRoute: typeof KycRoute
   MeRoute: typeof MeRoute
@@ -592,6 +605,13 @@ declare module '@tanstack/react-router' {
       path: '/invite-rules'
       fullPath: '/invite-rules'
       preLoaderRoute: typeof InviteRulesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hot-shops': {
+      id: '/hot-shops'
+      path: '/hot-shops'
+      fullPath: '/hot-shops'
+      preLoaderRoute: typeof HotShopsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/groups': {
@@ -834,6 +854,7 @@ const rootRouteChildren: RootRouteChildren = {
   DiscountsRoute: DiscountsRoute,
   FavoritesRoute: FavoritesRoute,
   GroupsRoute: GroupsRoute,
+  HotShopsRoute: HotShopsRoute,
   InviteRulesRoute: InviteRulesRoute,
   KycRoute: KycRoute,
   MeRoute: MeRoute,

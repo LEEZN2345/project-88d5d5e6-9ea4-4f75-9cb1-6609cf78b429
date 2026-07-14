@@ -1,104 +1,48 @@
+# 后台静态页面补充规划
 
-# 前后端联调需求盘点
+## 现状
+后台已有 15 个页面（概览 / 订单 / 反馈 / 发货 / 现货 / 拼单 / 退款 / 商品 / 分类 / 档口 / 用户 / 积分商城 / 商户号 / 配置 / Banner）。对照买手端已有功能与常规运营后台的分工，仍有以下**静态页面缺口**要补齐，全部只做前端 UI + mock 数据，不接后端。
 
-目前整站数据均为前端模拟（`src/lib/mock-data.ts`、`localStorage`、`rank-data.ts`），未接入任何真实后端。要上线，需要按下述顺序做「前后联调」。建议基于 Lovable Cloud（Supabase）搭建，全部走 TanStack Start server functions。
+## 需要新增的页面
 
-## 一、必须联调（P0：核心业务闭环）
+### 一、经营模块
+1. **`/admin/logistics`** — 物流管理
+   - 概览页里"物流 Excel 上传"当前指向不存在路由
+   - 内容：物流单号列表、状态、Excel 批量导入区、异常件筛选
+2. **`/admin/orders/$id`** — 订单详情
+   - 商品明细 / 收货信息 / 支付凭证预览 / 状态时间线 / 操作按钮（确认收款、锁汇率、代付、备注）
+3. **`/admin/feedback/$id`** — 反馈工单详情（会话式回复）
 
-### 1. 账号与权限
-- 页面：`auth.tsx`、`me.tsx`、`kyc.tsx`、`admin.users.tsx`
-- 需要：邮箱/手机注册登录、Session、KYC 提交与审核、买手/管理员角色（`user_roles` 单独表 + `has_role`）
-- 后端：Supabase Auth + `profiles`、`kyc_submissions`、`user_roles`
+### 二、商品模块
+4. **`/admin/products/$id`** — 商品编辑详情（SKU、颜色/尺码矩阵、图片管理、上下架、内部款号）
+5. **`/admin/shops/$id`** — 档口编辑详情（16:9 封面上传、标签、楼层、起订量、绑定商品列表）
+6. **`/admin/buildings`** — 商圈/楼栋管理（doota / migliore / apm 等 + 楼层）
 
-### 2. 商品 / 档口 / 分类
-- 前端：`shops.index.tsx`、`shops.$id.tsx`、`products.$id.tsx`、`new-arrivals.tsx`、`index.tsx`
-- 后台：`admin.products.tsx`、`admin.shops.tsx`、`admin.categories.tsx`
-- 表：`shops`、`products`（含 images/colors/sizes/discount/isNew）、`product_categories`
-- 需要：列表/详情读取、后台增删改、Excel 批量导入、图片上传+水印（Supabase Storage）
+### 三、用户与增长
+7. **`/admin/users/$id`** — 用户详情（基础信息、KYC 状态、订单历史、积分流水、备注/拉黑）
+8. **`/admin/kyc`** — KYC 审核队列（待审 / 已通过 / 已驳回 三 tab + 审核抽屉）
+9. **`/admin/points-rules`** — 积分规则配置（下单送分、邀请送分、签到规则）
+10. **`/admin/invites`** — 邀请码/邀请记录管理
 
-### 3. 购物车 / 收藏
-- 前端：`cart.tsx`、`favorites.tsx`、`products.$id.tsx`
-- 表：`cart_items`、`favorites`（RLS 按 user_id）
-- 需要：加购、改数量、删除、跨设备同步
+### 四、资金
+11. **`/admin/refunds/$id`** — 退款工单详情（客服 → 财务两级流转 UI）
+12. **`/admin/payment-accounts/$id`** — 商户号详情（今日/历史入账、日限额、启停）
 
-### 4. 下单 / 支付 / 订单跟踪
-- 前端：`checkout.tsx`、`orders.index.tsx`、`orders.$id.tsx`、`logistics.$id.tsx`
-- 后台：`admin.orders.tsx`、`admin.shipping.tsx`、`admin.payment-accounts.tsx`
-- 表：`orders`、`order_items`、`shipments`、`shipment_events`、`payment_accounts`
-- 需要：下单、支付回调（微信/支付宝/韩币收款 Webhook → `/api/public/webhooks/*`）、订单状态机、物流轨迹录入
+### 五、系统
+13. **`/admin/banners/new` & `/admin/banners/$id`** — Banner 新建/编辑（图片、跳转链接、有效期、排序）
 
-### 5. 地址簿
-- 前端：`addresses.tsx`、`checkout.tsx`
-- 表：`user_addresses`
+## 通用改动
+- 修正 `admin.index.tsx` 快捷入口链接（`/admin/logistics` 指向新页）
+- `AdminShell` 侧边导航新增：物流、楼栋、KYC、积分规则、邀请四项，放入对应 group
+- 详情页统一顶部返回条 + 操作按钮组样式
 
-## 二、需联调（P1：完善体验）
+## 页面开发顺序
+1. 详情类（订单 / 商品 / 档口 / 用户 / 退款 / 反馈 / Banner 编辑）
+2. 新增模块列表页（物流 / 楼栋 / KYC / 积分规则 / 邀请）
+3. 导航更新 + 概览快捷入口修正
 
-### 6. 拼单
-- 前端：`groups.tsx`、后台 `admin.groups.tsx`
-- 表：`group_buys`、`group_members`；到期结算需要定时任务（pg_cron → `/api/public/cron/group-settle`）
-
-### 7. 现货管理
-- 前端：`products.$id.tsx`（现货匹配）、后台 `admin.stock.tsx`
-- 表：`stock_items`，与 `orders` 联动扣减
-
-### 8. 退款工单
-- 前端：`orders.$id.tsx` 发起入口、后台 `admin.refunds.tsx`
-- 表：`refund_requests`、`refund_evidence`（图片）
-
-### 9. 反馈与售后
-- 前端：`support.tsx`、订单页反馈按钮
-- 后台：`admin.feedback.tsx`
-- 表：`order_feedback`、`support_tickets`
-
-### 10. 积分体系
-- 前端：`points.tsx`、`points.history.tsx`、`points-rules.tsx`、`invite-rules.tsx`
-- 后台：`admin.points-mall.tsx`
-- 表：`points_ledger`、`points_rules`、`points_products`、`redemptions`、`invite_codes`
-- 触发：下单/邀请/签到 → 服务端事件写入 ledger
-
-### 11. 汇率与平台配置
-- 前端：全站 `krwToCny`、`checkout.tsx`
-- 后台：`admin.config.tsx`
-- 表：`platform_config`（汇率、加价率、费率）；可选定时抓取韩币汇率
-
-## 三、可迁移到后端（P2：目前用 localStorage）
-
-以下已可用但存本地，需搬到数据库以便后台真正生效：
-
-- `src/lib/banners.ts` → `banners` 表 + Storage 图片
-- `src/lib/categories.ts` → `product_categories` 表（与 P0-2 合并）
-- 折扣/优惠 `discounts.tsx` → `discount_rules` 表
-- 排行榜 `rank-data.ts`（`APM_RANK`、`OFFLINE_HOT`）→ 由订单数据实时聚合，或后台可编辑的 `shop_rankings` 表
-
-## 四、后端接口分工
-
-- **createServerFn**：所有 App 内读写（商品列表、下单、加购、收藏、后台 CRUD）
-- **Server routes `/api/public/*`**：
-  - 支付回调 Webhook（HMAC 校验）
-  - 物流查询 Webhook / 拉取脚本
-  - pg_cron 定时任务（拼单结算、汇率刷新、榜单聚合）
-- **Storage**：商品图、Banner、KYC 证件、退款凭证、水印后原图
-
-## 五、建议实施顺序
-
-```text
-Step 1  开启 Lovable Cloud + 建表 schema（含 RLS/GRANT）
-Step 2  Auth + 角色 + KYC             ← 打通登录
-Step 3  分类/档口/商品 CRUD + 图片    ← 打通目录
-Step 4  购物车 + 收藏 + 地址          ← 打通选购
-Step 5  下单 + 支付 Webhook + 订单    ← 打通交易
-Step 6  发货 + 物流 + 现货            ← 打通履约
-Step 7  退款 + 反馈 + 售后            ← 打通售后
-Step 8  拼单 + 积分 + 邀请            ← 增长模块
-Step 9  Banner / 分类 / 配置搬后端    ← 后台生效
-Step 10 排行榜聚合 + 定时任务         ← 数据运营
-```
-
-## 六、待你确认
-
-1. 是否直接启用 **Lovable Cloud (Supabase)** 作为后端？
-2. 支付通道优先接：微信 / 支付宝 / Stripe / Toss（韩国）中的哪几个？
-3. 图片存储是否使用 Supabase Storage + 服务端加水印？还是接第三方 CDN？
-4. 是否需要多语言（韩文/中文/英文）字段，还是先只做中文？
-
-确认后我按 Step 1 开始落地。
+## 技术备忘
+- 全部使用 `createFileRoute` + `AdminShell` 布局
+- 详情页参数用 `$id`（`admin.orders.$id.tsx` 等）
+- Mock 数据延用 `src/lib/mock-data.ts`；缺字段就在里面扩充类型 + 补几条假数据
+- 表单交互仅本地 `useState`；提交按钮触发 toast，不落库

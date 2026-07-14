@@ -28,27 +28,28 @@ function Index() {
   const today = new Date().toLocaleDateString("zh-CN", { month: "2-digit", day: "2-digit" });
   const krwPerCny = 1 / REFERENCE_RATE; // 1 CNY ≈ ? KRW
   const homeHero = useBanner("home_hero");
-  const heroSlides =
-    homeHero?.enabled !== false
+  const heroSlides = (() => {
+    if (!homeHero || homeHero.enabled === false) return [];
+    const base = homeHero.image
       ? [
-          ...(homeHero?.image
-            ? [
-                {
-                  image: homeHero.image,
-                  title: homeHero.title,
-                  subtitle: homeHero.subtitle,
-                  link: homeHero.link,
-                },
-              ]
-            : []),
-          ...(homeHero?.slides || []).map((image) => ({
-            image,
+          {
+            image: homeHero.image,
             title: homeHero.title,
             subtitle: homeHero.subtitle,
             link: homeHero.link,
-          })),
+          },
         ]
       : [];
+    return [
+      ...base,
+      ...(homeHero.slides || []).map((image) => ({
+        image,
+        title: homeHero.title,
+        subtitle: homeHero.subtitle,
+        link: homeHero.link,
+      })),
+    ];
+  })();
   return (
     <MobileShell>
       <MobileHeader

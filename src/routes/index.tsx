@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Search, Flame, Sparkles, TicketPercent, TrendingUp } from "lucide-react";
 import { useBanner } from "@/lib/banners";
 import { BrandPlate, SignBoard } from "@/components/SignBoard";
+import { useCategories } from "@/lib/categories";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/")({
 function Index() {
   const newProducts = PRODUCTS.filter((p) => p.isNew);
   const dealProducts = PRODUCTS.filter((p) => p.discount);
+  const categories = useCategories().filter((c) => c.enabled);
   const today = new Date().toLocaleDateString("zh-CN", { month: "2-digit", day: "2-digit" });
   const krwPerCny = 1 / REFERENCE_RATE; // 1 CNY ≈ ? KRW
   const homeHero = useBanner("home_hero");
@@ -99,6 +101,25 @@ function Index() {
           </Link>
         ))}
       </div>
+
+      {/* 商品分类九宫格 */}
+      <Section title="商品分类" linkTo="/shops" linkLabel="全部档口">
+        <div className="grid grid-cols-4 gap-y-4 gap-x-2 px-4">
+          {categories.map((c) => (
+            <Link
+              key={c.id}
+              to="/categories/$id"
+              params={{ id: c.id }}
+              className="flex flex-col items-center"
+            >
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-2xl">
+                {c.icon ?? "🏷️"}
+              </div>
+              <span className="mt-1 text-xs text-foreground">{c.name}</span>
+            </Link>
+          ))}
+        </div>
+      </Section>
 
       <Section title="新款抢先" linkTo="/new-arrivals" linkLabel="更多新款">
         <div className="grid grid-cols-2 gap-3 px-4">

@@ -93,6 +93,23 @@ function ProductEdit() {
               <Label className="text-xs">折扣（%）</Label>
               <Input type="number" defaultValue={p.discount ?? 0} className="mt-1" />
             </div>
+            <div>
+              <Label className="text-xs flex items-center justify-between">
+                <span>单件净重（克） <span className="text-rose-500">*</span></span>
+                <span className="text-[10px] font-normal text-muted-foreground">用于国际运费计算</span>
+              </Label>
+              <Input
+                type="number"
+                min={0}
+                step={10}
+                defaultValue={p.weightGrams ?? ""}
+                placeholder="例如 680"
+                className="mt-1"
+              />
+              <p className="mt-1 text-[10px] text-muted-foreground">
+                请填写含吊牌 / 包装的实测重量。未填写将无法自动核算国际运费，下单时会拦截提示。
+              </p>
+            </div>
           </div>
 
           <div>
@@ -137,6 +154,7 @@ function ProductEdit() {
             <div className="mb-2 text-sm font-semibold">运营数据</div>
             <ul className="space-y-1 text-muted-foreground">
               <li>展示单价：{formatKRW(p.priceKRW)}</li>
+              <li>登记重量：{p.weightGrams ? `${p.weightGrams} g` : <span className="text-rose-500">未填写</span>}</li>
               <li>上新日期：{p.uploadedAt}</li>
               <li>近 30 日销量：128 件</li>
               <li>收藏数：42</li>

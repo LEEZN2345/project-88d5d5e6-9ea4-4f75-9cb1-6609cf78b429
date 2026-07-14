@@ -24,6 +24,7 @@ function AdminProducts() {
       "制造国",
       "颜色(多个用 / 分隔)",
       "尺寸(多个用 / 分隔)",
+      "单件净重(克)",
       "购买条件",
     ];
     const sample = [
@@ -36,6 +37,7 @@ function AdminProducts() {
       "韩国",
       "奶白/燕麦/炭灰",
       "FREE",
+      "1450",
       "2件起订 · 不可换色 · 到货 7 天内可退",
     ];
     const csv = "\ufeff" + [headers, sample].map((r) => r.map((c) => `"${c.replace(/"/g, '""')}"`).join(",")).join("\n");
@@ -70,8 +72,13 @@ function AdminProducts() {
           <div className="mt-1 text-2xl font-semibold">{SHOPS.length}</div>
         </Card>
         <Card className="p-4">
-          <div className="text-xs text-muted-foreground">本周上新</div>
-          <div className="mt-1 text-2xl font-semibold">{PRODUCTS.filter((p) => p.isNew).length}</div>
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>未填重量</span>
+            <span className="text-[10px]">国际运费无法核算</span>
+          </div>
+          <div className="mt-1 text-2xl font-semibold text-rose-500">
+            {PRODUCTS.filter((p) => !p.weightGrams).length}
+          </div>
         </Card>
       </div>
 
@@ -85,7 +92,7 @@ function AdminProducts() {
           <table className="w-full text-sm">
             <thead className="bg-muted/50 text-xs text-muted-foreground">
               <tr>
-                <Th>图</Th><Th>内部款号</Th><Th>名称</Th><Th>档口名称</Th><Th>档口位置</Th><Th>品类</Th><Th>价格</Th><Th>颜色</Th><Th>尺寸</Th><Th>制造国</Th><Th>状态</Th><Th>操作</Th>
+                <Th>图</Th><Th>内部款号</Th><Th>名称</Th><Th>档口名称</Th><Th>档口位置</Th><Th>品类</Th><Th>价格</Th><Th>重量(g)</Th><Th>颜色</Th><Th>尺寸</Th><Th>制造国</Th><Th>状态</Th><Th>操作</Th>
               </tr>
             </thead>
             <tbody>
@@ -100,6 +107,13 @@ function AdminProducts() {
                     <Td className="text-[11px] text-muted-foreground">{shop ? `${shop.building} ${shop.floor}-${shop.position}` : "—"}</Td>
                     <Td className="text-xs">{p.category}</Td>
                     <Td>{formatKRW(p.priceKRW)}</Td>
+                    <Td className="text-xs">
+                      {p.weightGrams ? (
+                        <span className="font-mono">{p.weightGrams}</span>
+                      ) : (
+                        <Badge variant="outline" className="border-rose-300 text-rose-500">未填</Badge>
+                      )}
+                    </Td>
                     <Td className="text-xs">{p.colors.join(" / ")}</Td>
                     <Td className="text-xs">{p.sizes.join(" / ")}</Td>
                     <Td className="text-xs">{p.originCountry ?? "—"}</Td>
@@ -140,6 +154,7 @@ function AdminProducts() {
                 ["制造国", "MADE IN 国家", "韩国"],
                 ["颜色", "多个用 / 分隔", "奶白/燕麦/炭灰"],
                 ["尺寸", "多个用 / 分隔", "S/M/L 或 FREE"],
+                ["单件净重", "含吊牌 / 包装的实测克重，用于国际运费计算，必填", "1450"],
                 ["购买条件", "起订量 / 换色 / 退换规则", "2件起订 · 不可换色"],
               ].map((row) => (
                 <tr key={row[0]} className="border-t border-border">

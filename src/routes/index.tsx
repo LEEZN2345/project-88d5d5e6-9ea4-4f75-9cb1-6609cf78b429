@@ -91,7 +91,7 @@ function Index() {
 
       <div className="mt-4 grid grid-cols-3 gap-2 px-4">
         {[
-          { to: "/shops", icon: Flame, label: "热门档口", color: "text-orange-500" },
+          { to: "/hot-shops", icon: Flame, label: "热门档口", color: "text-orange-500" },
           { to: "/new-arrivals", icon: Sparkles, label: "今日上新", color: "text-primary" },
           { to: "/discounts", icon: TicketPercent, label: "档口折扣", color: "text-rose-500" },
         ].map(({ to, icon: Icon, label, color }) => (

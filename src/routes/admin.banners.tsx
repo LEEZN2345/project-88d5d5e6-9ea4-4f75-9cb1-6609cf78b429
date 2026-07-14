@@ -14,7 +14,7 @@ import {
   type BannerSlot,
 } from "@/lib/banners";
 import { useEffect, useRef, useState } from "react";
-import { Upload, RotateCcw, Image as ImageIcon, Save } from "lucide-react";
+import { Upload, RotateCcw, Image as ImageIcon, Save, Plus, X } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/banners")({
@@ -79,8 +79,9 @@ function BannerCard({
   onChange: (patch: Partial<BannerSlot>) => void;
 }) {
   const fileRef = useRef<HTMLInputElement>(null);
+  const slideFileRef = useRef<HTMLInputElement>(null);
 
-  const onFile = (f: File) => {
+  const onFile = (f: File, target: "main" | "slide") => {
     if (!f.type.startsWith("image/")) {
       toast.error("请选择图片文件");
       return;
@@ -91,10 +92,27 @@ function BannerCard({
     }
     const reader = new FileReader();
     reader.onload = () => {
-      onChange({ image: String(reader.result || "") });
+      const url = String(reader.result || "");
+      if (target === "main") {
+        onChange({ image: url });
+      } else {
+        onChange({ slides: [...(banner.slides || []), url] });
+      }
       toast.success("图片已更新，记得点右上角『保存全部』");
     };
     reader.readAsDataURL(f);
+  };
+
+  const updateSlide = (idx: number, value: string) => {
+    const next = [...(banner.slides || [])];
+    next[idx] = value;
+    onChange({ slides: next });
+  };
+
+  const removeSlide = (idx: number) => {
+    const next = [...(banner.slides || [])];
+    next.splice(idx, 1);
+    onChange({ slides: next });
   };
 
   return (
@@ -147,7 +165,7 @@ function BannerCard({
               className="hidden"
               onChange={(e) => {
                 const f = e.target.files?.[0];
-                if (f) onFile(f);
+                if (f) onFile(f, "main");
                 e.currentTarget.value = "";
               }}
             />
@@ -196,6 +214,70 @@ function BannerCard({
             onChange={(e) => onChange({ link: e.target.value })}
           />
         </div>
+
+        {banner.id === "home_hero" && (
+          <div className="mt-2 border-t border-border pt-3">
+            <div className="mb-2 flex items-center justify-between">
+              <Label className="text-xs">轮播图片（除首张外）</Label>
+              <div className="flex items-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => slideFileRef.current?.click()}
+                >
+                  <Plus className="mr-1 h-3 w-3" /> 添加
+                </Button>
+                <input
+                  ref={slideFileRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) onFile(f, "slide");
+                    e.currentTarget.value = "";
+                  }}
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              {(banner.slides || []).length === 0 && (
+                <div className="text-xs text-muted-foreground">暂无额外轮播图</div>
+              )}
+              {(banner.slides || []).map((url, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  {url ? (
+                    <img
+                      src={url}
+                      alt=""
+                      className="h-10 w-10 rounded object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-10 w-10 items-center justify-center rounded bg-muted text-muted-foreground">
+                      <ImageIcon className="h-4 w-4" />
+                    </div>
+                  )}
+                  <Input
+                    className="flex-1 text-xs"
+                    placeholder="图片 URL"
+                    value={url}
+                    onChange={(e) => updateSlide(idx, e.target.value)}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 shrink-0"
+                    onClick={() => removeSlide(idx)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </Card>
   );

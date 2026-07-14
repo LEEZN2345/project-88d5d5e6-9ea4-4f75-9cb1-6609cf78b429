@@ -4,7 +4,7 @@ import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { SHOPS, PRODUCTS, REFERENCE_RATE, formatKRW, krwToCny, formatCNY } from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Search, Flame, Sparkles, TicketPercent, TrendingUp } from "lucide-react";
+import { Search, Sparkles, TicketPercent, TrendingUp } from "lucide-react";
 import { useBanner } from "@/lib/banners";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { useCategories } from "@/lib/categories";

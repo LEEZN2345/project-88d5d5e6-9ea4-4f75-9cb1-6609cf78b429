@@ -13,7 +13,7 @@ import {
   MessageSquare,
   Warehouse,
 } from "lucide-react";
-import { Image as ImageIcon, Tags } from "lucide-react";
+import { Image as ImageIcon, Tags, Building2, ShieldCheck, Sparkles, UserPlus } from "lucide-react";
 
 type NavItem = {
   to: string;
@@ -27,14 +27,19 @@ const NAV: NavItem[] = [
   { to: "/admin/orders", icon: ClipboardList, label: "新订单+预定管理", group: "经营" },
   { to: "/admin/feedback", icon: MessageSquare, label: "订单反馈管理", group: "经营" },
   { to: "/admin/shipping", icon: Truck, label: "发货管理", group: "经营" },
+  { to: "/admin/logistics", icon: Truck, label: "物流单管理", group: "经营" },
   { to: "/admin/stock", icon: Warehouse, label: "现货管理", group: "经营" },
   { to: "/admin/groups", icon: Users2, label: "拼单管理", group: "经营" },
   { to: "/admin/refunds", icon: Undo2, label: "退款工单", group: "经营" },
   { to: "/admin/products", icon: Package, label: "商品管理", group: "商品" },
   { to: "/admin/categories", icon: Tags, label: "属性分类", group: "商品" },
   { to: "/admin/shops", icon: Package, label: "档口管理", group: "商品" },
+  { to: "/admin/buildings", icon: Building2, label: "商圈 / 楼栋", group: "商品" },
   { to: "/admin/users", icon: Users2, label: "用户 / KYC", group: "用户与增长" },
+  { to: "/admin/kyc", icon: ShieldCheck, label: "KYC 审核", group: "用户与增长" },
   { to: "/admin/points-mall", icon: Gift, label: "积分商城", group: "用户与增长" },
+  { to: "/admin/points-rules", icon: Sparkles, label: "积分规则", group: "用户与增长" },
+  { to: "/admin/invites", icon: UserPlus, label: "邀请管理", group: "用户与增长" },
   { to: "/admin/payment-accounts", icon: Wallet, label: "商户号", group: "资金" },
   { to: "/admin/config", icon: Settings2, label: "汇率与配置", group: "系统" },
   { to: "/admin/banners", icon: ImageIcon, label: "Banner 管理", group: "系统" },

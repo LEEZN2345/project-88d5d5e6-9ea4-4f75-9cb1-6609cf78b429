@@ -45,6 +45,7 @@ import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 import { Route as AdminGroupsRouteImport } from './routes/admin.groups'
 import { Route as AdminFeedbackRouteImport } from './routes/admin.feedback'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
+import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
 import { Route as AdminBannersRouteImport } from './routes/admin.banners'
 
 const SupportRoute = SupportRouteImport.update({
@@ -227,6 +228,11 @@ const AdminConfigRoute = AdminConfigRouteImport.update({
   path: '/admin/config',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
+  id: '/admin/categories',
+  path: '/admin/categories',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminBannersRoute = AdminBannersRouteImport.update({
   id: '/admin/banners',
   path: '/admin/banners',
@@ -251,6 +257,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/admin/banners': typeof AdminBannersRoute
+  '/admin/categories': typeof AdminCategoriesRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/feedback': typeof AdminFeedbackRoute
   '/admin/groups': typeof AdminGroupsRoute
@@ -290,6 +297,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/admin/banners': typeof AdminBannersRoute
+  '/admin/categories': typeof AdminCategoriesRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/feedback': typeof AdminFeedbackRoute
   '/admin/groups': typeof AdminGroupsRoute
@@ -330,6 +338,7 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/admin/banners': typeof AdminBannersRoute
+  '/admin/categories': typeof AdminCategoriesRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/feedback': typeof AdminFeedbackRoute
   '/admin/groups': typeof AdminGroupsRoute
@@ -371,6 +380,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/support'
     | '/admin/banners'
+    | '/admin/categories'
     | '/admin/config'
     | '/admin/feedback'
     | '/admin/groups'
@@ -410,6 +420,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/support'
     | '/admin/banners'
+    | '/admin/categories'
     | '/admin/config'
     | '/admin/feedback'
     | '/admin/groups'
@@ -449,6 +460,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/support'
     | '/admin/banners'
+    | '/admin/categories'
     | '/admin/config'
     | '/admin/feedback'
     | '/admin/groups'
@@ -489,6 +501,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   SupportRoute: typeof SupportRoute
   AdminBannersRoute: typeof AdminBannersRoute
+  AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminConfigRoute: typeof AdminConfigRoute
   AdminFeedbackRoute: typeof AdminFeedbackRoute
   AdminGroupsRoute: typeof AdminGroupsRoute
@@ -764,6 +777,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminConfigRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/categories': {
+      id: '/admin/categories'
+      path: '/admin/categories'
+      fullPath: '/admin/categories'
+      preLoaderRoute: typeof AdminCategoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/banners': {
       id: '/admin/banners'
       path: '/admin/banners'
@@ -803,6 +823,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   SupportRoute: SupportRoute,
   AdminBannersRoute: AdminBannersRoute,
+  AdminCategoriesRoute: AdminCategoriesRoute,
   AdminConfigRoute: AdminConfigRoute,
   AdminFeedbackRoute: AdminFeedbackRoute,
   AdminGroupsRoute: AdminGroupsRoute,

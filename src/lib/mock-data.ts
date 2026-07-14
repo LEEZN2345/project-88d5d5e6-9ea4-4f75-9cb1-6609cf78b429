@@ -602,3 +602,174 @@ export const SHIP_STATUS_LABEL: Record<ShipStatus, string> = {
   packed: "已打包",
   shipped: "已发货",
 };
+
+// ========== 售后 · 换货工单 ==========
+// 平台不支持退货，仅支持换货。买家把货寄到国内集运仓 → 平台转寄韩国 →
+// 韩国档口签收后再配同款/换款 → 重新发出给买家。
+
+export const EXCHANGE_WAREHOUSE = {
+  name: "东大门订货通 · 上海集运仓",
+  contact: "换货收件组 · 021-6000-8899",
+  address: "上海市青浦区华徐公路 3288 号 A 栋 2 楼 换货组(请注明工单号)",
+  zip: "201703",
+  hours: "工作日 09:00 – 18:00 签收",
+};
+
+export type ExchangeStatus =
+  | "applied" // 待客服审核
+  | "approved_wait_ship" // 审核通过 · 待买家寄回集运仓
+  | "cn_received" // 集运仓已签收
+  | "forwarded_kr" // 已转寄韩国
+  | "kr_received" // 韩国档口已签收
+  | "sourcing" // 档口配货中
+  | "reshipped" // 已重新发出给买家
+  | "completed" // 已完成
+  | "rejected"; // 已驳回
+
+export const EXCHANGE_STATUS_LABEL: Record<ExchangeStatus, string> = {
+  applied: "待审核",
+  approved_wait_ship: "待寄回",
+  cn_received: "集运仓已签收",
+  forwarded_kr: "转寄韩国中",
+  kr_received: "韩国已签收",
+  sourcing: "档口配货中",
+  reshipped: "已重新发出",
+  completed: "已完成",
+  rejected: "已驳回",
+};
+
+export type ExchangeReason =
+  | "size" // 尺码不符
+  | "color" // 颜色不符
+  | "defect" // 质量瑕疵
+  | "wrong_item" // 发错款
+  | "other";
+
+export const EXCHANGE_REASON_LABEL: Record<ExchangeReason, string> = {
+  size: "尺码不合适",
+  color: "颜色/款式不符预期",
+  defect: "质量瑕疵",
+  wrong_item: "发错款",
+  other: "其他",
+};
+
+export type ExchangeRequest = {
+  id: string;
+  orderId: string;
+  createdAt: string;
+  status: ExchangeStatus;
+  reason: ExchangeReason;
+  note?: string;
+  // 换货明细：原 SKU → 期望新 SKU
+  item: {
+    productId: string;
+    productName: string;
+    image: string;
+    fromColor: string;
+    fromSize: string;
+    toColor: string;
+    toSize: string;
+    qty: number;
+  };
+  // 物流三段
+  buyerToCn?: { carrier: string; trackingNo: string; shippedAt?: string; receivedAt?: string };
+  cnToKr?: { batchNo: string; shippedAt?: string; receivedAt?: string };
+  krToBuyer?: { carrier: string; trackingNo: string; shippedAt?: string };
+  photos?: string[]; // 买手上传的凭证
+  csUser?: string;
+  rejectReason?: string;
+};
+
+export const EXCHANGES: ExchangeRequest[] = [
+  {
+    id: "EX20260701001",
+    orderId: "DD20251120002",
+    createdAt: "2026-07-02 10:20",
+    status: "applied",
+    reason: "size",
+    note: "M 码偏小，希望换 L 码",
+    item: {
+      productId: "p1",
+      productName: "羊毛混纺 双排扣大衣",
+      image: "https://picsum.photos/seed/milk/300/300",
+      fromColor: "米色",
+      fromSize: "M",
+      toColor: "米色",
+      toSize: "L",
+      qty: 1,
+    },
+    photos: ["https://picsum.photos/seed/ex1a/400/400", "https://picsum.photos/seed/ex1b/400/400"],
+  },
+  {
+    id: "EX20260625003",
+    orderId: "DD20251115007",
+    createdAt: "2026-06-25 14:10",
+    status: "cn_received",
+    reason: "color",
+    note: "实物颜色偏黄，换黑色同码",
+    item: {
+      productId: "p3",
+      productName: "针织半身裙",
+      image: "https://picsum.photos/seed/blue/300/300",
+      fromColor: "米色",
+      fromSize: "FREE",
+      toColor: "黑色",
+      toSize: "FREE",
+      qty: 1,
+    },
+    csUser: "客服-小南",
+    buyerToCn: {
+      carrier: "顺丰",
+      trackingNo: "SF1289334****",
+      shippedAt: "2026-06-26 09:00",
+      receivedAt: "2026-06-28 11:20",
+    },
+  },
+  {
+    id: "EX20260618002",
+    orderId: "DD20251110004",
+    createdAt: "2026-06-18 16:00",
+    status: "reshipped",
+    reason: "defect",
+    note: "袖口线头 + 一颗扣子松动",
+    item: {
+      productId: "p2",
+      productName: "宽松西装外套",
+      image: "https://picsum.photos/seed/stella/300/300",
+      fromColor: "黑色",
+      fromSize: "L",
+      toColor: "黑色",
+      toSize: "L",
+      qty: 1,
+    },
+    csUser: "客服-阿珍",
+    buyerToCn: {
+      carrier: "圆通",
+      trackingNo: "YT77291****",
+      shippedAt: "2026-06-19",
+      receivedAt: "2026-06-21",
+    },
+    cnToKr: { batchNo: "KR-BATCH-20260622", shippedAt: "2026-06-22", receivedAt: "2026-06-25" },
+    krToBuyer: { carrier: "极兔跨境", trackingNo: "JT88112****", shippedAt: "2026-06-30" },
+  },
+  {
+    id: "EX20260610008",
+    orderId: "DD20251105011",
+    createdAt: "2026-06-10 09:30",
+    status: "rejected",
+    reason: "other",
+    note: "买家反悔想换其他款",
+    item: {
+      productId: "p4",
+      productName: "小香风短外套",
+      image: "https://picsum.photos/seed/hera/300/300",
+      fromColor: "粉",
+      fromSize: "S",
+      toColor: "粉",
+      toSize: "S",
+      qty: 1,
+    },
+    csUser: "客服-小南",
+    rejectReason: "非质量问题且已过 7 天售后期，按平台规则不受理换货。",
+  },
+];

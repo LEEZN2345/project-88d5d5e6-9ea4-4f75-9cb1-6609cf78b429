@@ -65,6 +65,7 @@ import { Route as AdminProductsIdRouteImport } from './routes/admin.products.$id
 import { Route as AdminPaymentAccountsIdRouteImport } from './routes/admin.payment-accounts.$id'
 import { Route as AdminOrdersIdRouteImport } from './routes/admin.orders.$id'
 import { Route as AdminFeedbackIdRouteImport } from './routes/admin.feedback.$id'
+import { Route as AdminExchangesIdRouteImport } from './routes/admin.exchanges.$id'
 import { Route as AdminBannersNewRouteImport } from './routes/admin.banners.new'
 import { Route as AdminBannersIdRouteImport } from './routes/admin.banners.$id'
 
@@ -348,6 +349,11 @@ const AdminFeedbackIdRoute = AdminFeedbackIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AdminFeedbackRoute,
 } as any)
+const AdminExchangesIdRoute = AdminExchangesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminExchangesRoute,
+} as any)
 const AdminBannersNewRoute = AdminBannersNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -383,7 +389,7 @@ export interface FileRoutesByFullPath {
   '/admin/buildings': typeof AdminBuildingsRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/config': typeof AdminConfigRoute
-  '/admin/exchanges': typeof AdminExchangesRoute
+  '/admin/exchanges': typeof AdminExchangesRouteWithChildren
   '/admin/feedback': typeof AdminFeedbackRouteWithChildren
   '/admin/groups': typeof AdminGroupsRoute
   '/admin/guide': typeof AdminGuideRoute
@@ -411,6 +417,7 @@ export interface FileRoutesByFullPath {
   '/shops/': typeof ShopsIndexRoute
   '/admin/banners/$id': typeof AdminBannersIdRoute
   '/admin/banners/new': typeof AdminBannersNewRoute
+  '/admin/exchanges/$id': typeof AdminExchangesIdRoute
   '/admin/feedback/$id': typeof AdminFeedbackIdRoute
   '/admin/orders/$id': typeof AdminOrdersIdRoute
   '/admin/payment-accounts/$id': typeof AdminPaymentAccountsIdRoute
@@ -443,7 +450,7 @@ export interface FileRoutesByTo {
   '/admin/buildings': typeof AdminBuildingsRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/config': typeof AdminConfigRoute
-  '/admin/exchanges': typeof AdminExchangesRoute
+  '/admin/exchanges': typeof AdminExchangesRouteWithChildren
   '/admin/feedback': typeof AdminFeedbackRouteWithChildren
   '/admin/groups': typeof AdminGroupsRoute
   '/admin/guide': typeof AdminGuideRoute
@@ -471,6 +478,7 @@ export interface FileRoutesByTo {
   '/shops': typeof ShopsIndexRoute
   '/admin/banners/$id': typeof AdminBannersIdRoute
   '/admin/banners/new': typeof AdminBannersNewRoute
+  '/admin/exchanges/$id': typeof AdminExchangesIdRoute
   '/admin/feedback/$id': typeof AdminFeedbackIdRoute
   '/admin/orders/$id': typeof AdminOrdersIdRoute
   '/admin/payment-accounts/$id': typeof AdminPaymentAccountsIdRoute
@@ -504,7 +512,7 @@ export interface FileRoutesById {
   '/admin/buildings': typeof AdminBuildingsRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/config': typeof AdminConfigRoute
-  '/admin/exchanges': typeof AdminExchangesRoute
+  '/admin/exchanges': typeof AdminExchangesRouteWithChildren
   '/admin/feedback': typeof AdminFeedbackRouteWithChildren
   '/admin/groups': typeof AdminGroupsRoute
   '/admin/guide': typeof AdminGuideRoute
@@ -532,6 +540,7 @@ export interface FileRoutesById {
   '/shops/': typeof ShopsIndexRoute
   '/admin/banners/$id': typeof AdminBannersIdRoute
   '/admin/banners/new': typeof AdminBannersNewRoute
+  '/admin/exchanges/$id': typeof AdminExchangesIdRoute
   '/admin/feedback/$id': typeof AdminFeedbackIdRoute
   '/admin/orders/$id': typeof AdminOrdersIdRoute
   '/admin/payment-accounts/$id': typeof AdminPaymentAccountsIdRoute
@@ -594,6 +603,7 @@ export interface FileRouteTypes {
     | '/shops/'
     | '/admin/banners/$id'
     | '/admin/banners/new'
+    | '/admin/exchanges/$id'
     | '/admin/feedback/$id'
     | '/admin/orders/$id'
     | '/admin/payment-accounts/$id'
@@ -654,6 +664,7 @@ export interface FileRouteTypes {
     | '/shops'
     | '/admin/banners/$id'
     | '/admin/banners/new'
+    | '/admin/exchanges/$id'
     | '/admin/feedback/$id'
     | '/admin/orders/$id'
     | '/admin/payment-accounts/$id'
@@ -714,6 +725,7 @@ export interface FileRouteTypes {
     | '/shops/'
     | '/admin/banners/$id'
     | '/admin/banners/new'
+    | '/admin/exchanges/$id'
     | '/admin/feedback/$id'
     | '/admin/orders/$id'
     | '/admin/payment-accounts/$id'
@@ -747,7 +759,7 @@ export interface RootRouteChildren {
   AdminBuildingsRoute: typeof AdminBuildingsRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminConfigRoute: typeof AdminConfigRoute
-  AdminExchangesRoute: typeof AdminExchangesRoute
+  AdminExchangesRoute: typeof AdminExchangesRouteWithChildren
   AdminFeedbackRoute: typeof AdminFeedbackRouteWithChildren
   AdminGroupsRoute: typeof AdminGroupsRoute
   AdminGuideRoute: typeof AdminGuideRoute
@@ -1168,6 +1180,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminFeedbackIdRouteImport
       parentRoute: typeof AdminFeedbackRoute
     }
+    '/admin/exchanges/$id': {
+      id: '/admin/exchanges/$id'
+      path: '/$id'
+      fullPath: '/admin/exchanges/$id'
+      preLoaderRoute: typeof AdminExchangesIdRouteImport
+      parentRoute: typeof AdminExchangesRoute
+    }
     '/admin/banners/new': {
       id: '/admin/banners/new'
       path: '/new'
@@ -1208,6 +1227,18 @@ const AdminBannersRouteChildren: AdminBannersRouteChildren = {
 
 const AdminBannersRouteWithChildren = AdminBannersRoute._addFileChildren(
   AdminBannersRouteChildren,
+)
+
+interface AdminExchangesRouteChildren {
+  AdminExchangesIdRoute: typeof AdminExchangesIdRoute
+}
+
+const AdminExchangesRouteChildren: AdminExchangesRouteChildren = {
+  AdminExchangesIdRoute: AdminExchangesIdRoute,
+}
+
+const AdminExchangesRouteWithChildren = AdminExchangesRoute._addFileChildren(
+  AdminExchangesRouteChildren,
 )
 
 interface AdminFeedbackRouteChildren {
@@ -1317,7 +1348,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminBuildingsRoute: AdminBuildingsRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminConfigRoute: AdminConfigRoute,
-  AdminExchangesRoute: AdminExchangesRoute,
+  AdminExchangesRoute: AdminExchangesRouteWithChildren,
   AdminFeedbackRoute: AdminFeedbackRouteWithChildren,
   AdminGroupsRoute: AdminGroupsRoute,
   AdminGuideRoute: AdminGuideRoute,

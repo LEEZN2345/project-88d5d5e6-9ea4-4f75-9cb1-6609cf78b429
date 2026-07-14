@@ -7,25 +7,30 @@ export type BannerSlot = {
   id: string;
   name: string; // 后台显示的名称
   description: string; // 位置说明
-  image: string; // 图片 URL 或 dataURL
+  image: string; // 图片 URL 或 dataURL（首张轮播）
   title?: string;
   subtitle?: string;
   link?: string; // 点击跳转
   enabled: boolean;
+  slides?: string[]; // 额外轮播图片（用于首页顶部轮播）
 };
 
-const STORAGE_KEY = "platform_banners_v1";
+const STORAGE_KEY = "platform_banners_v2";
 
 export const DEFAULT_BANNERS: BannerSlot[] = [
   {
     id: "home_hero",
-    name: "首页顶部横幅",
-    description: "买手端首页顶部主视觉横幅",
+    name: "首页顶部轮播",
+    description: "买手端首页顶部主视觉轮播横幅",
     image: "https://picsum.photos/seed/home-hero/1200/480",
     title: "东大门订货通",
     subtitle: "档口直采 · 一键代购 · 全程跟踪",
     link: "/shops",
     enabled: true,
+    slides: [
+      "https://picsum.photos/seed/home-hero-2/1200/480",
+      "https://picsum.photos/seed/home-hero-3/1200/480",
+    ],
   },
   {
     id: "shops_hero",

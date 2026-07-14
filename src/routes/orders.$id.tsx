@@ -3,7 +3,7 @@ import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { ORDERS, STATUS_LABEL, formatKRW, formatCNY } from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Copy, Truck, Receipt, Wallet } from "lucide-react";
+import { Copy, Truck, Receipt, Wallet, RefreshCcw } from "lucide-react";
 
 export const Route = createFileRoute("/orders/$id")({
   component: OrderDetail,
@@ -84,6 +84,23 @@ function OrderDetail() {
             <div className="text-xs text-muted-foreground">{o.logisticsNo}</div>
           </div>
           <span className="text-xs text-muted-foreground">查看 →</span>
+        </Link>
+      )}
+
+      {o.status === "delivered" && (
+        <Link
+          to="/orders/$id/exchange"
+          params={{ id: o.id }}
+          className="mx-4 mt-3 flex items-center gap-3 rounded-xl border border-rose-300 bg-rose-50 p-3 dark:bg-rose-950/30"
+        >
+          <RefreshCcw className="h-4 w-4 text-rose-600" />
+          <div className="flex-1 text-sm">
+            <div className="font-medium text-rose-700 dark:text-rose-300">申请换货</div>
+            <div className="text-xs text-rose-600/80 dark:text-rose-400">
+              签收 7 天内可申请 · 平台仅支持换货，不支持退货
+            </div>
+          </div>
+          <span className="text-xs text-rose-600">前往 →</span>
         </Link>
       )}
 

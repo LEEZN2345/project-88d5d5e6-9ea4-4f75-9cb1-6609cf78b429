@@ -1,77 +1,104 @@
-# 统一 apM 蓝 & 灯牌字体体系
 
-在已有 `--primary = apM blue`、`font-display = Barlow Semi Condensed` 基础上，把全站按钮、链接、表单控件的配色和字号收拢到同一套语言，避免各页面各写各的。
+# 前后端联调需求盘点
 
-## 一、设计规范（落到 `src/styles.css`）
+目前整站数据均为前端模拟（`src/lib/mock-data.ts`、`localStorage`、`rank-data.ts`），未接入任何真实后端。要上线，需要按下述顺序做「前后联调」。建议基于 Lovable Cloud（Supabase）搭建，全部走 TanStack Start server functions。
 
-**字号 / 字重**
-- 主按钮、Tab、SignBoard 标签 → `font-display`（Barlow Semi Condensed）+ `font-bold` + `uppercase tracking-tight`
-- 表单 label、正文 → `font-sans` (Inter)
-- 输入框内文字统一 `text-sm`（14px）不再 `text-xs`
+## 一、必须联调（P0：核心业务闭环）
 
-**配色语义**
-- 主按钮 = `bg-primary text-primary-foreground`（apM 蓝）
-- 次按钮 = `variant="outline"`，边框改用 `border-primary/40 text-primary`
-- 幽灵按钮 = `variant="ghost"`，hover 底色 `bg-primary/8`
-- 链接 = 新增工具类 `.link` → `text-primary underline-offset-4 hover:underline`
-- 危险 = 保持 `destructive`
-- Focus ring 全部指到 `--ring = apM blue`
+### 1. 账号与权限
+- 页面：`auth.tsx`、`me.tsx`、`kyc.tsx`、`admin.users.tsx`
+- 需要：邮箱/手机注册登录、Session、KYC 提交与审核、买手/管理员角色（`user_roles` 单独表 + `has_role`）
+- 后端：Supabase Auth + `profiles`、`kyc_submissions`、`user_roles`
 
-**新增 CSS 变量**
-- `--ring` 改为 `oklch(0.36 0.18 264 / 0.5)` 与 primary 同色
-- `--input` 描边改 `oklch(0.90 0.02 260)`（微冷灰，配 apM 白袋质感）
+### 2. 商品 / 档口 / 分类
+- 前端：`shops.index.tsx`、`shops.$id.tsx`、`products.$id.tsx`、`new-arrivals.tsx`、`index.tsx`
+- 后台：`admin.products.tsx`、`admin.shops.tsx`、`admin.categories.tsx`
+- 表：`shops`、`products`（含 images/colors/sizes/discount/isNew）、`product_categories`
+- 需要：列表/详情读取、后台增删改、Excel 批量导入、图片上传+水印（Supabase Storage）
 
-## 二、组件层改造
+### 3. 购物车 / 收藏
+- 前端：`cart.tsx`、`favorites.tsx`、`products.$id.tsx`
+- 表：`cart_items`、`favorites`（RLS 按 user_id）
+- 需要：加购、改数量、删除、跨设备同步
 
-**`src/components/ui/button.tsx`**
-- 默认字体加 `font-display uppercase tracking-tight`
-- `variant.default`：从纯色改成微渐变 `bg-gradient-to-b from-[color:var(--apm)] to-[color:var(--apm-ink)]`，配 apM 袋子印刷感
-- `variant.outline`：`border-primary/40 text-primary bg-transparent hover:bg-primary/8`
-- `variant.secondary`：改成灰色 place 调 `bg-neutral-800 text-white`（对应 Place 袋子灰）
-- 新增 `variant="sign"`：直接调用 `.sign-board` 样式（灯牌按钮）
-- `size.default` 提到 `h-10`，字号 `text-sm`
+### 4. 下单 / 支付 / 订单跟踪
+- 前端：`checkout.tsx`、`orders.index.tsx`、`orders.$id.tsx`、`logistics.$id.tsx`
+- 后台：`admin.orders.tsx`、`admin.shipping.tsx`、`admin.payment-accounts.tsx`
+- 表：`orders`、`order_items`、`shipments`、`shipment_events`、`payment_accounts`
+- 需要：下单、支付回调（微信/支付宝/韩币收款 Webhook → `/api/public/webhooks/*`）、订单状态机、物流轨迹录入
 
-**`src/components/ui/input.tsx` / `select.tsx` / `textarea.tsx`**
-- 高度 `h-10`、`text-sm`、`rounded-md`
-- `focus-visible:ring-2 ring-ring/50 ring-offset-0 border-primary`
-- placeholder `text-muted-foreground/70`
+### 5. 地址簿
+- 前端：`addresses.tsx`、`checkout.tsx`
+- 表：`user_addresses`
 
-**`src/components/ui/badge.tsx`**
-- `default` 改为 apM 蓝细描边填充 `bg-primary/10 text-primary border-primary/30`
+## 二、需联调（P1：完善体验）
 
-**`src/components/MobileShell.tsx`**
-- 底部 Tab 激活态：图标 + 文字 `text-primary font-display font-bold`
-- 顶部 Header 标题：`font-display font-black tracking-tight`
+### 6. 拼单
+- 前端：`groups.tsx`、后台 `admin.groups.tsx`
+- 表：`group_buys`、`group_members`；到期结算需要定时任务（pg_cron → `/api/public/cron/group-settle`）
 
-## 三、页面层（批量搜索替换，只改样式类）
+### 7. 现货管理
+- 前端：`products.$id.tsx`（现货匹配）、后台 `admin.stock.tsx`
+- 表：`stock_items`，与 `orders` 联动扣减
 
-用 rg 找出以下模式统一换成 shadcn `Button` / `Link` + 语义类，不改业务逻辑：
+### 8. 退款工单
+- 前端：`orders.$id.tsx` 发起入口、后台 `admin.refunds.tsx`
+- 表：`refund_requests`、`refund_evidence`（图片）
 
-- 页面里手写 `<button className="rounded-... bg-...">` 且非灯牌 → `<Button variant=...>`
-- 手写小链接 `text-xs text-muted-foreground` 且明显是 CTA（"更多"、"全部…→"） → 加 `link` 工具类，颜色改 primary
-- 所有 `text-blue-500 / bg-blue-500 / bg-rose-500 / bg-amber-*`（除排行榜奖牌、状态色如 destructive、成功绿）→ 统一到 primary / accent 语义色
-- 各处硬编码 `text-[10px] / text-[11px]` 的正文类标签统一到 `text-xs`（12px），保留 `text-[10px]` 仅用于超小副标
+### 9. 反馈与售后
+- 前端：`support.tsx`、订单页反馈按钮
+- 后台：`admin.feedback.tsx`
+- 表：`order_feedback`、`support_tickets`
 
-涉及文件（挑出高优先）：
-`src/routes/index.tsx`、`shops.index.tsx`、`shops.$id.tsx`、`products.$id.tsx`、`cart.tsx`、`checkout.tsx`、`orders.index.tsx`、`orders.$id.tsx`、`me.tsx`、`admin.*`。
+### 10. 积分体系
+- 前端：`points.tsx`、`points.history.tsx`、`points-rules.tsx`、`invite-rules.tsx`
+- 后台：`admin.points-mall.tsx`
+- 表：`points_ledger`、`points_rules`、`points_products`、`redemptions`、`invite_codes`
+- 触发：下单/邀请/签到 → 服务端事件写入 ledger
 
-## 四、验证
+### 11. 汇率与平台配置
+- 前端：全站 `krwToCny`、`checkout.tsx`
+- 后台：`admin.config.tsx`
+- 表：`platform_config`（汇率、加价率、费率）；可选定时抓取韩币汇率
 
-- `bunx tsgo --noEmit` 通过
-- Playwright 截图首页 / 档口列表 / 商品详情 / 结算 / 后台首页，肉眼核对：
-  - 主按钮均为 apM 蓝渐变
-  - 链接颜色一致
-  - 输入框高度、focus ring 一致
-  - 底部导航激活态用灯牌字体
-- 检查 dark mode 下对比度（primary-foreground 仍为白）
+## 三、可迁移到后端（P2：目前用 localStorage）
 
-## 五、不动的东西
+以下已可用但存本地，需搬到数据库以便后台真正生效：
 
-- 排行榜金/银/铜奖牌渐变
-- 折扣红标、"实体热" 红标（属于状态语义）
-- SignBoard 组件本身的青白/暖金背光（这是品牌独立系统）
-- 业务逻辑、数据、路由结构
+- `src/lib/banners.ts` → `banners` 表 + Storage 图片
+- `src/lib/categories.ts` → `product_categories` 表（与 P0-2 合并）
+- 折扣/优惠 `discounts.tsx` → `discount_rules` 表
+- 排行榜 `rank-data.ts`（`APM_RANK`、`OFFLINE_HOT`）→ 由订单数据实时聚合，或后台可编辑的 `shop_rankings` 表
 
-## 六、预计改动量
+## 四、后端接口分工
 
-~14 个组件 / 页面文件，纯样式改动，无 API 变化。
+- **createServerFn**：所有 App 内读写（商品列表、下单、加购、收藏、后台 CRUD）
+- **Server routes `/api/public/*`**：
+  - 支付回调 Webhook（HMAC 校验）
+  - 物流查询 Webhook / 拉取脚本
+  - pg_cron 定时任务（拼单结算、汇率刷新、榜单聚合）
+- **Storage**：商品图、Banner、KYC 证件、退款凭证、水印后原图
+
+## 五、建议实施顺序
+
+```text
+Step 1  开启 Lovable Cloud + 建表 schema（含 RLS/GRANT）
+Step 2  Auth + 角色 + KYC             ← 打通登录
+Step 3  分类/档口/商品 CRUD + 图片    ← 打通目录
+Step 4  购物车 + 收藏 + 地址          ← 打通选购
+Step 5  下单 + 支付 Webhook + 订单    ← 打通交易
+Step 6  发货 + 物流 + 现货            ← 打通履约
+Step 7  退款 + 反馈 + 售后            ← 打通售后
+Step 8  拼单 + 积分 + 邀请            ← 增长模块
+Step 9  Banner / 分类 / 配置搬后端    ← 后台生效
+Step 10 排行榜聚合 + 定时任务         ← 数据运营
+```
+
+## 六、待你确认
+
+1. 是否直接启用 **Lovable Cloud (Supabase)** 作为后端？
+2. 支付通道优先接：微信 / 支付宝 / Stripe / Toss（韩国）中的哪几个？
+3. 图片存储是否使用 Supabase Storage + 服务端加水印？还是接第三方 CDN？
+4. 是否需要多语言（韩文/中文/英文）字段，还是先只做中文？
+
+确认后我按 Step 1 开始落地。

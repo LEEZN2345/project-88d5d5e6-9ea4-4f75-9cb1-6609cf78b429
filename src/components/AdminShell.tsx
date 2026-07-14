@@ -13,7 +13,7 @@ import {
   MessageSquare,
   Warehouse,
 } from "lucide-react";
-import { Image as ImageIcon } from "lucide-react";
+import { Image as ImageIcon, Tags } from "lucide-react";
 
 type NavItem = {
   to: string;
@@ -31,6 +31,7 @@ const NAV: NavItem[] = [
   { to: "/admin/groups", icon: Users2, label: "拼单管理", group: "经营" },
   { to: "/admin/refunds", icon: Undo2, label: "退款工单", group: "经营" },
   { to: "/admin/products", icon: Package, label: "商品管理", group: "商品" },
+  { to: "/admin/categories", icon: Tags, label: "属性分类", group: "商品" },
   { to: "/admin/shops", icon: Package, label: "档口管理", group: "商品" },
   { to: "/admin/users", icon: Users2, label: "用户 / KYC", group: "用户与增长" },
   { to: "/admin/points-mall", icon: Gift, label: "积分商城", group: "用户与增长" },

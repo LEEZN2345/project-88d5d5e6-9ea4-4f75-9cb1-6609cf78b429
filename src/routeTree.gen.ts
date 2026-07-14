@@ -53,6 +53,7 @@ import { Route as AdminInvitesRouteImport } from './routes/admin.invites'
 import { Route as AdminGuideRouteImport } from './routes/admin.guide'
 import { Route as AdminGroupsRouteImport } from './routes/admin.groups'
 import { Route as AdminFeedbackRouteImport } from './routes/admin.feedback'
+import { Route as AdminExchangesRouteImport } from './routes/admin.exchanges'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
 import { Route as AdminBuildingsRouteImport } from './routes/admin.buildings'
@@ -287,6 +288,11 @@ const AdminFeedbackRoute = AdminFeedbackRouteImport.update({
   path: '/admin/feedback',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminExchangesRoute = AdminExchangesRouteImport.update({
+  id: '/admin/exchanges',
+  path: '/admin/exchanges',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminConfigRoute = AdminConfigRouteImport.update({
   id: '/admin/config',
   path: '/admin/config',
@@ -377,6 +383,7 @@ export interface FileRoutesByFullPath {
   '/admin/buildings': typeof AdminBuildingsRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/config': typeof AdminConfigRoute
+  '/admin/exchanges': typeof AdminExchangesRoute
   '/admin/feedback': typeof AdminFeedbackRouteWithChildren
   '/admin/groups': typeof AdminGroupsRoute
   '/admin/guide': typeof AdminGuideRoute
@@ -436,6 +443,7 @@ export interface FileRoutesByTo {
   '/admin/buildings': typeof AdminBuildingsRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/config': typeof AdminConfigRoute
+  '/admin/exchanges': typeof AdminExchangesRoute
   '/admin/feedback': typeof AdminFeedbackRouteWithChildren
   '/admin/groups': typeof AdminGroupsRoute
   '/admin/guide': typeof AdminGuideRoute
@@ -496,6 +504,7 @@ export interface FileRoutesById {
   '/admin/buildings': typeof AdminBuildingsRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/config': typeof AdminConfigRoute
+  '/admin/exchanges': typeof AdminExchangesRoute
   '/admin/feedback': typeof AdminFeedbackRouteWithChildren
   '/admin/groups': typeof AdminGroupsRoute
   '/admin/guide': typeof AdminGuideRoute
@@ -557,6 +566,7 @@ export interface FileRouteTypes {
     | '/admin/buildings'
     | '/admin/categories'
     | '/admin/config'
+    | '/admin/exchanges'
     | '/admin/feedback'
     | '/admin/groups'
     | '/admin/guide'
@@ -616,6 +626,7 @@ export interface FileRouteTypes {
     | '/admin/buildings'
     | '/admin/categories'
     | '/admin/config'
+    | '/admin/exchanges'
     | '/admin/feedback'
     | '/admin/groups'
     | '/admin/guide'
@@ -675,6 +686,7 @@ export interface FileRouteTypes {
     | '/admin/buildings'
     | '/admin/categories'
     | '/admin/config'
+    | '/admin/exchanges'
     | '/admin/feedback'
     | '/admin/groups'
     | '/admin/guide'
@@ -735,6 +747,7 @@ export interface RootRouteChildren {
   AdminBuildingsRoute: typeof AdminBuildingsRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminConfigRoute: typeof AdminConfigRoute
+  AdminExchangesRoute: typeof AdminExchangesRoute
   AdminFeedbackRoute: typeof AdminFeedbackRouteWithChildren
   AdminGroupsRoute: typeof AdminGroupsRoute
   AdminGuideRoute: typeof AdminGuideRoute
@@ -1071,6 +1084,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminFeedbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/exchanges': {
+      id: '/admin/exchanges'
+      path: '/admin/exchanges'
+      fullPath: '/admin/exchanges'
+      preLoaderRoute: typeof AdminExchangesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/config': {
       id: '/admin/config'
       path: '/admin/config'
@@ -1297,6 +1317,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminBuildingsRoute: AdminBuildingsRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminConfigRoute: AdminConfigRoute,
+  AdminExchangesRoute: AdminExchangesRoute,
   AdminFeedbackRoute: AdminFeedbackRouteWithChildren,
   AdminGroupsRoute: AdminGroupsRoute,
   AdminGuideRoute: AdminGuideRoute,

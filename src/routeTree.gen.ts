@@ -18,6 +18,7 @@ import { Route as MeRouteImport } from './routes/me'
 import { Route as KycRouteImport } from './routes/kyc'
 import { Route as InviteRulesRouteImport } from './routes/invite-rules'
 import { Route as HotShopsRouteImport } from './routes/hot-shops'
+import { Route as GuideRouteImport } from './routes/guide'
 import { Route as GroupsRouteImport } from './routes/groups'
 import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as DiscountsRouteImport } from './routes/discounts'
@@ -48,6 +49,7 @@ import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 import { Route as AdminLogisticsRouteImport } from './routes/admin.logistics'
 import { Route as AdminKycRouteImport } from './routes/admin.kyc'
 import { Route as AdminInvitesRouteImport } from './routes/admin.invites'
+import { Route as AdminGuideRouteImport } from './routes/admin.guide'
 import { Route as AdminGroupsRouteImport } from './routes/admin.groups'
 import { Route as AdminFeedbackRouteImport } from './routes/admin.feedback'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
@@ -107,6 +109,11 @@ const InviteRulesRoute = InviteRulesRouteImport.update({
 const HotShopsRoute = HotShopsRouteImport.update({
   id: '/hot-shops',
   path: '/hot-shops',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuideRoute = GuideRouteImport.update({
+  id: '/guide',
+  path: '/guide',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GroupsRoute = GroupsRouteImport.update({
@@ -259,6 +266,11 @@ const AdminInvitesRoute = AdminInvitesRouteImport.update({
   path: '/admin/invites',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminGuideRoute = AdminGuideRouteImport.update({
+  id: '/admin/guide',
+  path: '/admin/guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminGroupsRoute = AdminGroupsRouteImport.update({
   id: '/admin/groups',
   path: '/admin/groups',
@@ -344,6 +356,7 @@ export interface FileRoutesByFullPath {
   '/discounts': typeof DiscountsRoute
   '/favorites': typeof FavoritesRoute
   '/groups': typeof GroupsRoute
+  '/guide': typeof GuideRoute
   '/hot-shops': typeof HotShopsRoute
   '/invite-rules': typeof InviteRulesRoute
   '/kyc': typeof KycRoute
@@ -359,6 +372,7 @@ export interface FileRoutesByFullPath {
   '/admin/config': typeof AdminConfigRoute
   '/admin/feedback': typeof AdminFeedbackRouteWithChildren
   '/admin/groups': typeof AdminGroupsRoute
+  '/admin/guide': typeof AdminGuideRoute
   '/admin/invites': typeof AdminInvitesRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/logistics': typeof AdminLogisticsRoute
@@ -400,6 +414,7 @@ export interface FileRoutesByTo {
   '/discounts': typeof DiscountsRoute
   '/favorites': typeof FavoritesRoute
   '/groups': typeof GroupsRoute
+  '/guide': typeof GuideRoute
   '/hot-shops': typeof HotShopsRoute
   '/invite-rules': typeof InviteRulesRoute
   '/kyc': typeof KycRoute
@@ -415,6 +430,7 @@ export interface FileRoutesByTo {
   '/admin/config': typeof AdminConfigRoute
   '/admin/feedback': typeof AdminFeedbackRouteWithChildren
   '/admin/groups': typeof AdminGroupsRoute
+  '/admin/guide': typeof AdminGuideRoute
   '/admin/invites': typeof AdminInvitesRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/logistics': typeof AdminLogisticsRoute
@@ -457,6 +473,7 @@ export interface FileRoutesById {
   '/discounts': typeof DiscountsRoute
   '/favorites': typeof FavoritesRoute
   '/groups': typeof GroupsRoute
+  '/guide': typeof GuideRoute
   '/hot-shops': typeof HotShopsRoute
   '/invite-rules': typeof InviteRulesRoute
   '/kyc': typeof KycRoute
@@ -472,6 +489,7 @@ export interface FileRoutesById {
   '/admin/config': typeof AdminConfigRoute
   '/admin/feedback': typeof AdminFeedbackRouteWithChildren
   '/admin/groups': typeof AdminGroupsRoute
+  '/admin/guide': typeof AdminGuideRoute
   '/admin/invites': typeof AdminInvitesRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/logistics': typeof AdminLogisticsRoute
@@ -515,6 +533,7 @@ export interface FileRouteTypes {
     | '/discounts'
     | '/favorites'
     | '/groups'
+    | '/guide'
     | '/hot-shops'
     | '/invite-rules'
     | '/kyc'
@@ -530,6 +549,7 @@ export interface FileRouteTypes {
     | '/admin/config'
     | '/admin/feedback'
     | '/admin/groups'
+    | '/admin/guide'
     | '/admin/invites'
     | '/admin/kyc'
     | '/admin/logistics'
@@ -571,6 +591,7 @@ export interface FileRouteTypes {
     | '/discounts'
     | '/favorites'
     | '/groups'
+    | '/guide'
     | '/hot-shops'
     | '/invite-rules'
     | '/kyc'
@@ -586,6 +607,7 @@ export interface FileRouteTypes {
     | '/admin/config'
     | '/admin/feedback'
     | '/admin/groups'
+    | '/admin/guide'
     | '/admin/invites'
     | '/admin/kyc'
     | '/admin/logistics'
@@ -627,6 +649,7 @@ export interface FileRouteTypes {
     | '/discounts'
     | '/favorites'
     | '/groups'
+    | '/guide'
     | '/hot-shops'
     | '/invite-rules'
     | '/kyc'
@@ -642,6 +665,7 @@ export interface FileRouteTypes {
     | '/admin/config'
     | '/admin/feedback'
     | '/admin/groups'
+    | '/admin/guide'
     | '/admin/invites'
     | '/admin/kyc'
     | '/admin/logistics'
@@ -684,6 +708,7 @@ export interface RootRouteChildren {
   DiscountsRoute: typeof DiscountsRoute
   FavoritesRoute: typeof FavoritesRoute
   GroupsRoute: typeof GroupsRoute
+  GuideRoute: typeof GuideRoute
   HotShopsRoute: typeof HotShopsRoute
   InviteRulesRoute: typeof InviteRulesRoute
   KycRoute: typeof KycRoute
@@ -699,6 +724,7 @@ export interface RootRouteChildren {
   AdminConfigRoute: typeof AdminConfigRoute
   AdminFeedbackRoute: typeof AdminFeedbackRouteWithChildren
   AdminGroupsRoute: typeof AdminGroupsRoute
+  AdminGuideRoute: typeof AdminGuideRoute
   AdminInvitesRoute: typeof AdminInvitesRoute
   AdminKycRoute: typeof AdminKycRoute
   AdminLogisticsRoute: typeof AdminLogisticsRoute
@@ -785,6 +811,13 @@ declare module '@tanstack/react-router' {
       path: '/hot-shops'
       fullPath: '/hot-shops'
       preLoaderRoute: typeof HotShopsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guide': {
+      id: '/guide'
+      path: '/guide'
+      fullPath: '/guide'
+      preLoaderRoute: typeof GuideRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/groups': {
@@ -995,6 +1028,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/invites'
       fullPath: '/admin/invites'
       preLoaderRoute: typeof AdminInvitesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/guide': {
+      id: '/admin/guide'
+      path: '/admin/guide'
+      fullPath: '/admin/guide'
+      preLoaderRoute: typeof AdminGuideRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/groups': {
@@ -1222,6 +1262,7 @@ const rootRouteChildren: RootRouteChildren = {
   DiscountsRoute: DiscountsRoute,
   FavoritesRoute: FavoritesRoute,
   GroupsRoute: GroupsRoute,
+  GuideRoute: GuideRoute,
   HotShopsRoute: HotShopsRoute,
   InviteRulesRoute: InviteRulesRoute,
   KycRoute: KycRoute,
@@ -1237,6 +1278,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminConfigRoute: AdminConfigRoute,
   AdminFeedbackRoute: AdminFeedbackRouteWithChildren,
   AdminGroupsRoute: AdminGroupsRoute,
+  AdminGuideRoute: AdminGuideRoute,
   AdminInvitesRoute: AdminInvitesRoute,
   AdminKycRoute: AdminKycRoute,
   AdminLogisticsRoute: AdminLogisticsRoute,

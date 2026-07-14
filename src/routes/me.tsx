@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { SHOPS } from "@/lib/mock-data";
-import { ChevronRight, MapPin, Heart, MessageSquare, Settings, Shield, Gift, ShoppingBag, ClipboardList, Store, Sparkles, Share2 } from "lucide-react";
+import { ChevronRight, MapPin, Heart, MessageSquare, Settings, Shield, Gift, ShoppingBag, ClipboardList, Store, Sparkles, Share2, BookOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/me")({
@@ -98,6 +98,7 @@ function Me() {
         <Item to="/points" icon={Gift} label="积分广场" right="2,580 分" />
         <Item to="/points-rules" icon={Share2} label="邀请好友赚积分" right="已邀 4 人" />
         <Item to="/invite-rules" icon={Gift} label="邀请分销规则（实体店）" right="最低 2.5%" />
+        <Item to="/guide" icon={BookOpen} label="使用指引" right="新手必看" />
         <Item to="/support" icon={MessageSquare} label="联系客服" />
         <Item to="/kyc" icon={Shield} label="实名认证" right="未认证" />
         <Item to="/settings" icon={Settings} label="设置" />

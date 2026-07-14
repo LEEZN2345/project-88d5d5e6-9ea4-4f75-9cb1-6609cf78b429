@@ -55,6 +55,7 @@ function AdminHome() {
             <Link to="/admin/logistics" className="rounded-md border border-border p-3 hover:bg-accent">物流单管理</Link>
             <Link to="/admin/refunds" className="rounded-md border border-border p-3 hover:bg-accent">退款工单</Link>
             <Link to="/admin/products" className="rounded-md border border-border p-3 hover:bg-accent">商品/档口录入</Link>
+            <Link to="/admin/guide" className="rounded-md border border-border p-3 hover:bg-accent">📘 使用指引 / SOP</Link>
           </div>
         </Card>
       </div>

@@ -376,13 +376,3 @@ function AdminCategories() {
   );
 }
 
-const Th = ({ children }: { children: React.ReactNode }) => (
-  <th className="px-3 py-2 text-left font-medium">{children}</th>
-);
-const Td = ({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => <td className={`px-3 py-2 ${className}`}>{children}</td>;

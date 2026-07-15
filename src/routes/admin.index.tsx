@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AdminShell } from "@/components/AdminShell";
 import { ORDERS, MERCHANT_ACCOUNTS, REFUNDS, formatCNY } from "@/lib/mock-data";
 import { Card } from "@/components/ui/card";
+import { ArrowUpRight, ArrowDownRight, BarChart3 } from "lucide-react";
 
 export const Route = createFileRoute("/admin/")({
   head: () => ({ meta: [{ title: "运营后台 · 概览" }] }),
@@ -25,6 +26,19 @@ function AdminHome() {
       </div>
 
       <div className="mt-6 grid gap-4 md:grid-cols-2">
+        <Card className="p-4 md:col-span-2">
+          <div className="mb-3 flex items-center justify-between">
+            <div className="text-sm font-semibold">近 7 日运营指标</div>
+            <Link to="/admin/analytics" className="text-xs text-primary">进入运营看板 →</Link>
+          </div>
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+            <Metric label="GMV" value="¥328,400" delta={12.4} />
+            <Metric label="订单数" value="1,284" delta={8.1} />
+            <Metric label="支付用户数" value="612" delta={-2.3} />
+            <Metric label="客单价" value="¥256" delta={4.7} />
+          </div>
+        </Card>
+
         <Card className="p-4">
           <div className="mb-2 text-sm font-semibold">商户号入账</div>
           <div className="space-y-2">
@@ -56,6 +70,8 @@ function AdminHome() {
             <Link to="/admin/refunds" className="rounded-md border border-border p-3 hover:bg-accent">退款工单</Link>
             <Link to="/admin/exchanges" className="rounded-md border border-border p-3 hover:bg-accent">售后换货</Link>
             <Link to="/admin/products" className="rounded-md border border-border p-3 hover:bg-accent">商品/档口录入</Link>
+            <Link to="/admin/home-decoration" className="rounded-md border border-border p-3 hover:bg-accent">🎨 首页装修</Link>
+            <Link to="/admin/analytics" className="rounded-md border border-border p-3 hover:bg-accent"><BarChart3 className="mr-1 inline h-3 w-3" />运营看板</Link>
             <Link to="/admin/guide" className="rounded-md border border-border p-3 hover:bg-accent">📘 使用指引 / SOP</Link>
           </div>
         </Card>
@@ -71,5 +87,19 @@ function Stat({ label, value, hint }: { label: string; value: string; hint?: str
       <div className="mt-1 text-2xl font-semibold">{value}</div>
       {hint && <div className="text-[10px] text-muted-foreground">{hint}</div>}
     </Card>
+  );
+}
+
+function Metric({ label, value, delta }: { label: string; value: string; delta: number }) {
+  const up = delta >= 0;
+  return (
+    <div className="rounded-md border border-border bg-background p-3">
+      <div className="text-xs text-muted-foreground">{label}</div>
+      <div className="mt-1 text-xl font-semibold">{value}</div>
+      <div className={`mt-1 flex items-center gap-1 text-[11px] ${up ? "text-emerald-600" : "text-rose-500"}`}>
+        {up ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
+        {Math.abs(delta)}% 环比
+      </div>
+    </div>
   );
 }

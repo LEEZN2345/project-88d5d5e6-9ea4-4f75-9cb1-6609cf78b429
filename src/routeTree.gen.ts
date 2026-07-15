@@ -53,7 +53,6 @@ import { Route as AdminPointsMallRouteImport } from './routes/admin.points-mall'
 import { Route as AdminPaymentAccountsRouteImport } from './routes/admin.payment-accounts'
 import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 import { Route as AdminLogisticsRouteImport } from './routes/admin.logistics'
-import { Route as AdminKycRouteImport } from './routes/admin.kyc'
 import { Route as AdminInvitesRouteImport } from './routes/admin.invites'
 import { Route as AdminHomeDecorationRouteImport } from './routes/admin.home-decoration'
 import { Route as AdminGuideRouteImport } from './routes/admin.guide'
@@ -297,11 +296,6 @@ const AdminLogisticsRoute = AdminLogisticsRouteImport.update({
   path: '/admin/logistics',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminKycRoute = AdminKycRouteImport.update({
-  id: '/admin/kyc',
-  path: '/admin/kyc',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminInvitesRoute = AdminInvitesRouteImport.update({
   id: '/admin/invites',
   path: '/admin/invites',
@@ -443,7 +437,6 @@ export interface FileRoutesByFullPath {
   '/admin/guide': typeof AdminGuideRoute
   '/admin/home-decoration': typeof AdminHomeDecorationRoute
   '/admin/invites': typeof AdminInvitesRoute
-  '/admin/kyc': typeof AdminKycRoute
   '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRouteWithChildren
   '/admin/payment-accounts': typeof AdminPaymentAccountsRouteWithChildren
@@ -512,7 +505,6 @@ export interface FileRoutesByTo {
   '/admin/guide': typeof AdminGuideRoute
   '/admin/home-decoration': typeof AdminHomeDecorationRoute
   '/admin/invites': typeof AdminInvitesRoute
-  '/admin/kyc': typeof AdminKycRoute
   '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRouteWithChildren
   '/admin/payment-accounts': typeof AdminPaymentAccountsRouteWithChildren
@@ -582,7 +574,6 @@ export interface FileRoutesById {
   '/admin/guide': typeof AdminGuideRoute
   '/admin/home-decoration': typeof AdminHomeDecorationRoute
   '/admin/invites': typeof AdminInvitesRoute
-  '/admin/kyc': typeof AdminKycRoute
   '/admin/logistics': typeof AdminLogisticsRoute
   '/admin/orders': typeof AdminOrdersRouteWithChildren
   '/admin/payment-accounts': typeof AdminPaymentAccountsRouteWithChildren
@@ -653,7 +644,6 @@ export interface FileRouteTypes {
     | '/admin/guide'
     | '/admin/home-decoration'
     | '/admin/invites'
-    | '/admin/kyc'
     | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
@@ -722,7 +712,6 @@ export interface FileRouteTypes {
     | '/admin/guide'
     | '/admin/home-decoration'
     | '/admin/invites'
-    | '/admin/kyc'
     | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
@@ -791,7 +780,6 @@ export interface FileRouteTypes {
     | '/admin/guide'
     | '/admin/home-decoration'
     | '/admin/invites'
-    | '/admin/kyc'
     | '/admin/logistics'
     | '/admin/orders'
     | '/admin/payment-accounts'
@@ -861,7 +849,6 @@ export interface RootRouteChildren {
   AdminGuideRoute: typeof AdminGuideRoute
   AdminHomeDecorationRoute: typeof AdminHomeDecorationRoute
   AdminInvitesRoute: typeof AdminInvitesRoute
-  AdminKycRoute: typeof AdminKycRoute
   AdminLogisticsRoute: typeof AdminLogisticsRoute
   AdminOrdersRoute: typeof AdminOrdersRouteWithChildren
   AdminPaymentAccountsRoute: typeof AdminPaymentAccountsRouteWithChildren
@@ -1198,13 +1185,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLogisticsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/kyc': {
-      id: '/admin/kyc'
-      path: '/admin/kyc'
-      fullPath: '/admin/kyc'
-      preLoaderRoute: typeof AdminKycRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/invites': {
       id: '/admin/invites'
       path: '/admin/invites'
@@ -1536,7 +1516,6 @@ const rootRouteChildren: RootRouteChildren = {
   AdminGuideRoute: AdminGuideRoute,
   AdminHomeDecorationRoute: AdminHomeDecorationRoute,
   AdminInvitesRoute: AdminInvitesRoute,
-  AdminKycRoute: AdminKycRoute,
   AdminLogisticsRoute: AdminLogisticsRoute,
   AdminOrdersRoute: AdminOrdersRouteWithChildren,
   AdminPaymentAccountsRoute: AdminPaymentAccountsRouteWithChildren,

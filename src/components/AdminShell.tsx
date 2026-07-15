@@ -13,7 +13,7 @@ import {
   MessageSquare,
   Warehouse,
 } from "lucide-react";
-import { Image as ImageIcon, Tags, Building2, ShieldCheck, Sparkles, UserPlus, BookOpen, RefreshCcw, Tag, UsersRound, CalendarCheck, BarChart3, LayoutTemplate } from "lucide-react";
+import { Image as ImageIcon, Tags, Building2, Sparkles, UserPlus, BookOpen, RefreshCcw, Tag, UsersRound, CalendarCheck, BarChart3, LayoutTemplate } from "lucide-react";
 
 type NavItem = {
   to: string;
@@ -36,8 +36,7 @@ const NAV: NavItem[] = [
   { to: "/admin/products", icon: Package, label: "商品管理", group: "商品" },
   { to: "/admin/categories", icon: Tags, label: "属性分类", group: "商品" },
   { to: "/admin/shops", icon: Building2, label: "档口 / 商圈", group: "商品" },
-  { to: "/admin/users", icon: Users2, label: "用户 / KYC", group: "用户与增长" },
-  { to: "/admin/kyc", icon: ShieldCheck, label: "KYC 审核", group: "用户与增长" },
+  { to: "/admin/users", icon: Users2, label: "用户管理", group: "用户与增长" },
   { to: "/admin/user-tags", icon: Tag, label: "会员标签", group: "用户与增长" },
   { to: "/admin/user-groups", icon: UsersRound, label: "人群包分组", group: "用户与增长" },
   { to: "/admin/sign-in", icon: CalendarCheck, label: "签到管理", group: "用户与增长" },

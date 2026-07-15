@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { ORDERS, STATUS_LABEL, formatCNY } from "@/lib/mock-data";
-import { ArrowLeft, Ban, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Ban } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/users/$id")({
@@ -51,19 +51,6 @@ function UserDetail() {
         </Card>
 
         <div className="space-y-4 lg:col-span-2">
-          <Card className="p-4">
-            <div className="mb-2 flex items-center justify-between">
-              <div className="text-sm font-semibold">KYC 认证</div>
-              <Badge><ShieldCheck className="mr-1 h-3 w-3" />已通过</Badge>
-            </div>
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <div><span className="text-xs text-muted-foreground">姓名</span><div>陈**</div></div>
-              <div><span className="text-xs text-muted-foreground">身份证号</span><div>330****199205*****</div></div>
-              <div><span className="text-xs text-muted-foreground">审核时间</span><div>2024-03-16 10:22</div></div>
-              <div><span className="text-xs text-muted-foreground">审核人</span><div>客服-小南</div></div>
-            </div>
-          </Card>
-
           <Card className="p-4">
             <div className="mb-2 text-sm font-semibold">最近订单</div>
             <div className="divide-y divide-border">

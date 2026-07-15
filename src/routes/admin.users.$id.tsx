@@ -24,6 +24,9 @@ function UserDetail() {
           <ArrowLeft className="h-4 w-4" />返回用户列表
         </Link>
         <div className="flex gap-2">
+          <Link to="/admin/users/$id/points" params={{ id }}>
+            <Button size="sm" variant="outline">积分调整</Button>
+          </Link>
           <Button size="sm" variant="outline" onClick={() => toast.success("已重置密码链接已发送")}>重置密码</Button>
           <Button size="sm" variant="destructive" onClick={() => toast.warning("已冻结该用户")}><Ban className="mr-1 h-4 w-4" />冻结</Button>
         </div>

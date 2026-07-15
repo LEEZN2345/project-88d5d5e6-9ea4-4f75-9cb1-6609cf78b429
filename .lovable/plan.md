@@ -1,48 +1,143 @@
-# 后台静态页面补充规划
 
-## 现状
-后台已有 15 个页面（概览 / 订单 / 反馈 / 发货 / 现货 / 拼单 / 退款 / 商品 / 分类 / 档口 / 用户 / 积分商城 / 商户号 / 配置 / Banner）。对照买手端已有功能与常规运营后台的分工，仍有以下**静态页面缺口**要补齐，全部只做前端 UI + mock 数据，不接后端。
+## 目标
 
-## 需要新增的页面
+结合你选定的 5 个借鉴项，把运营后台再往前推一步；同时给出「运营需要看到的数据从哪里埋」的埋点方案，便于后续 M2 接 Cloud 时统一落库。全部静态页 + mock 数据，不接后端。
 
-### 一、经营模块
-1. **`/admin/logistics`** — 物流管理
-   - 概览页里"物流 Excel 上传"当前指向不存在路由
-   - 内容：物流单号列表、状态、Excel 批量导入区、异常件筛选
-2. **`/admin/orders/$id`** — 订单详情
-   - 商品明细 / 收货信息 / 支付凭证预览 / 状态时间线 / 操作按钮（确认收款、锁汇率、代付、备注）
-3. **`/admin/feedback/$id`** — 反馈工单详情（会话式回复）
+---
 
-### 二、商品模块
-4. **`/admin/products/$id`** — 商品编辑详情（SKU、颜色/尺码矩阵、图片管理、上下架、内部款号）
-5. **`/admin/shops/$id`** — 档口编辑详情（16:9 封面上传、标签、楼层、起订量、绑定商品列表）
-6. **`/admin/buildings`** — 商圈/楼栋管理（doota / migliore / apm 等 + 楼层）
+## 一、后台功能补齐（5 块）
 
-### 三、用户与增长
-7. **`/admin/users/$id`** — 用户详情（基础信息、KYC 状态、订单历史、积分流水、备注/拉黑）
-8. **`/admin/kyc`** — KYC 审核队列（待审 / 已通过 / 已驳回 三 tab + 审核抽屉）
-9. **`/admin/points-rules`** — 积分规则配置（下单送分、邀请送分、签到规则）
-10. **`/admin/invites`** — 邀请码/邀请记录管理
+### 1. 会员资产调整（MEM-USER-002 精简版）
+**新增页**：`admin/users/$id` 内 Tab 「积分调整」 + 独立页 `admin/users/$id/points`
+- 调整表单：+/− 数量、原因（下拉：客服补偿 / 活动奖励 / 违规扣减 / 手工订正 / 其他）、备注
+- 提交后本地追加一条流水，Toast 反馈
+- 流水表：时间 / 操作员 / 变动 / 原因 / 备注 / 关联单号
+- 保留原「余额」字段但只读展示（不做调整，符合你的要求）
+- **不新增**：余额充值/扣减入口
 
-### 四、资金
-11. **`/admin/refunds/$id`** — 退款工单详情（客服 → 财务两级流转 UI）
-12. **`/admin/payment-accounts/$id`** — 商户号详情（今日/历史入账、日限额、启停）
+**mock**：`src/lib/mock-data.ts` 增加 `PointsLedgerEntry` 类型 + `MOCK_POINTS_LEDGER`（复用 `points.history.tsx` 已有结构，扩展 operator 字段）
 
-### 五、系统
-13. **`/admin/banners/new` & `/admin/banners/$id`** — Banner 新建/编辑（图片、跳转链接、有效期、排序）
+### 2. 会员标签 & 分组
+**新增页**：`/admin/user-tags`、`/admin/user-groups`
+- **标签管理**：手动标签（VIP、可疑刷单、内部测试…）+ 系统标签（新用户、7日未下单、高客单）
+- **分组（人群包）**：条件构造器 UI（历史消费总额 ≥ / 下单次数 ≥ / 最近下单 N 天内 / 含标签 / 会员等级）→ 命中人数预估 → 保存
+- 用户详情 `admin/users/$id` 顶部展示已绑定标签 chips，可增删
+- 用户列表 `admin/users` 增加「标签」筛选、「分组」筛选
+- **不做**：真实推送/短信下发，仅生成人群包给未来的营销活动用
 
-## 通用改动
-- 修正 `admin.index.tsx` 快捷入口链接（`/admin/logistics` 指向新页）
-- `AdminShell` 侧边导航新增：物流、楼栋、KYC、积分规则、邀请四项，放入对应 group
-- 详情页统一顶部返回条 + 操作按钮组样式
+### 3. 签到规则 & 记录
+**新增页**：`/admin/sign-in`
+- Tab 1「规则配置」：连续签到奖励表（第 1/2/3/7/15/30 天分别奖励多少积分）、断签是否重置、月度全勤额外奖励
+- Tab 2「签到记录」：日期筛选 + 用户搜索，列表展示 用户 / 签到日 / 连续天数 / 获得积分
+- Tab 3「异常」：一天多签、跨设备签到等风控提示（仅 UI 展示）
+- 买手端已有 `/points` 签到面板，本次不改，只做后台配置面
 
-## 页面开发顺序
-1. 详情类（订单 / 商品 / 档口 / 用户 / 退款 / 反馈 / Banner 编辑）
-2. 新增模块列表页（物流 / 楼栋 / KYC / 积分规则 / 邀请）
-3. 导航更新 + 概览快捷入口修正
+### 4. 数据中心：排行 + 导出
+**改造**：`admin.index.tsx` 概览页新增「运营看板」区，并抽独立页 `/admin/analytics`
+- 4 个排行榜（Tab 切换）：
+  - 商品销量 Top20
+  - 档口成交额 Top20
+  - 用户消费 Top20（含手机号脱敏 + 会员等级）
+  - 邀请拉新 Top20
+- 每张榜右上角「导出 Excel」按钮：生成本地 CSV 下载（用 Blob，不接后端）
+- 时间筛选：今日 / 昨日 / 近 7 日 / 近 30 日 / 自定义
+- 顶部 4 个核心指标卡：GMV、订单数、支付用户数、客单价（含环比箭头）
 
-## 技术备忘
-- 全部使用 `createFileRoute` + `AdminShell` 布局
-- 详情页参数用 `$id`（`admin.orders.$id.tsx` 等）
-- Mock 数据延用 `src/lib/mock-data.ts`；缺字段就在里面扩充类型 + 补几条假数据
-- 表单交互仅本地 `useState`；提交按钮触发 toast，不落库
+### 5. DIY 首页装修完善
+**改造**：`admin.banners.tsx` → 升级为 `/admin/home-decoration`
+- 现状：只能配 Banner 图，跳转链接
+- 升级为「组件化装修」抽屉编辑器：
+  - 组件类型：轮播图 / 图标金刚区 / 优选档口横排 / 新品瀑布流 / 分类导航 / 自定义图文 / 富文本公告
+  - 每个组件：启用开关、排序（拖拽或上下箭头）、标题、跳转、有效期
+  - 左侧组件列表 + 右侧实时手机预览（复用 `MobileShell` 尺寸）
+  - 保存后写入 `localStorage`，买手端 `routes/index.tsx` 按此顺序渲染
+- Banner 数据源沿用 `src/lib/banners.ts`，扩展成 `HomeSection[]`
+
+---
+
+## 二、运营数据埋点方案
+
+分 4 类事件 + 通用字段，前端埋点用 `src/lib/track.ts`（新增，先落 console + localStorage，M2 换 Cloud 表）。
+
+### 通用字段
+`event`、`ts`、`userId`（匿名则 device_id）、`role`（buyer/b_store/c_user/guest）、`route`、`referrer`、`platform`（h5/web-admin）、`session_id`
+
+### A. 流量与页面
+| 事件 | 触发点 | 关键属性 |
+|---|---|---|
+| `page_view` | 每个路由 mount | route, params, from_route |
+| `banner_click` | 首页装修组件 | section_id, slot_index, link |
+| `search` | 顶部搜索框 | keyword, result_count |
+| `category_click` | 首页金刚区/分类页 | category_id |
+
+### B. 商品与转化漏斗
+| 事件 | 属性 |
+|---|---|
+| `shop_view` | shop_id, source（首页/榜单/搜索/收藏） |
+| `product_view` | product_id, shop_id, price_krw, source |
+| `add_to_cart` | product_id, qty, sku |
+| `cart_view` | item_count, total_krw |
+| `checkout_start` | order_amount_krw, rate_effective, item_count |
+| `checkout_pay_click` | payment_channel |
+| `order_paid` | order_id, total_cny, snapshot_rate, item_count |
+| `order_confirmed` | order_id, days_since_paid |
+
+### C. 增长
+| 事件 | 属性 |
+|---|---|
+| `invite_share_click` | channel（wechat/link/qrcode） |
+| `invite_signup` | inviter_id, invitee_id |
+| `signin` | streak_days, points_gain |
+| `points_exchange` | reward_id, cost_points |
+| `kyc_submit` / `kyc_pass` / `kyc_reject` | user_id, reason |
+
+### D. 售后 & 客服
+| 事件 | 属性 |
+|---|---|
+| `exchange_apply` | order_id, item_count, reason |
+| `exchange_stage_change` | request_id, from, to |
+| `feedback_submit` | topic, has_image |
+| `refund_apply` | order_id, amount |
+
+### E. 后台运营行为（审计）
+- `admin_login` / `admin_action`（action_type, target, diff）
+- `points_manual_adjust`（operator, user_id, delta, reason）— 强制记录，对应模块 ①
+- `home_decoration_publish`（section_ids）— 对应模块 ⑤
+
+### 埋点消费
+`/admin/analytics` 页面直接读 `localStorage` 里的 `track_events` 聚合出榜单和指标；未来切换 Cloud 时替换 `track.ts` 的 sink 即可，业务代码零改。
+
+---
+
+## 三、文件改动清单
+
+**新增**
+- `src/lib/track.ts` — 埋点 SDK（记录 + 聚合读取）
+- `src/routes/admin.user-tags.tsx`
+- `src/routes/admin.user-groups.tsx`
+- `src/routes/admin.sign-in.tsx`
+- `src/routes/admin.analytics.tsx`
+- `src/routes/admin.home-decoration.tsx`（替代 `admin.banners.tsx` 的位置，或并存）
+- `src/routes/admin.users.$id.points.tsx`（积分调整 & 流水）
+
+**改动**
+- `src/lib/mock-data.ts` — 追加 PointsLedger / UserTag / UserGroup / SignInRule / SignInRecord / HomeSection 类型与假数据
+- `src/lib/banners.ts` → 扩展或重写为 `home-decoration.ts`
+- `src/components/AdminShell.tsx` — 侧栏加入「用户运营」组：标签、分组、签到；数据中心组：运营看板
+- `src/routes/admin.index.tsx` — 顶部 4 指标卡 + 排行榜入口
+- `src/routes/admin.users.$id.tsx` — 加标签 chips + 积分调整入口
+- `src/routes/admin.users.tsx` — 加标签/分组筛选
+- `src/routes/index.tsx` — 按 `HomeSection[]` 顺序渲染
+- `src/routes/__root.tsx` / `src/router.tsx` — 首次加载注册全局 `page_view` 埋点
+
+---
+
+## 四、里程碑
+
+1. 埋点 SDK + mock 数据结构扩展（基础）
+2. 积分调整、签到规则、标签分组（用户运营三件套）
+3. 数据中心排行 + 导出（消费埋点数据）
+4. DIY 首页装修（组件化 + 预览）
+5. AdminShell 导航整理 + 概览页升级
+
+预计工作量：中等，全部前端静态实现，一次交付。

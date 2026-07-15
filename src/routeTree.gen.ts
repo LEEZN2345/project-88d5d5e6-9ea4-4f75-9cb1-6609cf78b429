@@ -55,6 +55,7 @@ import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 import { Route as AdminLogisticsRouteImport } from './routes/admin.logistics'
 import { Route as AdminKycRouteImport } from './routes/admin.kyc'
 import { Route as AdminInvitesRouteImport } from './routes/admin.invites'
+import { Route as AdminHomeDecorationRouteImport } from './routes/admin.home-decoration'
 import { Route as AdminGuideRouteImport } from './routes/admin.guide'
 import { Route as AdminGroupsRouteImport } from './routes/admin.groups'
 import { Route as AdminFeedbackRouteImport } from './routes/admin.feedback'
@@ -306,6 +307,11 @@ const AdminInvitesRoute = AdminInvitesRouteImport.update({
   path: '/admin/invites',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminHomeDecorationRoute = AdminHomeDecorationRouteImport.update({
+  id: '/admin/home-decoration',
+  path: '/admin/home-decoration',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminGuideRoute = AdminGuideRouteImport.update({
   id: '/admin/guide',
   path: '/admin/guide',
@@ -436,6 +442,7 @@ export interface FileRoutesByFullPath {
   '/admin/feedback': typeof AdminFeedbackRouteWithChildren
   '/admin/groups': typeof AdminGroupsRoute
   '/admin/guide': typeof AdminGuideRoute
+  '/admin/home-decoration': typeof AdminHomeDecorationRoute
   '/admin/invites': typeof AdminInvitesRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/logistics': typeof AdminLogisticsRoute
@@ -504,6 +511,7 @@ export interface FileRoutesByTo {
   '/admin/feedback': typeof AdminFeedbackRouteWithChildren
   '/admin/groups': typeof AdminGroupsRoute
   '/admin/guide': typeof AdminGuideRoute
+  '/admin/home-decoration': typeof AdminHomeDecorationRoute
   '/admin/invites': typeof AdminInvitesRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/logistics': typeof AdminLogisticsRoute
@@ -573,6 +581,7 @@ export interface FileRoutesById {
   '/admin/feedback': typeof AdminFeedbackRouteWithChildren
   '/admin/groups': typeof AdminGroupsRoute
   '/admin/guide': typeof AdminGuideRoute
+  '/admin/home-decoration': typeof AdminHomeDecorationRoute
   '/admin/invites': typeof AdminInvitesRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/logistics': typeof AdminLogisticsRoute
@@ -643,6 +652,7 @@ export interface FileRouteTypes {
     | '/admin/feedback'
     | '/admin/groups'
     | '/admin/guide'
+    | '/admin/home-decoration'
     | '/admin/invites'
     | '/admin/kyc'
     | '/admin/logistics'
@@ -711,6 +721,7 @@ export interface FileRouteTypes {
     | '/admin/feedback'
     | '/admin/groups'
     | '/admin/guide'
+    | '/admin/home-decoration'
     | '/admin/invites'
     | '/admin/kyc'
     | '/admin/logistics'
@@ -779,6 +790,7 @@ export interface FileRouteTypes {
     | '/admin/feedback'
     | '/admin/groups'
     | '/admin/guide'
+    | '/admin/home-decoration'
     | '/admin/invites'
     | '/admin/kyc'
     | '/admin/logistics'
@@ -848,6 +860,7 @@ export interface RootRouteChildren {
   AdminFeedbackRoute: typeof AdminFeedbackRouteWithChildren
   AdminGroupsRoute: typeof AdminGroupsRoute
   AdminGuideRoute: typeof AdminGuideRoute
+  AdminHomeDecorationRoute: typeof AdminHomeDecorationRoute
   AdminInvitesRoute: typeof AdminInvitesRoute
   AdminKycRoute: typeof AdminKycRoute
   AdminLogisticsRoute: typeof AdminLogisticsRoute
@@ -1200,6 +1213,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminInvitesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/home-decoration': {
+      id: '/admin/home-decoration'
+      path: '/admin/home-decoration'
+      fullPath: '/admin/home-decoration'
+      preLoaderRoute: typeof AdminHomeDecorationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/guide': {
       id: '/admin/guide'
       path: '/admin/guide'
@@ -1504,6 +1524,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminFeedbackRoute: AdminFeedbackRouteWithChildren,
   AdminGroupsRoute: AdminGroupsRoute,
   AdminGuideRoute: AdminGuideRoute,
+  AdminHomeDecorationRoute: AdminHomeDecorationRoute,
   AdminInvitesRoute: AdminInvitesRoute,
   AdminKycRoute: AdminKycRoute,
   AdminLogisticsRoute: AdminLogisticsRoute,

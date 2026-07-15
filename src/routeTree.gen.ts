@@ -23,6 +23,7 @@ import { Route as GuideRouteImport } from './routes/guide'
 import { Route as GroupsRouteImport } from './routes/groups'
 import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as DiscountsRouteImport } from './routes/discounts'
+import { Route as CommissionRouteImport } from './routes/commission'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -52,6 +53,7 @@ import { Route as AdminPointsRulesRouteImport } from './routes/admin.points-rule
 import { Route as AdminPointsMallRouteImport } from './routes/admin.points-mall'
 import { Route as AdminPaymentAccountsRouteImport } from './routes/admin.payment-accounts'
 import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
+import { Route as AdminMembershipRouteImport } from './routes/admin.membership'
 import { Route as AdminLogisticsRouteImport } from './routes/admin.logistics'
 import { Route as AdminInvitesRouteImport } from './routes/admin.invites'
 import { Route as AdminHomeDecorationRouteImport } from './routes/admin.home-decoration'
@@ -60,6 +62,7 @@ import { Route as AdminGroupsRouteImport } from './routes/admin.groups'
 import { Route as AdminFeedbackRouteImport } from './routes/admin.feedback'
 import { Route as AdminExchangesRouteImport } from './routes/admin.exchanges'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
+import { Route as AdminCommissionRouteImport } from './routes/admin.commission'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
 import { Route as AdminBannersRouteImport } from './routes/admin.banners'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
@@ -144,6 +147,11 @@ const FavoritesRoute = FavoritesRouteImport.update({
 const DiscountsRoute = DiscountsRouteImport.update({
   id: '/discounts',
   path: '/discounts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommissionRoute = CommissionRouteImport.update({
+  id: '/commission',
+  path: '/commission',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutRoute = CheckoutRouteImport.update({
@@ -291,6 +299,11 @@ const AdminOrdersRoute = AdminOrdersRouteImport.update({
   path: '/admin/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminMembershipRoute = AdminMembershipRouteImport.update({
+  id: '/admin/membership',
+  path: '/admin/membership',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminLogisticsRoute = AdminLogisticsRouteImport.update({
   id: '/admin/logistics',
   path: '/admin/logistics',
@@ -329,6 +342,11 @@ const AdminExchangesRoute = AdminExchangesRouteImport.update({
 const AdminConfigRoute = AdminConfigRouteImport.update({
   id: '/admin/config',
   path: '/admin/config',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminCommissionRoute = AdminCommissionRouteImport.update({
+  id: '/admin/commission',
+  path: '/admin/commission',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
@@ -413,6 +431,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
+  '/commission': typeof CommissionRoute
   '/discounts': typeof DiscountsRoute
   '/favorites': typeof FavoritesRoute
   '/groups': typeof GroupsRoute
@@ -430,6 +449,7 @@ export interface FileRoutesByFullPath {
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/banners': typeof AdminBannersRouteWithChildren
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/commission': typeof AdminCommissionRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/exchanges': typeof AdminExchangesRouteWithChildren
   '/admin/feedback': typeof AdminFeedbackRouteWithChildren
@@ -438,6 +458,7 @@ export interface FileRoutesByFullPath {
   '/admin/home-decoration': typeof AdminHomeDecorationRoute
   '/admin/invites': typeof AdminInvitesRoute
   '/admin/logistics': typeof AdminLogisticsRoute
+  '/admin/membership': typeof AdminMembershipRoute
   '/admin/orders': typeof AdminOrdersRouteWithChildren
   '/admin/payment-accounts': typeof AdminPaymentAccountsRouteWithChildren
   '/admin/points-mall': typeof AdminPointsMallRoute
@@ -481,6 +502,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
+  '/commission': typeof CommissionRoute
   '/discounts': typeof DiscountsRoute
   '/favorites': typeof FavoritesRoute
   '/groups': typeof GroupsRoute
@@ -498,6 +520,7 @@ export interface FileRoutesByTo {
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/banners': typeof AdminBannersRouteWithChildren
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/commission': typeof AdminCommissionRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/exchanges': typeof AdminExchangesRouteWithChildren
   '/admin/feedback': typeof AdminFeedbackRouteWithChildren
@@ -506,6 +529,7 @@ export interface FileRoutesByTo {
   '/admin/home-decoration': typeof AdminHomeDecorationRoute
   '/admin/invites': typeof AdminInvitesRoute
   '/admin/logistics': typeof AdminLogisticsRoute
+  '/admin/membership': typeof AdminMembershipRoute
   '/admin/orders': typeof AdminOrdersRouteWithChildren
   '/admin/payment-accounts': typeof AdminPaymentAccountsRouteWithChildren
   '/admin/points-mall': typeof AdminPointsMallRoute
@@ -550,6 +574,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
+  '/commission': typeof CommissionRoute
   '/discounts': typeof DiscountsRoute
   '/favorites': typeof FavoritesRoute
   '/groups': typeof GroupsRoute
@@ -567,6 +592,7 @@ export interface FileRoutesById {
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/banners': typeof AdminBannersRouteWithChildren
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/commission': typeof AdminCommissionRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/exchanges': typeof AdminExchangesRouteWithChildren
   '/admin/feedback': typeof AdminFeedbackRouteWithChildren
@@ -575,6 +601,7 @@ export interface FileRoutesById {
   '/admin/home-decoration': typeof AdminHomeDecorationRoute
   '/admin/invites': typeof AdminInvitesRoute
   '/admin/logistics': typeof AdminLogisticsRoute
+  '/admin/membership': typeof AdminMembershipRoute
   '/admin/orders': typeof AdminOrdersRouteWithChildren
   '/admin/payment-accounts': typeof AdminPaymentAccountsRouteWithChildren
   '/admin/points-mall': typeof AdminPointsMallRoute
@@ -620,6 +647,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/checkout'
+    | '/commission'
     | '/discounts'
     | '/favorites'
     | '/groups'
@@ -637,6 +665,7 @@ export interface FileRouteTypes {
     | '/admin/analytics'
     | '/admin/banners'
     | '/admin/categories'
+    | '/admin/commission'
     | '/admin/config'
     | '/admin/exchanges'
     | '/admin/feedback'
@@ -645,6 +674,7 @@ export interface FileRouteTypes {
     | '/admin/home-decoration'
     | '/admin/invites'
     | '/admin/logistics'
+    | '/admin/membership'
     | '/admin/orders'
     | '/admin/payment-accounts'
     | '/admin/points-mall'
@@ -688,6 +718,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/checkout'
+    | '/commission'
     | '/discounts'
     | '/favorites'
     | '/groups'
@@ -705,6 +736,7 @@ export interface FileRouteTypes {
     | '/admin/analytics'
     | '/admin/banners'
     | '/admin/categories'
+    | '/admin/commission'
     | '/admin/config'
     | '/admin/exchanges'
     | '/admin/feedback'
@@ -713,6 +745,7 @@ export interface FileRouteTypes {
     | '/admin/home-decoration'
     | '/admin/invites'
     | '/admin/logistics'
+    | '/admin/membership'
     | '/admin/orders'
     | '/admin/payment-accounts'
     | '/admin/points-mall'
@@ -756,6 +789,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/checkout'
+    | '/commission'
     | '/discounts'
     | '/favorites'
     | '/groups'
@@ -773,6 +807,7 @@ export interface FileRouteTypes {
     | '/admin/analytics'
     | '/admin/banners'
     | '/admin/categories'
+    | '/admin/commission'
     | '/admin/config'
     | '/admin/exchanges'
     | '/admin/feedback'
@@ -781,6 +816,7 @@ export interface FileRouteTypes {
     | '/admin/home-decoration'
     | '/admin/invites'
     | '/admin/logistics'
+    | '/admin/membership'
     | '/admin/orders'
     | '/admin/payment-accounts'
     | '/admin/points-mall'
@@ -825,6 +861,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CartRoute: typeof CartRoute
   CheckoutRoute: typeof CheckoutRoute
+  CommissionRoute: typeof CommissionRoute
   DiscountsRoute: typeof DiscountsRoute
   FavoritesRoute: typeof FavoritesRoute
   GroupsRoute: typeof GroupsRoute
@@ -842,6 +879,7 @@ export interface RootRouteChildren {
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
   AdminBannersRoute: typeof AdminBannersRouteWithChildren
   AdminCategoriesRoute: typeof AdminCategoriesRoute
+  AdminCommissionRoute: typeof AdminCommissionRoute
   AdminConfigRoute: typeof AdminConfigRoute
   AdminExchangesRoute: typeof AdminExchangesRouteWithChildren
   AdminFeedbackRoute: typeof AdminFeedbackRouteWithChildren
@@ -850,6 +888,7 @@ export interface RootRouteChildren {
   AdminHomeDecorationRoute: typeof AdminHomeDecorationRoute
   AdminInvitesRoute: typeof AdminInvitesRoute
   AdminLogisticsRoute: typeof AdminLogisticsRoute
+  AdminMembershipRoute: typeof AdminMembershipRoute
   AdminOrdersRoute: typeof AdminOrdersRouteWithChildren
   AdminPaymentAccountsRoute: typeof AdminPaymentAccountsRouteWithChildren
   AdminPointsMallRoute: typeof AdminPointsMallRoute
@@ -973,6 +1012,13 @@ declare module '@tanstack/react-router' {
       path: '/discounts'
       fullPath: '/discounts'
       preLoaderRoute: typeof DiscountsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/commission': {
+      id: '/commission'
+      path: '/commission'
+      fullPath: '/commission'
+      preLoaderRoute: typeof CommissionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout': {
@@ -1178,6 +1224,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminOrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/membership': {
+      id: '/admin/membership'
+      path: '/admin/membership'
+      fullPath: '/admin/membership'
+      preLoaderRoute: typeof AdminMembershipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/logistics': {
       id: '/admin/logistics'
       path: '/admin/logistics'
@@ -1232,6 +1285,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/config'
       fullPath: '/admin/config'
       preLoaderRoute: typeof AdminConfigRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/commission': {
+      id: '/admin/commission'
+      path: '/admin/commission'
+      fullPath: '/admin/commission'
+      preLoaderRoute: typeof AdminCommissionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/categories': {
@@ -1492,6 +1552,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CartRoute: CartRoute,
   CheckoutRoute: CheckoutRoute,
+  CommissionRoute: CommissionRoute,
   DiscountsRoute: DiscountsRoute,
   FavoritesRoute: FavoritesRoute,
   GroupsRoute: GroupsRoute,
@@ -1509,6 +1570,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminAnalyticsRoute: AdminAnalyticsRoute,
   AdminBannersRoute: AdminBannersRouteWithChildren,
   AdminCategoriesRoute: AdminCategoriesRoute,
+  AdminCommissionRoute: AdminCommissionRoute,
   AdminConfigRoute: AdminConfigRoute,
   AdminExchangesRoute: AdminExchangesRouteWithChildren,
   AdminFeedbackRoute: AdminFeedbackRouteWithChildren,
@@ -1517,6 +1579,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminHomeDecorationRoute: AdminHomeDecorationRoute,
   AdminInvitesRoute: AdminInvitesRoute,
   AdminLogisticsRoute: AdminLogisticsRoute,
+  AdminMembershipRoute: AdminMembershipRoute,
   AdminOrdersRoute: AdminOrdersRouteWithChildren,
   AdminPaymentAccountsRoute: AdminPaymentAccountsRouteWithChildren,
   AdminPointsMallRoute: AdminPointsMallRoute,
@@ -1544,13 +1607,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

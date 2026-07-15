@@ -13,7 +13,7 @@ import {
   MessageSquare,
   Warehouse,
 } from "lucide-react";
-import { Image as ImageIcon, Tags, Building2, ShieldCheck, Sparkles, UserPlus, BookOpen, RefreshCcw } from "lucide-react";
+import { Image as ImageIcon, Tags, Building2, ShieldCheck, Sparkles, UserPlus, BookOpen, RefreshCcw, Tag, UsersRound, CalendarCheck, BarChart3, LayoutTemplate } from "lucide-react";
 
 type NavItem = {
   to: string;
@@ -39,15 +39,20 @@ const NAV: NavItem[] = [
   { to: "/admin/buildings", icon: Building2, label: "商圈 / 楼栋", group: "商品" },
   { to: "/admin/users", icon: Users2, label: "用户 / KYC", group: "用户与增长" },
   { to: "/admin/kyc", icon: ShieldCheck, label: "KYC 审核", group: "用户与增长" },
+  { to: "/admin/user-tags", icon: Tag, label: "会员标签", group: "用户与增长" },
+  { to: "/admin/user-groups", icon: UsersRound, label: "人群包分组", group: "用户与增长" },
+  { to: "/admin/sign-in", icon: CalendarCheck, label: "签到管理", group: "用户与增长" },
   { to: "/admin/points-mall", icon: Gift, label: "积分商城", group: "用户与增长" },
   { to: "/admin/points-rules", icon: Sparkles, label: "积分规则", group: "用户与增长" },
   { to: "/admin/invites", icon: UserPlus, label: "邀请管理", group: "用户与增长" },
   { to: "/admin/payment-accounts", icon: Wallet, label: "商户号", group: "资金" },
+  { to: "/admin/analytics", icon: BarChart3, label: "运营看板", group: "数据中心" },
   { to: "/admin/config", icon: Settings2, label: "汇率与配置", group: "系统" },
   { to: "/admin/banners", icon: ImageIcon, label: "Banner 管理", group: "系统" },
+  { to: "/admin/home-decoration", icon: LayoutTemplate, label: "首页装修", group: "系统" },
 ];
 
-const GROUP_ORDER = ["经营", "商品", "用户与增长", "资金", "系统"] as const;
+const GROUP_ORDER = ["经营", "商品", "用户与增长", "资金", "数据中心", "系统"] as const;
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });

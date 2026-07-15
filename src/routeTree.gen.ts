@@ -76,6 +76,7 @@ import { Route as AdminFeedbackIdRouteImport } from './routes/admin.feedback.$id
 import { Route as AdminExchangesIdRouteImport } from './routes/admin.exchanges.$id'
 import { Route as AdminBannersNewRouteImport } from './routes/admin.banners.new'
 import { Route as AdminBannersIdRouteImport } from './routes/admin.banners.$id'
+import { Route as AdminUsersIdPointsRouteImport } from './routes/admin.users.$id.points'
 
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
@@ -412,6 +413,11 @@ const AdminBannersIdRoute = AdminBannersIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AdminBannersRoute,
 } as any)
+const AdminUsersIdPointsRoute = AdminUsersIdPointsRouteImport.update({
+  id: '/points',
+  path: '/points',
+  getParentRoute: () => AdminUsersIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -479,8 +485,9 @@ export interface FileRoutesByFullPath {
   '/admin/products/$id': typeof AdminProductsIdRoute
   '/admin/refunds/$id': typeof AdminRefundsIdRoute
   '/admin/shops/$id': typeof AdminShopsIdRoute
-  '/admin/users/$id': typeof AdminUsersIdRoute
+  '/admin/users/$id': typeof AdminUsersIdRouteWithChildren
   '/orders/$id/exchange': typeof OrdersIdExchangeRoute
+  '/admin/users/$id/points': typeof AdminUsersIdPointsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -548,8 +555,9 @@ export interface FileRoutesByTo {
   '/admin/products/$id': typeof AdminProductsIdRoute
   '/admin/refunds/$id': typeof AdminRefundsIdRoute
   '/admin/shops/$id': typeof AdminShopsIdRoute
-  '/admin/users/$id': typeof AdminUsersIdRoute
+  '/admin/users/$id': typeof AdminUsersIdRouteWithChildren
   '/orders/$id/exchange': typeof OrdersIdExchangeRoute
+  '/admin/users/$id/points': typeof AdminUsersIdPointsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -618,8 +626,9 @@ export interface FileRoutesById {
   '/admin/products/$id': typeof AdminProductsIdRoute
   '/admin/refunds/$id': typeof AdminRefundsIdRoute
   '/admin/shops/$id': typeof AdminShopsIdRoute
-  '/admin/users/$id': typeof AdminUsersIdRoute
+  '/admin/users/$id': typeof AdminUsersIdRouteWithChildren
   '/orders/$id/exchange': typeof OrdersIdExchangeRoute
+  '/admin/users/$id/points': typeof AdminUsersIdPointsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -691,6 +700,7 @@ export interface FileRouteTypes {
     | '/admin/shops/$id'
     | '/admin/users/$id'
     | '/orders/$id/exchange'
+    | '/admin/users/$id/points'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -760,6 +770,7 @@ export interface FileRouteTypes {
     | '/admin/shops/$id'
     | '/admin/users/$id'
     | '/orders/$id/exchange'
+    | '/admin/users/$id/points'
   id:
     | '__root__'
     | '/'
@@ -829,6 +840,7 @@ export interface FileRouteTypes {
     | '/admin/shops/$id'
     | '/admin/users/$id'
     | '/orders/$id/exchange'
+    | '/admin/users/$id/points'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1360,6 +1372,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBannersIdRouteImport
       parentRoute: typeof AdminBannersRoute
     }
+    '/admin/users/$id/points': {
+      id: '/admin/users/$id/points'
+      path: '/points'
+      fullPath: '/admin/users/$id/points'
+      preLoaderRoute: typeof AdminUsersIdPointsRouteImport
+      parentRoute: typeof AdminUsersIdRoute
+    }
   }
 }
 
@@ -1471,12 +1490,24 @@ const AdminShopsRouteWithChildren = AdminShopsRoute._addFileChildren(
   AdminShopsRouteChildren,
 )
 
+interface AdminUsersIdRouteChildren {
+  AdminUsersIdPointsRoute: typeof AdminUsersIdPointsRoute
+}
+
+const AdminUsersIdRouteChildren: AdminUsersIdRouteChildren = {
+  AdminUsersIdPointsRoute: AdminUsersIdPointsRoute,
+}
+
+const AdminUsersIdRouteWithChildren = AdminUsersIdRoute._addFileChildren(
+  AdminUsersIdRouteChildren,
+)
+
 interface AdminUsersRouteChildren {
-  AdminUsersIdRoute: typeof AdminUsersIdRoute
+  AdminUsersIdRoute: typeof AdminUsersIdRouteWithChildren
 }
 
 const AdminUsersRouteChildren: AdminUsersRouteChildren = {
-  AdminUsersIdRoute: AdminUsersIdRoute,
+  AdminUsersIdRoute: AdminUsersIdRouteWithChildren,
 }
 
 const AdminUsersRouteWithChildren = AdminUsersRoute._addFileChildren(

@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { SHOPS } from "@/lib/mock-data";
-import { ChevronRight, MapPin, Heart, MessageSquare, Settings, Shield, Gift, ShoppingBag, ClipboardList, Store, Sparkles, Share2, BookOpen, Crown, RefreshCcw } from "lucide-react";
+import { ChevronRight, MapPin, Heart, MessageSquare, Settings, Shield, Gift, ShoppingBag, ClipboardList, Store, Sparkles, Share2, BookOpen, Crown, RefreshCcw, Wallet, TrendingUp, Truck, BadgeCheck, Clock, PackageCheck, Plane, Undo2, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/me")({
@@ -27,71 +27,135 @@ function Me() {
   return (
     <MobileShell>
       <MobileHeader title="我的" />
-      <div className="bg-gradient-to-br from-primary to-primary/70 px-4 pb-6 pt-4 text-primary-foreground">
-        <div className="flex items-center gap-3">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-background/20 text-xl">👤</div>
+      {/* 商家档案卡：身份 + 本月经营数据 + 订单流程 */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-primary/80 px-4 pb-5 pt-4 text-primary-foreground">
+        <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
+        <div className="absolute -bottom-16 -left-8 h-32 w-32 rounded-full bg-white/5 blur-2xl" />
+
+        <div className="relative flex items-center gap-3">
+          <div className="relative">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-background/20 text-xl ring-2 ring-white/30">👤</div>
+            <div className="absolute -bottom-1 -right-1 flex items-center gap-0.5 rounded-full bg-gradient-to-r from-amber-400 to-yellow-300 px-1.5 py-[1px] text-[9px] font-bold text-amber-900 shadow">
+              <Crown className="h-2.5 w-2.5" />G
+            </div>
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1.5">
+              <span className="truncate text-base font-semibold">张老板 · 实体店</span>
+              <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-400/25 px-1.5 py-[1px] text-[9px] font-medium text-emerald-50 ring-1 ring-emerald-300/40">
+                <BadgeCheck className="h-2.5 w-2.5" />已认证
+              </span>
+            </div>
+            <div className="mt-0.5 flex items-center gap-1.5 text-[11px] opacity-90">
+              <span>黄金买手</span>
+              <span className="opacity-50">·</span>
+              <span>ID 20260615</span>
+            </div>
+            {/* 升级进度条 */}
+            <div className="mt-2">
+              <div className="mb-0.5 flex justify-between text-[10px] opacity-90">
+                <span>距钻石买手</span>
+                <span className="tabular-nums">¥32,140 / ¥200,000</span>
+              </div>
+              <div className="h-1 overflow-hidden rounded-full bg-white/20">
+                <div className="h-full rounded-full bg-gradient-to-r from-cyan-300 to-white" style={{ width: "16%" }} />
+              </div>
+            </div>
+          </div>
+          <Link to="/membership" className="shrink-0 self-start rounded-full bg-white/15 px-2 py-1 text-[10px] backdrop-blur">
+            权益 <ChevronRight className="inline h-2.5 w-2.5" />
+          </Link>
+        </div>
+
+        {/* 本月经营三联数据 */}
+        <div className="relative mt-4 grid grid-cols-3 divide-x divide-white/15 rounded-xl bg-white/10 py-2.5 text-center backdrop-blur">
           <div>
-            <div className="text-base font-semibold">张老板 · 实体店</div>
-            <div className="text-xs opacity-80">B 端会员 · 享 -3% 物流费率</div>
+            <div className="text-base font-bold tabular-nums">¥32,140</div>
+            <div className="mt-0.5 text-[10px] opacity-80">本月成交</div>
+          </div>
+          <div>
+            <div className="flex items-center justify-center gap-0.5 text-base font-bold tabular-nums">
+              <Truck className="h-3.5 w-3.5 opacity-80" />¥964
+            </div>
+            <div className="mt-0.5 text-[10px] opacity-80">物流已省 -3%</div>
+          </div>
+          <div>
+            <div className="flex items-center justify-center gap-0.5 text-base font-bold tabular-nums">
+              <TrendingUp className="h-3.5 w-3.5 opacity-80" />24
+            </div>
+            <div className="mt-0.5 text-[10px] opacity-80">本月订单</div>
           </div>
         </div>
-        <div className="mt-4 grid grid-cols-4 gap-2 text-center text-xs">
-          {[
-            { n: "1", l: "待付款" },
-            { n: "2", l: "待发货" },
-            { n: "3", l: "在途" },
-            { n: "1", l: "售后" },
-          ].map((s) => (
-            <div key={s.l} className="rounded-md bg-background/10 py-2">
-              <div className="text-base font-semibold">{s.n}</div>
-              <div className="opacity-80">{s.l}</div>
-            </div>
-          ))}
+
+        {/* 订单流程 */}
+        <div className="relative mt-3 rounded-xl bg-white/10 p-2.5 backdrop-blur">
+          <div className="mb-1.5 flex items-center justify-between px-1">
+            <span className="text-[11px] font-medium opacity-95">我的订单</span>
+            <Link to="/orders" className="text-[10px] opacity-80">全部订单 <ChevronRight className="inline h-2.5 w-2.5" /></Link>
+          </div>
+          <div className="grid grid-cols-4 gap-1 text-center text-[10px]">
+            {[
+              { i: Wallet, n: 1, l: "待付款" },
+              { i: PackageCheck, n: 2, l: "待发货" },
+              { i: Plane, n: 3, l: "在途" },
+              { i: Undo2, n: 1, l: "售后" },
+            ].map((s) => (
+              <Link to="/orders" key={s.l} className="relative rounded-lg py-1.5 active:bg-white/10">
+                <s.i className="mx-auto h-4 w-4 opacity-90" />
+                <div className="mt-0.5 opacity-85">{s.l}</div>
+                {s.n > 0 && (
+                  <span className="absolute right-2 top-1 min-w-[14px] rounded-full bg-rose-500 px-1 text-[9px] font-bold leading-[14px] text-white">
+                    {s.n}
+                  </span>
+                )}
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* 我的积分卡片 */}
-      <div className="px-4 pt-4">
-        <div className="rounded-2xl border border-rose-200 bg-gradient-to-br from-rose-50 to-orange-50 p-4">
-          <div className="flex items-start justify-between">
-            <div>
-              <div className="flex items-center gap-1 text-[11px] text-rose-500">
+      {/* 会员资产卡：积分 + 兑换入口 */}
+      <div className="px-4 pt-3">
+        <div className="overflow-hidden rounded-2xl border border-rose-100 bg-card shadow-sm">
+          <div className="flex items-stretch">
+            <div className="flex-1 bg-gradient-to-br from-rose-50 via-white to-orange-50 p-3.5">
+              <div className="flex items-center gap-1 text-[10px] text-rose-500">
                 <Sparkles className="h-3 w-3" /> 我的积分
+                <span className="ml-1 rounded-full bg-amber-100 px-1.5 py-[1px] text-[9px] font-medium text-amber-700">黄金 1.5x</span>
               </div>
-              <div className="mt-1 text-3xl font-semibold tabular-nums text-rose-600">2,580</div>
-              <div className="mt-0.5 text-[11px] text-muted-foreground">100 积分 = ¥10 等值商品</div>
+              <div className="mt-1 flex items-baseline gap-1">
+                <span className="text-3xl font-bold tabular-nums text-rose-600">2,580</span>
+                <span className="text-[10px] text-muted-foreground">分</span>
+              </div>
+              <div className="mt-0.5 flex items-center gap-2 text-[10px] text-muted-foreground">
+                <span className="text-emerald-600">本月 +186</span>
+                <span>·</span>
+                <span>100 分 = ¥10</span>
+              </div>
             </div>
-            <div className="flex flex-col items-end gap-1">
-              <Link
-                to="/points/history"
-                className="rounded-full border border-rose-300 bg-white px-2.5 py-1 text-[10px] text-rose-500"
-              >
-                积分明细 →
-              </Link>
-              <Link
-                to="/points-rules"
-                className="rounded-full border border-rose-300 bg-white px-2.5 py-1 text-[10px] text-rose-500"
-              >
-                兑换攻略 →
-              </Link>
-            </div>
+            <Link
+              to="/points"
+              className="flex w-[92px] flex-col items-center justify-center gap-1 bg-gradient-to-br from-rose-500 to-rose-600 text-center text-white active:scale-[0.99]"
+            >
+              <Gift className="h-5 w-5" />
+              <span className="text-xs font-semibold leading-tight">积分广场<br />立即兑换</span>
+            </Link>
           </div>
 
-          <div className="mt-3 rounded-lg bg-amber-100/70 px-2.5 py-1.5 text-[11px] text-amber-700">
-            ⚠️ 830 积分将于 2026-10-31 过期，请尽早使用
+          <div className="flex items-center gap-2 border-t border-rose-100/80 bg-amber-50/60 px-3.5 py-2 text-[11px] text-amber-700">
+            <Clock className="h-3 w-3 shrink-0" />
+            <span className="flex-1 truncate">830 分将于 2026-10-31 过期</span>
+            <Link to="/points/history" className="rounded-full bg-white px-2 py-0.5 text-[10px] text-amber-700 ring-1 ring-amber-200">
+              明细
+            </Link>
+            <Link to="/points-rules" className="rounded-full bg-white px-2 py-0.5 text-[10px] text-amber-700 ring-1 ring-amber-200">
+              攻略
+            </Link>
           </div>
-
-          <Link
-            to="/points"
-            className="mt-3 flex items-center justify-center gap-1.5 rounded-xl bg-rose-500 py-2.5 text-sm font-semibold text-white shadow-sm active:scale-[0.99]"
-          >
-            <Gift className="h-4 w-4" /> 进入积分广场兑换
-          </Link>
         </div>
       </div>
 
       <div className="space-y-2 px-4 pt-4">
-        <Item to="/orders" icon={ClipboardList} label="我的订单" right="全部" />
         <Item to="/exchanges" icon={RefreshCcw} label="售后 / 换货" right="仅支持换货" />
         <Item to="/cart" icon={ShoppingBag} label="购物车" />
         <Item to="/addresses" icon={MapPin} label="收货地址" />

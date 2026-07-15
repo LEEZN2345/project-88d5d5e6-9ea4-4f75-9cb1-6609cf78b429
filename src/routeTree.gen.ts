@@ -62,7 +62,6 @@ import { Route as AdminFeedbackRouteImport } from './routes/admin.feedback'
 import { Route as AdminExchangesRouteImport } from './routes/admin.exchanges'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
-import { Route as AdminBuildingsRouteImport } from './routes/admin.buildings'
 import { Route as AdminBannersRouteImport } from './routes/admin.banners'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
 import { Route as OrdersIdExchangeRouteImport } from './routes/orders.$id.exchange'
@@ -343,11 +342,6 @@ const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
   path: '/admin/categories',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminBuildingsRoute = AdminBuildingsRouteImport.update({
-  id: '/admin/buildings',
-  path: '/admin/buildings',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminBannersRoute = AdminBannersRouteImport.update({
   id: '/admin/banners',
   path: '/admin/banners',
@@ -441,7 +435,6 @@ export interface FileRoutesByFullPath {
   '/support': typeof SupportRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/banners': typeof AdminBannersRouteWithChildren
-  '/admin/buildings': typeof AdminBuildingsRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/exchanges': typeof AdminExchangesRouteWithChildren
@@ -511,7 +504,6 @@ export interface FileRoutesByTo {
   '/support': typeof SupportRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/banners': typeof AdminBannersRouteWithChildren
-  '/admin/buildings': typeof AdminBuildingsRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/exchanges': typeof AdminExchangesRouteWithChildren
@@ -582,7 +574,6 @@ export interface FileRoutesById {
   '/support': typeof SupportRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/banners': typeof AdminBannersRouteWithChildren
-  '/admin/buildings': typeof AdminBuildingsRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/exchanges': typeof AdminExchangesRouteWithChildren
@@ -654,7 +645,6 @@ export interface FileRouteTypes {
     | '/support'
     | '/admin/analytics'
     | '/admin/banners'
-    | '/admin/buildings'
     | '/admin/categories'
     | '/admin/config'
     | '/admin/exchanges'
@@ -724,7 +714,6 @@ export interface FileRouteTypes {
     | '/support'
     | '/admin/analytics'
     | '/admin/banners'
-    | '/admin/buildings'
     | '/admin/categories'
     | '/admin/config'
     | '/admin/exchanges'
@@ -794,7 +783,6 @@ export interface FileRouteTypes {
     | '/support'
     | '/admin/analytics'
     | '/admin/banners'
-    | '/admin/buildings'
     | '/admin/categories'
     | '/admin/config'
     | '/admin/exchanges'
@@ -865,7 +853,6 @@ export interface RootRouteChildren {
   SupportRoute: typeof SupportRoute
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
   AdminBannersRoute: typeof AdminBannersRouteWithChildren
-  AdminBuildingsRoute: typeof AdminBuildingsRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminConfigRoute: typeof AdminConfigRoute
   AdminExchangesRoute: typeof AdminExchangesRouteWithChildren
@@ -1274,13 +1261,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCategoriesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/buildings': {
-      id: '/admin/buildings'
-      path: '/admin/buildings'
-      fullPath: '/admin/buildings'
-      preLoaderRoute: typeof AdminBuildingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/banners': {
       id: '/admin/banners'
       path: '/admin/banners'
@@ -1548,7 +1528,6 @@ const rootRouteChildren: RootRouteChildren = {
   SupportRoute: SupportRoute,
   AdminAnalyticsRoute: AdminAnalyticsRoute,
   AdminBannersRoute: AdminBannersRouteWithChildren,
-  AdminBuildingsRoute: AdminBuildingsRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminConfigRoute: AdminConfigRoute,
   AdminExchangesRoute: AdminExchangesRouteWithChildren,

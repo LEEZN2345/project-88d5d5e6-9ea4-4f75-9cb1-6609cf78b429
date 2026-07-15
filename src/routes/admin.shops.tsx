@@ -1,18 +1,27 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { AdminShell } from "@/components/AdminShell";
 import { SHOPS, PRODUCTS } from "@/lib/mock-data";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Upload, ImagePlus, Download, Store } from "lucide-react";
+import { Plus, Upload, ImagePlus, Download, Store, MapPin } from "lucide-react";
+import { MALLS } from "@/lib/buildings";
+import { toast } from "sonner";
+import { z } from "zod";
 
 export const Route = createFileRoute("/admin/shops")({
-  head: () => ({ meta: [{ title: "档口管理 · 运营后台" }] }),
+  head: () => ({ meta: [{ title: "档口 / 商圈管理 · 运营后台" }] }),
+  validateSearch: z.object({ tab: z.enum(["shops", "buildings"]).optional() }),
   component: AdminShops,
 });
 
 function AdminShops() {
+  const { tab = "shops" } = Route.useSearch();
+  const navigate = useNavigate();
+  const setTab = (t: "shops" | "buildings") =>
+    navigate({ to: "/admin/shops", search: { tab: t } });
+
   const downloadTemplate = () => {
     const headers = ["档口名称(英文)", "档口名称(韩文)", "楼宇", "层数", "档口位置", "档口背景图URL", "起订件数", "标签(多个用/分隔)"];
     const sample = ["MILK", "밀크", "Migliore", "2F", "A41", "https://.../cover.jpg", "2", "女装/上新快"];
@@ -28,16 +37,43 @@ function AdminShops() {
     <AdminShell>
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold">档口管理</h1>
-          <p className="text-xs text-muted-foreground">维护档口基础资料：楼宇 / 层数 / 位置 / 背景图。商品在「商品管理」中录入。</p>
+          <h1 className="text-xl font-semibold">档口 / 商圈管理</h1>
+          <p className="text-xs text-muted-foreground">统一维护商圈楼栋与档口资料。档口在楼栋下挂载，商品在「商品管理」中录入。</p>
         </div>
+        {tab === "shops" ? (
         <div className="flex gap-2">
           <Button size="sm" variant="outline" onClick={downloadTemplate}><Download className="mr-1 h-4 w-4" />下载导入模板</Button>
           <Button size="sm" variant="outline"><Upload className="mr-1 h-4 w-4" />批量 Excel</Button>
           <Button size="sm"><Plus className="mr-1 h-4 w-4" />新增档口</Button>
         </div>
+        ) : (
+        <Button size="sm" onClick={() => toast.info("新增楼栋弹窗")}><Plus className="mr-1 h-4 w-4" />新增楼栋</Button>
+        )}
       </div>
 
+      <div className="mb-4 inline-flex rounded-md border border-border bg-background p-1 text-sm">
+        {[
+          { k: "shops", label: `档口列表 (${SHOPS.length})` },
+          { k: "buildings", label: `商圈 / 楼栋 (${MALLS.reduce((n, m) => n + m.buildings.length, 0)})` },
+        ].map((t) => (
+          <button
+            key={t.k}
+            onClick={() => setTab(t.k as "shops" | "buildings")}
+            className={`rounded px-3 py-1 text-xs ${tab === t.k ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {tab === "buildings" ? <BuildingsTab /> : <ShopsTab downloadTemplate={downloadTemplate} />}
+    </AdminShell>
+  );
+}
+
+function ShopsTab({ downloadTemplate: _dl }: { downloadTemplate: () => void }) {
+  return (
+    <>
       <div className="mb-4 grid gap-4 md:grid-cols-4">
         <Card className="p-4">
           <div className="text-xs text-muted-foreground">合作档口</div>
@@ -132,7 +168,50 @@ function AdminShops() {
         </div>
         <div className="mt-3 flex items-center gap-1"><Store className="h-3.5 w-3.5" />楼宇 + 层数 + 档口位置 组合唯一，用于商品导入时匹配档口。</div>
       </Card>
-    </AdminShell>
+    </>
+  );
+}
+
+function BuildingsTab() {
+  const shopCount = (b: string) => SHOPS.filter((s) => s.building === b).length;
+  return (
+    <div className="space-y-4">
+      {MALLS.map((m) => (
+        <Card key={m.city} className="p-4">
+          <div className="mb-3 flex items-center gap-2">
+            <MapPin className="h-4 w-4 text-primary" />
+            <h2 className="text-lg font-semibold">{m.city}</h2>
+            <Badge variant="outline">{m.buildings.length} 栋</Badge>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/50 text-xs text-muted-foreground">
+                <tr><Th>楼栋</Th><Th>楼层</Th><Th>关联档口数</Th><Th>操作</Th></tr>
+              </thead>
+              <tbody>
+                {m.buildings.map((b) => (
+                  <tr key={b.name} className="border-t border-border">
+                    <Td className="font-medium">{b.name}</Td>
+                    <Td>
+                      <div className="flex flex-wrap gap-1">
+                        {b.floors.map((f) => <Badge key={f} variant="outline" className="text-[10px]">{f}</Badge>)}
+                      </div>
+                    </Td>
+                    <Td>{shopCount(b.name)}</Td>
+                    <Td>
+                      <div className="flex gap-1">
+                        <Button size="sm" variant="outline">编辑楼层</Button>
+                        <Button size="sm" variant="ghost">停用</Button>
+                      </div>
+                    </Td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      ))}
+    </div>
   );
 }
 

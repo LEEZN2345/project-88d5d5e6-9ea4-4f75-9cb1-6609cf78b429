@@ -41,6 +41,7 @@ import { Route as ExchangesIdRouteImport } from './routes/exchanges.$id'
 import { Route as CategoriesIdRouteImport } from './routes/categories.$id'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminUserTagsRouteImport } from './routes/admin.user-tags'
+import { Route as AdminUserGroupsRouteImport } from './routes/admin.user-groups'
 import { Route as AdminStockRouteImport } from './routes/admin.stock'
 import { Route as AdminShopsRouteImport } from './routes/admin.shops'
 import { Route as AdminShippingRouteImport } from './routes/admin.shipping'
@@ -231,6 +232,11 @@ const AdminUsersRoute = AdminUsersRouteImport.update({
 const AdminUserTagsRoute = AdminUserTagsRouteImport.update({
   id: '/admin/user-tags',
   path: '/admin/user-tags',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminUserGroupsRoute = AdminUserGroupsRouteImport.update({
+  id: '/admin/user-groups',
+  path: '/admin/user-groups',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminStockRoute = AdminStockRouteImport.update({
@@ -429,6 +435,7 @@ export interface FileRoutesByFullPath {
   '/admin/shipping': typeof AdminShippingRoute
   '/admin/shops': typeof AdminShopsRouteWithChildren
   '/admin/stock': typeof AdminStockRoute
+  '/admin/user-groups': typeof AdminUserGroupsRoute
   '/admin/user-tags': typeof AdminUserTagsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/categories/$id': typeof CategoriesIdRoute
@@ -494,6 +501,7 @@ export interface FileRoutesByTo {
   '/admin/shipping': typeof AdminShippingRoute
   '/admin/shops': typeof AdminShopsRouteWithChildren
   '/admin/stock': typeof AdminStockRoute
+  '/admin/user-groups': typeof AdminUserGroupsRoute
   '/admin/user-tags': typeof AdminUserTagsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/categories/$id': typeof CategoriesIdRoute
@@ -560,6 +568,7 @@ export interface FileRoutesById {
   '/admin/shipping': typeof AdminShippingRoute
   '/admin/shops': typeof AdminShopsRouteWithChildren
   '/admin/stock': typeof AdminStockRoute
+  '/admin/user-groups': typeof AdminUserGroupsRoute
   '/admin/user-tags': typeof AdminUserTagsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/categories/$id': typeof CategoriesIdRoute
@@ -627,6 +636,7 @@ export interface FileRouteTypes {
     | '/admin/shipping'
     | '/admin/shops'
     | '/admin/stock'
+    | '/admin/user-groups'
     | '/admin/user-tags'
     | '/admin/users'
     | '/categories/$id'
@@ -692,6 +702,7 @@ export interface FileRouteTypes {
     | '/admin/shipping'
     | '/admin/shops'
     | '/admin/stock'
+    | '/admin/user-groups'
     | '/admin/user-tags'
     | '/admin/users'
     | '/categories/$id'
@@ -757,6 +768,7 @@ export interface FileRouteTypes {
     | '/admin/shipping'
     | '/admin/shops'
     | '/admin/stock'
+    | '/admin/user-groups'
     | '/admin/user-tags'
     | '/admin/users'
     | '/categories/$id'
@@ -823,6 +835,7 @@ export interface RootRouteChildren {
   AdminShippingRoute: typeof AdminShippingRoute
   AdminShopsRoute: typeof AdminShopsRouteWithChildren
   AdminStockRoute: typeof AdminStockRoute
+  AdminUserGroupsRoute: typeof AdminUserGroupsRoute
   AdminUserTagsRoute: typeof AdminUserTagsRoute
   AdminUsersRoute: typeof AdminUsersRouteWithChildren
   CategoriesIdRoute: typeof CategoriesIdRoute
@@ -1061,6 +1074,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/user-tags'
       fullPath: '/admin/user-tags'
       preLoaderRoute: typeof AdminUserTagsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/user-groups': {
+      id: '/admin/user-groups'
+      path: '/admin/user-groups'
+      fullPath: '/admin/user-groups'
+      preLoaderRoute: typeof AdminUserGroupsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/stock': {
@@ -1455,6 +1475,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminShippingRoute: AdminShippingRoute,
   AdminShopsRoute: AdminShopsRouteWithChildren,
   AdminStockRoute: AdminStockRoute,
+  AdminUserGroupsRoute: AdminUserGroupsRoute,
   AdminUserTagsRoute: AdminUserTagsRoute,
   AdminUsersRoute: AdminUsersRouteWithChildren,
   CategoriesIdRoute: CategoriesIdRoute,

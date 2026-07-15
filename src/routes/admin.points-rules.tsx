@@ -19,34 +19,43 @@ function AdminPointsRules() {
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold">积分规则</h1>
-          <p className="text-xs text-muted-foreground">配置买手端赚取积分的方式，改动即刻生效，历史流水不追溯。</p>
+          <p className="text-xs text-muted-foreground">1 元消费 = 1 积分（基础比例）；100 积分 = ¥1 抵扣。改动即刻生效，不追溯历史。</p>
         </div>
         <Button size="sm" onClick={() => toast.success("积分规则已保存")}><Save className="mr-1 h-4 w-4" />保存全部</Button>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <RuleCard title="下单送积分" desc="每笔支付成功订单按人民币金额发放积分" defaultOn>
-          <NumberField label="每元获得积分" defaultValue={1} suffix="分" />
-          <NumberField label="单笔封顶" defaultValue={200} suffix="分" />
-          <NumberField label="到账延迟" defaultValue={7} suffix="天（签收后）" />
+        <RuleCard title="下单消费积分" desc="订单实付人民币金额按比例发放，会员等级享加成" defaultOn>
+          <NumberField label="基础比例（每元）" defaultValue={1} suffix="分（=1%）" />
+          <NumberField label="单笔封顶" defaultValue={0} suffix="分（0 不限）" />
+          <NumberField label="到账延迟" defaultValue={14} suffix="天（签收后释放）" />
         </RuleCard>
 
-        <RuleCard title="邀请好友" desc="被邀人完成首单且无退款后发放" defaultOn>
-          <NumberField label="邀请人奖励" defaultValue={500} suffix="分" />
-          <NumberField label="被邀人奖励" defaultValue={200} suffix="分" />
+        <RuleCard title="拼单成团奖励" desc="激励发起人拉团" defaultOn>
+          <NumberField label="发起人加成" defaultValue={1} suffix="% × 实付" />
+          <NumberField label="每人上限次数" defaultValue={5} suffix="次/日" />
+        </RuleCard>
+
+        <RuleCard title="多件购买" desc="单笔≥N 件额外奖励，鼓励客单价" defaultOn>
+          <NumberField label="件数门槛" defaultValue={2} suffix="件" />
+          <NumberField label="额外加成" defaultValue={1} suffix="% × 实付" />
+        </RuleCard>
+
+        <RuleCard title="分享种草" desc="小红书 / 抖音 图文分享回填链接审核通过后发放" defaultOn>
+          <NumberField label="每次奖励" defaultValue={50} suffix="分" />
+          <NumberField label="每月上限" defaultValue={10} suffix="次" />
+        </RuleCard>
+
+        <RuleCard title="邀请好友" desc="被邀人完成首单且售后期结束后发放" defaultOn>
+          <NumberField label="被邀人注册奖励" defaultValue={50} suffix="分" />
+          <NumberField label="被邀人首单奖励" defaultValue={100} suffix="分" />
           <NumberField label="单月最多邀请" defaultValue={20} suffix="人" />
         </RuleCard>
 
-        <RuleCard title="每日签到" desc="连续签到额外奖励，中断重置" defaultOn>
-          <NumberField label="基础签到" defaultValue={5} suffix="分/天" />
-          <NumberField label="连续 7 天奖励" defaultValue={50} suffix="分" />
-          <NumberField label="连续 30 天奖励" defaultValue={300} suffix="分" />
-        </RuleCard>
-
-        <RuleCard title="评价 / 晒单" desc="收货 15 天内完成图文评价" defaultOn={false}>
-          <NumberField label="纯文字评价" defaultValue={10} suffix="分" />
-          <NumberField label="带图评价（≥3 张）" defaultValue={30} suffix="分" />
-          <NumberField label="视频晒单" defaultValue={80} suffix="分" />
+        <RuleCard title="积分消耗" desc="控制积分出口比例，避免通胀" defaultOn>
+          <NumberField label="现金抵扣比例" defaultValue={100} suffix="分 = ¥1" />
+          <NumberField label="单笔最多抵扣" defaultValue={20} suffix="% 订单金额" />
+          <NumberField label="抽奖单次消耗" defaultValue={100} suffix="分/次" />
         </RuleCard>
 
         <RuleCard title="积分有效期" desc="按获得时间到期，过期自动清零" defaultOn>
@@ -57,6 +66,7 @@ function AdminPointsRules() {
         <RuleCard title="风控" desc="疑似作弊触发时的处理策略" defaultOn>
           <SelectField label="重复设备" options={["禁止获取", "标记待复核", "正常获取"]} />
           <SelectField label="退款订单" options={["扣回积分", "不发放", "仍发放"]} />
+          <SelectField label="同 IP 邀请" options={["拦截", "标记待复核", "放行"]} />
         </RuleCard>
       </div>
     </AdminShell>

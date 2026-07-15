@@ -161,8 +161,8 @@ function Me() {
         <Item to="/addresses" icon={MapPin} label="收货地址" />
         <Item to="/favorites" icon={Heart} label="我的收藏" />
         <Item to="/points" icon={Gift} label="积分广场" right="2,580 分" />
-        <Item to="/points-rules" icon={Share2} label="邀请好友赚积分" right="已邀 4 人" />
-        <Item to="/invite-rules" icon={Gift} label="邀请分销规则（实体店）" right="最低 2.5%" />
+        <Item to="/commission" icon={Wallet} label="我的分佣钱包" right="可提现 ¥46.7" />
+        <Item to="/invite-rules" icon={Share2} label="邀请分佣规则" right="L1 0.7% + L2 0.3%" />
         <Item to="/membership" icon={Crown} label="会员等级权益" right="黄金买手" />
         <Item to="/guide" icon={BookOpen} label="使用指引" right="新手必看" />
         <Item to="/support" icon={MessageSquare} label="联系客服" />

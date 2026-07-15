@@ -26,50 +26,38 @@ const TIERS: Tier[] = [
     threshold: "注册即得",
     color: "from-amber-700/80 to-amber-500/70",
     ring: "ring-amber-400/40",
-    discount: "物流费率 基准价",
-    benefits: ["每日签到得积分", "参与拼单广场", "享受平台售后保障", "生日券 1 张"],
+    discount: "积分 1x · 满 ¥300 包邮",
+    benefits: ["每日签到得积分", "参与拼单广场", "享受平台售后保障"],
   },
   {
     key: "silver",
     name: "Silver",
     cn: "白银买手",
-    threshold: "近 90 天成交 ≥ ¥1 万",
+    threshold: "近 12 月累计消费 ≥ ¥2,000",
     color: "from-slate-400 to-slate-300",
     ring: "ring-slate-300/60",
-    discount: "物流费率 -2%",
-    benefits: ["专属客服 8h 响应", "积分 1.2 倍加成", "新款上新 30 分钟优先看", "每月免运补贴 1 单"],
+    discount: "积分 1.2x · 满 ¥200 包邮",
+    benefits: ["积分 1.2 倍加成", "生日双倍积分", "客服 8h 响应"],
   },
   {
     key: "gold",
     name: "Gold",
     cn: "黄金买手",
-    threshold: "近 90 天成交 ≥ ¥5 万",
+    threshold: "近 12 月累计消费 ≥ ¥10,000",
     color: "from-amber-400 to-yellow-300",
     ring: "ring-amber-300/70",
-    discount: "物流费率 -3% · 汇率优惠 -0.5%",
-    benefits: [
-      "专属客服 2h 响应 + 微信直连",
-      "积分 1.5 倍加成 + 生日双倍",
-      "档口私密价 / 独家新款",
-      "拼单免起订门槛",
-      "每月免运补贴 3 单",
-    ],
+    discount: "积分 1.5x · 满 ¥100 包邮",
+    benefits: ["积分 1.5 倍加成", "档口私密价 / 独家新款", "拼单免起订门槛", "客服 2h 响应"],
   },
   {
     key: "diamond",
     name: "Diamond",
     cn: "钻石买手",
-    threshold: "近 90 天成交 ≥ ¥20 万 / 邀请制",
+    threshold: "近 12 月累计消费 ≥ ¥100,000",
     color: "from-sky-400 via-cyan-300 to-fuchsia-300",
     ring: "ring-cyan-300/70",
-    discount: "物流费率 -5% · 汇率优惠 -1%",
-    benefits: [
-      "1v1 专属买手顾问",
-      "积分 2 倍加成",
-      "首尔看货 / 展会邀请",
-      "订单账期支持（T+7）",
-      "独立仓位 / 优先集运",
-    ],
+    discount: "积分 2x · 全场包邮",
+    benefits: ["积分 2 倍加成", "1v1 专属买手顾问", "首尔看货 / 展会邀请", "订单账期支持（T+7）"],
   },
 ];
 
@@ -124,9 +112,9 @@ function Membership() {
         </div>
         <div className="grid grid-cols-4 gap-2 text-center">
           {[
-            { i: Truck, l: "物流 -3%" },
-            { i: Percent, l: "汇率 -0.5%" },
             { i: Gift, l: "积分 1.5x" },
+            { i: Truck, l: "满 ¥100 包邮" },
+            { i: Percent, l: "档口私密价" },
             { i: Headphones, l: "2h 客服" },
           ].map((b) => (
             <div key={b.l} className="rounded-xl border border-border bg-card p-2">
@@ -191,10 +179,10 @@ function Membership() {
           <Shield className="h-4 w-4 text-rose-500" /> 升级 & 保级规则
         </div>
         <div className="space-y-2 rounded-2xl border border-border bg-card p-4 text-[12px] leading-relaxed text-muted-foreground">
-          <p>· 等级依据近 <b className="text-foreground">90 天累计成交金额</b> 动态更新，每周一 00:00 结算。</p>
-          <p>· 已完成售后 / 退款的订单不计入成交额；虚假交易一经发现降级并冻结。</p>
-          <p>· 达标后立即升级，权益即时生效；未保级将下调一级，权益保留 30 天缓冲期。</p>
-          <p>· 钻石等级需成交达标 + 平台邀请复核，年度重新评审。</p>
+          <p>· 等级依据 <b className="text-foreground">近 12 个月累计消费金额</b> 动态更新，每日凌晨自动结算。</p>
+          <p>· 达标后立即升级，权益即时生效。</p>
+          <p>· 每个自然年重新评估，不达标降 <b className="text-foreground">1 级</b>（非归零），给你缓冲空间。</p>
+          <p>· 退款订单不计入消费额；虚假交易一经发现降级并冻结。</p>
         </div>
       </div>
 

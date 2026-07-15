@@ -43,6 +43,7 @@ import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminUserTagsRouteImport } from './routes/admin.user-tags'
 import { Route as AdminUserGroupsRouteImport } from './routes/admin.user-groups'
 import { Route as AdminStockRouteImport } from './routes/admin.stock'
+import { Route as AdminSignInRouteImport } from './routes/admin.sign-in'
 import { Route as AdminShopsRouteImport } from './routes/admin.shops'
 import { Route as AdminShippingRouteImport } from './routes/admin.shipping'
 import { Route as AdminRefundsRouteImport } from './routes/admin.refunds'
@@ -244,6 +245,11 @@ const AdminStockRoute = AdminStockRouteImport.update({
   path: '/admin/stock',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminSignInRoute = AdminSignInRouteImport.update({
+  id: '/admin/sign-in',
+  path: '/admin/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminShopsRoute = AdminShopsRouteImport.update({
   id: '/admin/shops',
   path: '/admin/shops',
@@ -434,6 +440,7 @@ export interface FileRoutesByFullPath {
   '/admin/refunds': typeof AdminRefundsRouteWithChildren
   '/admin/shipping': typeof AdminShippingRoute
   '/admin/shops': typeof AdminShopsRouteWithChildren
+  '/admin/sign-in': typeof AdminSignInRoute
   '/admin/stock': typeof AdminStockRoute
   '/admin/user-groups': typeof AdminUserGroupsRoute
   '/admin/user-tags': typeof AdminUserTagsRoute
@@ -500,6 +507,7 @@ export interface FileRoutesByTo {
   '/admin/refunds': typeof AdminRefundsRouteWithChildren
   '/admin/shipping': typeof AdminShippingRoute
   '/admin/shops': typeof AdminShopsRouteWithChildren
+  '/admin/sign-in': typeof AdminSignInRoute
   '/admin/stock': typeof AdminStockRoute
   '/admin/user-groups': typeof AdminUserGroupsRoute
   '/admin/user-tags': typeof AdminUserTagsRoute
@@ -567,6 +575,7 @@ export interface FileRoutesById {
   '/admin/refunds': typeof AdminRefundsRouteWithChildren
   '/admin/shipping': typeof AdminShippingRoute
   '/admin/shops': typeof AdminShopsRouteWithChildren
+  '/admin/sign-in': typeof AdminSignInRoute
   '/admin/stock': typeof AdminStockRoute
   '/admin/user-groups': typeof AdminUserGroupsRoute
   '/admin/user-tags': typeof AdminUserTagsRoute
@@ -635,6 +644,7 @@ export interface FileRouteTypes {
     | '/admin/refunds'
     | '/admin/shipping'
     | '/admin/shops'
+    | '/admin/sign-in'
     | '/admin/stock'
     | '/admin/user-groups'
     | '/admin/user-tags'
@@ -701,6 +711,7 @@ export interface FileRouteTypes {
     | '/admin/refunds'
     | '/admin/shipping'
     | '/admin/shops'
+    | '/admin/sign-in'
     | '/admin/stock'
     | '/admin/user-groups'
     | '/admin/user-tags'
@@ -767,6 +778,7 @@ export interface FileRouteTypes {
     | '/admin/refunds'
     | '/admin/shipping'
     | '/admin/shops'
+    | '/admin/sign-in'
     | '/admin/stock'
     | '/admin/user-groups'
     | '/admin/user-tags'
@@ -834,6 +846,7 @@ export interface RootRouteChildren {
   AdminRefundsRoute: typeof AdminRefundsRouteWithChildren
   AdminShippingRoute: typeof AdminShippingRoute
   AdminShopsRoute: typeof AdminShopsRouteWithChildren
+  AdminSignInRoute: typeof AdminSignInRoute
   AdminStockRoute: typeof AdminStockRoute
   AdminUserGroupsRoute: typeof AdminUserGroupsRoute
   AdminUserTagsRoute: typeof AdminUserTagsRoute
@@ -1088,6 +1101,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/stock'
       fullPath: '/admin/stock'
       preLoaderRoute: typeof AdminStockRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/sign-in': {
+      id: '/admin/sign-in'
+      path: '/admin/sign-in'
+      fullPath: '/admin/sign-in'
+      preLoaderRoute: typeof AdminSignInRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/shops': {
@@ -1474,6 +1494,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRefundsRoute: AdminRefundsRouteWithChildren,
   AdminShippingRoute: AdminShippingRoute,
   AdminShopsRoute: AdminShopsRouteWithChildren,
+  AdminSignInRoute: AdminSignInRoute,
   AdminStockRoute: AdminStockRoute,
   AdminUserGroupsRoute: AdminUserGroupsRoute,
   AdminUserTagsRoute: AdminUserTagsRoute,

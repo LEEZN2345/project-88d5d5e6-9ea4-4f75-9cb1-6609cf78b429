@@ -379,6 +379,10 @@ function AdminShipping() {
         </>
       )}
 
+      {tab === "exchange" && (
+        <ExchangePane exTab={exTab} setExTab={setExTab} />
+      )}
+
       {tab === "import" && (
         <div className="grid gap-4 md:grid-cols-2">
           <Card className="p-6">

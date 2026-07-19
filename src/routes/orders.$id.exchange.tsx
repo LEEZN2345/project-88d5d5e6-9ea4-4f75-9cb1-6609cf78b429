@@ -32,6 +32,7 @@ function ApplyExchange() {
   const [toColor, setToColor] = useState("");
   const [toSize, setToSize] = useState("");
   const [note, setNote] = useState("");
+  const [photos, setPhotos] = useState<string[]>([]);
 
   const item = o.items[pick]!;
 
@@ -40,7 +41,15 @@ function ApplyExchange() {
       toast.error("请填写希望换的颜色与尺码");
       return;
     }
-    toast.success("已提交换货申请，客服将在 24 小时内审核");
+    if (note.trim().length < 5) {
+      toast.error("请填写不良/换货文字描述（至少 5 个字）");
+      return;
+    }
+    if (photos.length < 1) {
+      toast.error("请至少上传 1 张实拍照片作为凭证");
+      return;
+    }
+    toast.success("已提交不良交换申请，客服将在 24 小时内审核");
     navigate({ to: "/exchanges" });
   };
 
@@ -118,26 +127,46 @@ function ApplyExchange() {
           </div>
         </div>
         <div className="mt-3">
-          <Label className="text-xs">补充说明（可选）</Label>
+          <Label className="text-xs">
+            不良/换货描述 <span className="text-rose-500">*</span>
+          </Label>
           <Textarea
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            placeholder="例：M 码偏小，想换 L 码同色"
+            placeholder="请详细描述不良情况或换货原因，例：袖口有明显线头，希望更换同款同色。"
             rows={3}
             className="mt-1"
           />
         </div>
         <div className="mt-3">
-          <Label className="text-xs">上传凭证（建议 1-3 张）</Label>
+          <Label className="text-xs">
+            实拍凭证 <span className="text-rose-500">*</span>
+            <span className="ml-1 text-[11px] text-muted-foreground">（至少 1 张，最多 3 张）</span>
+          </Label>
           <div className="mt-1 flex gap-2">
-            {[0, 1, 2].map((i) => (
-              <div
-                key={i}
-                className="flex h-16 w-16 items-center justify-center rounded-md border border-dashed border-border text-lg text-muted-foreground"
-              >
-                +
-              </div>
-            ))}
+            {[0, 1, 2].map((i) => {
+              const p = photos[i];
+              return (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => {
+                    if (p) {
+                      setPhotos((ps) => ps.filter((_, j) => j !== i));
+                    } else {
+                      setPhotos((ps) => [...ps, `https://picsum.photos/seed/ex-photo-${Date.now()}-${i}/300/300`]);
+                    }
+                  }}
+                  className="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-md border border-dashed border-border text-lg text-muted-foreground"
+                >
+                  {p ? (
+                    <img src={p} alt="" className="h-full w-full object-cover" />
+                  ) : (
+                    "+"
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>

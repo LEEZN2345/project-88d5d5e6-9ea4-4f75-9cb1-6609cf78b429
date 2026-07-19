@@ -11,7 +11,7 @@ import {
   EXCHANGE_WAREHOUSE,
   type ExchangeStatus,
 } from "@/lib/mock-data";
-import { Copy, Warehouse, Truck } from "lucide-react";
+import { Copy, Warehouse, Truck, Wallet } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/exchanges/$id")({
@@ -29,7 +29,9 @@ const STEPS: { key: ExchangeStatus; label: string; hint: string }[] = [
   { key: "cn_received", label: "国内集运仓已签收", hint: "等待并入韩国转寄批次" },
   { key: "forwarded_kr", label: "已转寄韩国", hint: "跨境物流约 3-5 个工作日" },
   { key: "kr_received", label: "韩国档口已签收", hint: "档口开始为你配货" },
-  { key: "sourcing", label: "档口配货中", hint: "档口有货时会立即安排出库" },
+  { key: "shop_exchanging", label: "档口交换中", hint: "档口正在为你更换新品，请耐心等待" },
+  { key: "awaiting_return_fee", label: "待补运费", hint: "请在下方支付国际回运运费" },
+  { key: "return_fee_paid", label: "运费已收 · 待发货", hint: "平台正在为你安排出库" },
   { key: "reshipped", label: "已重新发出", hint: "跨境物流回到你手上" },
   { key: "completed", label: "换货完成", hint: "本次换货已结案" },
 ];
@@ -74,6 +76,37 @@ function BuyerExchangeDetail() {
               <Button size="sm" onClick={() => toast.success("已提交，等待集运仓签收")}>提交</Button>
             </div>
           </div>
+        </div>
+      )}
+
+      {e.status === "awaiting_return_fee" && (
+        <div className="mx-4 mt-3 rounded-xl border border-rose-300 bg-rose-50 p-3 dark:bg-rose-950/30">
+          <div className="flex items-center gap-2 text-sm font-medium">
+            <Wallet className="h-4 w-4" /> 请补交国际回运运费
+          </div>
+          <div className="mt-2 rounded-lg bg-background/60 p-2.5 text-xs text-muted-foreground">
+            档口交换完成，重新发出需补交国际回运运费。支付后平台将安排出库。
+          </div>
+          <div className="mt-3 flex items-center justify-between rounded-lg bg-background/60 p-2.5">
+            <div>
+              <div className="text-[11px] text-muted-foreground">应付金额</div>
+              <div className="text-lg font-semibold text-rose-600">
+                ¥{(e.returnFee?.amountCNY ?? 45).toFixed(2)}
+              </div>
+            </div>
+            <Button size="sm" onClick={() => toast.success("已支付，等待平台确认发货")}>
+              立即补运费
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {(e.status === "return_fee_paid" || e.status === "reshipped" || e.status === "completed") && e.returnFee && (
+        <div className="mx-4 mt-3 rounded-xl border border-emerald-300 bg-emerald-50 p-3 text-xs dark:bg-emerald-950/30 dark:text-emerald-200">
+          <div className="flex items-center gap-2 text-sm font-medium">
+            <Wallet className="h-4 w-4" /> 补运费 ¥{e.returnFee.amountCNY.toFixed(2)} 已收
+          </div>
+          <div className="mt-1 text-muted-foreground">平台正在安排出库，请留意物流通知。</div>
         </div>
       )}
 

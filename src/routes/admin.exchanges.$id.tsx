@@ -13,7 +13,7 @@ import {
   EXCHANGE_WAREHOUSE,
   type ExchangeStatus,
 } from "@/lib/mock-data";
-import { ArrowLeft, CheckCircle2, XCircle, Warehouse, Plane, PackageCheck, Send } from "lucide-react";
+import { ArrowLeft, CheckCircle2, XCircle, Warehouse, Plane, PackageCheck, Send, Wallet } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/exchanges/$id")({
@@ -27,7 +27,9 @@ const STEPS: { key: ExchangeStatus; label: string }[] = [
   { key: "cn_received", label: "集运仓签收" },
   { key: "forwarded_kr", label: "转寄韩国" },
   { key: "kr_received", label: "韩国档口签收" },
-  { key: "sourcing", label: "档口配货" },
+  { key: "shop_exchanging", label: "档口交换中" },
+  { key: "awaiting_return_fee", label: "待买家补运费" },
+  { key: "return_fee_paid", label: "运费已收 · 待发货" },
   { key: "reshipped", label: "重新发出" },
   { key: "completed", label: "完成" },
 ];
@@ -85,11 +87,22 @@ function AdminExchangeDetail() {
             </Button>
           )}
           {e.status === "kr_received" && (
-            <Button size="sm" onClick={() => toast.success("已下发档口配货")}>
-              档口配货
+            <Button size="sm" onClick={() => toast.success("已进入档口交换流程")}>
+              进入档口交换
             </Button>
           )}
-          {e.status === "sourcing" && (
+          {e.status === "shop_exchanging" && (
+            <Button size="sm" onClick={() => toast.success("已通知买家补运费")}>
+              <Wallet className="mr-1 h-4 w-4" />
+              需要补运费
+            </Button>
+          )}
+          {e.status === "awaiting_return_fee" && (
+            <Button size="sm" variant="outline" disabled>
+              等待买家支付
+            </Button>
+          )}
+          {e.status === "return_fee_paid" && (
             <Button size="sm" onClick={() => toast.success("已重新发出")}>
               <Send className="mr-1 h-4 w-4" />
               重新发出
@@ -178,10 +191,41 @@ function AdminExchangeDetail() {
                 title="③ 韩国 → 买手"
                 data={e.krToBuyer}
                 empty="档口配货完成后再录入"
-                canEdit={e.status === "sourcing" || e.status === "reshipped"}
+                canEdit={e.status === "return_fee_paid" || e.status === "reshipped"}
               />
             </div>
           </Card>
+
+          {(e.status === "awaiting_return_fee" || e.status === "return_fee_paid" || e.status === "reshipped" || e.status === "completed") && (
+            <Card className="p-4">
+              <div className="mb-2 flex items-center gap-2 text-sm font-semibold">
+                <Wallet className="h-4 w-4" /> 补运费
+              </div>
+              <div className="grid gap-3 md:grid-cols-3 text-xs">
+                <div>
+                  <Label className="text-[11px]">金额(CNY)</Label>
+                  <Input defaultValue={e.returnFee?.amountCNY ?? 45} className="mt-1 h-8" />
+                </div>
+                <div>
+                  <Label className="text-[11px]">发起时间</Label>
+                  <div className="mt-1 text-muted-foreground">{e.returnFee?.requestedAt ?? "—"}</div>
+                </div>
+                <div>
+                  <Label className="text-[11px]">买家支付时间</Label>
+                  <div className="mt-1 text-muted-foreground">
+                    {e.status === "awaiting_return_fee" ? (
+                      <span className="text-rose-600">等待中</span>
+                    ) : (
+                      e.returnFee?.paidAt ?? "已收款"
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="mt-2 text-[11px] text-muted-foreground">
+                运费到账后，工单自动进入「运费已收 · 待发货」，可在物流管理「不良交换 · 待发货」队列中发货。
+              </div>
+            </Card>
+          )}
 
           {e.status === "applied" && (
             <Card className="border-rose-200 bg-rose-50/60 p-4 text-xs dark:bg-rose-950/20">

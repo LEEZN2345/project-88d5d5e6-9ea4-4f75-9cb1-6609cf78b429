@@ -7,7 +7,11 @@ import {
   type ShipStatus,
   type ShipSource,
   formatKRW,
+  EXCHANGES,
+  EXCHANGE_STATUS_LABEL,
+  EXCHANGE_REASON_LABEL,
 } from "@/lib/mock-data";
+import { Link } from "@tanstack/react-router";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -37,6 +41,7 @@ import {
   Upload,
   Download,
   FileSpreadsheet,
+  RefreshCcw,
 } from "lucide-react";
 
 export const Route = createFileRoute("/admin/shipping")({
@@ -113,7 +118,8 @@ const NODE_ENUM = ["韩国仓入库", "打包出库", "起运", "到港清关", 
 const CARRIERS = ["顺丰速运", "圆通速递", "中通快递", "韵达快递", "京东物流", "EMS", "通关社A", "通关社B"];
 
 function AdminShipping() {
-  const [tab, setTab] = useState<"queue" | "import">("queue");
+  const [tab, setTab] = useState<"queue" | "import" | "exchange">("queue");
+  const [exTab, setExTab] = useState<"pending" | "shipped">("pending");
   const [rows, setRows] = useState<ShipRow[]>(() => buildRows());
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [srcFilter, setSrcFilter] = useState<ShipSource | "all">("all");
@@ -200,6 +206,12 @@ function AdminShipping() {
             className={`rounded-full px-3 py-1 ${tab === "queue" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
           >
             <Truck className="mr-1 inline h-3.5 w-3.5" /> 发货队列
+          </button>
+          <button
+            onClick={() => setTab("exchange")}
+            className={`rounded-full px-3 py-1 ${tab === "exchange" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+          >
+            <RefreshCcw className="mr-1 inline h-3.5 w-3.5" /> 不良交换
           </button>
           <button
             onClick={() => setTab("import")}

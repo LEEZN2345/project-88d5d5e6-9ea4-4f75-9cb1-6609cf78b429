@@ -1,16 +1,19 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Store, Users, User } from "lucide-react";
+import { Home, Store, Users, User, ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useCartCount } from "@/lib/cart-store";
 
 const TABS = [
   { to: "/", icon: Home, label: "首页" },
   { to: "/shops", icon: Store, label: "档口" },
   { to: "/groups", icon: Users, label: "拼单广场" },
+  { to: "/cart", icon: ShoppingCart, label: "购物车" },
   { to: "/me", icon: User, label: "我的" },
 ] as const;
 
 export function MobileShell({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const cartCount = useCartCount();
   return (
     <div className="mx-auto flex min-h-screen max-w-[480px] flex-col bg-background">
       <main className="flex-1 pb-20">{children}</main>
@@ -26,7 +29,14 @@ export function MobileShell({ children }: { children: React.ReactNode }) {
                 active ? "text-primary" : "text-muted-foreground",
               )}
             >
-              <Icon className="h-5 w-5" />
+              <span className="relative">
+                <Icon className="h-5 w-5" />
+                {to === "/cart" && cartCount > 0 && (
+                  <span className="absolute -right-2 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-rose-500 px-1 text-[9px] font-bold text-white">
+                    {cartCount > 99 ? "99+" : cartCount}
+                  </span>
+                )}
+              </span>
               <span>{label}</span>
             </Link>
           );

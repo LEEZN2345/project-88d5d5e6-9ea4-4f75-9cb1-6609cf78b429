@@ -621,7 +621,9 @@ export type ExchangeStatus =
   | "cn_received" // 集运仓已签收
   | "forwarded_kr" // 已转寄韩国
   | "kr_received" // 韩国档口已签收
-  | "sourcing" // 档口配货中
+  | "shop_exchanging" // 档口交换中（韩国档口正在处理不良交换）
+  | "awaiting_return_fee" // 待买家补运费
+  | "return_fee_paid" // 运费已收 · 待发货
   | "reshipped" // 已重新发出给买家
   | "completed" // 已完成
   | "rejected"; // 已驳回
@@ -632,7 +634,9 @@ export const EXCHANGE_STATUS_LABEL: Record<ExchangeStatus, string> = {
   cn_received: "集运仓已签收",
   forwarded_kr: "转寄韩国中",
   kr_received: "韩国已签收",
-  sourcing: "档口配货中",
+  shop_exchanging: "档口交换中",
+  awaiting_return_fee: "待补运费",
+  return_fee_paid: "运费已收 · 待发货",
   reshipped: "已重新发出",
   completed: "已完成",
   rejected: "已驳回",
@@ -678,6 +682,12 @@ export type ExchangeRequest = {
   photos?: string[]; // 买手上传的凭证
   csUser?: string;
   rejectReason?: string;
+  // 补运费（重新发出前平台向买家收取的国际运费）
+  returnFee?: {
+    amountCNY: number;
+    requestedAt?: string; // 平台发起补运费的时间
+    paidAt?: string;      // 买家支付时间
+  };
 };
 
 export const EXCHANGES: ExchangeRequest[] = [

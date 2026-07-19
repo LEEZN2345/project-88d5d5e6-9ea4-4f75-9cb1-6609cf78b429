@@ -119,6 +119,7 @@ function ProductDetail() {
   const [expanded, setExpanded] = useState<TierKey | null>(defaultTier);
   const [flowOpen, setFlowOpen] = useState(false);
   const [showPurchaseOptions, setShowPurchaseOptions] = useState(!!tierParam);
+  const [intent, setIntent] = useState<"buy" | "cart">("buy");
   const [api, setApi] = useState<CarouselApi>();
   const [slide, setSlide] = useState(0);
 
@@ -254,10 +255,23 @@ function ProductDetail() {
                     e.stopPropagation();
                     setTierKey(t.key);
                     setShowPurchaseOptions(false);
-                    navigate({ to: "/checkout" });
+                    if (intent === "cart") {
+                      cart.add({
+                        productId: p.id,
+                        color,
+                        size,
+                        qty: Math.max(1, t.qty),
+                        tier: t.key,
+                      });
+                      toast.success(`已加入购物车 · ${t.label}`);
+                    } else {
+                      navigate({ to: "/checkout" });
+                    }
                   }}
                 >
-                  {t.cta(formatCNY(tTotalCNY), formatCNY(tUnitCNY))}
+                  {intent === "cart"
+                    ? `加入购物车 · ${t.label}${t.qty > 1 ? ` ×${t.qty}` : ""}`
+                    : t.cta(formatCNY(tTotalCNY), formatCNY(tUnitCNY))}
                 </Button>
               </div>
             )}
@@ -431,7 +445,9 @@ function ProductDetail() {
       {showPurchaseOptions && (
         <div className="fixed bottom-32 left-1/2 z-40 w-full max-w-[480px] -translate-x-1/2 rounded-xl border border-border bg-background px-4 pb-4 pt-3 shadow-lg">
           <div className="mb-2 flex items-center justify-between">
-            <div className="text-sm font-medium">选择购买方式</div>
+            <div className="text-sm font-medium">
+              {intent === "cart" ? "选择加购方式" : "选择购买方式"}
+            </div>
             <button
               onClick={() => setShowPurchaseOptions(false)}
               className="rounded-full p-1 hover:bg-muted"
@@ -449,15 +465,18 @@ function ProductDetail() {
             variant="outline"
             className="h-11 flex-1 text-sm font-semibold"
             onClick={() => {
-              cart.add({ productId: p.id, color, size, qty: Math.max(1, tier.qty) });
-              toast.success("已加入购物车");
+              setIntent("cart");
+              setShowPurchaseOptions(true);
             }}
           >
             加入购物车
           </Button>
           <Button
             className="h-11 flex-1 text-sm font-semibold"
-            onClick={() => setShowPurchaseOptions((v) => !v)}
+            onClick={() => {
+              setIntent("buy");
+              setShowPurchaseOptions((v) => !v);
+            }}
           >
             {minOrderQty === 2 && tierKey === "bulk"
               ? `2件起拍 ${formatCNY(totalCNY)}`

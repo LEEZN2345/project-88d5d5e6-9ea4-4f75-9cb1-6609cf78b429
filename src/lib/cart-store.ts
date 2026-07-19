@@ -5,6 +5,7 @@ export type CartItem = {
   color: string;
   size: string;
   qty: number;
+  tier?: "solo" | "group" | "bulk";
 };
 
 const KEY = "ddth_cart_v1";
@@ -45,7 +46,11 @@ export function useCartCount() {
 export const cart = {
   add(item: CartItem) {
     const idx = items.findIndex(
-      (i) => i.productId === item.productId && i.color === item.color && i.size === item.size,
+      (i) =>
+        i.productId === item.productId &&
+        i.color === item.color &&
+        i.size === item.size &&
+        (i.tier ?? "solo") === (item.tier ?? "solo"),
     );
     if (idx >= 0) items[idx] = { ...items[idx]!, qty: items[idx]!.qty + item.qty };
     else items = [...items, item];

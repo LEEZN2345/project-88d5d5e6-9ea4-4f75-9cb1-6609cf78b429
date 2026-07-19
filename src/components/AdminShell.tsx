@@ -1,5 +1,14 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
+import { useRole, setRole, ROLE_LABEL, canAccess, type AppRole } from "@/lib/auth-role";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 import {
   LayoutDashboard,
   Package,
@@ -56,20 +65,27 @@ const GROUP_ORDER = ["经营", "商品", "用户与增长", "资金", "数据中
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const role = useRole();
+  const visible = NAV.filter((n) => canAccess(n.to, role));
+  const visibleGroups = GROUP_ORDER.filter((g) => visible.some((n) => n.group === g));
   return (
     <div className="flex min-h-screen bg-muted/30">
       <aside className="hidden w-56 shrink-0 border-r border-border bg-background md:block">
         <div className="border-b border-border px-5 py-4">
           <div className="text-sm font-semibold">东大门订货通</div>
           <div className="text-xs text-muted-foreground">运营后台 · M1</div>
+          <div className="mt-3">
+            <div className="mb-1 text-[10px] uppercase tracking-wider text-muted-foreground/70">当前角色</div>
+            <RoleSwitcher value={role} />
+          </div>
         </div>
         <nav className="flex flex-col gap-3 p-2">
-          {GROUP_ORDER.map((g) => (
+          {visibleGroups.map((g) => (
             <div key={g}>
               <div className="px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
                 {g}
               </div>
-              {NAV.filter((n) => n.group === g).map(({ to, icon: Icon, label, exact }) => {
+              {visible.filter((n) => n.group === g).map(({ to, icon: Icon, label, exact }) => {
                 const active = exact ? pathname === to : pathname.startsWith(to);
                 return (
                   <Link
@@ -94,12 +110,15 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       <div className="flex-1 overflow-x-hidden">
         <header className="flex h-12 items-center justify-between border-b border-border bg-background px-4 md:hidden">
           <span className="text-sm font-semibold">运营后台</span>
-          <Link to="/" className="text-xs text-muted-foreground">
-            返回买手端 →
-          </Link>
+          <div className="flex items-center gap-2">
+            <RoleSwitcher value={role} compact />
+            <Link to="/" className="text-xs text-muted-foreground">
+              返回买手端 →
+            </Link>
+          </div>
         </header>
         <div className="flex flex-wrap gap-1 border-b border-border bg-background px-2 py-2 md:hidden">
-          {NAV.map(({ to, label, exact }) => {
+          {visible.map(({ to, label, exact }) => {
             const active = exact ? pathname === to : pathname.startsWith(to);
             return (
               <Link
@@ -117,7 +136,66 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             );
           })}
         </div>
-        <main className="p-4 md:p-6">{children}</main>
+        <main className="p-4 md:p-6">
+          {canAccess(matchAdminBase(pathname), role) ? (
+            children
+          ) : (
+            <NoAccess role={role} />
+          )}
+        </main>
+      </div>
+    </div>
+  );
+}
+
+function matchAdminBase(pathname: string): string {
+  // 归并到 NAV 中最长匹配的父路径，用于权限判定
+  const keys = Object.keys({
+    "/admin": 1,
+  });
+  void keys;
+  const candidates = [
+    "/admin/orders", "/admin/feedback", "/admin/shipping", "/admin/logistics",
+    "/admin/stock", "/admin/groups", "/admin/refunds", "/admin/exchanges",
+    "/admin/products", "/admin/categories", "/admin/shops",
+    "/admin/users", "/admin/user-tags", "/admin/user-groups", "/admin/sign-in",
+    "/admin/points-mall", "/admin/points-rules", "/admin/membership",
+    "/admin/commission", "/admin/invites", "/admin/payment-accounts",
+    "/admin/analytics", "/admin/config", "/admin/banners", "/admin/home-decoration",
+    "/admin/guide",
+  ].sort((a, b) => b.length - a.length);
+  for (const c of candidates) {
+    if (pathname === c || pathname.startsWith(c + "/")) return c;
+  }
+  return "/admin";
+}
+
+function RoleSwitcher({ value, compact }: { value: AppRole; compact?: boolean }) {
+  return (
+    <Select value={value} onValueChange={(v) => setRole(v as AppRole)}>
+      <SelectTrigger className={compact ? "h-8 w-32 text-xs" : "h-8 text-xs"}>
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="super">{ROLE_LABEL.super}</SelectItem>
+        <SelectItem value="orders">{ROLE_LABEL.orders}</SelectItem>
+        <SelectItem value="shipping">{ROLE_LABEL.shipping}</SelectItem>
+        <SelectItem value="user">{ROLE_LABEL.user}（无后台权限）</SelectItem>
+      </SelectContent>
+    </Select>
+  );
+}
+
+function NoAccess({ role }: { role: AppRole }) {
+  return (
+    <div className="mx-auto max-w-md rounded-lg border border-dashed border-border bg-background p-8 text-center">
+      <Badge variant="destructive" className="mb-3">无权限</Badge>
+      <div className="text-sm font-medium">当前角色：{ROLE_LABEL[role]}</div>
+      <div className="mt-1 text-xs text-muted-foreground">
+        该菜单仅对具备相应权限的管理员开放。请在左上角切换角色，或联系总管理员分配权限。
+      </div>
+      <div className="mt-4">
+        <Link to="/admin" className="text-xs text-primary underline">回到概览</Link>
       </div>
     </div>
   );

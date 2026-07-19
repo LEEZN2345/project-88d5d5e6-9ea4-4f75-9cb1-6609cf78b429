@@ -4,6 +4,8 @@ import { PRODUCTS, SHOPS, formatKRW, formatCNY, REFERENCE_RATE } from "@/lib/moc
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, type ReactNode } from "react";
+import { cart } from "@/lib/cart-store";
+import { toast } from "sonner";
 import {
   Store,
   Calendar,
@@ -442,14 +444,26 @@ function ProductDetail() {
       )}
 
       <div className="fixed bottom-16 left-1/2 z-50 w-full max-w-[480px] -translate-x-1/2 border-t border-border bg-background/95 px-4 py-2 backdrop-blur">
-        <Button
-          className="h-11 w-full text-sm font-semibold"
-          onClick={() => setShowPurchaseOptions((v) => !v)}
-        >
-          {minOrderQty === 2 && tierKey === "bulk"
-            ? `2件起拍 ${formatCNY(totalCNY)}`
-            : `立即下单 ${formatCNY(totalCNY)}`}
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            className="h-11 flex-1 text-sm font-semibold"
+            onClick={() => {
+              cart.add({ productId: p.id, color, size, qty: Math.max(1, tier.qty) });
+              toast.success("已加入购物车");
+            }}
+          >
+            加入购物车
+          </Button>
+          <Button
+            className="h-11 flex-1 text-sm font-semibold"
+            onClick={() => setShowPurchaseOptions((v) => !v)}
+          >
+            {minOrderQty === 2 && tierKey === "bulk"
+              ? `2件起拍 ${formatCNY(totalCNY)}`
+              : `立即下单 ${formatCNY(totalCNY)}`}
+          </Button>
+        </div>
         <div className="mt-1 text-center text-[10px] text-muted-foreground">
           {tierKey === "group"
             ? "若拼团失败，系统将自动全额退款"

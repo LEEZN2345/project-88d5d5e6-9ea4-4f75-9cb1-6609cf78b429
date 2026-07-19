@@ -621,7 +621,9 @@ export type ExchangeStatus =
   | "cn_received" // 集运仓已签收
   | "forwarded_kr" // 已转寄韩国
   | "kr_received" // 韩国档口已签收
-  | "sourcing" // 档口配货中
+  | "shop_exchanging" // 档口交换中（韩国档口正在处理不良交换）
+  | "awaiting_return_fee" // 待买家补运费
+  | "return_fee_paid" // 运费已收 · 待发货
   | "reshipped" // 已重新发出给买家
   | "completed" // 已完成
   | "rejected"; // 已驳回
@@ -632,7 +634,9 @@ export const EXCHANGE_STATUS_LABEL: Record<ExchangeStatus, string> = {
   cn_received: "集运仓已签收",
   forwarded_kr: "转寄韩国中",
   kr_received: "韩国已签收",
-  sourcing: "档口配货中",
+  shop_exchanging: "档口交换中",
+  awaiting_return_fee: "待补运费",
+  return_fee_paid: "运费已收 · 待发货",
   reshipped: "已重新发出",
   completed: "已完成",
   rejected: "已驳回",
@@ -678,6 +682,12 @@ export type ExchangeRequest = {
   photos?: string[]; // 买手上传的凭证
   csUser?: string;
   rejectReason?: string;
+  // 补运费（重新发出前平台向买家收取的国际运费）
+  returnFee?: {
+    amountCNY: number;
+    requestedAt?: string; // 平台发起补运费的时间
+    paidAt?: string;      // 买家支付时间
+  };
 };
 
 export const EXCHANGES: ExchangeRequest[] = [
@@ -751,6 +761,50 @@ export const EXCHANGES: ExchangeRequest[] = [
     },
     cnToKr: { batchNo: "KR-BATCH-20260622", shippedAt: "2026-06-22", receivedAt: "2026-06-25" },
     krToBuyer: { carrier: "极兔跨境", trackingNo: "JT88112****", shippedAt: "2026-06-30" },
+  },
+  {
+    id: "EX20260620004",
+    orderId: "DD20251112009",
+    createdAt: "2026-06-20 11:30",
+    status: "awaiting_return_fee",
+    reason: "defect",
+    note: "拉链损坏，档口已交换新品，等买家补运费。",
+    item: {
+      productId: "p5",
+      productName: "宽松直筒牛仔裤",
+      image: "https://picsum.photos/seed/denim/300/300",
+      fromColor: "蓝色",
+      fromSize: "M",
+      toColor: "蓝色",
+      toSize: "M",
+      qty: 1,
+    },
+    csUser: "客服-阿珍",
+    buyerToCn: { carrier: "顺丰", trackingNo: "SF9911****", shippedAt: "2026-06-21", receivedAt: "2026-06-23" },
+    cnToKr: { batchNo: "KR-BATCH-20260624", shippedAt: "2026-06-24", receivedAt: "2026-06-27" },
+    returnFee: { amountCNY: 45, requestedAt: "2026-07-01 10:00" },
+  },
+  {
+    id: "EX20260622005",
+    orderId: "DD20251113010",
+    createdAt: "2026-06-22 09:10",
+    status: "return_fee_paid",
+    reason: "wrong_item",
+    note: "档口发错款，已交换正确款，等待发货。",
+    item: {
+      productId: "p6",
+      productName: "V 领针织衫",
+      image: "https://picsum.photos/seed/knit/300/300",
+      fromColor: "杏色",
+      fromSize: "FREE",
+      toColor: "黑色",
+      toSize: "FREE",
+      qty: 1,
+    },
+    csUser: "客服-小南",
+    buyerToCn: { carrier: "圆通", trackingNo: "YT88221****", shippedAt: "2026-06-23", receivedAt: "2026-06-25" },
+    cnToKr: { batchNo: "KR-BATCH-20260626", shippedAt: "2026-06-26", receivedAt: "2026-06-29" },
+    returnFee: { amountCNY: 38, requestedAt: "2026-07-02 09:00", paidAt: "2026-07-02 14:30" },
   },
   {
     id: "EX20260610008",

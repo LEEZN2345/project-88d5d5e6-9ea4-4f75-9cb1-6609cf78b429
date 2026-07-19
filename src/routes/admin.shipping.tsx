@@ -7,7 +7,11 @@ import {
   type ShipStatus,
   type ShipSource,
   formatKRW,
+  EXCHANGES,
+  EXCHANGE_STATUS_LABEL,
+  EXCHANGE_REASON_LABEL,
 } from "@/lib/mock-data";
+import { Link } from "@tanstack/react-router";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -37,6 +41,7 @@ import {
   Upload,
   Download,
   FileSpreadsheet,
+  RefreshCcw,
 } from "lucide-react";
 
 export const Route = createFileRoute("/admin/shipping")({
@@ -113,7 +118,8 @@ const NODE_ENUM = ["韩国仓入库", "打包出库", "起运", "到港清关", 
 const CARRIERS = ["顺丰速运", "圆通速递", "中通快递", "韵达快递", "京东物流", "EMS", "通关社A", "通关社B"];
 
 function AdminShipping() {
-  const [tab, setTab] = useState<"queue" | "import">("queue");
+  const [tab, setTab] = useState<"queue" | "import" | "exchange">("queue");
+  const [exTab, setExTab] = useState<"pending" | "shipped">("pending");
   const [rows, setRows] = useState<ShipRow[]>(() => buildRows());
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [srcFilter, setSrcFilter] = useState<ShipSource | "all">("all");
@@ -200,6 +206,12 @@ function AdminShipping() {
             className={`rounded-full px-3 py-1 ${tab === "queue" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
           >
             <Truck className="mr-1 inline h-3.5 w-3.5" /> 发货队列
+          </button>
+          <button
+            onClick={() => setTab("exchange")}
+            className={`rounded-full px-3 py-1 ${tab === "exchange" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+          >
+            <RefreshCcw className="mr-1 inline h-3.5 w-3.5" /> 不良交换
           </button>
           <button
             onClick={() => setTab("import")}
@@ -365,6 +377,10 @@ function AdminShipping() {
             </table>
           </Card>
         </>
+      )}
+
+      {tab === "exchange" && (
+        <ExchangePane exTab={exTab} setExTab={setExTab} />
       )}
 
       {tab === "import" && (
@@ -568,5 +584,113 @@ function Stat({
       <div className="text-[11px] text-muted-foreground">{label}</div>
       <div className={`mt-1 text-xl font-semibold ${toneClass}`}>{value}</div>
     </Card>
+  );
+}
+
+function ExchangePane({
+  exTab,
+  setExTab,
+}: {
+  exTab: "pending" | "shipped";
+  setExTab: (v: "pending" | "shipped") => void;
+}) {
+  const pending = EXCHANGES.filter((e) => e.status === "return_fee_paid");
+  const shipped = EXCHANGES.filter((e) => e.status === "reshipped" || e.status === "completed");
+  const list = exTab === "pending" ? pending : shipped;
+  return (
+    <>
+      <div className="mb-3 flex flex-wrap items-center gap-2 text-xs">
+        <span className="text-muted-foreground">不良交换发货：</span>
+        <button
+          onClick={() => setExTab("pending")}
+          className={`rounded-full px-2.5 py-1 ${exTab === "pending" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+        >
+          待发货 <span className="ml-1 opacity-70">{pending.length}</span>
+        </button>
+        <button
+          onClick={() => setExTab("shipped")}
+          className={`rounded-full px-2.5 py-1 ${exTab === "shipped" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+        >
+          已发货 <span className="ml-1 opacity-70">{shipped.length}</span>
+        </button>
+        <span className="ml-2 text-[11px] text-muted-foreground">
+          仅显示已收到买家「补运费」的不良交换工单。
+        </span>
+      </div>
+
+      <Card className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead className="bg-muted/50 text-xs text-muted-foreground">
+            <tr>
+              <Th>工单号</Th>
+              <Th>关联订单</Th>
+              <Th>商品</Th>
+              <Th>换货明细</Th>
+              <Th>原因</Th>
+              <Th>补运费</Th>
+              <Th>状态</Th>
+              <Th>操作</Th>
+            </tr>
+          </thead>
+          <tbody>
+            {list.map((e) => (
+              <tr key={e.id} className="border-t border-border align-top">
+                <Td className="font-mono text-xs">{e.id}</Td>
+                <Td className="font-mono text-xs">{e.orderId}</Td>
+                <Td>
+                  <div className="flex items-center gap-2">
+                    <img src={e.item.image} alt="" className="h-10 w-10 rounded object-cover" />
+                    <div className="max-w-[160px] truncate text-xs">{e.item.productName}</div>
+                  </div>
+                </Td>
+                <Td className="text-xs">
+                  <div className="text-muted-foreground line-through">
+                    {e.item.fromColor} / {e.item.fromSize}
+                  </div>
+                  <div className="font-medium">
+                    {e.item.toColor} / {e.item.toSize} ×{e.item.qty}
+                  </div>
+                </Td>
+                <Td className="text-xs">{EXCHANGE_REASON_LABEL[e.reason]}</Td>
+                <Td className="text-xs">
+                  ¥{(e.returnFee?.amountCNY ?? 45).toFixed(2)}
+                  <div className="text-[10px] text-emerald-600">已收</div>
+                </Td>
+                <Td>
+                  <Badge variant={exTab === "pending" ? "destructive" : "secondary"}>
+                    {EXCHANGE_STATUS_LABEL[e.status]}
+                  </Badge>
+                </Td>
+                <Td>
+                  <div className="flex gap-1">
+                    <Link to="/admin/exchanges/$id" params={{ id: e.id }}>
+                      <Button size="sm" variant="outline" className="h-7 text-[11px]">
+                        详情
+                      </Button>
+                    </Link>
+                    {exTab === "pending" && (
+                      <Button
+                        size="sm"
+                        className="h-7 text-[11px]"
+                        onClick={() => toast.success(`工单 ${e.id} 已发货`)}
+                      >
+                        确认发货
+                      </Button>
+                    )}
+                  </div>
+                </Td>
+              </tr>
+            ))}
+            {list.length === 0 && (
+              <tr>
+                <td colSpan={8} className="px-3 py-8 text-center text-xs text-muted-foreground">
+                  暂无不良交换{exTab === "pending" ? "待发货" : "已发货"}工单
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </Card>
+    </>
   );
 }

@@ -139,12 +139,6 @@ function ApplyExchange() {
       toast.error(`请上传 1-${MAX_PHOTOS} 张实拍照片作为凭证`);
       return;
     }
-      return;
-    }
-    if (photos.length < 1) {
-      toast.error("请至少上传 1 张实拍照片作为凭证");
-      return;
-    }
     toast.success("已提交不良交换申请，客服将在 24 小时内审核");
     navigate({ to: "/exchanges" });
   };
@@ -244,13 +238,18 @@ function ApplyExchange() {
           <div className="mt-1 flex flex-wrap gap-2">
             {photos.map((p, i) => (
               <div
-                key={p}
+                key={p.key}
                 className="relative h-16 w-16 overflow-hidden rounded-md border border-border"
               >
-                <img src={p} alt="" className="h-full w-full object-cover" />
+                <img src={p.url} alt={p.name} className="h-full w-full object-cover" />
                 <button
                   type="button"
-                  onClick={() => setPhotos((ps) => ps.filter((_, j) => j !== i))}
+                  onClick={() =>
+                    setPhotos((ps) => {
+                      URL.revokeObjectURL(ps[i]!.url);
+                      return ps.filter((_, j) => j !== i);
+                    })
+                  }
                   className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-bl-md bg-black/60 text-white"
                   aria-label="删除"
                 >

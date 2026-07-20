@@ -67,8 +67,7 @@ function AdminHome() {
           <div className="grid grid-cols-2 gap-2 text-sm">
             <Link to="/admin/orders" className="rounded-md border border-border p-3 hover:bg-accent">订单管理</Link>
             <Link to="/admin/shipping" className="rounded-md border border-border p-3 hover:bg-accent">发货管理</Link>
-            <Link to="/admin/refunds" className="rounded-md border border-border p-3 hover:bg-accent">退款工单</Link>
-            <Link to="/admin/exchanges" className="rounded-md border border-border p-3 hover:bg-accent">售后换货</Link>
+            <Link to="/admin/after-sales" className="rounded-md border border-border p-3 hover:bg-accent">售后管理</Link>
             <Link to="/admin/products" className="rounded-md border border-border p-3 hover:bg-accent">商品/档口录入</Link>
             <Link to="/admin/home-decoration" className="rounded-md border border-border p-3 hover:bg-accent">🎨 首页装修</Link>
             <Link to="/admin/analytics" className="rounded-md border border-border p-3 hover:bg-accent"><BarChart3 className="mr-1 inline h-3 w-3" />运营看板</Link>

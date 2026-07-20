@@ -48,7 +48,6 @@ import { Route as AdminStaffRouteImport } from './routes/admin.staff'
 import { Route as AdminSignInRouteImport } from './routes/admin.sign-in'
 import { Route as AdminShopsRouteImport } from './routes/admin.shops'
 import { Route as AdminShippingRouteImport } from './routes/admin.shipping'
-import { Route as AdminRefundsRouteImport } from './routes/admin.refunds'
 import { Route as AdminProductsRouteImport } from './routes/admin.products'
 import { Route as AdminPointsRulesRouteImport } from './routes/admin.points-rules'
 import { Route as AdminPointsMallRouteImport } from './routes/admin.points-mall'
@@ -60,7 +59,6 @@ import { Route as AdminHomeDecorationRouteImport } from './routes/admin.home-dec
 import { Route as AdminGuideRouteImport } from './routes/admin.guide'
 import { Route as AdminGroupsRouteImport } from './routes/admin.groups'
 import { Route as AdminFeedbackRouteImport } from './routes/admin.feedback'
-import { Route as AdminExchangesRouteImport } from './routes/admin.exchanges'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
 import { Route as AdminCommissionRouteImport } from './routes/admin.commission'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
@@ -274,11 +272,6 @@ const AdminShippingRoute = AdminShippingRouteImport.update({
   path: '/admin/shipping',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminRefundsRoute = AdminRefundsRouteImport.update({
-  id: '/admin/refunds',
-  path: '/admin/refunds',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminProductsRoute = AdminProductsRouteImport.update({
   id: '/admin/products',
   path: '/admin/products',
@@ -334,11 +327,6 @@ const AdminFeedbackRoute = AdminFeedbackRouteImport.update({
   path: '/admin/feedback',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminExchangesRoute = AdminExchangesRouteImport.update({
-  id: '/admin/exchanges',
-  path: '/admin/exchanges',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminConfigRoute = AdminConfigRouteImport.update({
   id: '/admin/config',
   path: '/admin/config',
@@ -380,9 +368,9 @@ const AdminShopsIdRoute = AdminShopsIdRouteImport.update({
   getParentRoute: () => AdminShopsRoute,
 } as any)
 const AdminRefundsIdRoute = AdminRefundsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => AdminRefundsRoute,
+  id: '/admin/refunds/$id',
+  path: '/admin/refunds/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminProductsIdRoute = AdminProductsIdRouteImport.update({
   id: '/$id',
@@ -405,9 +393,9 @@ const AdminFeedbackIdRoute = AdminFeedbackIdRouteImport.update({
   getParentRoute: () => AdminFeedbackRoute,
 } as any)
 const AdminExchangesIdRoute = AdminExchangesIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => AdminExchangesRoute,
+  id: '/admin/exchanges/$id',
+  path: '/admin/exchanges/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminBannersNewRoute = AdminBannersNewRouteImport.update({
   id: '/new',
@@ -451,7 +439,6 @@ export interface FileRoutesByFullPath {
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/commission': typeof AdminCommissionRoute
   '/admin/config': typeof AdminConfigRoute
-  '/admin/exchanges': typeof AdminExchangesRouteWithChildren
   '/admin/feedback': typeof AdminFeedbackRouteWithChildren
   '/admin/groups': typeof AdminGroupsRoute
   '/admin/guide': typeof AdminGuideRoute
@@ -463,7 +450,6 @@ export interface FileRoutesByFullPath {
   '/admin/points-mall': typeof AdminPointsMallRoute
   '/admin/points-rules': typeof AdminPointsRulesRoute
   '/admin/products': typeof AdminProductsRouteWithChildren
-  '/admin/refunds': typeof AdminRefundsRouteWithChildren
   '/admin/shipping': typeof AdminShippingRoute
   '/admin/shops': typeof AdminShopsRouteWithChildren
   '/admin/sign-in': typeof AdminSignInRoute
@@ -522,7 +508,6 @@ export interface FileRoutesByTo {
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/commission': typeof AdminCommissionRoute
   '/admin/config': typeof AdminConfigRoute
-  '/admin/exchanges': typeof AdminExchangesRouteWithChildren
   '/admin/feedback': typeof AdminFeedbackRouteWithChildren
   '/admin/groups': typeof AdminGroupsRoute
   '/admin/guide': typeof AdminGuideRoute
@@ -534,7 +519,6 @@ export interface FileRoutesByTo {
   '/admin/points-mall': typeof AdminPointsMallRoute
   '/admin/points-rules': typeof AdminPointsRulesRoute
   '/admin/products': typeof AdminProductsRouteWithChildren
-  '/admin/refunds': typeof AdminRefundsRouteWithChildren
   '/admin/shipping': typeof AdminShippingRoute
   '/admin/shops': typeof AdminShopsRouteWithChildren
   '/admin/sign-in': typeof AdminSignInRoute
@@ -594,7 +578,6 @@ export interface FileRoutesById {
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/commission': typeof AdminCommissionRoute
   '/admin/config': typeof AdminConfigRoute
-  '/admin/exchanges': typeof AdminExchangesRouteWithChildren
   '/admin/feedback': typeof AdminFeedbackRouteWithChildren
   '/admin/groups': typeof AdminGroupsRoute
   '/admin/guide': typeof AdminGuideRoute
@@ -606,7 +589,6 @@ export interface FileRoutesById {
   '/admin/points-mall': typeof AdminPointsMallRoute
   '/admin/points-rules': typeof AdminPointsRulesRoute
   '/admin/products': typeof AdminProductsRouteWithChildren
-  '/admin/refunds': typeof AdminRefundsRouteWithChildren
   '/admin/shipping': typeof AdminShippingRoute
   '/admin/shops': typeof AdminShopsRouteWithChildren
   '/admin/sign-in': typeof AdminSignInRoute
@@ -667,7 +649,6 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/commission'
     | '/admin/config'
-    | '/admin/exchanges'
     | '/admin/feedback'
     | '/admin/groups'
     | '/admin/guide'
@@ -679,7 +660,6 @@ export interface FileRouteTypes {
     | '/admin/points-mall'
     | '/admin/points-rules'
     | '/admin/products'
-    | '/admin/refunds'
     | '/admin/shipping'
     | '/admin/shops'
     | '/admin/sign-in'
@@ -738,7 +718,6 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/commission'
     | '/admin/config'
-    | '/admin/exchanges'
     | '/admin/feedback'
     | '/admin/groups'
     | '/admin/guide'
@@ -750,7 +729,6 @@ export interface FileRouteTypes {
     | '/admin/points-mall'
     | '/admin/points-rules'
     | '/admin/products'
-    | '/admin/refunds'
     | '/admin/shipping'
     | '/admin/shops'
     | '/admin/sign-in'
@@ -809,7 +787,6 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/commission'
     | '/admin/config'
-    | '/admin/exchanges'
     | '/admin/feedback'
     | '/admin/groups'
     | '/admin/guide'
@@ -821,7 +798,6 @@ export interface FileRouteTypes {
     | '/admin/points-mall'
     | '/admin/points-rules'
     | '/admin/products'
-    | '/admin/refunds'
     | '/admin/shipping'
     | '/admin/shops'
     | '/admin/sign-in'
@@ -881,7 +857,6 @@ export interface RootRouteChildren {
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminCommissionRoute: typeof AdminCommissionRoute
   AdminConfigRoute: typeof AdminConfigRoute
-  AdminExchangesRoute: typeof AdminExchangesRouteWithChildren
   AdminFeedbackRoute: typeof AdminFeedbackRouteWithChildren
   AdminGroupsRoute: typeof AdminGroupsRoute
   AdminGuideRoute: typeof AdminGuideRoute
@@ -893,7 +868,6 @@ export interface RootRouteChildren {
   AdminPointsMallRoute: typeof AdminPointsMallRoute
   AdminPointsRulesRoute: typeof AdminPointsRulesRoute
   AdminProductsRoute: typeof AdminProductsRouteWithChildren
-  AdminRefundsRoute: typeof AdminRefundsRouteWithChildren
   AdminShippingRoute: typeof AdminShippingRoute
   AdminShopsRoute: typeof AdminShopsRouteWithChildren
   AdminSignInRoute: typeof AdminSignInRoute
@@ -912,6 +886,8 @@ export interface RootRouteChildren {
   ExchangesIndexRoute: typeof ExchangesIndexRoute
   OrdersIndexRoute: typeof OrdersIndexRoute
   ShopsIndexRoute: typeof ShopsIndexRoute
+  AdminExchangesIdRoute: typeof AdminExchangesIdRoute
+  AdminRefundsIdRoute: typeof AdminRefundsIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1189,13 +1165,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminShippingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/refunds': {
-      id: '/admin/refunds'
-      path: '/admin/refunds'
-      fullPath: '/admin/refunds'
-      preLoaderRoute: typeof AdminRefundsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/products': {
       id: '/admin/products'
       path: '/admin/products'
@@ -1273,13 +1242,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminFeedbackRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/exchanges': {
-      id: '/admin/exchanges'
-      path: '/admin/exchanges'
-      fullPath: '/admin/exchanges'
-      preLoaderRoute: typeof AdminExchangesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/config': {
       id: '/admin/config'
       path: '/admin/config'
@@ -1338,10 +1300,10 @@ declare module '@tanstack/react-router' {
     }
     '/admin/refunds/$id': {
       id: '/admin/refunds/$id'
-      path: '/$id'
+      path: '/admin/refunds/$id'
       fullPath: '/admin/refunds/$id'
       preLoaderRoute: typeof AdminRefundsIdRouteImport
-      parentRoute: typeof AdminRefundsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/products/$id': {
       id: '/admin/products/$id'
@@ -1373,10 +1335,10 @@ declare module '@tanstack/react-router' {
     }
     '/admin/exchanges/$id': {
       id: '/admin/exchanges/$id'
-      path: '/$id'
+      path: '/admin/exchanges/$id'
       fullPath: '/admin/exchanges/$id'
       preLoaderRoute: typeof AdminExchangesIdRouteImport
-      parentRoute: typeof AdminExchangesRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/banners/new': {
       id: '/admin/banners/new'
@@ -1427,18 +1389,6 @@ const AdminBannersRouteWithChildren = AdminBannersRoute._addFileChildren(
   AdminBannersRouteChildren,
 )
 
-interface AdminExchangesRouteChildren {
-  AdminExchangesIdRoute: typeof AdminExchangesIdRoute
-}
-
-const AdminExchangesRouteChildren: AdminExchangesRouteChildren = {
-  AdminExchangesIdRoute: AdminExchangesIdRoute,
-}
-
-const AdminExchangesRouteWithChildren = AdminExchangesRoute._addFileChildren(
-  AdminExchangesRouteChildren,
-)
-
 interface AdminFeedbackRouteChildren {
   AdminFeedbackIdRoute: typeof AdminFeedbackIdRoute
 }
@@ -1484,18 +1434,6 @@ const AdminProductsRouteChildren: AdminProductsRouteChildren = {
 
 const AdminProductsRouteWithChildren = AdminProductsRoute._addFileChildren(
   AdminProductsRouteChildren,
-)
-
-interface AdminRefundsRouteChildren {
-  AdminRefundsIdRoute: typeof AdminRefundsIdRoute
-}
-
-const AdminRefundsRouteChildren: AdminRefundsRouteChildren = {
-  AdminRefundsIdRoute: AdminRefundsIdRoute,
-}
-
-const AdminRefundsRouteWithChildren = AdminRefundsRoute._addFileChildren(
-  AdminRefundsRouteChildren,
 )
 
 interface AdminShopsRouteChildren {
@@ -1572,7 +1510,6 @@ const rootRouteChildren: RootRouteChildren = {
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminCommissionRoute: AdminCommissionRoute,
   AdminConfigRoute: AdminConfigRoute,
-  AdminExchangesRoute: AdminExchangesRouteWithChildren,
   AdminFeedbackRoute: AdminFeedbackRouteWithChildren,
   AdminGroupsRoute: AdminGroupsRoute,
   AdminGuideRoute: AdminGuideRoute,
@@ -1584,7 +1521,6 @@ const rootRouteChildren: RootRouteChildren = {
   AdminPointsMallRoute: AdminPointsMallRoute,
   AdminPointsRulesRoute: AdminPointsRulesRoute,
   AdminProductsRoute: AdminProductsRouteWithChildren,
-  AdminRefundsRoute: AdminRefundsRouteWithChildren,
   AdminShippingRoute: AdminShippingRoute,
   AdminShopsRoute: AdminShopsRouteWithChildren,
   AdminSignInRoute: AdminSignInRoute,
@@ -1603,6 +1539,8 @@ const rootRouteChildren: RootRouteChildren = {
   ExchangesIndexRoute: ExchangesIndexRoute,
   OrdersIndexRoute: OrdersIndexRoute,
   ShopsIndexRoute: ShopsIndexRoute,
+  AdminExchangesIdRoute: AdminExchangesIdRoute,
+  AdminRefundsIdRoute: AdminRefundsIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

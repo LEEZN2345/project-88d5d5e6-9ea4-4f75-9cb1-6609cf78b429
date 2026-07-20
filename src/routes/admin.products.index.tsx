@@ -15,7 +15,7 @@ import { Plus, Upload, ImagePlus, Download, ChevronDown } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/admin/products")({
+export const Route = createFileRoute("/admin/products/")({
   head: () => ({ meta: [{ title: "商品管理 · 运营后台" }] }),
   component: AdminProducts,
 });

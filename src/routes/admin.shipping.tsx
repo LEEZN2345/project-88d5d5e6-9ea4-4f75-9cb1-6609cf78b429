@@ -34,7 +34,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { useMemo, useState } from "react";
+import { useMemo, useState, Fragment } from "react";
 import {
   PackageCheck,
   Truck,
@@ -42,6 +42,8 @@ import {
   Download,
   FileSpreadsheet,
   RefreshCcw,
+  ChevronRight,
+  ChevronDown,
 } from "lucide-react";
 
 export const Route = createFileRoute("/admin/shipping")({
@@ -128,6 +130,9 @@ function AdminShipping() {
   const [formTracking, setFormTracking] = useState("");
   const [formCarrier, setFormCarrier] = useState("");
   const [formErr, setFormErr] = useState<{ t?: string; c?: string }>({});
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const toggleExpand = (id: string) =>
+    setExpanded((e) => ({ ...e, [id]: !e[id] }));
 
   const openConfirm = (r: ShipRow) => {
     setConfirmRow(r);
@@ -171,13 +176,33 @@ function AdminShipping() {
     [rows, srcFilter, stFilter],
   );
 
-  const allChecked = filtered.length > 0 && filtered.every((r) => checked[r.key]);
+  // 同一订单号合并成一组
+  const groups = useMemo(() => {
+    const m = new Map<string, ShipRow[]>();
+    filtered.forEach((r) => {
+      const arr = m.get(r.orderId) ?? [];
+      arr.push(r);
+      m.set(r.orderId, arr);
+    });
+    return Array.from(m.entries()).map(([orderId, items]) => ({ orderId, items }));
+  }, [filtered]);
+
+  const allChecked =
+    filtered.length > 0 && filtered.every((r) => checked[r.key]);
   const someChecked = filtered.some((r) => checked[r.key]);
   const toggleAll = () => {
     const next = { ...checked };
     const set = !allChecked;
     filtered.forEach((r) => (next[r.key] = set));
     setChecked(next);
+  };
+  const toggleGroup = (items: ShipRow[]) => {
+    const allOn = items.every((r) => checked[r.key]);
+    setChecked((c) => {
+      const next = { ...c };
+      items.forEach((r) => (next[r.key] = !allOn));
+      return next;
+    });
   };
 
   const bulkAdvance = (to: ShipStatus) => {
@@ -271,12 +296,12 @@ function AdminShipping() {
                   <th className="w-10 px-3 py-2">
                     <Checkbox checked={allChecked} onCheckedChange={toggleAll} />
                   </th>
+                  <th className="w-8 px-2 py-2"></th>
                   <Th>订单号</Th>
                   <Th>会员 / 收货</Th>
-                  <Th>档口</Th>
-                  <Th>商品</Th>
-                  <Th>颜色 / 尺寸</Th>
-                  <Th>数量</Th>
+                  <Th>档口数</Th>
+                  <Th>商品 SKU</Th>
+                  <Th>总件数</Th>
                   <Th>发货来源</Th>
                   <Th>运单号 / 物流</Th>
                   <Th>操作</Th>
@@ -284,89 +309,268 @@ function AdminShipping() {
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((r) => (
-                  <tr key={r.key} className="border-t border-border">
-                    <td className="px-3 py-2">
-                      <Checkbox
-                        checked={!!checked[r.key]}
-                        onCheckedChange={(v) => setChecked((c) => ({ ...c, [r.key]: !!v }))}
-                      />
-                    </td>
-                    <Td className="font-mono text-xs">{r.orderId}</Td>
-                    <Td className="text-xs">
-                      <div className="font-medium text-foreground">{r.buyer}</div>
-                      <div className="text-muted-foreground">{r.phone}</div>
-                      <div className="max-w-[220px] truncate text-muted-foreground" title={r.address}>
-                        {r.address}
-                      </div>
-                    </Td>
-                    <Td className="text-xs">
-                      <div>{r.shopName}</div>
-                      <div className="text-muted-foreground">{r.shopLoc}</div>
-                    </Td>
-                    <Td>
-                      <div className="flex items-center gap-2">
-                        <img src={r.image} alt="" className="h-10 w-10 rounded object-cover" />
-                        <div className="text-xs">
-                          <div>{r.productName}</div>
-                          <div className="font-mono text-[10px] text-muted-foreground">{r.internalCode}</div>
-                          <div className="text-muted-foreground">{formatKRW(r.priceKRW)}</div>
-                        </div>
-                      </div>
-                    </Td>
-                    <Td className="text-xs">
-                      <div>{r.color}</div>
-                      <div className="text-muted-foreground">{r.size}</div>
-                    </Td>
-                    <Td>× {r.qty}</Td>
-                    <Td>
-                      {r.source === "stock" ? (
-                        <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/15 px-1.5 py-0.5 text-[11px] text-emerald-700 dark:text-emerald-300">
-                          <PackageCheck className="h-3 w-3" /> 现货库出库
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 rounded-md bg-sky-500/15 px-1.5 py-0.5 text-[11px] text-sky-700 dark:text-sky-300">
-                          <Truck className="h-3 w-3" /> 新订单代订
-                        </span>
-                      )}
-                    </Td>
-                    <Td className="text-xs">
-                      <Input
-                        value={r.trackingNo ?? ""}
-                        onChange={(e) =>
-                          setRows((rs) =>
-                            rs.map((x) =>
-                              x.key === r.key ? { ...x, trackingNo: e.target.value } : x,
-                            ),
-                          )
-                        }
-                        placeholder="待回填"
-                        className="h-7 w-36 font-mono text-[11px]"
-                      />
-                    </Td>
-                    <Td>
-                      <div className="flex flex-col gap-1">
-                        {r.status !== "shipped" ? (
-                          <Button
-                            size="sm"
-                            className="h-7 text-[11px]"
-                            onClick={() => openConfirm(r)}
+                {groups.map(({ orderId, items }) => {
+                  const first = items[0]!;
+                  const totalQty = items.reduce((s, r) => s + r.qty, 0);
+                  const shopCount = new Set(items.map((r) => r.shopName)).size;
+                  const shippedN = items.filter((r) => r.status === "shipped").length;
+                  const groupStatus: "shipped" | "partial" | "pending" =
+                    shippedN === items.length
+                      ? "shipped"
+                      : shippedN > 0
+                        ? "partial"
+                        : "pending";
+                  const stockN = items.filter((r) => r.source === "stock").length;
+                  const newN = items.length - stockN;
+                  const trackings = Array.from(
+                    new Set(items.map((r) => r.trackingNo).filter(Boolean)),
+                  ) as string[];
+                  const groupAllOn = items.every((r) => checked[r.key]);
+                  const groupSomeOn = items.some((r) => checked[r.key]);
+                  const open = !!expanded[orderId];
+                  const pendingItems = items.filter((r) => r.status !== "shipped");
+                  return (
+                    <Fragment key={orderId}>
+                      <tr className="border-t border-border">
+                        <td className="px-3 py-2">
+                          <Checkbox
+                            checked={
+                              groupAllOn
+                                ? true
+                                : groupSomeOn
+                                  ? "indeterminate"
+                                  : false
+                            }
+                            onCheckedChange={() => toggleGroup(items)}
+                          />
+                        </td>
+                        <td className="px-2 py-2">
+                          <button
+                            onClick={() => toggleExpand(orderId)}
+                            className="inline-flex h-6 w-6 items-center justify-center rounded hover:bg-muted"
+                            aria-label={open ? "收起" : "展开明细"}
                           >
-                            确认发货
-                          </Button>
-                        ) : (
-                          <span className="text-[10px] text-muted-foreground">已完成</span>
-                        )}
-                      </div>
-                    </Td>
-                    <Td>
-                      <Badge variant={r.status === "shipped" ? "default" : "secondary"}>
-                        {r.status === "shipped" ? "已发货" : "未发货"}
-                      </Badge>
-                    </Td>
-                  </tr>
-                ))}
-                {filtered.length === 0 && (
+                            {open ? (
+                              <ChevronDown className="h-4 w-4" />
+                            ) : (
+                              <ChevronRight className="h-4 w-4" />
+                            )}
+                          </button>
+                        </td>
+                        <Td className="font-mono text-xs">
+                          <button
+                            onClick={() => toggleExpand(orderId)}
+                            className="text-primary hover:underline"
+                          >
+                            {orderId}
+                          </button>
+                          <div className="text-[10px] text-muted-foreground">
+                            共 {items.length} SKU
+                          </div>
+                        </Td>
+                        <Td className="text-xs">
+                          <div className="font-medium text-foreground">{first.buyer}</div>
+                          <div className="text-muted-foreground">{first.phone}</div>
+                          <div
+                            className="max-w-[220px] truncate text-muted-foreground"
+                            title={first.address}
+                          >
+                            {first.address}
+                          </div>
+                        </Td>
+                        <Td className="text-xs">
+                          {shopCount === 1 ? (
+                            <>
+                              <div>{first.shopName}</div>
+                              <div className="text-muted-foreground">
+                                {first.shopLoc}
+                              </div>
+                            </>
+                          ) : (
+                            <span className="text-muted-foreground">
+                              {shopCount} 个档口
+                            </span>
+                          )}
+                        </Td>
+                        <Td>
+                          <div className="flex -space-x-2">
+                            {items.slice(0, 4).map((r) => (
+                              <img
+                                key={r.key}
+                                src={r.image}
+                                alt=""
+                                className="h-8 w-8 rounded border-2 border-background object-cover"
+                              />
+                            ))}
+                            {items.length > 4 && (
+                              <span className="flex h-8 w-8 items-center justify-center rounded border-2 border-background bg-muted text-[10px] text-muted-foreground">
+                                +{items.length - 4}
+                              </span>
+                            )}
+                          </div>
+                        </Td>
+                        <Td className="text-xs font-medium">× {totalQty}</Td>
+                        <Td className="text-xs">
+                          <div className="flex flex-col gap-0.5">
+                            {newN > 0 && (
+                              <span className="inline-flex w-fit items-center gap-1 rounded-md bg-sky-500/15 px-1.5 py-0.5 text-[10px] text-sky-700 dark:text-sky-300">
+                                <Truck className="h-3 w-3" /> 新订单 {newN}
+                              </span>
+                            )}
+                            {stockN > 0 && (
+                              <span className="inline-flex w-fit items-center gap-1 rounded-md bg-emerald-500/15 px-1.5 py-0.5 text-[10px] text-emerald-700 dark:text-emerald-300">
+                                <PackageCheck className="h-3 w-3" /> 现货 {stockN}
+                              </span>
+                            )}
+                          </div>
+                        </Td>
+                        <Td className="text-xs">
+                          {trackings.length === 0 ? (
+                            <span className="text-muted-foreground">待回填</span>
+                          ) : trackings.length === 1 ? (
+                            <span className="font-mono text-[11px]">
+                              {trackings[0]}
+                            </span>
+                          ) : (
+                            <span className="text-muted-foreground">
+                              {trackings.length} 个运单
+                            </span>
+                          )}
+                        </Td>
+                        <Td>
+                          <div className="flex gap-1">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-7 text-[11px]"
+                              onClick={() => toggleExpand(orderId)}
+                            >
+                              {open ? "收起" : "展开"}
+                            </Button>
+                            {pendingItems.length > 0 && (
+                              <Button
+                                size="sm"
+                                className="h-7 text-[11px]"
+                                onClick={() => openConfirm(pendingItems[0]!)}
+                              >
+                                确认发货
+                              </Button>
+                            )}
+                          </div>
+                        </Td>
+                        <Td>
+                          <Badge
+                            variant={
+                              groupStatus === "shipped"
+                                ? "default"
+                                : groupStatus === "partial"
+                                  ? "outline"
+                                  : "secondary"
+                            }
+                          >
+                            {groupStatus === "shipped"
+                              ? "已发货"
+                              : groupStatus === "partial"
+                                ? `部分发货 ${shippedN}/${items.length}`
+                                : "未发货"}
+                          </Badge>
+                        </Td>
+                      </tr>
+                      {open && (
+                        <tr className="border-t border-border bg-muted/30">
+                          <td colSpan={11} className="px-4 py-3">
+                            <div className="mb-2 text-[11px] font-medium text-muted-foreground">
+                              订单明细（{items.length} 个 SKU）
+                            </div>
+                            <table className="w-full text-xs">
+                              <thead className="text-muted-foreground">
+                                <tr>
+                                  <th className="px-2 py-1 text-left font-normal">档口</th>
+                                  <th className="px-2 py-1 text-left font-normal">商品</th>
+                                  <th className="px-2 py-1 text-left font-normal">颜色 / 尺寸</th>
+                                  <th className="px-2 py-1 text-left font-normal">数量</th>
+                                  <th className="px-2 py-1 text-left font-normal">来源</th>
+                                  <th className="px-2 py-1 text-left font-normal">运单号 / 物流</th>
+                                  <th className="px-2 py-1 text-left font-normal">操作</th>
+                                  <th className="px-2 py-1 text-left font-normal">状态</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {items.map((r) => (
+                                  <tr key={r.key} className="border-t border-border/60 align-top">
+                                    <td className="px-2 py-1.5">
+                                      <div>{r.shopName}</div>
+                                      <div className="text-[10px] text-muted-foreground">{r.shopLoc}</div>
+                                    </td>
+                                    <td className="px-2 py-1.5">
+                                      <div className="flex items-center gap-2">
+                                        <img src={r.image} alt="" className="h-9 w-9 rounded object-cover" />
+                                        <div>
+                                          <div>{r.productName}</div>
+                                          <div className="font-mono text-[10px] text-muted-foreground">{r.internalCode}</div>
+                                          <div className="text-[10px] text-muted-foreground">{formatKRW(r.priceKRW)}</div>
+                                        </div>
+                                      </div>
+                                    </td>
+                                    <td className="px-2 py-1.5">
+                                      <div>{r.color}</div>
+                                      <div className="text-muted-foreground">{r.size}</div>
+                                    </td>
+                                    <td className="px-2 py-1.5">× {r.qty}</td>
+                                    <td className="px-2 py-1.5">
+                                      {r.source === "stock" ? (
+                                        <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/15 px-1.5 py-0.5 text-[10px] text-emerald-700 dark:text-emerald-300">
+                                          <PackageCheck className="h-3 w-3" /> 现货
+                                        </span>
+                                      ) : (
+                                        <span className="inline-flex items-center gap-1 rounded-md bg-sky-500/15 px-1.5 py-0.5 text-[10px] text-sky-700 dark:text-sky-300">
+                                          <Truck className="h-3 w-3" /> 新订单
+                                        </span>
+                                      )}
+                                    </td>
+                                    <td className="px-2 py-1.5">
+                                      <Input
+                                        value={r.trackingNo ?? ""}
+                                        onChange={(e) =>
+                                          setRows((rs) =>
+                                            rs.map((x) =>
+                                              x.key === r.key ? { ...x, trackingNo: e.target.value } : x,
+                                            ),
+                                          )
+                                        }
+                                        placeholder="待回填"
+                                        className="h-7 w-36 font-mono text-[11px]"
+                                      />
+                                    </td>
+                                    <td className="px-2 py-1.5">
+                                      {r.status !== "shipped" ? (
+                                        <Button
+                                          size="sm"
+                                          className="h-7 text-[11px]"
+                                          onClick={() => openConfirm(r)}
+                                        >
+                                          确认发货
+                                        </Button>
+                                      ) : (
+                                        <span className="text-[10px] text-muted-foreground">已完成</span>
+                                      )}
+                                    </td>
+                                    <td className="px-2 py-1.5">
+                                      <Badge variant={r.status === "shipped" ? "default" : "secondary"}>
+                                        {r.status === "shipped" ? "已发货" : "未发货"}
+                                      </Badge>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      )}
+                    </Fragment>
+                  );
+                })}
+                {groups.length === 0 && (
                   <tr>
                     <td colSpan={11} className="px-3 py-8 text-center text-xs text-muted-foreground">
                       没有符合条件的发货任务

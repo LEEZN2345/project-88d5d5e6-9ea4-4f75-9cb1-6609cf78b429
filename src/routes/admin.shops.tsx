@@ -4,6 +4,7 @@ import { SHOPS, PRODUCTS } from "@/lib/mock-data";
 import type { Shop } from "@/lib/mock-data";
 import { CPW_AS_SHOPS, CPW_SECTION_LABEL } from "@/lib/cpw-as-shops";
 import { APM_AS_SHOPS } from "@/lib/apm-as-shops";
+import { APM_PLACE_AS_SHOPS } from "@/lib/apm-place-shops";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,7 +35,10 @@ function AdminShops() {
     navigate({ to: "/admin/shops", search: { tab: t } });
 
   // 合并演示档口 + 从视频抓取的清平和档口
-  const allShops = useMemo(() => [...SHOPS, ...CPW_AS_SHOPS, ...APM_AS_SHOPS], []);
+  const allShops = useMemo(
+    () => [...SHOPS, ...CPW_AS_SHOPS, ...APM_AS_SHOPS, ...APM_PLACE_AS_SHOPS],
+    []
+  );
 
   const downloadTemplate = () => {
     const headers = ["档口名称(英文)", "档口名称(韩文)", "楼宇", "层数", "档口位置", "档口背景图URL", "起订件数", "标签(多个用/分隔)"];

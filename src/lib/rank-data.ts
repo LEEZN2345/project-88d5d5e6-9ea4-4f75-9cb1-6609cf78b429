@@ -81,6 +81,7 @@ function parseLocation(loc: string): { building: string; floor: string; code: st
 
 import { CPW_SHOPS } from "./chungpyunghwa-shops";
 import { APM_SHOPS } from "./apm-shops";
+import { APM_PLACE_SHOPS } from "./apm-place-shops";
 
 const indexed: IndexedShop[] = [];
 const hotNames = new Set(OFFLINE_HOT.map((s) => s.name));
@@ -108,6 +109,16 @@ for (const s of APM_SHOPS) {
     building: "APM",
     floor: s.floor,
     code: String(s.number),
+  });
+}
+
+// APM Place 2026 新整理档口位置表（1F–8F）
+for (const s of APM_PLACE_SHOPS) {
+  indexed.push({
+    name: s.nameKo ? `${s.name} ${s.nameKo}` : s.name,
+    building: "APM Place",
+    floor: s.floor,
+    code: s.number,
   });
 }
 

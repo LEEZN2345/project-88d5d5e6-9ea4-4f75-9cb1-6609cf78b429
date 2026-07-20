@@ -7,13 +7,22 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { useState } from "react";
+import {
   EXCHANGES,
   EXCHANGE_STATUS_LABEL,
   EXCHANGE_REASON_LABEL,
   EXCHANGE_WAREHOUSE,
   type ExchangeStatus,
 } from "@/lib/mock-data";
-import { ArrowLeft, CheckCircle2, XCircle, Warehouse, Plane, PackageCheck, Send, Wallet } from "lucide-react";
+import { ArrowLeft, CheckCircle2, XCircle, Warehouse, Plane, PackageCheck, Send, Wallet, Info, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/exchanges/$id")({
@@ -39,11 +48,142 @@ function stepIndex(s: ExchangeStatus) {
   return STEPS.findIndex((x) => x.key === s);
 }
 
+// 各状态下管理员应做的动作与注意事项
+const STEP_TIP: Partial<Record<ExchangeStatus, { title: string; desc: string; tone: "info" | "warn" }>> = {
+  applied: { tone: "warn", title: "待审核", desc: "请核对：① 签收 ≤ 7 天；② 属可换货情形；③ 目标 SKU 可复购。必要时驳回并写明原因。" },
+  approved_wait_ship: { tone: "info", title: "等待买手寄回", desc: "已向买手推送集运仓地址。收到快递后请在此录入运单并「确认集运仓已签收」。" },
+  cn_received: { tone: "info", title: "待转寄韩国", desc: "请合并至最近一趟韩国批次并录入批次号。" },
+  forwarded_kr: { tone: "info", title: "运输至韩国途中", desc: "韩国仓库签收后立即更新，避免档口交换延误。" },
+  kr_received: { tone: "info", title: "档口配合中", desc: "确认档口已接货并开始交换。" },
+  shop_exchanging: { tone: "warn", title: "档口交换中", desc: "如需买手补运费，请点击「需要补运费」并填写金额；否则等待完成后直接安排重发。" },
+  awaiting_return_fee: { tone: "warn", title: "等待买手付款", desc: "买手支付到账后系统自动推进到「运费已收 · 待发货」。" },
+  return_fee_paid: { tone: "info", title: "待重新发出", desc: "请录入国际快递单号后点击「重新发出」。" },
+  reshipped: { tone: "info", title: "已重发", desc: "买手签收后请点击「标记完成」结束工单。" },
+};
+
+type ActionKey =
+  | "reject"
+  | "approve"
+  | "cn_receive"
+  | "forward"
+  | "kr_receive"
+  | "shop_exchange"
+  | "request_fee"
+  | "reship"
+  | "complete";
+
+type FieldDef = {
+  key: string;
+  label: string;
+  required?: boolean;
+  type?: "text" | "textarea" | "number";
+  placeholder?: string;
+  hint?: string;
+};
+
+type ActionConfig = {
+  title: string;
+  desc: string;
+  confirmLabel: string;
+  destructive?: boolean;
+  fields: FieldDef[];
+  successToast: (v: Record<string, string>) => string;
+};
+
+const ACTIONS: Record<ActionKey, ActionConfig> = {
+  reject: {
+    title: "驳回换货申请",
+    desc: "驳回后买手将收到通知，工单不可再恢复。请填写清晰的驳回理由，便于买手复申。",
+    confirmLabel: "确认驳回",
+    destructive: true,
+    fields: [
+      { key: "reason", label: "驳回原因（对买手展示）", required: true, type: "textarea", placeholder: "例：已超过 7 天签收售后期限…" },
+    ],
+    successToast: () => "已驳回并通知买手",
+  },
+  approve: {
+    title: "通过并通知寄回",
+    desc: "通过后系统会向买手推送集运仓地址与寄回须知，请确认已核对换货信息。",
+    confirmLabel: "通过并推送地址",
+    fields: [
+      { key: "note", label: "补充说明（可选，将推送给买手）", type: "textarea", placeholder: "例：请随包附上换货单 PDF…" },
+    ],
+    successToast: () => "已通过 · 集运仓地址已推送买手",
+  },
+  cn_receive: {
+    title: "确认集运仓已签收",
+    desc: "请核对到货实物与买手申请一致，并录入国内快递单号与到货重量。",
+    confirmLabel: "确认签收",
+    fields: [
+      { key: "trackingNo", label: "买手寄回单号", required: true, placeholder: "SF12345678" },
+      { key: "weight", label: "到货重量 (g)", required: true, type: "number", placeholder: "如 350" },
+    ],
+    successToast: (v) => `已确认集运仓签收 · ${v.trackingNo}`,
+  },
+  forward: {
+    title: "并入韩国转寄批次",
+    desc: "将该件并入最近一趟韩国批次，确认后无法回退。",
+    confirmLabel: "并入批次",
+    fields: [
+      { key: "batchNo", label: "批次号", required: true, placeholder: "KRB2025W02" },
+      { key: "shippedAt", label: "预计寄出时间", required: true, placeholder: "2025-01-08 18:00" },
+    ],
+    successToast: (v) => `已并入批次 ${v.batchNo}`,
+  },
+  kr_receive: {
+    title: "韩国仓签收",
+    desc: "确认档口/韩国仓已接货，请录入实际签收时间。",
+    confirmLabel: "确认韩国签收",
+    fields: [
+      { key: "receivedAt", label: "签收时间", required: true, placeholder: "2025-01-10 15:20" },
+    ],
+    successToast: () => "已确认韩国签收",
+  },
+  shop_exchange: {
+    title: "进入档口交换",
+    desc: "确认档口开始进行换货操作，之后可选择是否需要买手补运费。",
+    confirmLabel: "进入档口交换",
+    fields: [
+      { key: "shop", label: "档口名称", required: true, placeholder: "MILK 女装 · A-102" },
+    ],
+    successToast: () => "已进入档口交换流程",
+  },
+  request_fee: {
+    title: "通知买手补运费",
+    desc: "买手支付到账后工单自动进入「运费已收 · 待发货」。请确认金额准确。",
+    confirmLabel: "推送买手支付",
+    fields: [
+      { key: "amount", label: "补运费金额 (CNY)", required: true, type: "number", placeholder: "如 45" },
+      { key: "reason", label: "费用说明（对买手展示）", required: true, type: "textarea", placeholder: "例：一件羽绒服国际快递差额…" },
+    ],
+    successToast: (v) => `已通知买手支付 ¥${v.amount}`,
+  },
+  reship: {
+    title: "重新发出",
+    desc: "请录入国际快递承运商与运单号，确认后将同步给买手。",
+    confirmLabel: "确认发出",
+    fields: [
+      { key: "carrier", label: "承运商", required: true, placeholder: "SF / EMS / CJ 大韩通运…" },
+      { key: "trackingNo", label: "国际运单号", required: true, placeholder: "SF88888888888" },
+    ],
+    successToast: (v) => `已重发 · ${v.carrier} ${v.trackingNo}`,
+  },
+  complete: {
+    title: "标记工单完成",
+    desc: "确认买手已签收换货并无异议后再操作，完成后不可撤回。",
+    confirmLabel: "确认完成",
+    fields: [],
+    successToast: () => "工单已完成",
+  },
+};
+
 function AdminExchangeDetail() {
   const { id } = Route.useParams();
   const e = EXCHANGES.find((x) => x.id === id);
   if (!e) throw notFound();
   const idx = stepIndex(e.status);
+  const [pending, setPending] = useState<ActionKey | null>(null);
+  const tip = STEP_TIP[e.status];
 
   return (
     <AdminShell>
@@ -58,41 +198,41 @@ function AdminExchangeDetail() {
         <div className="flex flex-wrap gap-2">
           {e.status === "applied" && (
             <>
-              <Button size="sm" variant="destructive" onClick={() => toast.warning("已驳回")}>
+              <Button size="sm" variant="destructive" onClick={() => setPending("reject")}>
                 <XCircle className="mr-1 h-4 w-4" />
                 驳回
               </Button>
-              <Button size="sm" onClick={() => toast.success("已通过 · 已推送国内集运仓地址给买手")}>
+              <Button size="sm" onClick={() => setPending("approve")}>
                 <CheckCircle2 className="mr-1 h-4 w-4" />
                 通过并通知寄回
               </Button>
             </>
           )}
           {e.status === "approved_wait_ship" && (
-            <Button size="sm" onClick={() => toast.success("已确认集运仓签收")}>
+            <Button size="sm" onClick={() => setPending("cn_receive")}>
               <Warehouse className="mr-1 h-4 w-4" />
               确认集运仓已签收
             </Button>
           )}
           {e.status === "cn_received" && (
-            <Button size="sm" onClick={() => toast.success("已并入韩国转寄批次")}>
+            <Button size="sm" onClick={() => setPending("forward")}>
               <Plane className="mr-1 h-4 w-4" />
               并入转寄批次
             </Button>
           )}
           {e.status === "forwarded_kr" && (
-            <Button size="sm" onClick={() => toast.success("韩国已签收")}>
+            <Button size="sm" onClick={() => setPending("kr_receive")}>
               <PackageCheck className="mr-1 h-4 w-4" />
               韩国签收
             </Button>
           )}
           {e.status === "kr_received" && (
-            <Button size="sm" onClick={() => toast.success("已进入档口交换流程")}>
+            <Button size="sm" onClick={() => setPending("shop_exchange")}>
               进入档口交换
             </Button>
           )}
           {e.status === "shop_exchanging" && (
-            <Button size="sm" onClick={() => toast.success("已通知买家补运费")}>
+            <Button size="sm" onClick={() => setPending("request_fee")}>
               <Wallet className="mr-1 h-4 w-4" />
               需要补运费
             </Button>
@@ -103,13 +243,13 @@ function AdminExchangeDetail() {
             </Button>
           )}
           {e.status === "return_fee_paid" && (
-            <Button size="sm" onClick={() => toast.success("已重新发出")}>
+            <Button size="sm" onClick={() => setPending("reship")}>
               <Send className="mr-1 h-4 w-4" />
               重新发出
             </Button>
           )}
           {e.status === "reshipped" && (
-            <Button size="sm" onClick={() => toast.success("工单已完成")}>
+            <Button size="sm" onClick={() => setPending("complete")}>
               标记完成
             </Button>
           )}
@@ -122,6 +262,26 @@ function AdminExchangeDetail() {
         <span className="text-xs text-muted-foreground">关联订单 {e.orderId}</span>
         <span className="text-xs text-muted-foreground">提交于 {e.createdAt}</span>
       </div>
+
+      {tip && (
+        <div
+          className={`mb-4 flex gap-2 rounded-md border p-3 text-xs ${
+            tip.tone === "warn"
+              ? "border-amber-300 bg-amber-50 text-amber-900 dark:bg-amber-950/30 dark:text-amber-200"
+              : "border-sky-300 bg-sky-50 text-sky-900 dark:bg-sky-950/30 dark:text-sky-200"
+          }`}
+        >
+          {tip.tone === "warn" ? (
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+          ) : (
+            <Info className="mt-0.5 h-4 w-4 shrink-0" />
+          )}
+          <div>
+            <div className="font-medium">{tip.title} · 下一步指引</div>
+            <div className="mt-0.5 opacity-90">{tip.desc}</div>
+          </div>
+        </div>
+      )}
 
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="space-y-4 lg:col-span-2">
@@ -296,9 +456,113 @@ function AdminExchangeDetail() {
           </Card>
         </div>
       </div>
+
+      <ActionDialog
+        actionKey={pending}
+        onClose={() => setPending(null)}
+      />
     </AdminShell>
   );
 }
+
+function ActionDialog({ actionKey, onClose }: { actionKey: ActionKey | null; onClose: () => void }) {
+  const cfg = actionKey ? ACTIONS[actionKey] : null;
+  const [values, setValues] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // reset values whenever the dialog opens on a new action
+  const open = !!cfg;
+  const currentKey = actionKey ?? "";
+  // Simple reset via key prop on inner form
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(o) => {
+        if (!o) {
+          setValues({});
+          setErrors({});
+          onClose();
+        }
+      }}
+    >
+      {cfg && (
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{cfg.title}</DialogTitle>
+            <DialogDescription>{cfg.desc}</DialogDescription>
+          </DialogHeader>
+          <form
+            key={currentKey}
+            className="space-y-3"
+            onSubmit={(ev) => {
+              ev.preventDefault();
+              const nextErr: Record<string, string> = {};
+              for (const f of cfg.fields) {
+                const v = (values[f.key] ?? "").trim();
+                if (f.required && !v) nextErr[f.key] = "此项必填";
+                else if (f.type === "number" && v && !(Number(v) > 0)) nextErr[f.key] = "请输入大于 0 的数值";
+              }
+              if (Object.keys(nextErr).length) {
+                setErrors(nextErr);
+                toast.error("请补全必填项后再提交");
+                return;
+              }
+              toast.success(cfg.successToast(values));
+              setValues({});
+              setErrors({});
+              onClose();
+            }}
+          >
+            {cfg.fields.length === 0 && (
+              <div className="rounded-md border border-dashed p-3 text-xs text-muted-foreground">
+                无需额外填写，请确认后提交。
+              </div>
+            )}
+            {cfg.fields.map((f) => (
+              <div key={f.key}>
+                <Label className="text-xs">
+                  {f.label}
+                  {f.required && <span className="ml-1 text-destructive">*</span>}
+                </Label>
+                {f.type === "textarea" ? (
+                  <Textarea
+                    className="mt-1"
+                    rows={3}
+                    placeholder={f.placeholder}
+                    value={values[f.key] ?? ""}
+                    onChange={(ev) => setValues((s) => ({ ...s, [f.key]: ev.target.value }))}
+                  />
+                ) : (
+                  <Input
+                    className="mt-1"
+                    type={f.type === "number" ? "number" : "text"}
+                    placeholder={f.placeholder}
+                    value={values[f.key] ?? ""}
+                    onChange={(ev) => setValues((s) => ({ ...s, [f.key]: ev.target.value }))}
+                  />
+                )}
+                {(errors[f.key] || f.hint) && (
+                  <div className={`mt-1 text-[11px] ${errors[f.key] ? "text-destructive" : "text-muted-foreground"}`}>
+                    {errors[f.key] ?? f.hint}
+                  </div>
+                )}
+              </div>
+            ))}
+            <DialogFooter className="pt-2">
+              <Button type="button" variant="ghost" onClick={onClose}>
+                取消
+              </Button>
+              <Button type="submit" variant={cfg.destructive ? "destructive" : "default"}>
+                {cfg.confirmLabel}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      )}
+    </Dialog>
+  );
+}
+
 
 function LegCard({
   title,

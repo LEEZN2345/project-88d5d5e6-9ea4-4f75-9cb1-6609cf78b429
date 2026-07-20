@@ -1,11 +1,19 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AdminShell } from "@/components/AdminShell";
 import { PRODUCTS, SHOPS, formatKRW } from "@/lib/mock-data";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Upload, ImagePlus, Download } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Plus, Upload, ImagePlus, Download, ChevronDown } from "lucide-react";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/products")({
   head: () => ({ meta: [{ title: "商品管理 · 运营后台" }] }),
@@ -13,6 +21,29 @@ export const Route = createFileRoute("/admin/products")({
 });
 
 function AdminProducts() {
+  const navigate = useNavigate();
+  const [keyword, setKeyword] = useState("");
+  const [shopId, setShopId] = useState<string>("");
+  const [category, setCategory] = useState<string>("");
+
+  const categories = useMemo(
+    () => Array.from(new Set(PRODUCTS.map((p) => p.category))).sort(),
+    [],
+  );
+
+  const filtered = useMemo(() => {
+    const kw = keyword.trim().toLowerCase();
+    return PRODUCTS.filter((p) => {
+      if (shopId && p.shopId !== shopId) return false;
+      if (category && p.category !== category) return false;
+      if (!kw) return true;
+      return (
+        p.internalCode.toLowerCase().includes(kw) ||
+        p.name.toLowerCase().includes(kw)
+      );
+    });
+  }, [keyword, shopId, category]);
+
   const downloadTemplate = () => {
     const headers = [
       "档口名称",
@@ -48,6 +79,15 @@ function AdminProducts() {
     URL.revokeObjectURL(url);
   };
 
+  const handleCreate = () => {
+    const first = PRODUCTS[0];
+    if (!first) { toast.error("暂无可复制的模板商品"); return; }
+    toast.success("新增商品：请在编辑页填写字段");
+    navigate({ to: "/admin/products/$id", params: { id: first.id } });
+  };
+
+  const handleBulkExcel = () => toast.info("批量 Excel 导入：请上传按模板整理的 .csv/.xlsx");
+
   return (
     <AdminShell>
       <div className="mb-4 flex items-center justify-between">
@@ -57,8 +97,8 @@ function AdminProducts() {
         </div>
         <div className="flex gap-2">
           <Button size="sm" variant="outline" onClick={downloadTemplate}><Download className="mr-1 h-4 w-4" />下载导入模板</Button>
-          <Button size="sm" variant="outline"><Upload className="mr-1 h-4 w-4" />批量 Excel</Button>
-          <Button size="sm"><Plus className="mr-1 h-4 w-4" />新增商品</Button>
+          <Button size="sm" variant="outline" onClick={handleBulkExcel}><Upload className="mr-1 h-4 w-4" />批量 Excel</Button>
+          <Button size="sm" onClick={handleCreate}><Plus className="mr-1 h-4 w-4" />新增商品</Button>
         </div>
       </div>
 
@@ -84,9 +124,43 @@ function AdminProducts() {
 
       <Card className="p-4">
         <div className="mb-3 flex flex-wrap items-center gap-2">
-          <Input placeholder="搜索内部款号 / 商品名" className="max-w-xs" />
-          <Button size="sm" variant="outline">所有档口</Button>
-          <Button size="sm" variant="outline">所有品类</Button>
+          <Input
+            placeholder="搜索内部款号 / 商品名"
+            className="max-w-xs"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="sm" variant="outline">
+                {shopId ? SHOPS.find((s) => s.id === shopId)?.name ?? "档口" : "所有档口"}
+                <ChevronDown className="ml-1 h-3 w-3" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="max-h-72 overflow-auto">
+              <DropdownMenuItem onClick={() => setShopId("")}>所有档口</DropdownMenuItem>
+              {SHOPS.map((s) => (
+                <DropdownMenuItem key={s.id} onClick={() => setShopId(s.id)}>
+                  {s.name} · {s.building} {s.floor}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="sm" variant="outline">
+                {category || "所有品类"}
+                <ChevronDown className="ml-1 h-3 w-3" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="max-h-72 overflow-auto">
+              <DropdownMenuItem onClick={() => setCategory("")}>所有品类</DropdownMenuItem>
+              {categories.map((c) => (
+                <DropdownMenuItem key={c} onClick={() => setCategory(c)}>{c}</DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <span className="ml-auto text-xs text-muted-foreground">共 {filtered.length} 条</span>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -96,7 +170,14 @@ function AdminProducts() {
               </tr>
             </thead>
             <tbody>
-              {PRODUCTS.map((p) => {
+              {filtered.length === 0 && (
+                <tr>
+                  <td colSpan={13} className="px-3 py-8 text-center text-xs text-muted-foreground">
+                    无匹配商品
+                  </td>
+                </tr>
+              )}
+              {filtered.map((p) => {
                 const shop = SHOPS.find((s) => s.id === p.shopId);
                 return (
                   <tr key={p.id} className="border-t border-border">
@@ -122,7 +203,9 @@ function AdminProducts() {
                       {p.discount && <Badge className="bg-rose-500 text-white">-{p.discount}%</Badge>}
                     </Td>
                     <Td>
-                      <Button size="sm" variant="outline">编辑</Button>
+                      <Button size="sm" variant="outline" asChild>
+                        <Link to="/admin/products/$id" params={{ id: p.id }}>编辑</Link>
+                      </Button>
                     </Td>
                   </tr>
                 );

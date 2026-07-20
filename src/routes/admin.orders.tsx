@@ -277,9 +277,6 @@ function AdminOrders() {
                 </Td>
                 <Td>
                   <div className="flex gap-1">
-                    {o.snapshotRate && !o.receiptUrl && (
-                      <Button size="sm">标记已代付</Button>
-                    )}
                     <Button size="sm" variant="ghost">查看</Button>
                   </div>
                 </Td>

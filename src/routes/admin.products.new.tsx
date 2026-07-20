@@ -71,12 +71,6 @@ function NewProduct() {
     ).then((urls) => setImages((prev) => [...prev, ...urls].slice(0, 9)));
   };
 
-  const addColor = () => {
-    const v = newColor.trim();
-    if (!v || colors.includes(v)) return;
-    setColors((p) => [...p, v]);
-    setNewColor("");
-  };
   const addSize = () => {
     const v = newSize.trim();
     if (!v || sizes.includes(v)) return;

@@ -155,7 +155,7 @@ function matchAdminBase(pathname: string): string {
   void keys;
   const candidates = [
     "/admin/orders", "/admin/feedback", "/admin/shipping", "/admin/stock",
-    "/admin/groups", "/admin/refunds", "/admin/exchanges",
+    "/admin/groups", "/admin/after-sales", "/admin/refunds", "/admin/exchanges",
     "/admin/products", "/admin/categories", "/admin/shops",
     "/admin/users", "/admin/user-tags", "/admin/user-groups", "/admin/sign-in",
     "/admin/points-mall", "/admin/points-rules", "/admin/membership",

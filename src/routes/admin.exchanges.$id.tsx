@@ -14,7 +14,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import {
   EXCHANGES,
   EXCHANGE_STATUS_LABEL,
@@ -563,8 +563,6 @@ function ActionDialog({ actionKey, onClose }: { actionKey: ActionKey | null; onC
   );
 }
 
-// keep unused import guard for ReactNode (utility types)
-export type _Unused = ReactNode;
 
 function LegCard({
   title,

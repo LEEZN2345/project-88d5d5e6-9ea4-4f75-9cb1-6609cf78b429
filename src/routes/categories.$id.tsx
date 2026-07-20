@@ -40,18 +40,29 @@ function CategoryPage() {
   const cats = useCategories();
   const cat = cats.find((c) => c.id === id);
   const [activeSub, setActiveSub] = useState<string>("all");
+  const [activeLeaf, setActiveLeaf] = useState<string>("all");
   const [q, setQ] = useState("");
 
   if (!cat) return null;
   const subs = cat.subs.filter((s) => s.enabled);
-  const subNames = subs.map((s) => s.name);
+  const currentSub = subs.find((s) => s.id === activeSub);
+  const leafs = (currentSub?.leafs ?? []).filter((l) => l.enabled);
+  const allNames = subs.flatMap((s) => [
+    s.name,
+    ...((s.leafs ?? []).map((l) => l.name)),
+  ]);
 
   const list = PRODUCTS.filter((p) => {
     if (activeSub === "all") {
-      return subNames.length === 0 || subNames.includes(p.category);
+      return allNames.length === 0 || allNames.includes(p.category);
     }
-    const s = subs.find((x) => x.id === activeSub);
-    return s ? p.category === s.name : true;
+    if (!currentSub) return true;
+    if (activeLeaf !== "all") {
+      const l = leafs.find((x) => x.id === activeLeaf);
+      return l ? p.category === l.name : true;
+    }
+    const names = [currentSub.name, ...leafs.map((l) => l.name)];
+    return names.includes(p.category);
   }).filter((p) => (q ? p.name.includes(q) || p.internalCode.includes(q) : true));
 
   return (
@@ -64,17 +75,40 @@ function CategoryPage() {
           <SubTab
             active={activeSub === "all"}
             label="全部"
-            onClick={() => setActiveSub("all")}
+            onClick={() => {
+              setActiveSub("all");
+              setActiveLeaf("all");
+            }}
           />
           {subs.map((s) => (
             <SubTab
               key={s.id}
               active={activeSub === s.id}
               label={s.name}
-              onClick={() => setActiveSub(s.id)}
+              onClick={() => {
+                setActiveSub(s.id);
+                setActiveLeaf("all");
+              }}
             />
           ))}
         </div>
+        {leafs.length > 0 && (
+          <div className="scrollbar-none flex gap-2 overflow-x-auto border-t border-border bg-muted/30 px-4 py-2">
+            <LeafChip
+              active={activeLeaf === "all"}
+              label="全部"
+              onClick={() => setActiveLeaf("all")}
+            />
+            {leafs.map((l) => (
+              <LeafChip
+                key={l.id}
+                active={activeLeaf === l.id}
+                label={l.name}
+                onClick={() => setActiveLeaf(l.id)}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* 搜索 + 筛选 */}
@@ -161,6 +195,30 @@ function SubTab({
       {active && (
         <span className="absolute -bottom-0.5 left-1/2 h-0.5 w-4 -translate-x-1/2 rounded-full bg-primary" />
       )}
+    </button>
+  );
+}
+
+function LeafChip({
+  active,
+  label,
+  onClick,
+}: {
+  active: boolean;
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`whitespace-nowrap rounded-full border px-3 py-1 text-xs ${
+        active
+          ? "border-primary bg-primary text-primary-foreground"
+          : "border-border bg-card text-muted-foreground"
+      }`}
+    >
+      {label}
     </button>
   );
 }

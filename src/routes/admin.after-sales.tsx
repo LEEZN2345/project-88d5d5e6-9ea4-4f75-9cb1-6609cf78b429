@@ -86,13 +86,62 @@ const EX_VARIANT: Record<ExchangeStatus, "default" | "secondary" | "outline" | "
 };
 
 function ExchangesPanel() {
+  type Filter = "all" | "pending" | "cn" | "kr";
+  const [filter, setFilter] = useState<Filter>("all");
+
+  const pendingSet: ExchangeStatus[] = ["applied", "approved_wait_ship"];
+  const cnSet: ExchangeStatus[] = ["cn_received"];
+  const krSet: ExchangeStatus[] = ["forwarded_kr"];
+
+  const counts = {
+    pending: EXCHANGES.filter((e) => pendingSet.includes(e.status)).length,
+    cn: EXCHANGES.filter((e) => cnSet.includes(e.status)).length,
+    kr: EXCHANGES.filter((e) => krSet.includes(e.status)).length,
+  };
+
+  const rows = EXCHANGES.filter((e) => {
+    if (filter === "all") return true;
+    if (filter === "pending") return pendingSet.includes(e.status);
+    if (filter === "cn") return cnSet.includes(e.status);
+    if (filter === "kr") return krSet.includes(e.status);
+    return true;
+  });
+
   return (
     <>
       <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-3">
-        <StatCard icon={<PackageCheck className="h-4 w-4" />} label="待审核 / 待寄回" value="2" tone="rose" />
-        <StatCard icon={<Warehouse className="h-4 w-4" />} label="集运仓在库" value="1" tone="amber" />
-        <StatCard icon={<Plane className="h-4 w-4" />} label="转寄韩国在途" value="0" tone="sky" />
+        <StatCard
+          icon={<PackageCheck className="h-4 w-4" />}
+          label="待审核 / 待寄回"
+          value={String(counts.pending)}
+          tone="rose"
+          active={filter === "pending"}
+          onClick={() => setFilter(filter === "pending" ? "all" : "pending")}
+        />
+        <StatCard
+          icon={<Warehouse className="h-4 w-4" />}
+          label="集运仓在库"
+          value={String(counts.cn)}
+          tone="amber"
+          active={filter === "cn"}
+          onClick={() => setFilter(filter === "cn" ? "all" : "cn")}
+        />
+        <StatCard
+          icon={<Plane className="h-4 w-4" />}
+          label="转寄韩国在途"
+          value={String(counts.kr)}
+          tone="sky"
+          active={filter === "kr"}
+          onClick={() => setFilter(filter === "kr" ? "all" : "kr")}
+        />
       </div>
+
+      {filter !== "all" && (
+        <div className="mb-3 flex items-center gap-2 text-xs text-muted-foreground">
+          <span>已筛选：{filter === "pending" ? "待审核 / 待寄回" : filter === "cn" ? "集运仓在库" : "转寄韩国在途"}</span>
+          <button className="text-primary hover:underline" onClick={() => setFilter("all")}>清除筛选</button>
+        </div>
+      )}
 
       <Card className="mb-4 border-dashed p-4 text-xs">
         <div className="mb-1 flex items-center gap-2 text-sm font-medium">
@@ -122,7 +171,10 @@ function ExchangesPanel() {
             </tr>
           </thead>
           <tbody>
-            {EXCHANGES.map((e) => (
+            {rows.length === 0 && (
+              <tr><td colSpan={8} className="px-3 py-8 text-center text-xs text-muted-foreground">该筛选下暂无工单</td></tr>
+            )}
+            {rows.map((e) => (
               <tr key={e.id} className="border-t border-border align-top">
                 <Td className="font-mono text-xs">{e.id}</Td>
                 <Td className="font-mono text-xs">{e.orderId}</Td>
@@ -234,11 +286,15 @@ function StatCard({
   label,
   value,
   tone,
+  active,
+  onClick,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
   tone: "rose" | "amber" | "sky";
+  active?: boolean;
+  onClick?: () => void;
 }) {
   const toneCls =
     tone === "rose"
@@ -246,8 +302,12 @@ function StatCard({
       : tone === "amber"
       ? "border-amber-200 bg-amber-50 text-amber-700 dark:bg-amber-950/30"
       : "border-sky-200 bg-sky-50 text-sky-700 dark:bg-sky-950/30";
+  const ringCls = active ? "ring-2 ring-primary ring-offset-1" : "";
   return (
-    <Card className={`p-3 ${toneCls}`}>
+    <Card
+      onClick={onClick}
+      className={`p-3 ${toneCls} ${ringCls} ${onClick ? "cursor-pointer transition hover:brightness-95" : ""}`}
+    >
       <div className="flex items-center gap-2 text-xs">
         {icon}
         {label}

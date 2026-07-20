@@ -211,6 +211,7 @@ import type { Shop } from "./mock-data";
 export const NUZZON_AS_SHOPS: Shop[] = NUZZON_SHOPS.map((s) => ({
   id: `nuzzon-${s.floor}-${s.number}`,
   name: s.name,
+  nameKo: s.name,
   building: "NUZZON",
   floor: s.floor,
   position: String(s.number),

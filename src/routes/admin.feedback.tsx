@@ -549,7 +549,11 @@ function AdminFeedback() {
                                   <ActionCell
                                     action={act}
                                     locked={locked}
-                                    onPick={(a) => toggleItemAction(order.id, idx, a)}
+                                    onPick={(a) =>
+                                      a === "out_of_stock"
+                                        ? requestOutOfStock(order.id, idx)
+                                        : toggleItemAction(order.id, idx, a)
+                                    }
                                     shipDate={fb.itemShipDates?.[idx]}
                                     onShipDateChange={(d) => setItemShipDate(order.id, idx, d)}
                                   />

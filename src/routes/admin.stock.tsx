@@ -30,7 +30,7 @@ import { Link } from "@tanstack/react-router";
 import { Plus, Minus, Trash2, Search, Warehouse } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { useCurrentAdminRole } from "@/lib/auth-role";
+import { useRole, ROLE_LABEL } from "@/lib/auth-role";
 
 export const Route = createFileRoute("/admin/stock")({
   head: () => ({ meta: [{ title: "现货管理 · 运营后台" }] }),
@@ -43,7 +43,8 @@ function AdminStock() {
   const [shopFilter, setShopFilter] = useState<string>("all");
   const [sourceFilter, setSourceFilter] = useState<string>("all");
   const [addOpen, setAddOpen] = useState(false);
-  const role = useCurrentAdminRole();
+  const role = useRole();
+  const roleLabel = ROLE_LABEL[role];
 
   const [newForm, setNewForm] = useState({
     productId: "",
@@ -99,7 +100,7 @@ function AdminStock() {
         qty: newForm.qty,
         sourceOrderId: "-",
         source: "manual" as StockSource,
-        operator: role.label,
+        operator: roleLabel,
         remark: newForm.remark.trim() || undefined,
         createdAt: new Date().toISOString().replace("T", " ").slice(0, 16),
       },
@@ -398,7 +399,7 @@ function AdminStock() {
                 className="min-h-16 text-xs"
               />
               <div className="mt-1 text-[10px] text-muted-foreground">
-                入库来源固定为「手动入库」，操作人：{role.label}
+                入库来源固定为「手动入库」，操作人：{roleLabel}
               </div>
             </div>
           </div>

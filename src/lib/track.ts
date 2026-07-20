@@ -5,7 +5,7 @@ export type TrackEvent = {
   event: string;
   ts: number;
   userId?: string;
-  role?: "buyer" | "b_store" | "c_user" | "guest" | "admin";
+  role?: "user" | "guest" | "admin";
   route?: string;
   platform?: "h5" | "web-admin";
   props?: Record<string, unknown>;

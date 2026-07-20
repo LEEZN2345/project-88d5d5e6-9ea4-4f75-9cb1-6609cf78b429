@@ -41,7 +41,7 @@ function Me() {
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
-              <span className="truncate text-base font-semibold">张老板 · 实体店</span>
+              <span className="truncate text-base font-semibold">张老板</span>
               <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-400/25 px-1.5 py-[1px] text-[9px] font-medium text-emerald-50 ring-1 ring-emerald-300/40">
                 <BadgeCheck className="h-2.5 w-2.5" />已认证
               </span>

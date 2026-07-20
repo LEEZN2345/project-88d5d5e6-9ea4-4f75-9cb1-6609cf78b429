@@ -46,20 +46,14 @@ const DAILY = [
     to: "/admin/shipping",
   },
   {
-    icon: Truck,
-    title: "4. 更新物流",
-    desc: "「物流单管理」上传物流公司 Excel，异常件筛出后单独跟进。",
-    to: "/admin/logistics",
-  },
-  {
     icon: Undo2,
-    title: "5. 处理退款工单",
+    title: "4. 处理退款工单",
     desc: "客服先在「退款工单」核实凭证，转交财务复核后完成打款。",
     to: "/admin/refunds",
   },
   {
     icon: MessageSquare,
-    title: "6. 回复反馈",
+    title: "5. 回复反馈",
     desc: "「订单反馈管理」按订单会话式回复，超 24 小时未回复的工单自动升级。",
     to: "/admin/feedback",
   },
@@ -69,7 +63,7 @@ const MODULES = [
   {
     group: "经营",
     items: [
-      { label: "订单 / 反馈 / 发货 / 物流 / 拼单 / 退款", to: "/admin/orders" },
+      { label: "订单 / 反馈 / 发货 / 拼单 / 退款", to: "/admin/orders" },
       { label: "现货库存", to: "/admin/stock" },
     ],
   },

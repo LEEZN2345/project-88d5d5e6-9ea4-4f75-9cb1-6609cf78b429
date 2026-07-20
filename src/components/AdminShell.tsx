@@ -37,7 +37,6 @@ const NAV: NavItem[] = [
   { to: "/admin/orders", icon: ClipboardList, label: "新订单+预定管理", group: "经营" },
   { to: "/admin/feedback", icon: MessageSquare, label: "订单反馈管理", group: "经营" },
   { to: "/admin/shipping", icon: Truck, label: "发货管理", group: "经营" },
-  { to: "/admin/logistics", icon: Truck, label: "物流单管理", group: "经营" },
   { to: "/admin/stock", icon: Warehouse, label: "现货管理", group: "经营" },
   { to: "/admin/groups", icon: Users2, label: "拼单管理", group: "经营" },
   { to: "/admin/refunds", icon: Undo2, label: "退款工单", group: "经营" },
@@ -156,8 +155,8 @@ function matchAdminBase(pathname: string): string {
   });
   void keys;
   const candidates = [
-    "/admin/orders", "/admin/feedback", "/admin/shipping", "/admin/logistics",
-    "/admin/stock", "/admin/groups", "/admin/refunds", "/admin/exchanges",
+    "/admin/orders", "/admin/feedback", "/admin/shipping", "/admin/stock",
+    "/admin/groups", "/admin/refunds", "/admin/exchanges",
     "/admin/products", "/admin/categories", "/admin/shops",
     "/admin/users", "/admin/user-tags", "/admin/user-groups", "/admin/sign-in",
     "/admin/points-mall", "/admin/points-rules", "/admin/membership",

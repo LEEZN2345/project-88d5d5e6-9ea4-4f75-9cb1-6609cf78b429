@@ -48,7 +48,6 @@ import { Route as AdminStaffRouteImport } from './routes/admin.staff'
 import { Route as AdminSignInRouteImport } from './routes/admin.sign-in'
 import { Route as AdminShopsRouteImport } from './routes/admin.shops'
 import { Route as AdminShippingRouteImport } from './routes/admin.shipping'
-import { Route as AdminProductWeightsRouteImport } from './routes/admin.product-weights'
 import { Route as AdminPointsRulesRouteImport } from './routes/admin.points-rules'
 import { Route as AdminPointsMallRouteImport } from './routes/admin.points-mall'
 import { Route as AdminPaymentAccountsRouteImport } from './routes/admin.payment-accounts'
@@ -275,11 +274,6 @@ const AdminShippingRoute = AdminShippingRouteImport.update({
   path: '/admin/shipping',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminProductWeightsRoute = AdminProductWeightsRouteImport.update({
-  id: '/admin/product-weights',
-  path: '/admin/product-weights',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminPointsRulesRoute = AdminPointsRulesRouteImport.update({
   id: '/admin/points-rules',
   path: '/admin/points-rules',
@@ -468,7 +462,6 @@ export interface FileRoutesByFullPath {
   '/admin/payment-accounts': typeof AdminPaymentAccountsRouteWithChildren
   '/admin/points-mall': typeof AdminPointsMallRoute
   '/admin/points-rules': typeof AdminPointsRulesRoute
-  '/admin/product-weights': typeof AdminProductWeightsRoute
   '/admin/shipping': typeof AdminShippingRoute
   '/admin/shops': typeof AdminShopsRouteWithChildren
   '/admin/sign-in': typeof AdminSignInRoute
@@ -540,7 +533,6 @@ export interface FileRoutesByTo {
   '/admin/payment-accounts': typeof AdminPaymentAccountsRouteWithChildren
   '/admin/points-mall': typeof AdminPointsMallRoute
   '/admin/points-rules': typeof AdminPointsRulesRoute
-  '/admin/product-weights': typeof AdminProductWeightsRoute
   '/admin/shipping': typeof AdminShippingRoute
   '/admin/shops': typeof AdminShopsRouteWithChildren
   '/admin/sign-in': typeof AdminSignInRoute
@@ -613,7 +605,6 @@ export interface FileRoutesById {
   '/admin/payment-accounts': typeof AdminPaymentAccountsRouteWithChildren
   '/admin/points-mall': typeof AdminPointsMallRoute
   '/admin/points-rules': typeof AdminPointsRulesRoute
-  '/admin/product-weights': typeof AdminProductWeightsRoute
   '/admin/shipping': typeof AdminShippingRoute
   '/admin/shops': typeof AdminShopsRouteWithChildren
   '/admin/sign-in': typeof AdminSignInRoute
@@ -687,7 +678,6 @@ export interface FileRouteTypes {
     | '/admin/payment-accounts'
     | '/admin/points-mall'
     | '/admin/points-rules'
-    | '/admin/product-weights'
     | '/admin/shipping'
     | '/admin/shops'
     | '/admin/sign-in'
@@ -759,7 +749,6 @@ export interface FileRouteTypes {
     | '/admin/payment-accounts'
     | '/admin/points-mall'
     | '/admin/points-rules'
-    | '/admin/product-weights'
     | '/admin/shipping'
     | '/admin/shops'
     | '/admin/sign-in'
@@ -831,7 +820,6 @@ export interface FileRouteTypes {
     | '/admin/payment-accounts'
     | '/admin/points-mall'
     | '/admin/points-rules'
-    | '/admin/product-weights'
     | '/admin/shipping'
     | '/admin/shops'
     | '/admin/sign-in'
@@ -904,7 +892,6 @@ export interface RootRouteChildren {
   AdminPaymentAccountsRoute: typeof AdminPaymentAccountsRouteWithChildren
   AdminPointsMallRoute: typeof AdminPointsMallRoute
   AdminPointsRulesRoute: typeof AdminPointsRulesRoute
-  AdminProductWeightsRoute: typeof AdminProductWeightsRoute
   AdminShippingRoute: typeof AdminShippingRoute
   AdminShopsRoute: typeof AdminShopsRouteWithChildren
   AdminSignInRoute: typeof AdminSignInRoute
@@ -1203,13 +1190,6 @@ declare module '@tanstack/react-router' {
       path: '/admin/shipping'
       fullPath: '/admin/shipping'
       preLoaderRoute: typeof AdminShippingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/product-weights': {
-      id: '/admin/product-weights'
-      path: '/admin/product-weights'
-      fullPath: '/admin/product-weights'
-      preLoaderRoute: typeof AdminProductWeightsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/points-rules': {
@@ -1570,7 +1550,6 @@ const rootRouteChildren: RootRouteChildren = {
   AdminPaymentAccountsRoute: AdminPaymentAccountsRouteWithChildren,
   AdminPointsMallRoute: AdminPointsMallRoute,
   AdminPointsRulesRoute: AdminPointsRulesRoute,
-  AdminProductWeightsRoute: AdminProductWeightsRoute,
   AdminShippingRoute: AdminShippingRoute,
   AdminShopsRoute: AdminShopsRouteWithChildren,
   AdminSignInRoute: AdminSignInRoute,

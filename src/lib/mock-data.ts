@@ -174,6 +174,7 @@ export type RefundRequest = {
   id: string;
   orderId: string;
   amountCNY: number;
+  scenario: "out_of_stock" | "platform_initiated"; // 退款场景：订单断货 / 平台主动联系
   reason: string;
   status: "cs_pending" | "finance_pending" | "paid" | "rejected";
   csUser?: string;
@@ -562,6 +563,7 @@ export const REFUNDS: RefundRequest[] = [
     id: "R001",
     orderId: "DD20251125003",
     amountCNY: 412.5,
+    scenario: "out_of_stock",
     reason: "档口缺货,买手申请退款",
     status: "finance_pending",
     csUser: "客服-小南",
@@ -571,7 +573,8 @@ export const REFUNDS: RefundRequest[] = [
     id: "R002",
     orderId: "DD20251124011",
     amountCNY: 198.0,
-    reason: "尺码不符,已退回",
+    scenario: "platform_initiated",
+    reason: "平台质检瑕疵,主动联系买手退款",
     status: "paid",
     csUser: "客服-小南",
     financeUser: "财务-阿珍",
@@ -581,7 +584,8 @@ export const REFUNDS: RefundRequest[] = [
     id: "R003",
     orderId: "DD20251128009",
     amountCNY: 89.5,
-    reason: "买手取消订单",
+    scenario: "out_of_stock",
+    reason: "SKU 全部断货,无法采购",
     status: "cs_pending",
     createdAt: "2025-11-28 19:10",
   },

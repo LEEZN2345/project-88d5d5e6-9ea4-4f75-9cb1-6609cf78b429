@@ -22,6 +22,11 @@ const STATUS: Record<string, string> = {
   rejected: "已驳回",
 };
 
+const SCENARIO: Record<string, string> = {
+  out_of_stock: "订单断货",
+  platform_initiated: "平台主动联系退款",
+};
+
 function RefundDetail() {
   const { id } = Route.useParams();
   const r = REFUNDS.find((x) => x.id === id) ?? REFUNDS[0]!;
@@ -53,6 +58,7 @@ function RefundDetail() {
       <div className="mb-4 flex flex-wrap items-baseline gap-3">
         <h1 className="font-mono text-xl font-semibold">{r.id}</h1>
         <Badge>{STATUS[r.status]}</Badge>
+        <Badge variant={r.scenario === "out_of_stock" ? "destructive" : "secondary"}>{SCENARIO[r.scenario]}</Badge>
         <span className="text-xs text-muted-foreground">关联订单 {r.orderId}</span>
       </div>
 
@@ -61,7 +67,18 @@ function RefundDetail() {
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div><span className="text-xs text-muted-foreground">退款金额</span><div className="text-lg font-semibold">{formatCNY(r.amountCNY)}</div></div>
             <div><span className="text-xs text-muted-foreground">申请时间</span><div>{r.createdAt}</div></div>
+            <div>
+              <span className="text-xs text-muted-foreground">退款场景</span>
+              <div>{SCENARIO[r.scenario]}</div>
+            </div>
+            <div>
+              <span className="text-xs text-muted-foreground">发起方</span>
+              <div>{r.scenario === "out_of_stock" ? "档口断货触发" : "平台客服主动联系"}</div>
+            </div>
             <div className="col-span-2"><span className="text-xs text-muted-foreground">退款原因</span><div>{r.reason}</div></div>
+            <div className="col-span-2 rounded-md border border-dashed border-destructive/40 bg-destructive/5 p-2 text-xs text-destructive">
+              说明：平台不受理买手主观意愿的退款；仅「订单断货」与「平台主动联系退款」两种场景可进入本工单流程。
+            </div>
           </div>
 
           <div className="border-t border-border pt-3">

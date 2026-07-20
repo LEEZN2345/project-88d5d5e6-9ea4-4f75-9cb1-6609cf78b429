@@ -605,8 +605,18 @@ export type StockItem = {
   color: string;
   size: string;
   qty: number;
-  sourceOrderId: string; // 由哪一笔「首单 2 件」入库
+  sourceOrderId: string; // 由哪一笔订单入库；手动入库时为 "-"
+  source: StockSource; // 入库来源
+  operator?: string; // 手动入库时的操作人
+  remark?: string; // 入库备注
   createdAt: string;
+};
+
+// 入库来源
+export type StockSource = "manual" | "first_order_surplus";
+export const STOCK_SOURCE_LABEL: Record<StockSource, string> = {
+  manual: "手动入库",
+  first_order_surplus: "首件2件起订",
 };
 
 export const STOCK_ITEMS: StockItem[] = [
@@ -618,6 +628,7 @@ export const STOCK_ITEMS: StockItem[] = [
     size: "FREE",
     qty: 1,
     sourceOrderId: "DD20251020007",
+    source: "first_order_surplus",
     createdAt: "2025-10-20 12:30",
   },
   {
@@ -628,6 +639,7 @@ export const STOCK_ITEMS: StockItem[] = [
     size: "L",
     qty: 2,
     sourceOrderId: "DD20251015003",
+    source: "first_order_surplus",
     createdAt: "2025-10-15 09:10",
   },
 ];

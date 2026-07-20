@@ -14,8 +14,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { useState, Fragment } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { ChevronRight, ChevronDown, Download, Sparkles, PackageCheck } from "lucide-react";
+// 引入以触发客户端持久化订单合并 (loadOrders -> ORDERS.unshift)
+import "@/lib/checkout-store";
 
 export const Route = createFileRoute("/admin/orders")({
   head: () => ({ meta: [{ title: "新订单 + 预定管理 · 运营后台" }] }),
@@ -23,6 +25,10 @@ export const Route = createFileRoute("/admin/orders")({
 });
 
 function AdminOrders() {
+  // 首次挂载后 tick 一次，确保 SSR 之后由 checkout-store 合并进 ORDERS 的
+  // localStorage 订单也能被渲染出来。
+  const [, forceRender] = useState(0);
+  useEffect(() => { forceRender((n) => n + 1); }, []);
   // 全部走在线支付（微信/支付宝商户号）
   const payChannelOf = (idx: number): { label: string } =>
     idx % 2 === 0 ? { label: "微信 · 在线" } : { label: "支付宝 · 在线" };

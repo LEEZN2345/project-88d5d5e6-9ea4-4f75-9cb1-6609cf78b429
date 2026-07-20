@@ -46,12 +46,6 @@ const DAILY = [
     to: "/admin/shipping",
   },
   {
-    icon: Truck,
-    title: "4. 更新物流",
-    desc: "「物流单管理」上传物流公司 Excel，异常件筛出后单独跟进。",
-    to: "/admin/logistics",
-  },
-  {
     icon: Undo2,
     title: "5. 处理退款工单",
     desc: "客服先在「退款工单」核实凭证，转交财务复核后完成打款。",

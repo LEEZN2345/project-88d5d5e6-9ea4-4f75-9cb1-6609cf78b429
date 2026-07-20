@@ -11,6 +11,7 @@ import {
   useCategories,
   type ProductCategory,
   type SubCategory,
+  type LeafCategory,
 } from "@/lib/categories";
 import { PRODUCTS } from "@/lib/mock-data";
 import {
@@ -51,6 +52,77 @@ function AdminCategories() {
       list.map((c) =>
         c.id === cid
           ? { ...c, subs: c.subs.map((s) => (s.id === sid ? { ...s, ...p } : s)) }
+          : c,
+      ),
+    );
+  };
+
+  const patchLeaf = (
+    cid: string,
+    sid: string,
+    lid: string,
+    p: Partial<LeafCategory>,
+  ) => {
+    update(
+      list.map((c) =>
+        c.id === cid
+          ? {
+              ...c,
+              subs: c.subs.map((s) =>
+                s.id === sid
+                  ? {
+                      ...s,
+                      leafs: (s.leafs ?? []).map((l) =>
+                        l.id === lid ? { ...l, ...p } : l,
+                      ),
+                    }
+                  : s,
+              ),
+            }
+          : c,
+      ),
+    );
+  };
+
+  const addLeaf = (cid: string, sid: string) => {
+    update(
+      list.map((c) =>
+        c.id === cid
+          ? {
+              ...c,
+              subs: c.subs.map((s) =>
+                s.id === sid
+                  ? {
+                      ...s,
+                      leafs: [
+                        ...(s.leafs ?? []),
+                        {
+                          id: `leaf_${Date.now().toString(36)}`,
+                          name: "新细分",
+                          enabled: true,
+                        },
+                      ],
+                    }
+                  : s,
+              ),
+            }
+          : c,
+      ),
+    );
+  };
+
+  const removeLeaf = (cid: string, sid: string, lid: string) => {
+    update(
+      list.map((c) =>
+        c.id === cid
+          ? {
+              ...c,
+              subs: c.subs.map((s) =>
+                s.id === sid
+                  ? { ...s, leafs: (s.leafs ?? []).filter((l) => l.id !== lid) }
+                  : s,
+              ),
+            }
           : c,
       ),
     );
@@ -279,8 +351,9 @@ function AdminCategories() {
                         {c.subs.map((s, si) => (
                           <div
                             key={s.id}
-                            className="flex flex-wrap items-center gap-2 rounded-md border border-border px-2 py-1.5"
+                            className="rounded-md border border-border"
                           >
+                            <div className="flex flex-wrap items-center gap-2 px-2 py-1.5">
                             <Button
                               size="icon"
                               variant="ghost"
@@ -315,7 +388,7 @@ function AdminCategories() {
                               placeholder="韩文名"
                             />
                             <span className="text-[11px] text-muted-foreground">
-                              {usageCount(s.name)} 件
+                              {usageCount(s.name)} 件 · {(s.leafs ?? []).length} 细分
                             </span>
                             <div className="ml-auto flex items-center gap-2">
                               <button
@@ -338,12 +411,71 @@ function AdminCategories() {
                               <Button
                                 size="sm"
                                 variant="ghost"
+                                className="h-7 px-2 text-[11px]"
+                                onClick={() => addLeaf(c.id, s.id)}
+                              >
+                                <Plus className="mr-0.5 h-3 w-3" />细分
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
                                 className="text-destructive hover:text-destructive"
                                 onClick={() => removeSub(c.id, s.id)}
                               >
                                 <Trash2 className="h-3.5 w-3.5" />
                               </Button>
                             </div>
+                            </div>
+                            {(s.leafs ?? []).length > 0 && (
+                              <div className="flex flex-wrap gap-1.5 border-t border-border bg-muted/20 px-2 py-1.5">
+                                {(s.leafs ?? []).map((l) => (
+                                  <div
+                                    key={l.id}
+                                    className="flex items-center gap-1 rounded-md border border-border bg-card px-1.5 py-1"
+                                  >
+                                    <Input
+                                      value={l.name}
+                                      onChange={(e) =>
+                                        patchLeaf(c.id, s.id, l.id, {
+                                          name: e.target.value,
+                                        })
+                                      }
+                                      className="h-7 w-24 text-xs"
+                                    />
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        patchLeaf(c.id, s.id, l.id, {
+                                          enabled: !l.enabled,
+                                        })
+                                      }
+                                      className="text-[10px]"
+                                    >
+                                      {l.enabled ? (
+                                        <Badge className="text-[10px]">启</Badge>
+                                      ) : (
+                                        <Badge
+                                          variant="secondary"
+                                          className="text-[10px]"
+                                        >
+                                          停
+                                        </Badge>
+                                      )}
+                                    </button>
+                                    <Button
+                                      size="icon"
+                                      variant="ghost"
+                                      className="h-6 w-6 text-destructive hover:text-destructive"
+                                      onClick={() =>
+                                        removeLeaf(c.id, s.id, l.id)
+                                      }
+                                    >
+                                      <Trash2 className="h-3 w-3" />
+                                    </Button>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         ))}
                       </div>

@@ -38,36 +38,87 @@ function ApplyExchange() {
   const [toColor, setToColor] = useState("");
   const [toSize, setToSize] = useState("");
   const [note, setNote] = useState("");
-  const [photos, setPhotos] = useState<string[]>([]);
+  const [photos, setPhotos] = useState<{ url: string; key: string; name: string }[]>([]);
+  const [uploading, setUploading] = useState(false);
 
   const item = o.items[pick]!;
 
-  const onPickFiles = (files: FileList | null) => {
+  const verifyImage = (url: string) =>
+    new Promise<boolean>((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(img.naturalWidth > 0 && img.naturalHeight > 0);
+      img.onerror = () => resolve(false);
+      img.src = url;
+    });
+
+  const onPickFiles = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
     const remaining = MAX_PHOTOS - photos.length;
     if (remaining <= 0) {
-      toast.error(`最多上传 ${MAX_PHOTOS} 张照片`);
+      toast.error(`已达上限：最多上传 ${MAX_PHOTOS} 张照片`);
       return;
     }
     const incoming = Array.from(files);
     if (incoming.length > remaining) {
-      toast.error(`最多再上传 ${remaining} 张，已忽略多余文件`);
+      toast.warning(`只能再上传 ${remaining} 张，超出部分已忽略`);
     }
-    const accepted: string[] = [];
+
+    setUploading(true);
+    const accepted: { url: string; key: string; name: string }[] = [];
+    let skipped = 0;
+    const existing = new Set(photos.map((p) => p.key));
+
     for (const f of incoming.slice(0, remaining)) {
+      const name = f.name || "未命名文件";
+      if (f.size === 0) {
+        toast.error(`${name}：文件为空或读取失败，请重新选择`);
+        skipped++;
+        continue;
+      }
+      if (!f.type.startsWith("image/")) {
+        toast.error(`${name}：不是图片文件，仅支持 ${ACCEPT_LABEL}`);
+        skipped++;
+        continue;
+      }
       if (!ACCEPT_TYPES.includes(f.type)) {
-        toast.error(`${f.name}：仅支持 ${ACCEPT_LABEL} 格式`);
+        toast.error(`${name}：暂不支持 ${f.type || "该"} 格式，请转为 ${ACCEPT_LABEL}`);
+        skipped++;
         continue;
       }
       if (f.size > MAX_SIZE_MB * 1024 * 1024) {
-        toast.error(`${f.name}：单张不能超过 ${MAX_SIZE_MB}MB`);
+        toast.error(
+          `${name}：${(f.size / 1024 / 1024).toFixed(1)}MB 超过 ${MAX_SIZE_MB}MB 上限，请压缩后重试`,
+        );
+        skipped++;
         continue;
       }
-      accepted.push(URL.createObjectURL(f));
+      const key = `${f.name}-${f.size}-${f.lastModified}`;
+      if (existing.has(key) || accepted.some((a) => a.key === key)) {
+        toast.error(`${name}：已选择过相同照片，请勿重复上传`);
+        skipped++;
+        continue;
+      }
+      const url = URL.createObjectURL(f);
+      const ok = await verifyImage(url);
+      if (!ok) {
+        URL.revokeObjectURL(url);
+        toast.error(`${name}：图片已损坏或无法解析，请重新拍摄`);
+        skipped++;
+        continue;
+      }
+      accepted.push({ url, key, name });
     }
+
+    setUploading(false);
     if (accepted.length > 0) {
       setPhotos((ps) => [...ps, ...accepted]);
-      toast.success(`已添加 ${accepted.length} 张照片`);
+      toast.success(
+        skipped > 0
+          ? `已添加 ${accepted.length} 张，${skipped} 张未通过校验`
+          : `已添加 ${accepted.length} 张照片`,
+      );
+    } else if (skipped > 0) {
+      toast.error("本次选择的照片均未通过校验，请根据提示重新上传");
     }
   };
 
@@ -78,6 +129,16 @@ function ApplyExchange() {
     }
     if (note.trim().length < 5) {
       toast.error("请填写不良/换货文字描述（至少 5 个字）");
+      return;
+    }
+    if (uploading) {
+      toast.error("图片仍在校验中，请稍候再提交");
+      return;
+    }
+    if (photos.length < 1 || photos.length > MAX_PHOTOS) {
+      toast.error(`请上传 1-${MAX_PHOTOS} 张实拍照片作为凭证`);
+      return;
+    }
       return;
     }
     if (photos.length < 1) {

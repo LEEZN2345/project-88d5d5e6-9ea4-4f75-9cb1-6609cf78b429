@@ -64,6 +64,7 @@ import { Route as AdminCommissionRouteImport } from './routes/admin.commission'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
 import { Route as AdminBannersRouteImport } from './routes/admin.banners'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
+import { Route as AdminAfterSalesRouteImport } from './routes/admin.after-sales'
 import { Route as OrdersIdExchangeRouteImport } from './routes/orders.$id.exchange'
 import { Route as AdminUsersIdRouteImport } from './routes/admin.users.$id'
 import { Route as AdminShopsIdRouteImport } from './routes/admin.shops.$id'
@@ -352,6 +353,11 @@ const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
   path: '/admin/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminAfterSalesRoute = AdminAfterSalesRouteImport.update({
+  id: '/admin/after-sales',
+  path: '/admin/after-sales',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OrdersIdExchangeRoute = OrdersIdExchangeRouteImport.update({
   id: '/exchange',
   path: '/exchange',
@@ -434,6 +440,7 @@ export interface FileRoutesByFullPath {
   '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
+  '/admin/after-sales': typeof AdminAfterSalesRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/banners': typeof AdminBannersRouteWithChildren
   '/admin/categories': typeof AdminCategoriesRoute
@@ -503,6 +510,7 @@ export interface FileRoutesByTo {
   '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
+  '/admin/after-sales': typeof AdminAfterSalesRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/banners': typeof AdminBannersRouteWithChildren
   '/admin/categories': typeof AdminCategoriesRoute
@@ -573,6 +581,7 @@ export interface FileRoutesById {
   '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
+  '/admin/after-sales': typeof AdminAfterSalesRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/banners': typeof AdminBannersRouteWithChildren
   '/admin/categories': typeof AdminCategoriesRoute
@@ -644,6 +653,7 @@ export interface FileRouteTypes {
     | '/points-rules'
     | '/settings'
     | '/support'
+    | '/admin/after-sales'
     | '/admin/analytics'
     | '/admin/banners'
     | '/admin/categories'
@@ -713,6 +723,7 @@ export interface FileRouteTypes {
     | '/points-rules'
     | '/settings'
     | '/support'
+    | '/admin/after-sales'
     | '/admin/analytics'
     | '/admin/banners'
     | '/admin/categories'
@@ -782,6 +793,7 @@ export interface FileRouteTypes {
     | '/points-rules'
     | '/settings'
     | '/support'
+    | '/admin/after-sales'
     | '/admin/analytics'
     | '/admin/banners'
     | '/admin/categories'
@@ -852,6 +864,7 @@ export interface RootRouteChildren {
   PointsRulesRoute: typeof PointsRulesRoute
   SettingsRoute: typeof SettingsRoute
   SupportRoute: typeof SupportRoute
+  AdminAfterSalesRoute: typeof AdminAfterSalesRoute
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
   AdminBannersRoute: typeof AdminBannersRouteWithChildren
   AdminCategoriesRoute: typeof AdminCategoriesRoute
@@ -1277,6 +1290,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/after-sales': {
+      id: '/admin/after-sales'
+      path: '/admin/after-sales'
+      fullPath: '/admin/after-sales'
+      preLoaderRoute: typeof AdminAfterSalesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/orders/$id/exchange': {
       id: '/orders/$id/exchange'
       path: '/exchange'
@@ -1505,6 +1525,7 @@ const rootRouteChildren: RootRouteChildren = {
   PointsRulesRoute: PointsRulesRoute,
   SettingsRoute: SettingsRoute,
   SupportRoute: SupportRoute,
+  AdminAfterSalesRoute: AdminAfterSalesRoute,
   AdminAnalyticsRoute: AdminAnalyticsRoute,
   AdminBannersRoute: AdminBannersRouteWithChildren,
   AdminCategoriesRoute: AdminCategoriesRoute,

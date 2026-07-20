@@ -3,6 +3,26 @@ import { useState } from "react";
 import { AdminShell } from "@/components/AdminShell";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
+} from "@/components/ui/dropdown-menu";
 import {
   EXCHANGES,
   EXCHANGE_STATUS_LABEL,
@@ -11,8 +31,24 @@ import {
   REFUNDS,
   formatCNY,
   type ExchangeStatus,
+  type ExchangeRequest,
+  type RefundRequest,
 } from "@/lib/mock-data";
-import { PackageCheck, Warehouse, Plane, RefreshCcw, Undo2 } from "lucide-react";
+import {
+  PackageCheck,
+  Warehouse,
+  Plane,
+  RefreshCcw,
+  Undo2,
+  ChevronDown,
+  Eye,
+  XCircle,
+  CheckCircle2,
+  Send,
+  Wallet,
+  FileText,
+} from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/after-sales")({
   head: () => ({ meta: [{ title: "售后管理 · 运营后台" }] }),
@@ -197,11 +233,14 @@ function ExchangesPanel() {
                 </Td>
                 <Td className="text-xs">{e.createdAt}</Td>
                 <Td>
-                  <Link to="/admin/exchanges/$id" params={{ id: e.id }}>
-                    <button className="inline-flex items-center rounded-md border border-primary/20 bg-primary/10 px-3.5 py-1.5 text-sm font-medium text-primary transition-all duration-200 hover:border-primary hover:bg-primary hover:text-primary-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:ring-offset-2 cursor-pointer">
-                      处理
-                    </button>
-                  </Link>
+                  <div className="flex items-center gap-1">
+                    <Link to="/admin/exchanges/$id" params={{ id: e.id }}>
+                      <Button size="sm" variant="ghost" className="h-8 px-2">
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </Link>
+                    <ExchangeQuickActions exchange={e} />
+                  </div>
                 </Td>
               </tr>
             ))}
@@ -261,11 +300,14 @@ function RefundsPanel() {
                   <Td className="text-xs">{r.createdAt}</Td>
                   <Td>{s && <Badge variant={s.variant}>{s.label}</Badge>}</Td>
                   <Td>
-                    <Link to="/admin/refunds/$id" params={{ id: r.id }}>
-                      <button className="inline-flex items-center rounded-md border border-primary/20 bg-primary/10 px-3.5 py-1.5 text-sm font-medium text-primary transition-all duration-200 hover:border-primary hover:bg-primary hover:text-primary-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:ring-offset-2 cursor-pointer">
-                        处理
-                      </button>
-                    </Link>
+                    <div className="flex items-center gap-1">
+                      <Link to="/admin/refunds/$id" params={{ id: r.id }}>
+                        <Button size="sm" variant="ghost" className="h-8 px-2">
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      </Link>
+                      <RefundQuickActions refund={r} />
+                    </div>
                   </Td>
                 </tr>
               );
@@ -279,6 +321,239 @@ function RefundsPanel() {
         退款场景（订单断货 / 平台主动联系）/ 退款金额(CNY) / 退款账户(微信/支付宝) / 退款流水号 / 回执截图 / 两级操作人(自动记录登录账号)。
       </Card>
     </>
+  );
+}
+
+/* ================== 快捷操作 ================== */
+
+type QuickField = { key: string; label: string; required?: boolean; type?: "text" | "textarea" | "number"; placeholder?: string };
+type QuickAction = { key: string; label: string; icon: React.ReactNode; fields: QuickField[]; destructive?: boolean; confirm: string; toast: string };
+
+function ExchangeQuickActions({ exchange }: { exchange: ExchangeRequest }) {
+  const available = exchangeQuickActions(exchange.status);
+  if (available.length === 0) return null;
+
+  const [pending, setPending] = useState<QuickAction | null>(null);
+
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button size="sm" className="h-8 gap-1 border border-primary/20 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground">
+            处理 <ChevronDown className="h-3.5 w-3.5" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-48">
+          <DropdownMenuLabel className="text-xs">可执行操作</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          {available.map((a) => (
+            <DropdownMenuItem key={a.key} onClick={() => setPending(a)} className="gap-2 text-xs">
+              {a.icon}
+              {a.label}
+            </DropdownMenuItem>
+          ))}
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild className="gap-2 text-xs">
+            <Link to="/admin/exchanges/$id" params={{ id: exchange.id }}>
+              <Eye className="h-4 w-4" /> 查看详情
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <QuickActionDialog action={pending} onClose={() => setPending(null)} />
+    </>
+  );
+}
+
+function RefundQuickActions({ refund }: { refund: RefundRequest }) {
+  const available = refundQuickActions(refund.status);
+  if (available.length === 0) return null;
+
+  const [pending, setPending] = useState<QuickAction | null>(null);
+
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button size="sm" className="h-8 gap-1 border border-primary/20 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground">
+            处理 <ChevronDown className="h-3.5 w-3.5" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-48">
+          <DropdownMenuLabel className="text-xs">可执行操作</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          {available.map((a) => (
+            <DropdownMenuItem key={a.key} onClick={() => setPending(a)} className="gap-2 text-xs">
+              {a.icon}
+              {a.label}
+            </DropdownMenuItem>
+          ))}
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild className="gap-2 text-xs">
+            <Link to="/admin/refunds/$id" params={{ id: refund.id }}>
+              <Eye className="h-4 w-4" /> 查看详情
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <QuickActionDialog action={pending} onClose={() => setPending(null)} />
+    </>
+  );
+}
+
+function exchangeQuickActions(status: ExchangeStatus): QuickAction[] {
+  switch (status) {
+    case "applied":
+      return [
+        { key: "approve", label: "通过并通知寄回", icon: <CheckCircle2 className="h-4 w-4" />, confirm: "通过并推送地址", toast: "已通过 · 集运仓地址已推送买手", fields: [{ key: "note", label: "补充说明（可选）", type: "textarea", placeholder: "将推送给买手…" }] },
+        { key: "reject", label: "驳回申请", icon: <XCircle className="h-4 w-4" />, destructive: true, confirm: "确认驳回", toast: "已驳回并通知买手", fields: [{ key: "reason", label: "驳回原因", required: true, type: "textarea", placeholder: "例：已超过 7 天签收售后期限…" }] },
+      ];
+    case "approved_wait_ship":
+      return [
+        { key: "cn_receive", label: "确认集运仓签收", icon: <Warehouse className="h-4 w-4" />, confirm: "确认签收", toast: "已确认集运仓签收", fields: [
+          { key: "trackingNo", label: "买手寄回单号", required: true, placeholder: "SF12345678" },
+          { key: "weight", label: "到货重量 (g)", required: true, type: "number", placeholder: "如 350" },
+        ] },
+      ];
+    case "cn_received":
+      return [
+        { key: "forward", label: "并入韩国转寄批次", icon: <Plane className="h-4 w-4" />, confirm: "并入批次", toast: "已并入韩国转寄批次", fields: [
+          { key: "batchNo", label: "批次号", required: true, placeholder: "KRB2025W02" },
+          { key: "shippedAt", label: "预计寄出时间", required: true, placeholder: "2025-01-08 18:00" },
+        ] },
+      ];
+    case "forwarded_kr":
+      return [
+        { key: "kr_receive", label: "韩国仓签收", icon: <PackageCheck className="h-4 w-4" />, confirm: "确认韩国签收", toast: "已确认韩国签收", fields: [{ key: "receivedAt", label: "签收时间", required: true, placeholder: "2025-01-10 15:20" }] },
+      ];
+    case "kr_received":
+      return [
+        { key: "shop_exchange", label: "进入档口交换", icon: <RefreshCcw className="h-4 w-4" />, confirm: "进入档口交换", toast: "已进入档口交换流程", fields: [{ key: "shop", label: "档口名称", required: true, placeholder: "MILK 女装 · A-102" }] },
+      ];
+    case "shop_exchanging":
+      return [
+        { key: "request_fee", label: "通知买手补运费", icon: <Wallet className="h-4 w-4" />, confirm: "推送买手支付", toast: "已通知买手补运费", fields: [
+          { key: "amount", label: "补运费金额 (CNY)", required: true, type: "number", placeholder: "如 45" },
+          { key: "reason", label: "费用说明", required: true, type: "textarea", placeholder: "对买手展示…" },
+        ] },
+      ];
+    case "return_fee_paid":
+      return [
+        { key: "reship", label: "重新发出", icon: <Send className="h-4 w-4" />, confirm: "确认发出", toast: "已重新发出", fields: [
+          { key: "carrier", label: "承运商", required: true, placeholder: "SF / EMS / CJ 大韩通运…" },
+          { key: "trackingNo", label: "国际运单号", required: true, placeholder: "SF88888888888" },
+        ] },
+      ];
+    case "reshipped":
+      return [
+        { key: "complete", label: "标记工单完成", icon: <CheckCircle2 className="h-4 w-4" />, confirm: "确认完成", toast: "工单已完成", fields: [] },
+      ];
+    default:
+      return [];
+  }
+}
+
+function refundQuickActions(status: string): QuickAction[] {
+  switch (status) {
+    case "cs_pending":
+      return [
+        { key: "cs_submit", label: "客服提单至财务", icon: <FileText className="h-4 w-4" />, confirm: "确认提单", toast: "已提单至财务", fields: [{ key: "note", label: "提单备注", required: true, type: "textarea", placeholder: "内部可见…" }] },
+      ];
+    case "finance_pending":
+      return [
+        { key: "finance_pay", label: "财务复核打款", icon: <CheckCircle2 className="h-4 w-4" />, confirm: "确认打款", toast: "已完成打款", fields: [
+          { key: "account", label: "退款账户", required: true, placeholder: "微信 · 张** / 支付宝 · 李**" },
+          { key: "txn", label: "退款流水号", required: true, placeholder: "4200002345XXXXXXXX" },
+          { key: "receipt", label: "回执截图 URL", required: true, placeholder: "https://…" },
+        ] },
+        { key: "reject", label: "驳回退款申请", icon: <XCircle className="h-4 w-4" />, destructive: true, confirm: "确认驳回", toast: "已驳回", fields: [{ key: "reason", label: "驳回原因", required: true, type: "textarea", placeholder: "原因…" }] },
+      ];
+    default:
+      return [];
+  }
+}
+
+function QuickActionDialog({ action, onClose }: { action: QuickAction | null; onClose: () => void }) {
+  const [values, setValues] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const open = !!action;
+
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(o) => {
+        if (!o) {
+          setValues({});
+          setErrors({});
+          onClose();
+        }
+      }}
+    >
+      {action && (
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{action.label}</DialogTitle>
+            <DialogDescription>提交后将同步更新工单状态，请确认必填项填写完整。</DialogDescription>
+          </DialogHeader>
+          <form
+            key={action.key}
+            className="space-y-3"
+            onSubmit={(ev) => {
+              ev.preventDefault();
+              const nextErr: Record<string, string> = {};
+              for (const f of action.fields) {
+                const v = (values[f.key] ?? "").trim();
+                if (f.required && !v) nextErr[f.key] = "此项必填";
+                else if (f.type === "number" && v && !(Number(v) > 0)) nextErr[f.key] = "请输入大于 0 的数值";
+              }
+              if (Object.keys(nextErr).length) {
+                setErrors(nextErr);
+                toast.error("请补全必填项后再提交");
+                return;
+              }
+              toast.success(action.toast);
+              setValues({});
+              setErrors({});
+              onClose();
+            }}
+          >
+            {action.fields.length === 0 && (
+              <div className="rounded-md border border-dashed p-3 text-xs text-muted-foreground">无需额外填写，请确认后提交。</div>
+            )}
+            {action.fields.map((f) => (
+              <div key={f.key}>
+                <Label className="text-xs">
+                  {f.label}
+                  {f.required && <span className="ml-1 text-destructive">*</span>}
+                </Label>
+                {f.type === "textarea" ? (
+                  <Textarea
+                    className="mt-1"
+                    rows={3}
+                    placeholder={f.placeholder}
+                    value={values[f.key] ?? ""}
+                    onChange={(ev) => setValues((s) => ({ ...s, [f.key]: ev.target.value }))}
+                  />
+                ) : (
+                  <Input
+                    className="mt-1"
+                    type={f.type === "number" ? "number" : "text"}
+                    placeholder={f.placeholder}
+                    value={values[f.key] ?? ""}
+                    onChange={(ev) => setValues((s) => ({ ...s, [f.key]: ev.target.value }))}
+                  />
+                )}
+                {errors[f.key] && <div className="mt-1 text-[11px] text-destructive">{errors[f.key]}</div>}
+              </div>
+            ))}
+            <DialogFooter className="pt-2">
+              <Button type="button" variant="ghost" onClick={onClose}>取消</Button>
+              <Button type="submit" variant={action.destructive ? "destructive" : "default"}>{action.confirm}</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      )}
+    </Dialog>
   );
 }
 

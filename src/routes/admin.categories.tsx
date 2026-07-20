@@ -229,7 +229,7 @@ function AdminCategories() {
         <div>
           <h1 className="text-xl font-semibold">商品属性分类</h1>
           <p className="text-xs text-muted-foreground">
-            管理商品品类标签（外套 / 针织 / 鞋 …），商品管理与买手端筛选器共用此列表。
+            管理商品品类标签（外套 / 针织 / 鞋 …），并可为每个子类/细分手动配置默认重量（克），用于商品未填重量时的国际运费兜底核算。
           </p>
         </div>
         <div className="flex gap-2">

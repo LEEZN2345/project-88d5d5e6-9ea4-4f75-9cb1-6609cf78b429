@@ -5,6 +5,7 @@ import type { Shop } from "@/lib/mock-data";
 import { CPW_AS_SHOPS, CPW_SECTION_LABEL } from "@/lib/cpw-as-shops";
 import { APM_AS_SHOPS } from "@/lib/apm-as-shops";
 import { APM_PLACE_AS_SHOPS } from "@/lib/apm-place-shops";
+import { NUZZON_AS_SHOPS } from "@/lib/nuzzon-shops";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,7 +37,7 @@ function AdminShops() {
 
   // 合并演示档口 + 从视频抓取的清平和档口
   const allShops = useMemo(
-    () => [...SHOPS, ...CPW_AS_SHOPS, ...APM_AS_SHOPS, ...APM_PLACE_AS_SHOPS],
+    () => [...SHOPS, ...CPW_AS_SHOPS, ...APM_AS_SHOPS, ...APM_PLACE_AS_SHOPS, ...NUZZON_AS_SHOPS],
     []
   );
 

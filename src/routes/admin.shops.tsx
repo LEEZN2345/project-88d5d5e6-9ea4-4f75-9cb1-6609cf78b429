@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { AdminShell } from "@/components/AdminShell";
 import { SHOPS, PRODUCTS } from "@/lib/mock-data";
 import type { Shop } from "@/lib/mock-data";
+import { CPW_AS_SHOPS, CPW_SECTION_LABEL } from "@/lib/cpw-as-shops";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,6 +31,9 @@ function AdminShops() {
   const navigate = useNavigate();
   const setTab = (t: "shops" | "buildings") =>
     navigate({ to: "/admin/shops", search: { tab: t } });
+
+  // 合并演示档口 + 从视频抓取的清平和档口
+  const allShops = useMemo(() => [...SHOPS, ...CPW_AS_SHOPS], []);
 
   const downloadTemplate = () => {
     const headers = ["档口名称(英文)", "档口名称(韩文)", "楼宇", "层数", "档口位置", "档口背景图URL", "起订件数", "标签(多个用/分隔)"];
@@ -62,7 +66,7 @@ function AdminShops() {
 
       <div className="mb-4 inline-flex rounded-md border border-border bg-background p-1 text-sm">
         {[
-          { k: "shops", label: `档口列表 (${SHOPS.length})` },
+          { k: "shops", label: `档口列表 (${allShops.length})` },
           { k: "buildings", label: `商圈 / 楼栋 (${MALLS.reduce((n, m) => n + m.buildings.length, 0)})` },
         ].map((t) => (
           <button
@@ -75,26 +79,46 @@ function AdminShops() {
         ))}
       </div>
 
-      {tab === "buildings" ? <BuildingsTab /> : <ShopsTab downloadTemplate={downloadTemplate} />}
+      {tab === "buildings" ? (
+        <BuildingsTab allShops={allShops} />
+      ) : (
+        <ShopsTab downloadTemplate={downloadTemplate} allShops={allShops} />
+      )}
     </AdminShell>
   );
 }
 
-function ShopsTab({ downloadTemplate: _dl }: { downloadTemplate: () => void }) {
+function ShopsTab({ downloadTemplate: _dl, allShops }: { downloadTemplate: () => void; allShops: Shop[] }) {
+  const [kw, setKw] = useState("");
+  const [building, setBuilding] = useState<string>("all");
+  const buildings = useMemo(() => Array.from(new Set(allShops.map((s) => s.building))), [allShops]);
+  const filtered = useMemo(() => {
+    const k = kw.trim().toLowerCase();
+    return allShops.filter((s) => {
+      if (building !== "all" && s.building !== building) return false;
+      if (!k) return true;
+      return (
+        s.name.toLowerCase().includes(k) ||
+        s.nameKo.toLowerCase().includes(k) ||
+        s.position.toLowerCase().includes(k)
+      );
+    });
+  }, [allShops, kw, building]);
+
   return (
     <>
       <div className="mb-4 grid gap-4 md:grid-cols-4">
         <Card className="p-4">
           <div className="text-xs text-muted-foreground">合作档口</div>
-          <div className="mt-1 text-2xl font-semibold">{SHOPS.length}</div>
+          <div className="mt-1 text-2xl font-semibold">{allShops.length}</div>
         </Card>
         <Card className="p-4">
           <div className="text-xs text-muted-foreground">覆盖楼宇</div>
-          <div className="mt-1 text-2xl font-semibold">{new Set(SHOPS.map((s) => s.building)).size}</div>
+          <div className="mt-1 text-2xl font-semibold">{new Set(allShops.map((s) => s.building)).size}</div>
         </Card>
         <Card className="p-4">
           <div className="text-xs text-muted-foreground">支持单件</div>
-          <div className="mt-1 text-2xl font-semibold">{SHOPS.filter((s) => s.minOrderQty === 1).length}</div>
+          <div className="mt-1 text-2xl font-semibold">{allShops.filter((s) => s.minOrderQty === 1).length}</div>
         </Card>
         <Card className="p-4">
           <div className="text-xs text-muted-foreground">在售商品数</div>
@@ -104,9 +128,25 @@ function ShopsTab({ downloadTemplate: _dl }: { downloadTemplate: () => void }) {
 
       <Card className="p-4">
         <div className="mb-3 flex flex-wrap items-center gap-2">
-          <Input placeholder="搜索档口名 / 位置" className="max-w-xs" />
-          <Button size="sm" variant="outline">所有楼宇</Button>
-          <Button size="sm" variant="outline">起订件数</Button>
+          <Input
+            placeholder="搜索档口名(中/韩/英)、铺位号"
+            className="max-w-xs"
+            value={kw}
+            onChange={(e) => setKw(e.target.value)}
+          />
+          <select
+            value={building}
+            onChange={(e) => setBuilding(e.target.value)}
+            className="h-9 rounded border border-border bg-background px-2 text-xs"
+          >
+            <option value="all">所有楼宇</option>
+            {buildings.map((b) => (
+              <option key={b} value={b}>{b}</option>
+            ))}
+          </select>
+          <div className="ml-auto text-xs text-muted-foreground">
+            共 {filtered.length} 条
+          </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -116,7 +156,7 @@ function ShopsTab({ downloadTemplate: _dl }: { downloadTemplate: () => void }) {
               </tr>
             </thead>
             <tbody>
-              {SHOPS.map((s) => {
+              {filtered.map((s) => {
                 const count = PRODUCTS.filter((p) => p.shopId === s.id).length;
                 return (
                   <tr key={s.id} className="border-t border-border">
@@ -126,7 +166,9 @@ function ShopsTab({ downloadTemplate: _dl }: { downloadTemplate: () => void }) {
                       <div className="text-[11px] text-muted-foreground">{s.nameKo}</div>
                     </Td>
                     <Td className="text-xs">{s.building}</Td>
-                    <Td className="text-xs">{s.floor}</Td>
+                    <Td className="text-xs">
+                      {CPW_SECTION_LABEL[s.floor] ?? s.floor}
+                    </Td>
                     <Td className="text-xs font-mono">{s.position}</Td>
                     <Td>
                       {s.minOrderQty === 1
@@ -181,8 +223,8 @@ function ShopsTab({ downloadTemplate: _dl }: { downloadTemplate: () => void }) {
   );
 }
 
-function BuildingsTab() {
-  const shopCount = (b: string) => SHOPS.filter((s) => s.building === b).length;
+function BuildingsTab({ allShops }: { allShops: Shop[] }) {
+  const shopCount = (b: string) => allShops.filter((s) => s.building === b).length;
   const [editing, setEditing] = useState<{ city: string; name: string; floors: string[] } | null>(null);
   return (
     <div className="space-y-4">
@@ -223,20 +265,20 @@ function BuildingsTab() {
       ))}
       <Sheet open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
         <SheetContent side="right" className="w-full sm:max-w-2xl overflow-y-auto">
-          {editing && <FloorEditor building={editing} />}
+          {editing && <FloorEditor building={editing} allShops={allShops} />}
         </SheetContent>
       </Sheet>
     </div>
   );
 }
 
-function FloorEditor({ building }: { building: { city: string; name: string; floors: string[] } }) {
+function FloorEditor({ building, allShops }: { building: { city: string; name: string; floors: string[] }; allShops: Shop[] }) {
   const [floors, setFloors] = useState<string[]>(building.floors);
   const [newFloor, setNewFloor] = useState("");
   const [activeFloor, setActiveFloor] = useState<string>(building.floors[0] ?? "");
 
   // 档口按 building+floor 分组（mock：以内存 SHOPS 为基础，本地增删）
-  const [localShops, setLocalShops] = useState<Shop[]>(() => SHOPS.filter((s) => s.building === building.name));
+  const [localShops, setLocalShops] = useState<Shop[]>(() => allShops.filter((s) => s.building === building.name));
   const [showAdd, setShowAdd] = useState(false);
   const [draft, setDraft] = useState<Partial<Shop>>({ minOrderQty: 1 });
 
@@ -295,7 +337,7 @@ function FloorEditor({ building }: { building: { city: string; name: string; flo
               onClick={() => setActiveFloor(f)}
               className={`group inline-flex items-center gap-1 rounded border px-2 py-1 text-xs ${activeFloor === f ? "border-primary bg-primary/10 text-primary" : "border-border text-foreground hover:bg-muted"}`}
             >
-              {f}
+              {CPW_SECTION_LABEL[f] ?? f}
               <X
                 className="h-3 w-3 opacity-0 hover:text-destructive group-hover:opacity-100"
                 onClick={(e) => { e.stopPropagation(); removeFloor(f); }}

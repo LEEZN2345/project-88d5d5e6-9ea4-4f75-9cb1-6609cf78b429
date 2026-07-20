@@ -13,15 +13,16 @@ export function cartItemKey(i: Pick<CartItem, "productId" | "color" | "size" | "
 }
 
 const KEY = "ddth_cart_v1";
+const EMPTY_CART: CartItem[] = [];
 let items: CartItem[] = load();
 const listeners = new Set<() => void>();
 
 function load(): CartItem[] {
-  if (typeof window === "undefined") return [];
+  if (typeof window === "undefined") return EMPTY_CART;
   try {
     return JSON.parse(localStorage.getItem(KEY) || "[]");
   } catch {
-    return [];
+    return EMPTY_CART;
   }
 }
 function persist() {
@@ -37,9 +38,12 @@ function subscribe(l: () => void) {
 function snapshot() {
   return items;
 }
+function getServerSnapshot() {
+  return EMPTY_CART;
+}
 
 export function useCart() {
-  return useSyncExternalStore(subscribe, snapshot, () => [] as CartItem[]);
+  return useSyncExternalStore(subscribe, snapshot, getServerSnapshot);
 }
 
 export function useCartCount() {

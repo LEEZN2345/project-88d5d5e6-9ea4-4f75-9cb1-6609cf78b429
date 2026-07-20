@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ColorPicker } from "@/components/ColorPicker";
 import { SHOPS } from "@/lib/mock-data";
 import { ArrowLeft, Upload, X, Save } from "lucide-react";
 import { useMemo, useRef, useState } from "react";

@@ -199,7 +199,9 @@ function ExchangesPanel() {
                 <Td className="text-xs">{e.createdAt}</Td>
                 <Td>
                   <Link to="/admin/exchanges/$id" params={{ id: e.id }}>
-                    <Button size="sm" variant="outline">处理</Button>
+                    <button className="inline-flex items-center rounded-md border border-primary/20 bg-primary/10 px-3.5 py-1.5 text-sm font-medium text-primary transition-all duration-200 hover:border-primary hover:bg-primary hover:text-primary-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:ring-offset-2 cursor-pointer">
+                      处理
+                    </button>
                   </Link>
                 </Td>
               </tr>
@@ -261,7 +263,9 @@ function RefundsPanel() {
                   <Td>{s && <Badge variant={s.variant}>{s.label}</Badge>}</Td>
                   <Td>
                     <Link to="/admin/refunds/$id" params={{ id: r.id }}>
-                      <Button size="sm" variant="outline">处理</Button>
+                      <button className="inline-flex items-center rounded-md border border-primary/20 bg-primary/10 px-3.5 py-1.5 text-sm font-medium text-primary transition-all duration-200 hover:border-primary hover:bg-primary hover:text-primary-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:ring-offset-2 cursor-pointer">
+                        处理
+                      </button>
                     </Link>
                   </Td>
                 </tr>

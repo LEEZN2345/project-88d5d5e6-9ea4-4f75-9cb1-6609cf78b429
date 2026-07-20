@@ -13,8 +13,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Upload, PackageCheck, ExternalLink, ChevronRight, ChevronDown, Truck, CalendarClock, Warehouse, Lock } from "lucide-react";
+import { Upload, PackageCheck, ExternalLink, ChevronRight, ChevronDown, Truck, CalendarClock, Warehouse, Lock, PackageX } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/feedback")({
   head: () => ({ meta: [{ title: "订单反馈管理 · 运营后台" }] }),
@@ -23,7 +24,7 @@ export const Route = createFileRoute("/admin/feedback")({
 
 type StockState = "pending" | "in_stock" | "out_of_stock";
 type GoodsType = "in_stock" | "reserve"; // 现货 / 预定
-type ItemAction = "wait_ship" | "reserve" | "to_stock";
+type ItemAction = "wait_ship" | "reserve" | "to_stock" | "out_of_stock";
 
 type FeedbackRow = {
   orderId: string;
@@ -55,6 +56,11 @@ const ACTION_META: Record<ItemAction, { label: string; icon: typeof Truck; color
     label: "现货数量 1 入现货库",
     icon: Warehouse,
     color: "bg-emerald-500/15 text-emerald-700 border-emerald-500/40 dark:text-emerald-300",
+  },
+  out_of_stock: {
+    label: "断货",
+    icon: PackageX,
+    color: "bg-rose-500/15 text-rose-700 border-rose-500/40 dark:text-rose-300",
   },
 };
 
@@ -134,6 +140,13 @@ function AdminFeedback() {
         map[idx] = act;
         if (act === "reserve" && !dates[idx]) {
           dates[idx] = addDays(new Date(), 5);
+        }
+        if (act === "out_of_stock") {
+          const order = PAID_ORDERS.find((o) => o.id === id);
+          const item = order?.items[idx];
+          toast.success(
+            `已通知买家「${order?.buyer.name ?? ""}」：${item?.product.name ?? "该商品"} 断货`,
+          );
         }
       }
       return { ...r, [id]: { ...cur, itemActions: map, itemShipDates: dates, updatedAt: nowStr() } };
@@ -609,7 +622,7 @@ function ActionCell({
   shipDate?: string;
   onShipDateChange: (d: string) => void;
 }) {
-  const opts: ItemAction[] = ["wait_ship", "reserve", "to_stock"];
+  const opts: ItemAction[] = ["wait_ship", "reserve", "to_stock", "out_of_stock"];
   return (
     <div className="flex flex-wrap items-center gap-1.5">
       {opts.map((a) => {

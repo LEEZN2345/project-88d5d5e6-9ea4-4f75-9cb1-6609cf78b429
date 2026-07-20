@@ -647,6 +647,165 @@ function AdminFeedback() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* 断货原因弹窗 */}
+      <Dialog open={!!oosDialog} onOpenChange={(v) => !v && setOosDialog(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>标记断货 · 通知买家</DialogTitle>
+          </DialogHeader>
+          {oosDialog && (() => {
+            const order = PAID_ORDERS.find((o) => o.id === oosDialog.orderId);
+            const item = order?.items[oosDialog.itemIdx];
+            const shop = item ? SHOPS.find((s) => s.id === item.product.shopId) : undefined;
+            return (
+              <div className="space-y-3 text-sm">
+                <div className="rounded-md border border-border bg-muted/40 p-2 text-xs">
+                  <div className="font-medium">{item?.product.name}</div>
+                  <div className="mt-0.5 text-muted-foreground">
+                    {shop?.name} · {item?.color} / {item?.size} · × {item?.qty}
+                  </div>
+                  <div className="mt-0.5 font-mono text-[10px] text-muted-foreground">
+                    订单 {order?.id} · 内部款号 {item?.product.internalCode}
+                  </div>
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs text-muted-foreground">
+                    断货原因（必填，将写入时间线）
+                  </label>
+                  <Textarea
+                    rows={3}
+                    placeholder="如：档口回复无货 / 已停产 / 缺色缺码"
+                    value={oosReason}
+                    onChange={(e) => setOosReason(e.target.value)}
+                  />
+                </div>
+                <div className="text-[11px] text-muted-foreground">
+                  操作人：{ROLE_LABEL[role]}
+                </div>
+              </div>
+            );
+          })()}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOosDialog(null)}>取消</Button>
+            <Button onClick={confirmOutOfStock}>确认断货并通知买家</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* 断货时间线弹窗 */}
+      <Dialog open={timelineOpen} onOpenChange={setTimelineOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>断货操作时间线</DialogTitle>
+          </DialogHeader>
+          <div className="mb-2">
+            <Input
+              placeholder="按订单号 / SKU / 操作人筛选"
+              value={timelineFilter}
+              onChange={(e) => setTimelineFilter(e.target.value)}
+              className="h-8"
+            />
+          </div>
+          <div className="max-h-[60vh] overflow-y-auto rounded-md border border-border">
+            {(() => {
+              const kw = timelineFilter.trim().toLowerCase();
+              const filtered = oosLog.filter((e) =>
+                !kw ||
+                e.orderId.toLowerCase().includes(kw) ||
+                e.skuName.toLowerCase().includes(kw) ||
+                (e.skuCode ?? "").toLowerCase().includes(kw) ||
+                e.actor.toLowerCase().includes(kw),
+              );
+              if (filtered.length === 0)
+                return (
+                  <div className="px-3 py-8 text-center text-xs text-muted-foreground">
+                    暂无断货记录
+                  </div>
+                );
+              return (
+                <ol className="divide-y divide-border">
+                  {filtered.map((e) => (
+                    <li key={e.id} className="p-3 text-xs">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span
+                          className={cn(
+                            "inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium",
+                            e.action === "mark"
+                              ? "bg-rose-500/15 text-rose-700 dark:text-rose-300"
+                              : "bg-muted text-muted-foreground",
+                          )}
+                        >
+                          {e.action === "mark" ? "标记断货" : "撤销断货"}
+                        </span>
+                        <span className="font-mono text-[11px]">{e.orderId}</span>
+                        <span className="text-muted-foreground">
+                          {new Date(e.at).toLocaleString("zh-CN", { hour12: false })}
+                        </span>
+                        <span className="ml-auto text-muted-foreground">
+                          操作人：<b className="text-foreground">{e.actor}</b>
+                        </span>
+                      </div>
+                      <div className="mt-1">
+                        {e.skuName}
+                        <span className="ml-1 text-muted-foreground">
+                          （{e.shopName ?? "-"} · {e.color ?? "-"} / {e.size ?? "-"} · × {e.qty}）
+                        </span>
+                      </div>
+                      {e.skuCode && (
+                        <div className="mt-0.5 font-mono text-[10px] text-muted-foreground">
+                          {e.skuCode}
+                        </div>
+                      )}
+                      <div className="mt-1 rounded bg-muted/50 px-2 py-1 text-[11px]">
+                        原因：{e.reason}
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              );
+            })()}
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                const rows = [
+                  ["时间", "动作", "订单号", "SKU", "内部款号", "档口", "颜色", "尺寸", "数量", "原因", "操作人", "角色"],
+                  ...oosLog.map((e) => [
+                    new Date(e.at).toLocaleString("zh-CN", { hour12: false }),
+                    e.action === "mark" ? "标记断货" : "撤销断货",
+                    e.orderId,
+                    e.skuName,
+                    e.skuCode ?? "",
+                    e.shopName ?? "",
+                    e.color ?? "",
+                    e.size ?? "",
+                    String(e.qty),
+                    e.reason,
+                    e.actor,
+                    e.actorRole,
+                  ]),
+                ];
+                const csv = rows
+                  .map((r) => r.map((c) => `"${String(c).replaceAll('"', '""')}"`).join(","))
+                  .join("\n");
+                const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `断货时间线_${new Date().toISOString().slice(0, 10)}.csv`;
+                a.click();
+                URL.revokeObjectURL(url);
+              }}
+              disabled={oosLog.length === 0}
+            >
+              导出 CSV
+            </Button>
+            <Button onClick={() => setTimelineOpen(false)}>关闭</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AdminShell>
   );
 }

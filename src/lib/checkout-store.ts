@@ -15,23 +15,37 @@ type PendingState = {
   source: "buy" | "cart";
   /** 用于结算成功后清理购物车 */
   cartKeys?: string[];
+  /** 首次进入结算的时间戳，用于恢复提示 */
+  createdAt?: number;
 };
 
 const PENDING_KEY = "ddth_checkout_pending_v1";
 const ORDERS_KEY = "ddth_orders_v1";
+/** pending 最长保留时长（24h 后视为过期，自动清理） */
+export const PENDING_TTL_MS = 24 * 60 * 60 * 1000;
 
 function loadPending(): PendingState {
   if (typeof window === "undefined") return { items: [], source: "buy" };
   try {
-    const raw = sessionStorage.getItem(PENDING_KEY);
-    return raw ? JSON.parse(raw) : { items: [], source: "buy" };
+    const raw = localStorage.getItem(PENDING_KEY);
+    if (!raw) return { items: [], source: "buy" };
+    const parsed = JSON.parse(raw) as PendingState;
+    if (parsed.createdAt && Date.now() - parsed.createdAt > PENDING_TTL_MS) {
+      localStorage.removeItem(PENDING_KEY);
+      return { items: [], source: "buy" };
+    }
+    return parsed;
   } catch {
     return { items: [], source: "buy" };
   }
 }
 function persistPending() {
   if (typeof window !== "undefined") {
-    sessionStorage.setItem(PENDING_KEY, JSON.stringify(state));
+    if (state.items.length === 0) {
+      localStorage.removeItem(PENDING_KEY);
+    } else {
+      localStorage.setItem(PENDING_KEY, JSON.stringify(state));
+    }
   }
   listeners.forEach((l) => l());
 }
@@ -41,7 +55,7 @@ const listeners = new Set<() => void>();
 
 export const checkoutStore = {
   setBuyNow(item: PendingItem) {
-    state = { items: [item], source: "buy" };
+    state = { items: [item], source: "buy", createdAt: Date.now() };
     persistPending();
   },
   setFromCart(items: (CartItem & { key: string })[]) {
@@ -55,6 +69,7 @@ export const checkoutStore = {
       })),
       source: "cart",
       cartKeys: items.map((i) => i.key),
+      createdAt: Date.now(),
     };
     persistPending();
   },

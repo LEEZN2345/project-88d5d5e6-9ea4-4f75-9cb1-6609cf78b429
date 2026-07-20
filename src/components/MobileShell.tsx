@@ -2,6 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { Home, Store, Users, User, ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCartCount } from "@/lib/cart-store";
+import { PendingCheckoutRecovery } from "@/components/PendingCheckoutRecovery";
 
 const TABS = [
   { to: "/", icon: Home, label: "首页" },
@@ -17,6 +18,7 @@ export function MobileShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="mx-auto flex min-h-screen max-w-[480px] flex-col bg-background">
       <main className="flex-1 pb-20">{children}</main>
+      <PendingCheckoutRecovery />
       <nav className="fixed bottom-0 left-1/2 z-50 flex w-full max-w-[480px] -translate-x-1/2 items-center justify-around border-t border-border bg-background/95 px-2 py-2 backdrop-blur">
         {TABS.map(({ to, icon: Icon, label }) => {
           const active = to === "/" ? pathname === "/" : pathname.startsWith(to);

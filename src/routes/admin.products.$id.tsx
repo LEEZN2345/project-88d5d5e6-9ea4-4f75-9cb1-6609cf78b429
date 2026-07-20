@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import { ColorPicker } from "@/components/ColorPicker";
 import { PRODUCTS, SHOPS, formatKRW } from "@/lib/mock-data";
 import { ArrowLeft, Upload, X, Save } from "lucide-react";
 import { useState } from "react";

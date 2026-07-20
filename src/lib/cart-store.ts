@@ -8,6 +8,10 @@ export type CartItem = {
   tier?: "solo" | "group" | "bulk";
 };
 
+export function cartItemKey(i: Pick<CartItem, "productId" | "color" | "size" | "tier">) {
+  return `${i.productId}|${i.color}|${i.size}|${i.tier ?? "solo"}`;
+}
+
 const KEY = "ddth_cart_v1";
 let items: CartItem[] = load();
 const listeners = new Set<() => void>();
@@ -66,6 +70,11 @@ export const cart = {
   },
   remove(idx: number) {
     items = items.filter((_, i) => i !== idx);
+    persist();
+  },
+  removeByKeys(keys: string[]) {
+    const set = new Set(keys);
+    items = items.filter((it) => !set.has(cartItemKey(it)));
     persist();
   },
   clear() {

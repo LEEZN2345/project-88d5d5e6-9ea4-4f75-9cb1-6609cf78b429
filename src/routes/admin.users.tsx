@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { AdminShell } from "@/components/AdminShell";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -118,7 +118,9 @@ function AdminUsers() {
                     </Td>
                     <Td>
                       <div className="flex gap-1">
-                        <Button size="sm" variant="outline">详情</Button>
+                        <Link to="/admin/users/$id" params={{ id: u.id }}>
+                          <Button size="sm" variant="outline">详情</Button>
+                        </Link>
                         <Button size="sm" variant="ghost">{u.status === "active" ? "冻结" : "解冻"}</Button>
                         {u.orderBan ? (
                           <Button size="sm" variant="ghost" onClick={() => liftBan(u)}>解除禁购</Button>

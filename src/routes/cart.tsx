@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Trash2, Minus, Plus, ShoppingCart } from "lucide-react";
 import { cart, cartItemKey, useCart } from "@/lib/cart-store";
 import { checkoutStore } from "@/lib/checkout-store";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 export const Route = createFileRoute("/cart")({
   head: () => ({ meta: [{ title: "购物车 · 东大门订货通" }] }),
@@ -31,6 +31,19 @@ function Cart() {
     shop: s,
     rows: rows.filter((r) => r.product!.shopId === s.id),
   })).filter((g) => g.rows.length > 0);
+
+  // 购物车条目变化时（含 SSR/水合后首次拿到 items），自动补选新条目
+  useEffect(() => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      rows.forEach((r) => next.add(r.index));
+      // 去掉已被移除的索引
+      Array.from(next).forEach((i) => {
+        if (!rows.some((r) => r.index === i)) next.delete(i);
+      });
+      return next;
+    });
+  }, [rows.length]);
 
   const totalKRW = rows
     .filter((r) => selected.has(r.index))

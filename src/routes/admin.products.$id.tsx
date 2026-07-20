@@ -124,16 +124,8 @@ function ProductEdit() {
             <div className="mb-2 text-sm font-semibold">颜色 / 尺码矩阵</div>
             <div className="mb-3">
               <Label className="text-xs">颜色</Label>
-              <div className="mt-1 flex flex-wrap gap-1">
-                {colors.map((c) => (
-                  <Badge key={c} variant="outline" className="gap-1">{c}
-                    <button onClick={() => setColors((p) => p.filter((x) => x !== c))}><X className="h-3 w-3" /></button>
-                  </Badge>
-                ))}
-              </div>
-              <div className="mt-2 flex gap-1">
-                <Input value={newColor} onChange={(e) => setNewColor(e.target.value)} placeholder="新增颜色" className="h-8 text-xs" />
-                <Button size="sm" variant="outline" onClick={() => { if (newColor) { setColors((p) => [...p, newColor]); setNewColor(""); } }}>+</Button>
+              <div className="mt-1">
+                <ColorPicker colors={colors} onChange={setColors} />
               </div>
             </div>
             <div>

@@ -82,6 +82,7 @@ function parseLocation(loc: string): { building: string; floor: string; code: st
 import { CPW_SHOPS } from "./chungpyunghwa-shops";
 import { APM_SHOPS } from "./apm-shops";
 import { APM_PLACE_SHOPS } from "./apm-place-shops";
+import { NUZZON_SHOPS } from "./nuzzon-shops";
 
 const indexed: IndexedShop[] = [];
 const hotNames = new Set(OFFLINE_HOT.map((s) => s.name));
@@ -119,6 +120,16 @@ for (const s of APM_PLACE_SHOPS) {
     building: "APM Place",
     floor: s.floor,
     code: s.number,
+  });
+}
+
+// NUZZON 视频抓取档口（1F–6F）
+for (const s of NUZZON_SHOPS) {
+  indexed.push({
+    name: s.name,
+    building: "NUZZON",
+    floor: s.floor,
+    code: String(s.number),
   });
 }
 

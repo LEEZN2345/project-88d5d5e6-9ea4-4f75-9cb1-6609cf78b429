@@ -96,6 +96,7 @@ export function ColorPicker({
               placeholder={placeholder}
               className="h-8 pl-8 text-xs"
             />
+            <span className="text-[10px] text-rose-500">q={query}|m={matches.length}</span>
           </div>
           <Button
             size="sm"

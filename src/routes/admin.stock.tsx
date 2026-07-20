@@ -1,6 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "@/components/AdminShell";
-import { STOCK_ITEMS, SHOPS, PRODUCTS, type StockItem } from "@/lib/mock-data";
+import {
+  STOCK_ITEMS,
+  SHOPS,
+  PRODUCTS,
+  STOCK_SOURCE_LABEL,
+  type StockItem,
+  type StockSource,
+} from "@/lib/mock-data";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,7 +26,11 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { useMemo, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { Plus, Minus, Trash2, Search, Warehouse } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { useRole, ROLE_LABEL } from "@/lib/auth-role";
 
 export const Route = createFileRoute("/admin/stock")({
   head: () => ({ meta: [{ title: "现货管理 · 运营后台" }] }),
@@ -30,19 +41,24 @@ function AdminStock() {
   const [items, setItems] = useState<StockItem[]>(() => STOCK_ITEMS.map((s) => ({ ...s })));
   const [q, setQ] = useState("");
   const [shopFilter, setShopFilter] = useState<string>("all");
+  const [sourceFilter, setSourceFilter] = useState<string>("all");
   const [addOpen, setAddOpen] = useState(false);
+  const role = useRole();
+  const roleLabel = ROLE_LABEL[role];
 
   const [newForm, setNewForm] = useState({
     productId: "",
     color: "",
     size: "",
     qty: 1,
+    remark: "",
   });
 
   const filtered = useMemo(() => {
     const kw = q.trim().toLowerCase();
     return items.filter((s) => {
       if (shopFilter !== "all" && s.shopId !== shopFilter) return false;
+      if (sourceFilter !== "all" && s.source !== sourceFilter) return false;
       if (!kw) return true;
       const p = PRODUCTS.find((x) => x.id === s.productId);
       return (
@@ -53,7 +69,7 @@ function AdminStock() {
         s.sourceOrderId.toLowerCase().includes(kw)
       );
     });
-  }, [items, q, shopFilter]);
+  }, [items, q, shopFilter, sourceFilter]);
 
   const totals = useMemo(() => {
     const total = items.reduce((s, i) => s + i.qty, 0);
@@ -82,13 +98,16 @@ function AdminStock() {
         color: newForm.color,
         size: newForm.size,
         qty: newForm.qty,
-        sourceOrderId: "手动录入",
+        sourceOrderId: "-",
+        source: "manual" as StockSource,
+        operator: roleLabel,
+        remark: newForm.remark.trim() || undefined,
         createdAt: new Date().toISOString().replace("T", " ").slice(0, 16),
       },
       ...rs,
     ]);
     setAddOpen(false);
-    setNewForm({ productId: "", color: "", size: "", qty: 1 });
+    setNewForm({ productId: "", color: "", size: "", qty: 1, remark: "" });
   };
 
   const selectedProduct = PRODUCTS.find((p) => p.id === newForm.productId);
@@ -133,6 +152,18 @@ function AdminStock() {
             ))}
           </SelectContent>
         </Select>
+        <Select value={sourceFilter} onValueChange={setSourceFilter}>
+          <SelectTrigger className="h-8 w-40 text-xs">
+            <SelectValue placeholder="入库来源" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">全部来源</SelectItem>
+            <SelectItem value="manual">{STOCK_SOURCE_LABEL.manual}</SelectItem>
+            <SelectItem value="first_order_surplus">
+              {STOCK_SOURCE_LABEL.first_order_surplus}
+            </SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <Card className="overflow-x-auto">
@@ -143,6 +174,7 @@ function AdminStock() {
               <Th>档口</Th>
               <Th>颜色 / 尺寸</Th>
               <Th>库存数量</Th>
+              <Th>入库来源</Th>
               <Th>来源订单</Th>
               <Th>入库时间</Th>
               <Th>操作</Th>
@@ -203,7 +235,41 @@ function AdminStock() {
                       </Button>
                     </div>
                   </Td>
-                  <Td className="font-mono text-xs">{s.sourceOrderId}</Td>
+                  <Td className="text-xs">
+                    <Badge
+                      variant="outline"
+                      className={
+                        s.source === "manual"
+                          ? "border-sky-500/40 bg-sky-500/10 text-sky-700 dark:text-sky-300"
+                          : "border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300"
+                      }
+                    >
+                      {STOCK_SOURCE_LABEL[s.source]}
+                    </Badge>
+                    {s.source === "manual" && s.operator && (
+                      <div className="mt-0.5 text-[10px] text-muted-foreground">
+                        操作人：{s.operator}
+                      </div>
+                    )}
+                    {s.remark && (
+                      <div className="mt-0.5 text-[10px] text-muted-foreground">
+                        备注：{s.remark}
+                      </div>
+                    )}
+                  </Td>
+                  <Td className="font-mono text-xs">
+                    {s.source === "manual" ? (
+                      <span className="text-muted-foreground">—</span>
+                    ) : (
+                      <Link
+                        to="/admin/orders/$id"
+                        params={{ id: s.sourceOrderId }}
+                        className="text-primary hover:underline"
+                      >
+                        {s.sourceOrderId}
+                      </Link>
+                    )}
+                  </Td>
                   <Td className="text-xs text-muted-foreground">{s.createdAt}</Td>
                   <Td>
                     <Button
@@ -220,7 +286,7 @@ function AdminStock() {
             })}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-3 py-8 text-center text-xs text-muted-foreground">
+                <td colSpan={8} className="px-3 py-8 text-center text-xs text-muted-foreground">
                   暂无符合条件的现货
                 </td>
               </tr>
@@ -232,8 +298,8 @@ function AdminStock() {
       <Card className="mt-4 p-4 text-xs text-muted-foreground">
         <div className="font-medium text-foreground">现货管理说明</div>
         <ul className="mt-1 list-disc space-y-0.5 pl-5">
-          <li><b>自动入库</b>：档口 2 件起拍时用户下 1 件，系统代订 2 件；发货后剩余的 1 件自动入库到现货库。</li>
-          <li><b>手动入库</b>：客服 / 采购可手动补录现货（例如档口赠品、促销库存）。</li>
+          <li><b>首件2件起订</b>：档口 2 件起拍时买手下 1 件，系统代订 2 件；发货后剩余的 1 件自动入库并挂上来源订单号，可点击追溯到原始订单。</li>
+          <li><b>手动入库</b>：客服 / 采购可手动补录现货（如档口赠品、促销库存、样衣），记录操作人与备注。</li>
           <li><b>库存出库</b>：在<span className="text-foreground">新订单管理</span>命中现货时选择「发现货」，或在<span className="text-foreground">发货管理</span>推进已发货，会自动扣减此处库存。</li>
           <li><b>数量调整</b>：直接 +/- 或删除；本页所有变更均记录到库存流水（M2 上线）。</li>
         </ul>
@@ -321,6 +387,20 @@ function AdminStock() {
                 }
                 className="h-9 text-xs"
               />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs text-muted-foreground">
+                入库备注（可选）
+              </label>
+              <Textarea
+                value={newForm.remark}
+                onChange={(e) => setNewForm((f) => ({ ...f, remark: e.target.value }))}
+                placeholder="如：档口赠品 / 样衣回收 / 促销余货"
+                className="min-h-16 text-xs"
+              />
+              <div className="mt-1 text-[10px] text-muted-foreground">
+                入库来源固定为「手动入库」，操作人：{roleLabel}
+              </div>
             </div>
           </div>
           <DialogFooter>

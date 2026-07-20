@@ -21,7 +21,10 @@ import {
   Loader2,
   ChevronDown,
   Check,
+  AlertTriangle,
+  Clock,
 } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({ meta: [{ title: "提交订单 · 东大门订货通" }] }),
@@ -46,7 +49,10 @@ function intlShipFor(productId: string) {
   return INTL_SHIP_MAP[productId] ?? 6;
 }
 
-type PayStep = "qr" | "confirming" | "done";
+type PayStep = "qr" | "confirming" | "done" | "failed" | "timeout";
+
+// 演示：模拟支付失败概率（生产接入真实支付网关回调）
+const FAIL_RATE = 0.25;
 
 const ICON: Record<PayMethodId, { icon: string; bg: string }> = {
   wechat_online: { icon: "微", bg: "bg-[#09BB07]" },
@@ -95,22 +101,64 @@ function Checkout() {
   const [channel, setChannel] = useState<PayMethodId>(enabledMethods[0]?.id ?? "wechat_online");
   const [seconds, setSeconds] = useState(15 * 60);
   const [shipOpen, setShipOpen] = useState(false);
+  const [failReason, setFailReason] = useState<string>("");
 
   useEffect(() => {
     if (!payOpen || step !== "qr") return;
-    const t = setInterval(() => setSeconds((s) => Math.max(0, s - 1)), 1000);
+    const t = setInterval(
+      () =>
+        setSeconds((s) => {
+          if (s <= 1) {
+            clearInterval(t);
+            setStep("timeout");
+            toast.error("支付超时", {
+              description: "订单未支付已释放，购物车已保留，可重新发起支付",
+            });
+            return 0;
+          }
+          return s - 1;
+        }),
+      1000,
+    );
     return () => clearInterval(t);
   }, [payOpen, step]);
 
   const openPay = () => {
     setStep("qr");
     setSeconds(15 * 60);
+    setFailReason("");
     setPayOpen(true);
+  };
+
+  const retryPay = () => {
+    setFailReason("");
+    setSeconds(15 * 60);
+    setStep("qr");
+  };
+
+  const backToCart = () => {
+    setPayOpen(false);
+    navigate({ to: "/cart" });
   };
 
   const confirmPaid = () => {
     setStep("confirming");
     setTimeout(() => {
+      // 模拟支付网关回调：随机失败以覆盖兜底流程
+      if (Math.random() < FAIL_RATE) {
+        const reasons = [
+          "银行返回：付款人余额不足",
+          "支付渠道未收到入账，请核对付款金额",
+          "网络异常，未能确认付款结果",
+        ];
+        const r = reasons[Math.floor(Math.random() * reasons.length)];
+        setFailReason(r);
+        setStep("failed");
+        toast.error("支付失败", {
+          description: `${r}。购物车已保留，可重新发起支付`,
+        });
+        return;
+      }
       const order = createOrderFromPending({
         channelId: channel,
         channelLabel: enabledMethods.find((m) => m.id === channel)?.label ?? "",
@@ -313,6 +361,50 @@ function Checkout() {
                 平台将锁定汇率并代付韩币，正在跳转订单详情…
               </div>
             </div>
+          )}
+
+          {step === "failed" && (
+            <>
+              <div className="flex flex-col items-center gap-3 px-6 pt-10 pb-4 text-center">
+                <AlertTriangle className="h-12 w-12 text-[#FF4D2E]" />
+                <div className="text-base font-semibold">支付未成功</div>
+                <div className="text-xs text-muted-foreground">{failReason}</div>
+                <div className="mt-2 rounded-md bg-muted/50 px-3 py-2 text-[11px] text-muted-foreground">
+                  订单尚未创建，购物车商品已为你保留。可更换支付方式或重试。
+                </div>
+              </div>
+              <DrawerFooter className="gap-2 pb-6">
+                <Button className="h-11 rounded-full" onClick={retryPay}>
+                  重试支付
+                </Button>
+                <Button variant="outline" className="h-11 rounded-full" onClick={backToCart}>
+                  返回购物车
+                </Button>
+              </DrawerFooter>
+            </>
+          )}
+
+          {step === "timeout" && (
+            <>
+              <div className="flex flex-col items-center gap-3 px-6 pt-10 pb-4 text-center">
+                <Clock className="h-12 w-12 text-amber-500" />
+                <div className="text-base font-semibold">支付超时</div>
+                <div className="text-xs text-muted-foreground">
+                  15 分钟内未完成支付，本次订单已自动关闭
+                </div>
+                <div className="mt-2 rounded-md bg-muted/50 px-3 py-2 text-[11px] text-muted-foreground">
+                  购物车商品已为你保留，重新发起支付将按最新汇率结算。
+                </div>
+              </div>
+              <DrawerFooter className="gap-2 pb-6">
+                <Button className="h-11 rounded-full" onClick={retryPay}>
+                  重新发起支付
+                </Button>
+                <Button variant="outline" className="h-11 rounded-full" onClick={backToCart}>
+                  返回购物车
+                </Button>
+              </DrawerFooter>
+            </>
           )}
         </DrawerContent>
       </Drawer>

@@ -104,8 +104,8 @@ function RefundDetail() {
   return (
     <AdminShell>
       <div className="mb-4 flex items-center justify-between">
-        <Link to="/admin/refunds" className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-          <ArrowLeft className="h-4 w-4" />返回退款列表
+        <Link to="/admin/after-sales" className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+          <ArrowLeft className="h-4 w-4" />返回售后管理
         </Link>
         <div className="flex gap-2">
           {r.status === "cs_pending" && <Button size="sm" onClick={() => setPending("cs_submit")}>客服提单</Button>}

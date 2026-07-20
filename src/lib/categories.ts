@@ -11,6 +11,7 @@ export type LeafCategory = {
   name: string;
   nameKo?: string;
   enabled: boolean;
+  defaultWeightGrams?: number;
 };
 
 export type SubCategory = {
@@ -19,6 +20,7 @@ export type SubCategory = {
   nameKo?: string;
   enabled: boolean;
   leafs?: LeafCategory[];
+  defaultWeightGrams?: number;
 };
 
 export type ProductCategory = {

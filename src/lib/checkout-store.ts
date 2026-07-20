@@ -134,7 +134,7 @@ export function createOrderFromPending(opts: {
     totalKRW: opts.totalKRW,
     totalCNY: opts.totalCNY,
     snapshotRate: REFERENCE_RATE,
-    status: "paid",
+    status: "paid_pending_proxy",
     channel: tierToChannel[pending.items[0]!.tier],
     paymentAccount: {
       name: payAcc?.label ?? "平台收款",

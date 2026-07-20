@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ColorPicker } from "@/components/ColorPicker";
 import { SHOPS } from "@/lib/mock-data";
 import { ArrowLeft, Upload, X, Save } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
@@ -39,7 +40,6 @@ function NewProduct() {
   const [origin, setOrigin] = useState<(typeof ORIGIN_OPTIONS)[number]>("韩国");
   const [colors, setColors] = useState<string[]>([]);
   const [sizes, setSizes] = useState<string[]>([]);
-  const [newColor, setNewColor] = useState("");
   const [newSize, setNewSize] = useState("");
   const [composition, setComposition] = useState("以实物为准");
   const [purchaseCondition, setPurchaseCondition] = useState<"single" | "moq2">("single");
@@ -71,12 +71,6 @@ function NewProduct() {
     ).then((urls) => setImages((prev) => [...prev, ...urls].slice(0, 9)));
   };
 
-  const addColor = () => {
-    const v = newColor.trim();
-    if (!v || colors.includes(v)) return;
-    setColors((p) => [...p, v]);
-    setNewColor("");
-  };
   const addSize = () => {
     const v = newSize.trim();
     if (!v || sizes.includes(v)) return;
@@ -210,23 +204,8 @@ function NewProduct() {
 
             <div>
               <Label className="text-xs">7.2 颜色 <span className="text-rose-500">*</span></Label>
-              <div className="mt-1 flex flex-wrap gap-1">
-                {colors.map((c) => (
-                  <Badge key={c} variant="outline" className="gap-1">
-                    {c}
-                    <button onClick={() => setColors((p) => p.filter((x) => x !== c))}><X className="h-3 w-3" /></button>
-                  </Badge>
-                ))}
-              </div>
-              <div className="mt-2 flex gap-1">
-                <Input
-                  value={newColor}
-                  onChange={(e) => setNewColor(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addColor(); } }}
-                  placeholder="输入颜色后回车，如 奶白"
-                  className="h-8 text-xs"
-                />
-                <Button size="sm" variant="outline" onClick={addColor}>添加</Button>
+              <div className="mt-1">
+                <ColorPicker colors={colors} onChange={setColors} />
               </div>
             </div>
 

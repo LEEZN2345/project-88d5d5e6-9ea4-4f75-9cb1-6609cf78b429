@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { PRODUCTS, SHOPS, PAY_METHODS, REFERENCE_RATE, formatKRW, formatCNY, krwToCny, type PayMethodId } from "@/lib/mock-data";
+import { usePendingCheckout, createOrderFromPending } from "@/lib/checkout-store";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +12,7 @@ import {
   DrawerDescription,
   DrawerFooter,
 } from "@/components/ui/drawer";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   ChevronRight,
   MapPin,
@@ -26,12 +27,6 @@ export const Route = createFileRoute("/checkout")({
   head: () => ({ meta: [{ title: "提交订单 · 东大门订货通" }] }),
   component: Checkout,
 });
-
-const ITEMS = [
-  { product: PRODUCTS[0]!, qty: 1, color: "奶白", size: "FREE" },
-  { product: PRODUCTS[1]!, qty: 2, color: "米色", size: "FREE" },
-  { product: PRODUCTS[2]!, qty: 1, color: "黑", size: "M" },
-];
 
 // 商家后台填写的「韩国→国内」单件基础物流服务费（示例）
 // 实际项目中来自商品资料；此处以 product.id 稳定映射，做 demo。
@@ -62,6 +57,30 @@ const ICON: Record<PayMethodId, { icon: string; bg: string }> = {
 
 function Checkout() {
   const navigate = useNavigate();
+  const pending = usePendingCheckout();
+  const ITEMS = useMemo(
+    () =>
+      pending.items
+        .map((i) => {
+          const product = PRODUCTS.find((p) => p.id === i.productId);
+          return product ? { product, qty: i.qty, color: i.color, size: i.size } : null;
+        })
+        .filter(Boolean) as { product: (typeof PRODUCTS)[number]; qty: number; color: string; size: string }[],
+    [pending.items],
+  );
+
+  if (ITEMS.length === 0) {
+    return (
+      <MobileShell>
+        <MobileHeader title="提交订单" back />
+        <div className="flex flex-col items-center gap-3 px-6 py-24 text-center">
+          <div className="text-sm text-muted-foreground">还没有待结算的商品</div>
+          <Button asChild size="sm"><Link to="/cart">去购物车</Link></Button>
+        </div>
+      </MobileShell>
+    );
+  }
+
   const totalKRW = ITEMS.reduce((s, i) => s + i.product.priceKRW * i.qty, 0);
   const intlShipCNY = ITEMS.reduce((s, i) => s + intlShipFor(i.product.id) * i.qty, 0);
   const totalCNY = krwToCny(totalKRW) + intlShipCNY;
@@ -92,10 +111,19 @@ function Checkout() {
   const confirmPaid = () => {
     setStep("confirming");
     setTimeout(() => {
+      const order = createOrderFromPending({
+        channelId: channel,
+        channelLabel: enabledMethods.find((m) => m.id === channel)?.label ?? "",
+        totalKRW,
+        totalCNY,
+      });
       setStep("done");
       setTimeout(() => {
         setPayOpen(false);
-        navigate({ to: "/orders/$id", params: { id: "DD20251128001" } });
+        navigate({
+          to: "/orders/$id",
+          params: { id: order?.id ?? "DD20251128001" },
+        });
       }, 1200);
     }, 1600);
   };

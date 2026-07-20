@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -97,85 +97,20 @@ export function ColorPicker({
               className="h-8 pl-8 text-xs"
             />
           </div>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => {
-                  if (matches.length === 1) {
-                    addColor(matches[0].zh);
-                  } else if (query.trim()) {
-                    addColor(query.trim());
-                  }
-                }}
-                className="h-8 px-2 text-xs"
-              >
-                添加
-              </Button>
-            </div>
-            <div className="text-[10px] text-rose-500">
-              DEBUG: query="{query}" matches={matches.length} show={String(showDropdown)}
-            </div>
-          </div>
-
-          {showDropdown && (
-            <div className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md border border-border bg-popover p-1 shadow-md">
-              {matches.length === 0 ? (
-                <div className="px-2 py-2 text-xs text-muted-foreground">
-                  无匹配预设，按「添加」将 "{query.trim()}" 作为自定义颜色
-                </div>
-              ) : (
-                matches.map((c) => (
-                  <button
-                    key={c.ko}
-                    type="button"
-                    onClick={() => addColor(c.zh)}
-                    className="w-full rounded px-2 py-1.5 text-left text-xs hover:bg-accent"
-                  >
-                    <span className="font-medium">{c.zh}</span>
-                    <span className="ml-2 text-muted-foreground">{c.ko}</span>
-                    {c.aliases && (
-                      <span className="ml-2 text-[10px] text-muted-foreground">
-                        {c.aliases.join(" / ")}
-                      </span>
-                    )}
-                  </button>
-                ))
-              )}
-            </div>
-          )}
-        </div>
-
-        <div className="space-y-1">
-          <div className="text-[11px] text-muted-foreground">常用颜色</div>
-          <div className="flex flex-wrap gap-1">
-            {quickPicks.map((c) => {
-              const selected = colors.includes(c.zh);
-              return (
-                <button
-                  key={c.ko}
-                  type="button"
-                  onClick={() => (selected ? removeColor(c.zh) : addColor(c.zh))}
-                  className={`rounded border px-2 py-1 text-[11px] transition-colors ${
-                    selected
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-border bg-background hover:bg-accent"
-                  }`}
-                >
-                  {c.zh}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <p className="text-[11px] text-muted-foreground">
-          可直接搜索中文或韩文颜色名，回车添加；未命中预设时允许自定义。
-        </p>
-      </div>
-    );
-  }
-
-  export function ColorPicker({
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => {
+              if (matches.length === 1) {
+                addColor(matches[0].zh);
+              } else if (query.trim()) {
+                addColor(query.trim());
+              }
+            }}
+            className="h-8 px-2 text-xs"
+          >
+            添加
+          </Button>
         </div>
 
         {showDropdown && (

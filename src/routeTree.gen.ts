@@ -22,6 +22,7 @@ import { Route as HotShopsRouteImport } from './routes/hot-shops'
 import { Route as GuideRouteImport } from './routes/guide'
 import { Route as GroupsRouteImport } from './routes/groups'
 import { Route as FavoritesRouteImport } from './routes/favorites'
+import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as DiscountsRouteImport } from './routes/discounts'
 import { Route as CommissionRouteImport } from './routes/commission'
 import { Route as CheckoutRouteImport } from './routes/checkout'
@@ -142,6 +143,11 @@ const GroupsRoute = GroupsRouteImport.update({
 const FavoritesRoute = FavoritesRouteImport.update({
   id: '/favorites',
   path: '/favorites',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiscoverRoute = DiscoverRouteImport.update({
+  id: '/discover',
+  path: '/discover',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DiscountsRoute = DiscountsRouteImport.update({
@@ -433,6 +439,7 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/commission': typeof CommissionRoute
   '/discounts': typeof DiscountsRoute
+  '/discover': typeof DiscoverRoute
   '/favorites': typeof FavoritesRoute
   '/groups': typeof GroupsRoute
   '/guide': typeof GuideRoute
@@ -504,6 +511,7 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/commission': typeof CommissionRoute
   '/discounts': typeof DiscountsRoute
+  '/discover': typeof DiscoverRoute
   '/favorites': typeof FavoritesRoute
   '/groups': typeof GroupsRoute
   '/guide': typeof GuideRoute
@@ -576,6 +584,7 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/commission': typeof CommissionRoute
   '/discounts': typeof DiscountsRoute
+  '/discover': typeof DiscoverRoute
   '/favorites': typeof FavoritesRoute
   '/groups': typeof GroupsRoute
   '/guide': typeof GuideRoute
@@ -649,6 +658,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/commission'
     | '/discounts'
+    | '/discover'
     | '/favorites'
     | '/groups'
     | '/guide'
@@ -720,6 +730,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/commission'
     | '/discounts'
+    | '/discover'
     | '/favorites'
     | '/groups'
     | '/guide'
@@ -791,6 +802,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/commission'
     | '/discounts'
+    | '/discover'
     | '/favorites'
     | '/groups'
     | '/guide'
@@ -863,6 +875,7 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   CommissionRoute: typeof CommissionRoute
   DiscountsRoute: typeof DiscountsRoute
+  DiscoverRoute: typeof DiscoverRoute
   FavoritesRoute: typeof FavoritesRoute
   GroupsRoute: typeof GroupsRoute
   GuideRoute: typeof GuideRoute
@@ -1008,6 +1021,13 @@ declare module '@tanstack/react-router' {
       path: '/favorites'
       fullPath: '/favorites'
       preLoaderRoute: typeof FavoritesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/discover': {
+      id: '/discover'
+      path: '/discover'
+      fullPath: '/discover'
+      preLoaderRoute: typeof DiscoverRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/discounts': {
@@ -1521,6 +1541,7 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   CommissionRoute: CommissionRoute,
   DiscountsRoute: DiscountsRoute,
+  DiscoverRoute: DiscoverRoute,
   FavoritesRoute: FavoritesRoute,
   GroupsRoute: GroupsRoute,
   GuideRoute: GuideRoute,

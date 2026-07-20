@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Store, Users, User, ShoppingCart } from "lucide-react";
+import { Home, Store, Users, User, ShoppingCart, Compass } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCartCount } from "@/lib/cart-store";
 import { PendingCheckoutRecovery } from "@/components/PendingCheckoutRecovery";
@@ -7,6 +7,7 @@ import { PendingCheckoutRecovery } from "@/components/PendingCheckoutRecovery";
 const TABS = [
   { to: "/", icon: Home, label: "首页" },
   { to: "/shops", icon: Store, label: "档口" },
+  { to: "/discover", icon: Compass, label: "发现好物" },
   { to: "/groups", icon: Users, label: "拼单广场" },
   { to: "/cart", icon: ShoppingCart, label: "购物车" },
   { to: "/me", icon: User, label: "我的" },

@@ -47,9 +47,9 @@ const DAILY = [
   },
   {
     icon: Undo2,
-    title: "4. 处理退款工单",
-    desc: "客服先在「退款工单」核实凭证，转交财务复核后完成打款。",
-    to: "/admin/refunds",
+    title: "4. 处理售后（换货 / 退款）",
+    desc: "在「售后管理」的换货 / 退款 Tab 中分别处理；退款仅限断货与平台主动联系两类。",
+    to: "/admin/after-sales",
   },
   {
     icon: MessageSquare,

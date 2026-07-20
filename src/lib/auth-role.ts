@@ -51,9 +51,11 @@ export const ADMIN_ROUTE_ROLES: Record<string, AdminRole[]> = {
   "/admin/shipping": ["super", "shipping"],
   // 共享
   "/admin/stock": ["super", "orders", "shipping"],
+  "/admin/after-sales": ["super", "orders", "shipping"],
+  // 详情页仍在原路径下，保留权限映射
   "/admin/exchanges": ["super", "orders", "shipping"],
+  "/admin/refunds": ["super", "orders"],
   // 仅总管理员
-  "/admin/refunds": ["super"],
   "/admin/products": ["super"],
   "/admin/categories": ["super"],
   "/admin/shops": ["super"],

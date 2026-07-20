@@ -387,6 +387,24 @@ function AdminCategories() {
                               className="h-8 w-32"
                               placeholder="韩文名"
                             />
+                            <div className="flex items-center gap-1">
+                              <Input
+                                type="number"
+                                min={0}
+                                value={s.defaultWeightGrams ?? ""}
+                                onChange={(e) =>
+                                  patchSub(c.id, s.id, {
+                                    defaultWeightGrams:
+                                      e.target.value === ""
+                                        ? undefined
+                                        : Number(e.target.value),
+                                  })
+                                }
+                                className="h-8 w-20"
+                                placeholder="重量"
+                              />
+                              <span className="text-[10px] text-muted-foreground">g</span>
+                            </div>
                             <span className="text-[11px] text-muted-foreground">
                               {usageCount(s.name)} 件 · {(s.leafs ?? []).length} 细分
                             </span>
@@ -441,6 +459,21 @@ function AdminCategories() {
                                         })
                                       }
                                       className="h-7 w-24 text-xs"
+                                    />
+                                    <Input
+                                      type="number"
+                                      min={0}
+                                      value={l.defaultWeightGrams ?? ""}
+                                      onChange={(e) =>
+                                        patchLeaf(c.id, s.id, l.id, {
+                                          defaultWeightGrams:
+                                            e.target.value === ""
+                                              ? undefined
+                                              : Number(e.target.value),
+                                        })
+                                      }
+                                      className="h-7 w-16 text-xs"
+                                      placeholder="g"
                                     />
                                     <button
                                       type="button"

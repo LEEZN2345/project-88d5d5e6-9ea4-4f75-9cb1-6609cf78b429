@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, type ReactNode } from "react";
 import { cart } from "@/lib/cart-store";
+import { checkoutStore } from "@/lib/checkout-store";
 import { toast } from "sonner";
 import {
   Store,
@@ -265,6 +266,13 @@ function ProductDetail() {
                       });
                       toast.success(`已加入购物车 · ${t.label}`);
                     } else {
+                      checkoutStore.setBuyNow({
+                        productId: p.id,
+                        color,
+                        size,
+                        qty: Math.max(1, t.qty),
+                        tier: t.key,
+                      });
                       navigate({ to: "/checkout" });
                     }
                   }}

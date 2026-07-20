@@ -1,10 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { PRODUCTS, SHOPS, formatKRW, krwToCny, formatCNY, REFERENCE_RATE } from "@/lib/mock-data";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Trash2, Minus, Plus, ShoppingCart } from "lucide-react";
-import { cart, useCart } from "@/lib/cart-store";
+import { cart, cartItemKey, useCart } from "@/lib/cart-store";
+import { checkoutStore } from "@/lib/checkout-store";
 import { useState, useMemo } from "react";
 
 export const Route = createFileRoute("/cart")({
@@ -14,6 +15,7 @@ export const Route = createFileRoute("/cart")({
 
 function Cart() {
   const items = useCart();
+  const navigate = useNavigate();
   const [selected, setSelected] = useState<Set<number>>(() => new Set(items.map((_, i) => i)));
 
   const rows = useMemo(
@@ -125,8 +127,25 @@ function Cart() {
           <div className="text-sm font-semibold">{formatKRW(totalKRW)}</div>
           <div className="text-[10px] text-muted-foreground">≈ {formatCNY(krwToCny(totalKRW))}</div>
         </div>
-        <Button asChild disabled={totalQty === 0}>
-          <Link to="/checkout">结算 ({totalQty})</Link>
+        <Button
+          disabled={totalQty === 0}
+          onClick={() => {
+            const picked = rows
+              .filter((r) => selected.has(r.index))
+              .map((r) => ({
+                productId: r.item.productId,
+                color: r.item.color,
+                size: r.item.size,
+                qty: r.item.qty,
+                tier: r.item.tier,
+                key: cartItemKey(r.item),
+              }));
+            if (!picked.length) return;
+            checkoutStore.setFromCart(picked);
+            navigate({ to: "/checkout" });
+          }}
+        >
+          结算 ({totalQty})
         </Button>
       </div>
     </MobileShell>

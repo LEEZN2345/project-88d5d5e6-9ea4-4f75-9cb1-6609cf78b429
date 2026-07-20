@@ -15,6 +15,7 @@ export const MALLS: Mall[] = [
       { name: "APM Luxe", floors: ["B1", "B2", "1F", "2F", "3F", "4F", "5F", "6F", "7F"] },
       { name: "DDP(U:US)", floors: ["1F", "2F", "3F"] },
       { name: "APM Place", floors: ["B1", "B2", "1F", "2F", "3F", "4F", "5F", "6F", "7F", "8F"] },
+      { name: "ChungPyungHwa", floors: ["가", "나", "다", "라", "마", "바", "신관"] },
     ],
   },
   {

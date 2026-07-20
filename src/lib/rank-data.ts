@@ -79,6 +79,8 @@ function parseLocation(loc: string): { building: string; floor: string; code: st
   return { building, floor: parts[1]!, code: parts[2]! };
 }
 
+import { CPW_SHOPS } from "./chungpyunghwa-shops";
+
 const indexed: IndexedShop[] = [];
 const hotNames = new Set(OFFLINE_HOT.map((s) => s.name));
 for (const s of APM_RANK) {
@@ -87,6 +89,16 @@ for (const s of APM_RANK) {
   indexed.push({ name: s.name, ...p, rank: s.rank, hot: hotNames.has(s.name) });
 }
 // OFFLINE_HOT 已在 APM_RANK 出现过,不再重复加入
+
+// 清平和市场（ChungPyungHwa）档口 - 用「区号(가/나/다/라/마/바/신관)」充当楼层维度
+for (const s of CPW_SHOPS) {
+  indexed.push({
+    name: s.nameEn ? `${s.nameKo} ${s.nameEn}` : s.nameKo,
+    building: "ChungPyungHwa",
+    floor: s.section,
+    code: String(s.number),
+  });
+}
 
 export const INDEXED_SHOPS: IndexedShop[] = indexed;
 

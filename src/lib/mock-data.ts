@@ -443,6 +443,65 @@ export const ORDERS: Order[] = [
   },
 ];
 
+// 追加模拟：新订单/预定/在途/派送/签收 各状态若干，方便后台联调时看到充足数据
+const _extra = (): Order[] => {
+  const R = 0.00528;
+  const mk = (
+    id: string,
+    dt: string,
+    itemsSpec: { pIdx: number; qty: number; color: string; size: string }[],
+    status: OrderStatus,
+    channel: OrderChannel,
+    buyer: Order["buyer"],
+    payer: Order["paymentAccount"],
+    logisticsNo?: string,
+  ): Order => {
+    const items = itemsSpec
+      .map((s) => (PRODUCTS[s.pIdx] ? { product: PRODUCTS[s.pIdx]!, qty: s.qty, color: s.color, size: s.size } : null))
+      .filter(Boolean) as Order["items"];
+    const totalKRW = items.reduce((sum, it) => sum + it.product.priceKRW * it.qty, 0);
+    return {
+      id,
+      createdAt: dt,
+      items,
+      totalKRW,
+      snapshotRate: R,
+      totalCNY: Math.round(totalKRW * R * 100) / 100,
+      status,
+      channel,
+      paymentAccount: payer,
+      paymentProofUrl: img("proof-" + id, 400, 600),
+      logisticsNo,
+      buyer,
+    };
+  };
+  const wx = { name: "微信 · 在线", channel: "wechat" as const, holder: "平台代收" };
+  const zfb = { name: "支付宝 · 在线", channel: "alipay" as const, holder: "平台代收" };
+  return [
+    mk("DD20251129012", "2025-11-29 09:14", [{ pIdx: 2, qty: 3, color: "米色", size: "FREE" }], "paid_pending_proxy", "moq2",
+      { name: "赵**", phone: "136****3311", address: "江苏省 苏州市 姑苏区 观前街 12 号 2-401" }, wx),
+    mk("DD20251129013", "2025-11-29 10:02", [{ pIdx: 0, qty: 1, color: "黑", size: "FREE" }], "paid_pending_proxy", "single",
+      { name: "钱**", phone: "135****2244", address: "北京市 朝阳区 三里屯 SOHO 5 号楼 22F" }, zfb),
+    mk("DD20251129014", "2025-11-29 11:33",
+      [{ pIdx: 4, qty: 5, color: "白", size: "L" }, { pIdx: 1, qty: 2, color: "米色", size: "FREE" }],
+      "paid_pending_proxy", "group",
+      { name: "孙**", phone: "134****9911", address: "四川省 成都市 锦江区 春熙路 IFS T3-1802" }, wx),
+    mk("DD20251128007", "2025-11-28 15:48", [{ pIdx: 3, qty: 2, color: "深棕", size: "245" }], "paid_locked", "moq2",
+      { name: "周**", phone: "137****0088", address: "湖北省 武汉市 江汉区 江汉路 88 号 6F" }, zfb, "DDKR202511280007"),
+    mk("DD20251128006", "2025-11-28 12:20", [{ pIdx: 2, qty: 4, color: "浅粉", size: "S" }], "in_warehouse", "moq2",
+      { name: "吴**", phone: "138****4423", address: "福建省 厦门市 思明区 中山路 200 号 9F" }, wx, "DDKR202511280006"),
+    mk("DD20251127015", "2025-11-27 18:02",
+      [{ pIdx: 1, qty: 3, color: "米色", size: "FREE" }, { pIdx: 4, qty: 2, color: "黑", size: "M" }],
+      "in_transit", "group",
+      { name: "郑**", phone: "139****5501", address: "山东省 青岛市 市南区 香港中路 76 号 12F" }, zfb, "DDKR202511270015"),
+    mk("DD20251126011", "2025-11-26 08:44", [{ pIdx: 0, qty: 2, color: "奶白", size: "FREE" }], "delivering", "moq2",
+      { name: "冯**", phone: "133****2299", address: "河南省 郑州市 金水区 花园路 158 号 8F" }, wx, "DDKR202511260011"),
+    mk("DD20251125008", "2025-11-25 14:10", [{ pIdx: 3, qty: 1, color: "黑", size: "240" }], "delivered", "single",
+      { name: "陈**", phone: "138****7712", address: "广东省 深圳市 罗湖区 东门老街 3 号 5F" }, zfb, "DDKR202511250008"),
+  ];
+};
+ORDERS.push(..._extra());
+
 export const SHIPMENT_EVENTS: Record<string, ShipmentEvent[]> = {
   DDKR202511280001: [
     { node: "韩国仓入库", time: "2025-11-28 18:30" },

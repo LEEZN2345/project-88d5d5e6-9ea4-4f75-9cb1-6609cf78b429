@@ -40,7 +40,6 @@ function NewProduct() {
   const [origin, setOrigin] = useState<(typeof ORIGIN_OPTIONS)[number]>("韩国");
   const [colors, setColors] = useState<string[]>([]);
   const [sizes, setSizes] = useState<string[]>([]);
-  const [newColor, setNewColor] = useState("");
   const [newSize, setNewSize] = useState("");
   const [composition, setComposition] = useState("以实物为准");
   const [purchaseCondition, setPurchaseCondition] = useState<"single" | "moq2">("single");

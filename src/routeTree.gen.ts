@@ -70,6 +70,7 @@ import { Route as OrdersIdExchangeRouteImport } from './routes/orders.$id.exchan
 import { Route as AdminUsersIdRouteImport } from './routes/admin.users.$id'
 import { Route as AdminShopsIdRouteImport } from './routes/admin.shops.$id'
 import { Route as AdminRefundsIdRouteImport } from './routes/admin.refunds.$id'
+import { Route as AdminProductsNewRouteImport } from './routes/admin.products.new'
 import { Route as AdminProductsIdRouteImport } from './routes/admin.products.$id'
 import { Route as AdminPaymentAccountsIdRouteImport } from './routes/admin.payment-accounts.$id'
 import { Route as AdminOrdersIdRouteImport } from './routes/admin.orders.$id'
@@ -384,6 +385,11 @@ const AdminRefundsIdRoute = AdminRefundsIdRouteImport.update({
   path: '/admin/refunds/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminProductsNewRoute = AdminProductsNewRouteImport.update({
+  id: '/admin/products/new',
+  path: '/admin/products/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminProductsIdRoute = AdminProductsIdRouteImport.update({
   id: '/admin/products/$id',
   path: '/admin/products/$id',
@@ -489,6 +495,7 @@ export interface FileRoutesByFullPath {
   '/admin/orders/$id': typeof AdminOrdersIdRoute
   '/admin/payment-accounts/$id': typeof AdminPaymentAccountsIdRoute
   '/admin/products/$id': typeof AdminProductsIdRoute
+  '/admin/products/new': typeof AdminProductsNewRoute
   '/admin/refunds/$id': typeof AdminRefundsIdRoute
   '/admin/shops/$id': typeof AdminShopsIdRoute
   '/admin/users/$id': typeof AdminUsersIdRouteWithChildren
@@ -560,6 +567,7 @@ export interface FileRoutesByTo {
   '/admin/orders/$id': typeof AdminOrdersIdRoute
   '/admin/payment-accounts/$id': typeof AdminPaymentAccountsIdRoute
   '/admin/products/$id': typeof AdminProductsIdRoute
+  '/admin/products/new': typeof AdminProductsNewRoute
   '/admin/refunds/$id': typeof AdminRefundsIdRoute
   '/admin/shops/$id': typeof AdminShopsIdRoute
   '/admin/users/$id': typeof AdminUsersIdRouteWithChildren
@@ -632,6 +640,7 @@ export interface FileRoutesById {
   '/admin/orders/$id': typeof AdminOrdersIdRoute
   '/admin/payment-accounts/$id': typeof AdminPaymentAccountsIdRoute
   '/admin/products/$id': typeof AdminProductsIdRoute
+  '/admin/products/new': typeof AdminProductsNewRoute
   '/admin/refunds/$id': typeof AdminRefundsIdRoute
   '/admin/shops/$id': typeof AdminShopsIdRoute
   '/admin/users/$id': typeof AdminUsersIdRouteWithChildren
@@ -705,6 +714,7 @@ export interface FileRouteTypes {
     | '/admin/orders/$id'
     | '/admin/payment-accounts/$id'
     | '/admin/products/$id'
+    | '/admin/products/new'
     | '/admin/refunds/$id'
     | '/admin/shops/$id'
     | '/admin/users/$id'
@@ -776,6 +786,7 @@ export interface FileRouteTypes {
     | '/admin/orders/$id'
     | '/admin/payment-accounts/$id'
     | '/admin/products/$id'
+    | '/admin/products/new'
     | '/admin/refunds/$id'
     | '/admin/shops/$id'
     | '/admin/users/$id'
@@ -847,6 +858,7 @@ export interface FileRouteTypes {
     | '/admin/orders/$id'
     | '/admin/payment-accounts/$id'
     | '/admin/products/$id'
+    | '/admin/products/new'
     | '/admin/refunds/$id'
     | '/admin/shops/$id'
     | '/admin/users/$id'
@@ -913,6 +925,7 @@ export interface RootRouteChildren {
   ShopsIndexRoute: typeof ShopsIndexRoute
   AdminExchangesIdRoute: typeof AdminExchangesIdRoute
   AdminProductsIdRoute: typeof AdminProductsIdRoute
+  AdminProductsNewRoute: typeof AdminProductsNewRoute
   AdminRefundsIdRoute: typeof AdminRefundsIdRoute
   AdminProductsIndexRoute: typeof AdminProductsIndexRoute
 }
@@ -1346,6 +1359,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRefundsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/products/new': {
+      id: '/admin/products/new'
+      path: '/admin/products/new'
+      fullPath: '/admin/products/new'
+      preLoaderRoute: typeof AdminProductsNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/products/$id': {
       id: '/admin/products/$id'
       path: '/admin/products/$id'
@@ -1571,6 +1591,7 @@ const rootRouteChildren: RootRouteChildren = {
   ShopsIndexRoute: ShopsIndexRoute,
   AdminExchangesIdRoute: AdminExchangesIdRoute,
   AdminProductsIdRoute: AdminProductsIdRoute,
+  AdminProductsNewRoute: AdminProductsNewRoute,
   AdminRefundsIdRoute: AdminRefundsIdRoute,
   AdminProductsIndexRoute: AdminProductsIndexRoute,
 }

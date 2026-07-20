@@ -79,12 +79,7 @@ function AdminProducts() {
     URL.revokeObjectURL(url);
   };
 
-  const handleCreate = () => {
-    const first = PRODUCTS[0];
-    if (!first) { toast.error("暂无可复制的模板商品"); return; }
-    toast.success("新增商品：请在编辑页填写字段");
-    navigate({ to: "/admin/products/$id", params: { id: first.id } });
-  };
+  const handleCreate = () => navigate({ to: "/admin/products/new" });
 
   const handleBulkExcel = () => toast.info("批量 Excel 导入：请上传按模板整理的 .csv/.xlsx");
 

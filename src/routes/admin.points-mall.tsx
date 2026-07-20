@@ -405,38 +405,3 @@ const Th = ({ children, className = "" }: { children: React.ReactNode; className
   <th className={`px-3 py-2 text-left font-medium ${className}`}>{children}</th>;
 const Td = ({ children, className = "" }: { children: React.ReactNode; className?: string }) =>
   <td className={`px-3 py-2 align-middle ${className}`}>{children}</td>;
-
-// removed old Stat component
-function _unusedStat() { return null; }
-
-/* legacy placeholder to satisfy prior exports */
-function _legacy() {
-  return (
-    <>
-      {/* old content removed after redesign */}
-    </>
-  );
-}
-
-// original component removed below
-function _dead() {
-  return null;
-}
-
-// The following ensures backwards imports do nothing extra.
-function _null() { return null; }
-
-// end of file
-function _end() {
-  return (
-    <div>
-      <div className="mb-4 flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-semibold">积分商城管理</h1>
-          <p className="text-xs text-muted-foreground">四大专区兑换商品上下架 + 每月邀请榜奖励发放。</p>
-        </div>
-        <Button size="sm"><Plus className="mr-1 h-4 w-4" />上架兑换商品</Button>
-      </div>
-    </div>
-  );
-}

@@ -25,7 +25,6 @@ function ProductEdit() {
   const [active, setActive] = useState(true);
   const [colors, setColors] = useState<string[]>(p.colors);
   const [sizes, setSizes] = useState<string[]>(p.sizes);
-  const [newColor, setNewColor] = useState("");
   const [newSize, setNewSize] = useState("");
 
   const save = () => toast.success("商品信息已保存");

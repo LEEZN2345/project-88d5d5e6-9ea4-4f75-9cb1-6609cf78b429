@@ -80,6 +80,7 @@ function parseLocation(loc: string): { building: string; floor: string; code: st
 }
 
 import { CPW_SHOPS } from "./chungpyunghwa-shops";
+import { APM_SHOPS } from "./apm-shops";
 
 const indexed: IndexedShop[] = [];
 const hotNames = new Set(OFFLINE_HOT.map((s) => s.name));
@@ -96,6 +97,16 @@ for (const s of CPW_SHOPS) {
     name: s.nameEn ? `${s.nameKo} ${s.nameEn}` : s.nameKo,
     building: "ChungPyungHwa",
     floor: s.section,
+    code: String(s.number),
+  });
+}
+
+// APM 视频抓取档口 - floor 与 buildings.ts 的 B1/1F/.../7F 对齐
+for (const s of APM_SHOPS) {
+  indexed.push({
+    name: s.name,
+    building: "APM",
+    floor: s.floor,
     code: String(s.number),
   });
 }

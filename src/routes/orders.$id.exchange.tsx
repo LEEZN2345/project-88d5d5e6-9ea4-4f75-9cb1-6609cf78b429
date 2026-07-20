@@ -7,7 +7,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { ORDERS, EXCHANGE_REASON_LABEL, type ExchangeReason } from "@/lib/mock-data";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Info } from "lucide-react";
+import { Info, X } from "lucide-react";
+
+const MAX_PHOTOS = 3;
+const MAX_SIZE_MB = 5;
+const ACCEPT_TYPES = ["image/jpeg", "image/png", "image/webp", "image/heic"];
+const ACCEPT_ATTR = ACCEPT_TYPES.join(",");
+const ACCEPT_LABEL = "JPG / PNG / WEBP";
 
 export const Route = createFileRoute("/orders/$id/exchange")({
   head: () => ({ meta: [{ title: "申请换货 · 东大门订货通" }] }),
@@ -35,6 +41,35 @@ function ApplyExchange() {
   const [photos, setPhotos] = useState<string[]>([]);
 
   const item = o.items[pick]!;
+
+  const onPickFiles = (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    const remaining = MAX_PHOTOS - photos.length;
+    if (remaining <= 0) {
+      toast.error(`最多上传 ${MAX_PHOTOS} 张照片`);
+      return;
+    }
+    const incoming = Array.from(files);
+    if (incoming.length > remaining) {
+      toast.error(`最多再上传 ${remaining} 张，已忽略多余文件`);
+    }
+    const accepted: string[] = [];
+    for (const f of incoming.slice(0, remaining)) {
+      if (!ACCEPT_TYPES.includes(f.type)) {
+        toast.error(`${f.name}：仅支持 ${ACCEPT_LABEL} 格式`);
+        continue;
+      }
+      if (f.size > MAX_SIZE_MB * 1024 * 1024) {
+        toast.error(`${f.name}：单张不能超过 ${MAX_SIZE_MB}MB`);
+        continue;
+      }
+      accepted.push(URL.createObjectURL(f));
+    }
+    if (accepted.length > 0) {
+      setPhotos((ps) => [...ps, ...accepted]);
+      toast.success(`已添加 ${accepted.length} 张照片`);
+    }
+  };
 
   const submit = () => {
     if (!toColor || !toSize) {
@@ -141,32 +176,43 @@ function ApplyExchange() {
         <div className="mt-3">
           <Label className="text-xs">
             实拍凭证 <span className="text-rose-500">*</span>
-            <span className="ml-1 text-[11px] text-muted-foreground">（至少 1 张，最多 3 张）</span>
+            <span className="ml-1 text-[11px] text-muted-foreground">
+              （1-{MAX_PHOTOS} 张，{ACCEPT_LABEL}，单张 ≤ {MAX_SIZE_MB}MB）
+            </span>
           </Label>
-          <div className="mt-1 flex gap-2">
-            {[0, 1, 2].map((i) => {
-              const p = photos[i];
-              return (
+          <div className="mt-1 flex flex-wrap gap-2">
+            {photos.map((p, i) => (
+              <div
+                key={p}
+                className="relative h-16 w-16 overflow-hidden rounded-md border border-border"
+              >
+                <img src={p} alt="" className="h-full w-full object-cover" />
                 <button
-                  key={i}
                   type="button"
-                  onClick={() => {
-                    if (p) {
-                      setPhotos((ps) => ps.filter((_, j) => j !== i));
-                    } else {
-                      setPhotos((ps) => [...ps, `https://picsum.photos/seed/ex-photo-${Date.now()}-${i}/300/300`]);
-                    }
-                  }}
-                  className="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-md border border-dashed border-border text-lg text-muted-foreground"
+                  onClick={() => setPhotos((ps) => ps.filter((_, j) => j !== i))}
+                  className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-bl-md bg-black/60 text-white"
+                  aria-label="删除"
                 >
-                  {p ? (
-                    <img src={p} alt="" className="h-full w-full object-cover" />
-                  ) : (
-                    "+"
-                  )}
+                  <X className="h-3 w-3" />
                 </button>
-              );
-            })}
+              </div>
+            ))}
+            {photos.length < MAX_PHOTOS && (
+              <label className="flex h-16 w-16 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-border text-lg text-muted-foreground hover:border-primary hover:text-primary">
+                +
+                <span className="text-[10px]">{photos.length}/{MAX_PHOTOS}</span>
+                <input
+                  type="file"
+                  accept={ACCEPT_ATTR}
+                  multiple
+                  className="hidden"
+                  onChange={(e) => {
+                    onPickFiles(e.target.files);
+                    e.currentTarget.value = "";
+                  }}
+                />
+              </label>
+            )}
           </div>
         </div>
       </div>

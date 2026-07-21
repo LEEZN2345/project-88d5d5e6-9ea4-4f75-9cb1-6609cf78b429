@@ -22,7 +22,6 @@ import { Route as HotShopsRouteImport } from './routes/hot-shops'
 import { Route as GuideRouteImport } from './routes/guide'
 import { Route as GroupsRouteImport } from './routes/groups'
 import { Route as FavoritesRouteImport } from './routes/favorites'
-import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as DiscountsRouteImport } from './routes/discounts'
 import { Route as CommissionRouteImport } from './routes/commission'
 import { Route as CheckoutRouteImport } from './routes/checkout'
@@ -33,6 +32,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ShopsIndexRouteImport } from './routes/shops.index'
 import { Route as OrdersIndexRouteImport } from './routes/orders.index'
 import { Route as ExchangesIndexRouteImport } from './routes/exchanges.index'
+import { Route as DiscoverIndexRouteImport } from './routes/discover.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ShopsIdRouteImport } from './routes/shops.$id'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
@@ -150,11 +150,6 @@ const FavoritesRoute = FavoritesRouteImport.update({
   path: '/favorites',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DiscoverRoute = DiscoverRouteImport.update({
-  id: '/discover',
-  path: '/discover',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const DiscountsRoute = DiscountsRouteImport.update({
   id: '/discounts',
   path: '/discounts',
@@ -205,6 +200,11 @@ const ExchangesIndexRoute = ExchangesIndexRouteImport.update({
   path: '/exchanges/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DiscoverIndexRoute = DiscoverIndexRouteImport.update({
+  id: '/discover/',
+  path: '/discover/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
@@ -251,19 +251,19 @@ const ExchangesIdRoute = ExchangesIdRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const DiscoverPublishedRoute = DiscoverPublishedRouteImport.update({
-  id: '/published',
-  path: '/published',
-  getParentRoute: () => DiscoverRoute,
+  id: '/discover/published',
+  path: '/discover/published',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const DiscoverNewRoute = DiscoverNewRouteImport.update({
-  id: '/new',
-  path: '/new',
-  getParentRoute: () => DiscoverRoute,
+  id: '/discover/new',
+  path: '/discover/new',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const DiscoverPostIdRoute = DiscoverPostIdRouteImport.update({
-  id: '/$postId',
-  path: '/$postId',
-  getParentRoute: () => DiscoverRoute,
+  id: '/discover/$postId',
+  path: '/discover/$postId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const CategoriesIdRoute = CategoriesIdRouteImport.update({
   id: '/categories/$id',
@@ -469,7 +469,6 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/commission': typeof CommissionRoute
   '/discounts': typeof DiscountsRoute
-  '/discover': typeof DiscoverRouteWithChildren
   '/favorites': typeof FavoritesRoute
   '/groups': typeof GroupsRoute
   '/guide': typeof GuideRoute
@@ -520,6 +519,7 @@ export interface FileRoutesByFullPath {
   '/products/$id': typeof ProductsIdRoute
   '/shops/$id': typeof ShopsIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/discover/': typeof DiscoverIndexRoute
   '/exchanges/': typeof ExchangesIndexRoute
   '/orders/': typeof OrdersIndexRoute
   '/shops/': typeof ShopsIndexRoute
@@ -546,7 +546,6 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/commission': typeof CommissionRoute
   '/discounts': typeof DiscountsRoute
-  '/discover': typeof DiscoverRouteWithChildren
   '/favorites': typeof FavoritesRoute
   '/groups': typeof GroupsRoute
   '/guide': typeof GuideRoute
@@ -597,6 +596,7 @@ export interface FileRoutesByTo {
   '/products/$id': typeof ProductsIdRoute
   '/shops/$id': typeof ShopsIdRoute
   '/admin': typeof AdminIndexRoute
+  '/discover': typeof DiscoverIndexRoute
   '/exchanges': typeof ExchangesIndexRoute
   '/orders': typeof OrdersIndexRoute
   '/shops': typeof ShopsIndexRoute
@@ -624,7 +624,6 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/commission': typeof CommissionRoute
   '/discounts': typeof DiscountsRoute
-  '/discover': typeof DiscoverRouteWithChildren
   '/favorites': typeof FavoritesRoute
   '/groups': typeof GroupsRoute
   '/guide': typeof GuideRoute
@@ -675,6 +674,7 @@ export interface FileRoutesById {
   '/products/$id': typeof ProductsIdRoute
   '/shops/$id': typeof ShopsIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/discover/': typeof DiscoverIndexRoute
   '/exchanges/': typeof ExchangesIndexRoute
   '/orders/': typeof OrdersIndexRoute
   '/shops/': typeof ShopsIndexRoute
@@ -703,7 +703,6 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/commission'
     | '/discounts'
-    | '/discover'
     | '/favorites'
     | '/groups'
     | '/guide'
@@ -754,6 +753,7 @@ export interface FileRouteTypes {
     | '/products/$id'
     | '/shops/$id'
     | '/admin/'
+    | '/discover/'
     | '/exchanges/'
     | '/orders/'
     | '/shops/'
@@ -780,7 +780,6 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/commission'
     | '/discounts'
-    | '/discover'
     | '/favorites'
     | '/groups'
     | '/guide'
@@ -831,6 +830,7 @@ export interface FileRouteTypes {
     | '/products/$id'
     | '/shops/$id'
     | '/admin'
+    | '/discover'
     | '/exchanges'
     | '/orders'
     | '/shops'
@@ -857,7 +857,6 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/commission'
     | '/discounts'
-    | '/discover'
     | '/favorites'
     | '/groups'
     | '/guide'
@@ -908,6 +907,7 @@ export interface FileRouteTypes {
     | '/products/$id'
     | '/shops/$id'
     | '/admin/'
+    | '/discover/'
     | '/exchanges/'
     | '/orders/'
     | '/shops/'
@@ -935,7 +935,6 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   CommissionRoute: typeof CommissionRoute
   DiscountsRoute: typeof DiscountsRoute
-  DiscoverRoute: typeof DiscoverRouteWithChildren
   FavoritesRoute: typeof FavoritesRoute
   GroupsRoute: typeof GroupsRoute
   GuideRoute: typeof GuideRoute
@@ -974,12 +973,16 @@ export interface RootRouteChildren {
   AdminUserTagsRoute: typeof AdminUserTagsRoute
   AdminUsersRoute: typeof AdminUsersRouteWithChildren
   CategoriesIdRoute: typeof CategoriesIdRoute
+  DiscoverPostIdRoute: typeof DiscoverPostIdRoute
+  DiscoverNewRoute: typeof DiscoverNewRoute
+  DiscoverPublishedRoute: typeof DiscoverPublishedRoute
   ExchangesIdRoute: typeof ExchangesIdRoute
   LogisticsIdRoute: typeof LogisticsIdRoute
   OrdersIdRoute: typeof OrdersIdRouteWithChildren
   ProductsIdRoute: typeof ProductsIdRoute
   ShopsIdRoute: typeof ShopsIdRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  DiscoverIndexRoute: typeof DiscoverIndexRoute
   ExchangesIndexRoute: typeof ExchangesIndexRoute
   OrdersIndexRoute: typeof OrdersIndexRoute
   ShopsIndexRoute: typeof ShopsIndexRoute
@@ -1083,13 +1086,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FavoritesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/discover': {
-      id: '/discover'
-      path: '/discover'
-      fullPath: '/discover'
-      preLoaderRoute: typeof DiscoverRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/discounts': {
       id: '/discounts'
       path: '/discounts'
@@ -1160,6 +1156,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExchangesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/discover/': {
+      id: '/discover/'
+      path: '/discover'
+      fullPath: '/discover/'
+      preLoaderRoute: typeof DiscoverIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/': {
       id: '/admin/'
       path: '/admin'
@@ -1225,24 +1228,24 @@ declare module '@tanstack/react-router' {
     }
     '/discover/published': {
       id: '/discover/published'
-      path: '/published'
+      path: '/discover/published'
       fullPath: '/discover/published'
       preLoaderRoute: typeof DiscoverPublishedRouteImport
-      parentRoute: typeof DiscoverRoute
+      parentRoute: typeof rootRouteImport
     }
     '/discover/new': {
       id: '/discover/new'
-      path: '/new'
+      path: '/discover/new'
       fullPath: '/discover/new'
       preLoaderRoute: typeof DiscoverNewRouteImport
-      parentRoute: typeof DiscoverRoute
+      parentRoute: typeof rootRouteImport
     }
     '/discover/$postId': {
       id: '/discover/$postId'
-      path: '/$postId'
+      path: '/discover/$postId'
       fullPath: '/discover/$postId'
       preLoaderRoute: typeof DiscoverPostIdRouteImport
-      parentRoute: typeof DiscoverRoute
+      parentRoute: typeof rootRouteImport
     }
     '/categories/$id': {
       id: '/categories/$id'
@@ -1520,22 +1523,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface DiscoverRouteChildren {
-  DiscoverPostIdRoute: typeof DiscoverPostIdRoute
-  DiscoverNewRoute: typeof DiscoverNewRoute
-  DiscoverPublishedRoute: typeof DiscoverPublishedRoute
-}
-
-const DiscoverRouteChildren: DiscoverRouteChildren = {
-  DiscoverPostIdRoute: DiscoverPostIdRoute,
-  DiscoverNewRoute: DiscoverNewRoute,
-  DiscoverPublishedRoute: DiscoverPublishedRoute,
-}
-
-const DiscoverRouteWithChildren = DiscoverRoute._addFileChildren(
-  DiscoverRouteChildren,
-)
-
 interface MeRouteChildren {
   MePostsRoute: typeof MePostsRoute
   MePromoLinksRoute: typeof MePromoLinksRoute
@@ -1664,7 +1651,6 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   CommissionRoute: CommissionRoute,
   DiscountsRoute: DiscountsRoute,
-  DiscoverRoute: DiscoverRouteWithChildren,
   FavoritesRoute: FavoritesRoute,
   GroupsRoute: GroupsRoute,
   GuideRoute: GuideRoute,
@@ -1703,12 +1689,16 @@ const rootRouteChildren: RootRouteChildren = {
   AdminUserTagsRoute: AdminUserTagsRoute,
   AdminUsersRoute: AdminUsersRouteWithChildren,
   CategoriesIdRoute: CategoriesIdRoute,
+  DiscoverPostIdRoute: DiscoverPostIdRoute,
+  DiscoverNewRoute: DiscoverNewRoute,
+  DiscoverPublishedRoute: DiscoverPublishedRoute,
   ExchangesIdRoute: ExchangesIdRoute,
   LogisticsIdRoute: LogisticsIdRoute,
   OrdersIdRoute: OrdersIdRouteWithChildren,
   ProductsIdRoute: ProductsIdRoute,
   ShopsIdRoute: ShopsIdRoute,
   AdminIndexRoute: AdminIndexRoute,
+  DiscoverIndexRoute: DiscoverIndexRoute,
   ExchangesIndexRoute: ExchangesIndexRoute,
   OrdersIndexRoute: OrdersIndexRoute,
   ShopsIndexRoute: ShopsIndexRoute,
@@ -1721,13 +1711,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

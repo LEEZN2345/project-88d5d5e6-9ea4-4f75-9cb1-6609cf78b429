@@ -5,7 +5,7 @@ import { Search, TrendingUp, Sparkles, ArrowRight } from "lucide-react";
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/discover")({
+export const Route = createFileRoute("/discover/")({
   head: () => ({ meta: [{ title: "发现好物 · 东大门订货通" }] }),
   component: Discover,
 });

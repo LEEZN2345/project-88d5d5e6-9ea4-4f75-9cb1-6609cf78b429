@@ -28,21 +28,21 @@ function Me() {
     <MobileShell>
       <MobileHeader title="我的" />
       {/* 商家档案卡：身份 + 本月经营数据 + 订单流程 */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-primary/80 px-4 pb-5 pt-4 text-primary-foreground">
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-primary/85 px-4 pb-5 pt-4 text-primary-foreground">
         <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
         <div className="absolute -bottom-16 -left-8 h-32 w-32 rounded-full bg-white/5 blur-2xl" />
 
         <div className="relative flex items-center gap-3">
           <div className="relative">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-background/20 text-xl ring-2 ring-white/30">👤</div>
-            <div className="absolute -bottom-1 -right-1 flex items-center gap-0.5 rounded-full bg-gradient-to-r from-amber-400 to-yellow-300 px-1.5 py-[1px] text-[9px] font-bold text-amber-900 shadow">
+            <div className="absolute -bottom-1 -right-1 flex items-center gap-0.5 rounded-full bg-white px-1.5 py-[1px] text-[9px] font-bold text-primary shadow">
               <Crown className="h-2.5 w-2.5" />G
             </div>
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
               <span className="truncate text-base font-semibold">张老板</span>
-              <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-400/25 px-1.5 py-[1px] text-[9px] font-medium text-emerald-50 ring-1 ring-emerald-300/40">
+              <span className="inline-flex items-center gap-0.5 rounded-full bg-white/20 px-1.5 py-[1px] text-[9px] font-medium text-primary-foreground ring-1 ring-white/30">
                 <BadgeCheck className="h-2.5 w-2.5" />已认证
               </span>
             </div>
@@ -58,7 +58,7 @@ function Me() {
                 <span className="tabular-nums">¥32,140 / ¥200,000</span>
               </div>
               <div className="h-1 overflow-hidden rounded-full bg-white/20">
-                <div className="h-full rounded-full bg-gradient-to-r from-cyan-300 to-white" style={{ width: "16%" }} />
+                <div className="h-full rounded-full bg-white" style={{ width: "16%" }} />
               </div>
             </div>
           </div>
@@ -97,39 +97,39 @@ function Me() {
 
       {/* 会员资产卡：积分 + 兑换入口 */}
       <div className="px-4 pt-3">
-        <div className="overflow-hidden rounded-2xl border border-rose-100 bg-card shadow-sm">
+        <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
           <div className="flex items-stretch">
-            <div className="flex-1 bg-gradient-to-br from-rose-50 via-white to-orange-50 p-3.5">
-              <div className="flex items-center gap-1 text-[10px] text-rose-500">
+            <div className="flex-1 bg-gradient-to-br from-primary/5 via-card to-primary/10 p-3.5">
+              <div className="flex items-center gap-1 text-[10px] text-primary">
                 <Sparkles className="h-3 w-3" /> 我的积分
-                <span className="ml-1 rounded-full bg-amber-100 px-1.5 py-[1px] text-[9px] font-medium text-amber-700">黄金 1.5x</span>
+                <span className="ml-1 rounded-full bg-primary/10 px-1.5 py-[1px] text-[9px] font-medium text-primary">黄金 1.5x</span>
               </div>
               <div className="mt-1 flex items-baseline gap-1">
-                <span className="text-3xl font-bold tabular-nums text-rose-600">2,580</span>
+                <span className="text-3xl font-bold tabular-nums text-primary">2,580</span>
                 <span className="text-[10px] text-muted-foreground">分</span>
               </div>
               <div className="mt-0.5 flex items-center gap-2 text-[10px] text-muted-foreground">
-                <span className="text-emerald-600">本月 +186</span>
+                <span className="text-primary">本月 +186</span>
                 <span>·</span>
                 <span>100 分 = ¥10</span>
               </div>
             </div>
             <Link
               to="/points"
-              className="flex w-[92px] flex-col items-center justify-center gap-1 bg-gradient-to-br from-rose-500 to-rose-600 text-center text-white active:scale-[0.99]"
+              className="flex w-[92px] flex-col items-center justify-center gap-1 bg-gradient-to-br from-primary to-primary/85 text-center text-primary-foreground active:scale-[0.99]"
             >
               <Gift className="h-5 w-5" />
               <span className="text-xs font-semibold leading-tight">积分广场<br />立即兑换</span>
             </Link>
           </div>
 
-          <div className="flex items-center gap-2 border-t border-rose-100/80 bg-amber-50/60 px-3.5 py-2 text-[11px] text-amber-700">
+          <div className="flex items-center gap-2 border-t border-border bg-muted/50 px-3.5 py-2 text-[11px] text-muted-foreground">
             <Clock className="h-3 w-3 shrink-0" />
             <span className="flex-1 truncate">830 分将于 2026-10-31 过期</span>
-            <Link to="/points/history" className="rounded-full bg-white px-2 py-0.5 text-[10px] text-amber-700 ring-1 ring-amber-200">
+            <Link to="/points/history" className="rounded-full bg-card px-2 py-0.5 text-[10px] text-foreground ring-1 ring-border">
               明细
             </Link>
-            <Link to="/points-rules" className="rounded-full bg-white px-2 py-0.5 text-[10px] text-amber-700 ring-1 ring-amber-200">
+            <Link to="/points-rules" className="rounded-full bg-card px-2 py-0.5 text-[10px] text-foreground ring-1 ring-border">
               攻略
             </Link>
           </div>
@@ -155,7 +155,7 @@ function Me() {
       <div className="px-4 pt-4">
         <div className="mb-2 flex items-center justify-between">
           <div className="flex items-center gap-1.5 text-sm font-medium">
-            <Store className="h-4 w-4 text-rose-500" />
+            <Store className="h-4 w-4 text-primary" />
             收藏档口
           </div>
           <Link to="/favorites" className="text-xs text-muted-foreground">

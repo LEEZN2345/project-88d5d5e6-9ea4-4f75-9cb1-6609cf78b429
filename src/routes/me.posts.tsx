@@ -133,6 +133,12 @@ function MyPosts() {
             <ScrollText className="h-4 w-4" /> 收益明细
           </Link>
         </div>
+        <Link
+          to="/me/promo-links"
+          className="mt-2 flex items-center justify-center gap-1 rounded-full bg-white/15 py-2 text-xs font-semibold text-white ring-1 ring-white/40 backdrop-blur"
+        >
+          🔗 我的推广链接（复制 / 二维码）
+        </Link>
       </div>
 
       {/* Tabs */}

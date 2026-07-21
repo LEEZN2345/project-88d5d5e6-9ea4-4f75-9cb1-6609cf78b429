@@ -187,15 +187,24 @@ function NewPost() {
         {/* 汇总卡 */}
         {product && (
           <section className="rounded-2xl border border-rose-200 bg-gradient-to-br from-rose-50 to-orange-50 p-3 dark:border-rose-500/30 dark:from-rose-500/10 dark:to-orange-500/10">
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Store className="h-3.5 w-3.5" /> 档口名称
-              <span className="ml-auto font-medium text-foreground">{shop?.name}</span>
+            <div className="flex items-center justify-between rounded-xl bg-white/60 px-3 py-2 dark:bg-white/5">
+              <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                🏢 <span>档口名称</span>
+              </span>
+              <span className="text-sm font-semibold text-foreground">
+                {shop?.name}
+                <span className="ml-1 text-[10px] font-normal text-muted-foreground">
+                  {shop?.building} {shop?.floor}
+                </span>
+              </span>
             </div>
-            <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
-              <Coins className="h-3.5 w-3.5 text-amber-500" /> 预估佣金
-              <span className="ml-auto text-lg font-black text-rose-600">{formatCNY(commission)}</span>
+            <div className="mt-2 flex items-center justify-between rounded-xl bg-white/60 px-3 py-2 dark:bg-white/5">
+              <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                💰 <span>预估佣金</span>
+              </span>
+              <span className="text-xl font-black text-rose-600">{formatCNY(commission)}</span>
             </div>
-            <div className="mt-1 text-right text-[10px] text-muted-foreground">
+            <div className="mt-1.5 text-right text-[10px] text-muted-foreground">
               按拼单价 × {(COMMISSION_RATE * 100).toFixed(0)}% 计算，实际以成交为准
             </div>
           </section>

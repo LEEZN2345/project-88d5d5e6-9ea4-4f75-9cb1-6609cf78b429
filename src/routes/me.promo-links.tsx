@@ -150,7 +150,7 @@ function PromoLinks() {
 
   return (
     <MobileShell>
-      <MobileHeader title="我的推广链接" backTo="/me/posts" />
+      <MobileHeader title="我的推广链接" back />
 
       {/* 汇总看板 */}
       <div className="mx-3 mt-3 rounded-2xl bg-gradient-to-br from-rose-500 to-orange-500 p-4 text-white shadow">

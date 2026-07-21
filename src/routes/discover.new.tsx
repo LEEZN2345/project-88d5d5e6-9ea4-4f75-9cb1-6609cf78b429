@@ -54,8 +54,10 @@ function NewPost() {
     if (!images.length) return toast.error("请至少上传 1 张实拍图");
     if (!text.trim()) return toast.error("写点推荐理由吧");
     if (!product) return toast.error("请挂上商品链接（必选）");
-    toast.success("发布成功！内容审核通过后即可获取佣金");
-    nav({ to: "/discover" });
+    nav({
+      to: "/discover/published",
+      search: { commission, shop: shop?.name },
+    });
   };
 
   const saveDraft = () => {

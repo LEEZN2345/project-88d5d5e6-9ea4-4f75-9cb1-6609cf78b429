@@ -38,8 +38,10 @@ import { Route as ShopsIdRouteImport } from './routes/shops.$id'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
 import { Route as PointsHistoryRouteImport } from './routes/points.history'
 import { Route as OrdersIdRouteImport } from './routes/orders.$id'
+import { Route as MePostsRouteImport } from './routes/me.posts'
 import { Route as LogisticsIdRouteImport } from './routes/logistics.$id'
 import { Route as ExchangesIdRouteImport } from './routes/exchanges.$id'
+import { Route as DiscoverPublishedRouteImport } from './routes/discover.published'
 import { Route as DiscoverNewRouteImport } from './routes/discover.new'
 import { Route as CategoriesIdRouteImport } from './routes/categories.$id'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
@@ -226,6 +228,11 @@ const OrdersIdRoute = OrdersIdRouteImport.update({
   path: '/orders/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MePostsRoute = MePostsRouteImport.update({
+  id: '/posts',
+  path: '/posts',
+  getParentRoute: () => MeRoute,
+} as any)
 const LogisticsIdRoute = LogisticsIdRouteImport.update({
   id: '/logistics/$id',
   path: '/logistics/$id',
@@ -235,6 +242,11 @@ const ExchangesIdRoute = ExchangesIdRouteImport.update({
   id: '/exchanges/$id',
   path: '/exchanges/$id',
   getParentRoute: () => rootRouteImport,
+} as any)
+const DiscoverPublishedRoute = DiscoverPublishedRouteImport.update({
+  id: '/published',
+  path: '/published',
+  getParentRoute: () => DiscoverRoute,
 } as any)
 const DiscoverNewRoute = DiscoverNewRouteImport.update({
   id: '/new',
@@ -452,7 +464,7 @@ export interface FileRoutesByFullPath {
   '/hot-shops': typeof HotShopsRoute
   '/invite-rules': typeof InviteRulesRoute
   '/kyc': typeof KycRoute
-  '/me': typeof MeRoute
+  '/me': typeof MeRouteWithChildren
   '/membership': typeof MembershipRoute
   '/new-arrivals': typeof NewArrivalsRoute
   '/points': typeof PointsRouteWithChildren
@@ -485,8 +497,10 @@ export interface FileRoutesByFullPath {
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/categories/$id': typeof CategoriesIdRoute
   '/discover/new': typeof DiscoverNewRoute
+  '/discover/published': typeof DiscoverPublishedRoute
   '/exchanges/$id': typeof ExchangesIdRoute
   '/logistics/$id': typeof LogisticsIdRoute
+  '/me/posts': typeof MePostsRoute
   '/orders/$id': typeof OrdersIdRouteWithChildren
   '/points/history': typeof PointsHistoryRoute
   '/products/$id': typeof ProductsIdRoute
@@ -525,7 +539,7 @@ export interface FileRoutesByTo {
   '/hot-shops': typeof HotShopsRoute
   '/invite-rules': typeof InviteRulesRoute
   '/kyc': typeof KycRoute
-  '/me': typeof MeRoute
+  '/me': typeof MeRouteWithChildren
   '/membership': typeof MembershipRoute
   '/new-arrivals': typeof NewArrivalsRoute
   '/points': typeof PointsRouteWithChildren
@@ -558,8 +572,10 @@ export interface FileRoutesByTo {
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/categories/$id': typeof CategoriesIdRoute
   '/discover/new': typeof DiscoverNewRoute
+  '/discover/published': typeof DiscoverPublishedRoute
   '/exchanges/$id': typeof ExchangesIdRoute
   '/logistics/$id': typeof LogisticsIdRoute
+  '/me/posts': typeof MePostsRoute
   '/orders/$id': typeof OrdersIdRouteWithChildren
   '/points/history': typeof PointsHistoryRoute
   '/products/$id': typeof ProductsIdRoute
@@ -599,7 +615,7 @@ export interface FileRoutesById {
   '/hot-shops': typeof HotShopsRoute
   '/invite-rules': typeof InviteRulesRoute
   '/kyc': typeof KycRoute
-  '/me': typeof MeRoute
+  '/me': typeof MeRouteWithChildren
   '/membership': typeof MembershipRoute
   '/new-arrivals': typeof NewArrivalsRoute
   '/points': typeof PointsRouteWithChildren
@@ -632,8 +648,10 @@ export interface FileRoutesById {
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/categories/$id': typeof CategoriesIdRoute
   '/discover/new': typeof DiscoverNewRoute
+  '/discover/published': typeof DiscoverPublishedRoute
   '/exchanges/$id': typeof ExchangesIdRoute
   '/logistics/$id': typeof LogisticsIdRoute
+  '/me/posts': typeof MePostsRoute
   '/orders/$id': typeof OrdersIdRouteWithChildren
   '/points/history': typeof PointsHistoryRoute
   '/products/$id': typeof ProductsIdRoute
@@ -707,8 +725,10 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/categories/$id'
     | '/discover/new'
+    | '/discover/published'
     | '/exchanges/$id'
     | '/logistics/$id'
+    | '/me/posts'
     | '/orders/$id'
     | '/points/history'
     | '/products/$id'
@@ -780,8 +800,10 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/categories/$id'
     | '/discover/new'
+    | '/discover/published'
     | '/exchanges/$id'
     | '/logistics/$id'
+    | '/me/posts'
     | '/orders/$id'
     | '/points/history'
     | '/products/$id'
@@ -853,8 +875,10 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/categories/$id'
     | '/discover/new'
+    | '/discover/published'
     | '/exchanges/$id'
     | '/logistics/$id'
+    | '/me/posts'
     | '/orders/$id'
     | '/points/history'
     | '/products/$id'
@@ -894,7 +918,7 @@ export interface RootRouteChildren {
   HotShopsRoute: typeof HotShopsRoute
   InviteRulesRoute: typeof InviteRulesRoute
   KycRoute: typeof KycRoute
-  MeRoute: typeof MeRoute
+  MeRoute: typeof MeRouteWithChildren
   MembershipRoute: typeof MembershipRoute
   NewArrivalsRoute: typeof NewArrivalsRoute
   PointsRoute: typeof PointsRouteWithChildren
@@ -1147,6 +1171,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrdersIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/me/posts': {
+      id: '/me/posts'
+      path: '/posts'
+      fullPath: '/me/posts'
+      preLoaderRoute: typeof MePostsRouteImport
+      parentRoute: typeof MeRoute
+    }
     '/logistics/$id': {
       id: '/logistics/$id'
       path: '/logistics/$id'
@@ -1160,6 +1191,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/exchanges/$id'
       preLoaderRoute: typeof ExchangesIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/discover/published': {
+      id: '/discover/published'
+      path: '/published'
+      fullPath: '/discover/published'
+      preLoaderRoute: typeof DiscoverPublishedRouteImport
+      parentRoute: typeof DiscoverRoute
     }
     '/discover/new': {
       id: '/discover/new'
@@ -1446,15 +1484,27 @@ declare module '@tanstack/react-router' {
 
 interface DiscoverRouteChildren {
   DiscoverNewRoute: typeof DiscoverNewRoute
+  DiscoverPublishedRoute: typeof DiscoverPublishedRoute
 }
 
 const DiscoverRouteChildren: DiscoverRouteChildren = {
   DiscoverNewRoute: DiscoverNewRoute,
+  DiscoverPublishedRoute: DiscoverPublishedRoute,
 }
 
 const DiscoverRouteWithChildren = DiscoverRoute._addFileChildren(
   DiscoverRouteChildren,
 )
+
+interface MeRouteChildren {
+  MePostsRoute: typeof MePostsRoute
+}
+
+const MeRouteChildren: MeRouteChildren = {
+  MePostsRoute: MePostsRoute,
+}
+
+const MeRouteWithChildren = MeRoute._addFileChildren(MeRouteChildren)
 
 interface PointsRouteChildren {
   PointsHistoryRoute: typeof PointsHistoryRoute
@@ -1579,7 +1629,7 @@ const rootRouteChildren: RootRouteChildren = {
   HotShopsRoute: HotShopsRoute,
   InviteRulesRoute: InviteRulesRoute,
   KycRoute: KycRoute,
-  MeRoute: MeRoute,
+  MeRoute: MeRouteWithChildren,
   MembershipRoute: MembershipRoute,
   NewArrivalsRoute: NewArrivalsRoute,
   PointsRoute: PointsRouteWithChildren,

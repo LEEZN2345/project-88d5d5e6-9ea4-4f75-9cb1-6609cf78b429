@@ -109,7 +109,7 @@ function Discover() {
             <TrendingUp className="h-10 w-10 opacity-30" />
           </div>
           <Link
-            to="/me"
+            to="/discover/new"
             className="mt-3 inline-flex items-center gap-1 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-rose-600 shadow"
           >
             立即发布赚佣金 <ArrowRight className="h-3 w-3" />

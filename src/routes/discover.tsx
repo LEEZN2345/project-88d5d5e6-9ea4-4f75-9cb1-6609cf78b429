@@ -60,7 +60,7 @@ function Discover() {
         soldCount: 3 + (h % 80),
         priceCNY: krwToCny(p.priceKRW),
         // 图片高度错落，形成瀑布流
-        ratio: (h % 3 === 0 ? "aspect-[3/4]" : h % 3 === 1 ? "aspect-square" : "aspect-[4/5]") as const,
+        ratio: h % 3 === 0 ? "aspect-[3/4]" : h % 3 === 1 ? "aspect-square" : "aspect-[4/5]",
       };
     });
   }, []);

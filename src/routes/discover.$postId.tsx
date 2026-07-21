@@ -66,6 +66,10 @@ function PostDetail() {
   const [idx, setIdx] = useState(0);
   const [liked, setLiked] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
+  const [followed, setFollowed] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [commentText, setCommentText] = useState("");
+  const [extraComments, setExtraComments] = useState<{ u: string; t: string }[]>([]);
   const images = product.images.length ? product.images : [product.images[0]];
 
   // 分享链接：附带 ref=<author> 用于佣金归属
@@ -179,6 +183,11 @@ function PostDetail() {
             <button className="rounded-full border border-primary px-3 py-1 text-xs font-medium text-primary">
               关注
             </button>
+          </div>
+          {/* placeholder to keep JSX balance removed */}
+          <div className="hidden" />
+          {/* Actual follow button rendered above via replacement below */}
+          <script data-noop />
           </div>
 
           {/* 档口 & 评分 */}

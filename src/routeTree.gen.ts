@@ -38,6 +38,7 @@ import { Route as ShopsIdRouteImport } from './routes/shops.$id'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
 import { Route as PointsHistoryRouteImport } from './routes/points.history'
 import { Route as OrdersIdRouteImport } from './routes/orders.$id'
+import { Route as MePromoLinksRouteImport } from './routes/me.promo-links'
 import { Route as MePostsRouteImport } from './routes/me.posts'
 import { Route as LogisticsIdRouteImport } from './routes/logistics.$id'
 import { Route as ExchangesIdRouteImport } from './routes/exchanges.$id'
@@ -228,6 +229,11 @@ const OrdersIdRoute = OrdersIdRouteImport.update({
   id: '/orders/$id',
   path: '/orders/$id',
   getParentRoute: () => rootRouteImport,
+} as any)
+const MePromoLinksRoute = MePromoLinksRouteImport.update({
+  id: '/promo-links',
+  path: '/promo-links',
+  getParentRoute: () => MeRoute,
 } as any)
 const MePostsRoute = MePostsRouteImport.update({
   id: '/posts',
@@ -508,6 +514,7 @@ export interface FileRoutesByFullPath {
   '/exchanges/$id': typeof ExchangesIdRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/me/posts': typeof MePostsRoute
+  '/me/promo-links': typeof MePromoLinksRoute
   '/orders/$id': typeof OrdersIdRouteWithChildren
   '/points/history': typeof PointsHistoryRoute
   '/products/$id': typeof ProductsIdRoute
@@ -584,6 +591,7 @@ export interface FileRoutesByTo {
   '/exchanges/$id': typeof ExchangesIdRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/me/posts': typeof MePostsRoute
+  '/me/promo-links': typeof MePromoLinksRoute
   '/orders/$id': typeof OrdersIdRouteWithChildren
   '/points/history': typeof PointsHistoryRoute
   '/products/$id': typeof ProductsIdRoute
@@ -661,6 +669,7 @@ export interface FileRoutesById {
   '/exchanges/$id': typeof ExchangesIdRoute
   '/logistics/$id': typeof LogisticsIdRoute
   '/me/posts': typeof MePostsRoute
+  '/me/promo-links': typeof MePromoLinksRoute
   '/orders/$id': typeof OrdersIdRouteWithChildren
   '/points/history': typeof PointsHistoryRoute
   '/products/$id': typeof ProductsIdRoute
@@ -739,6 +748,7 @@ export interface FileRouteTypes {
     | '/exchanges/$id'
     | '/logistics/$id'
     | '/me/posts'
+    | '/me/promo-links'
     | '/orders/$id'
     | '/points/history'
     | '/products/$id'
@@ -815,6 +825,7 @@ export interface FileRouteTypes {
     | '/exchanges/$id'
     | '/logistics/$id'
     | '/me/posts'
+    | '/me/promo-links'
     | '/orders/$id'
     | '/points/history'
     | '/products/$id'
@@ -891,6 +902,7 @@ export interface FileRouteTypes {
     | '/exchanges/$id'
     | '/logistics/$id'
     | '/me/posts'
+    | '/me/promo-links'
     | '/orders/$id'
     | '/points/history'
     | '/products/$id'
@@ -1182,6 +1194,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/orders/$id'
       preLoaderRoute: typeof OrdersIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/me/promo-links': {
+      id: '/me/promo-links'
+      path: '/promo-links'
+      fullPath: '/me/promo-links'
+      preLoaderRoute: typeof MePromoLinksRouteImport
+      parentRoute: typeof MeRoute
     }
     '/me/posts': {
       id: '/me/posts'
@@ -1519,10 +1538,12 @@ const DiscoverRouteWithChildren = DiscoverRoute._addFileChildren(
 
 interface MeRouteChildren {
   MePostsRoute: typeof MePostsRoute
+  MePromoLinksRoute: typeof MePromoLinksRoute
 }
 
 const MeRouteChildren: MeRouteChildren = {
   MePostsRoute: MePostsRoute,
+  MePromoLinksRoute: MePromoLinksRoute,
 }
 
 const MeRouteWithChildren = MeRoute._addFileChildren(MeRouteChildren)

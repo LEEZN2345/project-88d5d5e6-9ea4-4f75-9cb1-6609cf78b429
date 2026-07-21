@@ -27,76 +27,75 @@ function Me() {
   return (
     <MobileShell>
       <MobileHeader title="我的" />
-      {/* 商家档案卡：身份 + 本月经营数据 + 订单流程 */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-primary/85 px-4 pb-5 pt-4 text-primary-foreground">
-        <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
-        <div className="absolute -bottom-16 -left-8 h-32 w-32 rounded-full bg-white/5 blur-2xl" />
+      <div className="space-y-3 px-4 pb-6 pt-3">
+        {/* 会员档案卡 */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary via-primary to-primary/85 px-4 pb-5 pt-4 text-primary-foreground">
+          <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
+          <div className="absolute -bottom-16 -left-8 h-32 w-32 rounded-full bg-white/5 blur-2xl" />
 
-        <div className="relative flex items-center gap-3">
-          <div className="relative">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-background/20 text-xl ring-2 ring-white/30">👤</div>
-            <div className="absolute -bottom-1 -right-1 flex items-center gap-0.5 rounded-full bg-white px-1.5 py-[1px] text-[9px] font-bold text-primary shadow">
-              <Crown className="h-2.5 w-2.5" />G
+          <div className="relative flex items-center gap-3">
+            <div className="relative">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-background/20 text-xl ring-2 ring-white/30">👤</div>
+              <div className="absolute -bottom-1 -right-1 flex items-center gap-0.5 rounded-full bg-white px-1.5 py-[1px] text-[9px] font-bold text-primary shadow">
+                <Crown className="h-2.5 w-2.5" />G
+              </div>
             </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5">
+                <span className="truncate text-base font-semibold">张老板</span>
+                <span className="inline-flex items-center gap-0.5 rounded-full bg-white/20 px-1.5 py-[1px] text-[9px] font-medium text-primary-foreground ring-1 ring-white/30">
+                  <BadgeCheck className="h-2.5 w-2.5" />已认证
+                </span>
+              </div>
+              <div className="mt-0.5 flex items-center gap-1.5 text-[11px] opacity-90">
+                <span>黄金买手</span>
+                <span className="opacity-50">·</span>
+                <span>ID 20260615</span>
+              </div>
+              {/* 升级进度条 */}
+              <div className="mt-2">
+                <div className="mb-0.5 flex justify-between text-[10px] opacity-90">
+                  <span>距钻石买手</span>
+                  <span className="tabular-nums">¥32,140 / ¥200,000</span>
+                </div>
+                <div className="h-1 overflow-hidden rounded-full bg-white/20">
+                  <div className="h-full rounded-full bg-white" style={{ width: "16%" }} />
+                </div>
+              </div>
+            </div>
+            <Link to="/membership" className="shrink-0 self-start rounded-full bg-white/15 px-2 py-1 text-[10px] backdrop-blur">
+              权益 <ChevronRight className="inline h-2.5 w-2.5" />
+            </Link>
           </div>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-1.5">
-              <span className="truncate text-base font-semibold">张老板</span>
-              <span className="inline-flex items-center gap-0.5 rounded-full bg-white/20 px-1.5 py-[1px] text-[9px] font-medium text-primary-foreground ring-1 ring-white/30">
-                <BadgeCheck className="h-2.5 w-2.5" />已认证
+
+          {/* 当前等级权益 */}
+          <Link
+            to="/membership"
+            className="relative mt-4 block rounded-xl bg-white/10 p-3 backdrop-blur active:scale-[0.99]"
+          >
+            <div className="flex items-center justify-between text-[11px] opacity-90">
+              <span className="inline-flex items-center gap-1">
+                <Crown className="h-3 w-3" /> 黄金买手 · 当前权益
               </span>
+              <span className="inline-flex items-center gap-0.5">查看全部 <ChevronRight className="h-3 w-3" /></span>
             </div>
-            <div className="mt-0.5 flex items-center gap-1.5 text-[11px] opacity-90">
-              <span>黄金买手</span>
-              <span className="opacity-50">·</span>
-              <span>ID 20260615</span>
+            <div className="mt-2 grid grid-cols-4 gap-2 text-center">
+              {[
+                { i: Gift, l: "积分 1.5x" },
+                { i: Truck, l: "满¥100包邮" },
+                { i: Percent, l: "档口私密价" },
+                { i: Headphones, l: "2h 客服" },
+              ].map((b) => (
+                <div key={b.l} className="rounded-lg bg-white/10 py-1.5">
+                  <b.i className="mx-auto h-3.5 w-3.5" />
+                  <div className="mt-0.5 text-[10px] opacity-90">{b.l}</div>
+                </div>
+              ))}
             </div>
-            {/* 升级进度条 */}
-            <div className="mt-2">
-              <div className="mb-0.5 flex justify-between text-[10px] opacity-90">
-                <span>距钻石买手</span>
-                <span className="tabular-nums">¥32,140 / ¥200,000</span>
-              </div>
-              <div className="h-1 overflow-hidden rounded-full bg-white/20">
-                <div className="h-full rounded-full bg-white" style={{ width: "16%" }} />
-              </div>
-            </div>
-          </div>
-          <Link to="/membership" className="shrink-0 self-start rounded-full bg-white/15 px-2 py-1 text-[10px] backdrop-blur">
-            权益 <ChevronRight className="inline h-2.5 w-2.5" />
           </Link>
         </div>
 
-        {/* 当前等级权益 */}
-        <Link
-          to="/membership"
-          className="relative mt-4 block rounded-xl bg-white/10 p-3 backdrop-blur active:scale-[0.99]"
-        >
-          <div className="flex items-center justify-between text-[11px] opacity-90">
-            <span className="inline-flex items-center gap-1">
-              <Crown className="h-3 w-3" /> 黄金买手 · 当前权益
-            </span>
-            <span className="inline-flex items-center gap-0.5">查看全部 <ChevronRight className="h-3 w-3" /></span>
-          </div>
-          <div className="mt-2 grid grid-cols-4 gap-2 text-center">
-            {[
-              { i: Gift, l: "积分 1.5x" },
-              { i: Truck, l: "满¥100包邮" },
-              { i: Percent, l: "档口私密价" },
-              { i: Headphones, l: "2h 客服" },
-            ].map((b) => (
-              <div key={b.l} className="rounded-lg bg-white/10 py-1.5">
-                <b.i className="mx-auto h-3.5 w-3.5" />
-                <div className="mt-0.5 text-[10px] opacity-90">{b.l}</div>
-              </div>
-            ))}
-          </div>
-        </Link>
-
-      </div>
-
-      {/* 会员资产卡：积分 + 兑换入口 */}
-      <div className="px-4 pt-3">
+        {/* 会员资产卡：积分 + 兑换入口 */}
         <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
           <div className="flex items-stretch">
             <div className="flex-1 bg-gradient-to-br from-primary/5 via-card to-primary/10 p-3.5">
@@ -134,68 +133,69 @@ function Me() {
             </Link>
           </div>
         </div>
-      </div>
 
-      <div className="space-y-2 px-4 pt-4">
-        <Item to="/orders" icon={ClipboardList} label="我的订单" right="全部订单" />
-        <Item to="/cart" icon={ShoppingBag} label="购物车" />
-        <Item to="/favorites" icon={Heart} label="我的收藏" />
-        <Item to="/exchanges" icon={RefreshCcw} label="售后 / 换货" right="仅支持换货" />
-        <Item to="/addresses" icon={MapPin} label="收货地址" />
-        <Item to="/points" icon={Gift} label="积分广场" right="2,580 分" />
-        <Item to="/commission" icon={Wallet} label="我的分佣钱包" right="可提现 ¥46.7" />
-        <Item to="/invite-rules" icon={Share2} label="邀请分佣规则" right="L1 0.7% + L2 0.3%" />
-        <Item to="/membership" icon={Crown} label="会员等级权益" right="黄金买手" />
-        <Item to="/guide" icon={BookOpen} label="使用指引" right="新手必看" />
-        <Item to="/support" icon={MessageSquare} label="联系客服" />
-        <Item to="/kyc" icon={Shield} label="实名认证" right="未认证" />
-        <Item to="/settings" icon={Settings} label="设置" />
-      </div>
+        {/* 菜单列表 */}
+        <div className="space-y-2">
+          <Item to="/orders" icon={ClipboardList} label="我的订单" right="全部订单" />
+          <Item to="/cart" icon={ShoppingBag} label="购物车" />
+          <Item to="/favorites" icon={Heart} label="我的收藏" />
+          <Item to="/exchanges" icon={RefreshCcw} label="售后 / 换货" right="仅支持换货" />
+          <Item to="/addresses" icon={MapPin} label="收货地址" />
+          <Item to="/points" icon={Gift} label="积分广场" right="2,580 分" />
+          <Item to="/commission" icon={Wallet} label="我的分佣钱包" right="可提现 ¥46.7" />
+          <Item to="/invite-rules" icon={Share2} label="邀请分佣规则" right="L1 0.7% + L2 0.3%" />
+          <Item to="/membership" icon={Crown} label="会员等级权益" right="黄金买手" />
+          <Item to="/guide" icon={BookOpen} label="使用指引" right="新手必看" />
+          <Item to="/support" icon={MessageSquare} label="联系客服" />
+          <Item to="/kyc" icon={Shield} label="实名认证" right="未认证" />
+          <Item to="/settings" icon={Settings} label="设置" />
+        </div>
 
-      <div className="px-4 pt-4">
-        <div className="mb-2 flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-sm font-medium">
-            <Store className="h-4 w-4 text-primary" />
-            收藏档口
+        {/* 收藏档口 */}
+        <div>
+          <div className="mb-2 flex items-center justify-between">
+            <div className="flex items-center gap-1.5 text-sm font-medium">
+              <Store className="h-4 w-4 text-primary" />
+              收藏档口
+            </div>
+            <Link to="/favorites" className="text-xs text-muted-foreground">
+              查看全部
+            </Link>
           </div>
-          <Link to="/favorites" className="text-xs text-muted-foreground">
-            查看全部
+          {favShopIds.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-border bg-card p-4 text-center text-xs text-muted-foreground">
+              暂无收藏档口，去档口详情页点击收藏
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {SHOPS.filter((s) => favShopIds.includes(s.id)).map((s) => (
+                <Link
+                  key={s.id}
+                  to="/shops/$id"
+                  params={{ id: s.id }}
+                  className="flex items-center gap-3 rounded-xl border border-border bg-card p-3"
+                >
+                  <img src={s.cover} alt="" className="h-12 w-12 rounded-lg object-cover" />
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-medium">{s.brand || s.name}</div>
+                    <div className="text-xs text-muted-foreground">{s.building} · {s.floor}</div>
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* 底部操作 */}
+        <div className="space-y-2 pt-1">
+          <Link to="/admin" className="block rounded-xl border border-dashed border-border bg-card p-3 text-center text-xs text-muted-foreground">
+            (内部入口) 进入运营后台 →
+          </Link>
+          <Link to="/auth" className="block rounded-xl border border-border bg-card p-3 text-center text-xs text-muted-foreground">
+            切换账号 / 登录
           </Link>
         </div>
-        {favShopIds.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-border bg-card p-4 text-center text-xs text-muted-foreground">
-            暂无收藏档口，去档口详情页点击收藏
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {SHOPS.filter((s) => favShopIds.includes(s.id)).map((s) => (
-              <Link
-                key={s.id}
-                to="/shops/$id"
-                params={{ id: s.id }}
-                className="flex items-center gap-3 rounded-xl border border-border bg-card p-3"
-              >
-                <img src={s.cover} alt="" className="h-12 w-12 rounded-lg object-cover" />
-                <div className="min-w-0 flex-1">
-                  <div className="text-sm font-medium">{s.brand || s.name}</div>
-                  <div className="text-xs text-muted-foreground">{s.building} · {s.floor}</div>
-                </div>
-                <ChevronRight className="h-4 w-4 text-muted-foreground" />
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <div className="px-4 pt-4">
-        <Link to="/admin" className="block rounded-xl border border-dashed border-border bg-card p-3 text-center text-xs text-muted-foreground">
-          (内部入口) 进入运营后台 →
-        </Link>
-      </div>
-      <div className="px-4 pt-2">
-        <Link to="/auth" className="block rounded-xl border border-border bg-card p-3 text-center text-xs text-muted-foreground">
-          切换账号 / 登录
-        </Link>
       </div>
     </MobileShell>
   );

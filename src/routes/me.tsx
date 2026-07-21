@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { SHOPS } from "@/lib/mock-data";
-import { ChevronRight, MapPin, Heart, MessageSquare, Settings, Shield, Gift, ShoppingBag, ClipboardList, Store, Sparkles, Share2, BookOpen, Crown, RefreshCcw, Wallet, TrendingUp, Truck, BadgeCheck, Clock, PackageCheck, Plane, Undo2, Zap } from "lucide-react";
+import { ChevronRight, MapPin, Heart, MessageSquare, Settings, Shield, Gift, ShoppingBag, ClipboardList, Store, Sparkles, Share2, BookOpen, Crown, RefreshCcw, Wallet, Truck, BadgeCheck, Clock, Percent, Headphones } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/me")({
@@ -67,25 +67,31 @@ function Me() {
           </Link>
         </div>
 
-        {/* 本月经营三联数据 */}
-        <div className="relative mt-4 grid grid-cols-3 divide-x divide-white/15 rounded-xl bg-white/10 py-2.5 text-center backdrop-blur">
-          <div>
-            <div className="text-base font-bold tabular-nums">¥32,140</div>
-            <div className="mt-0.5 text-[10px] opacity-80">本月成交</div>
+        {/* 当前等级权益 */}
+        <Link
+          to="/membership"
+          className="relative mt-4 block rounded-xl bg-white/10 p-3 backdrop-blur active:scale-[0.99]"
+        >
+          <div className="flex items-center justify-between text-[11px] opacity-90">
+            <span className="inline-flex items-center gap-1">
+              <Crown className="h-3 w-3" /> 黄金买手 · 当前权益
+            </span>
+            <span className="inline-flex items-center gap-0.5">查看全部 <ChevronRight className="h-3 w-3" /></span>
           </div>
-          <div>
-            <div className="flex items-center justify-center gap-0.5 text-base font-bold tabular-nums">
-              <Truck className="h-3.5 w-3.5 opacity-80" />¥964
-            </div>
-            <div className="mt-0.5 text-[10px] opacity-80">物流已省 -3%</div>
+          <div className="mt-2 grid grid-cols-4 gap-2 text-center">
+            {[
+              { i: Gift, l: "积分 1.5x" },
+              { i: Truck, l: "满¥100包邮" },
+              { i: Percent, l: "档口私密价" },
+              { i: Headphones, l: "2h 客服" },
+            ].map((b) => (
+              <div key={b.l} className="rounded-lg bg-white/10 py-1.5">
+                <b.i className="mx-auto h-3.5 w-3.5" />
+                <div className="mt-0.5 text-[10px] opacity-90">{b.l}</div>
+              </div>
+            ))}
           </div>
-          <div>
-            <div className="flex items-center justify-center gap-0.5 text-base font-bold tabular-nums">
-              <TrendingUp className="h-3.5 w-3.5 opacity-80" />24
-            </div>
-            <div className="mt-0.5 text-[10px] opacity-80">本月订单</div>
-          </div>
-        </div>
+        </Link>
 
       </div>
 

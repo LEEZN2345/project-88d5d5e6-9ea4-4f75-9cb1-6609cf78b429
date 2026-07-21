@@ -63,7 +63,7 @@ function NewPost() {
   };
 
   return (
-    <MobileShell hideTabBar>
+    <MobileShell>
       {/* 顶部条 */}
       <header className="sticky top-0 z-40 flex items-center justify-between border-b border-border bg-background/95 px-3 py-2 backdrop-blur">
         <button onClick={() => nav({ to: "/discover" })} className="flex items-center gap-1 rounded-full px-2 py-1 text-sm text-muted-foreground">

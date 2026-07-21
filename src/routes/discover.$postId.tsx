@@ -184,10 +184,6 @@ function PostDetail() {
               关注
             </button>
           </div>
-          {/* placeholder to keep JSX balance removed */}
-          <div className="hidden" />
-          {/* Actual follow button rendered above via replacement below */}
-          <script data-noop />
           </div>
 
           {/* 档口 & 评分 */}

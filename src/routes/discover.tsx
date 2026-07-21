@@ -159,8 +159,8 @@ function Discover() {
             {list.map((p) => (
               <Link
                 key={p.id}
-                to="/products/$id"
-                params={{ id: p.product.id }}
+                to="/discover/$postId"
+                params={{ postId: p.product.id }}
                 className="mb-2 block break-inside-avoid overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition active:scale-[0.98]"
               >
                 <div className={cn("relative w-full overflow-hidden bg-muted", p.ratio)}>

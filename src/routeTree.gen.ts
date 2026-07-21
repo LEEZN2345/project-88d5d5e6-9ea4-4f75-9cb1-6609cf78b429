@@ -43,6 +43,7 @@ import { Route as LogisticsIdRouteImport } from './routes/logistics.$id'
 import { Route as ExchangesIdRouteImport } from './routes/exchanges.$id'
 import { Route as DiscoverPublishedRouteImport } from './routes/discover.published'
 import { Route as DiscoverNewRouteImport } from './routes/discover.new'
+import { Route as DiscoverPostIdRouteImport } from './routes/discover.$postId'
 import { Route as CategoriesIdRouteImport } from './routes/categories.$id'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminUserTagsRouteImport } from './routes/admin.user-tags'
@@ -251,6 +252,11 @@ const DiscoverPublishedRoute = DiscoverPublishedRouteImport.update({
 const DiscoverNewRoute = DiscoverNewRouteImport.update({
   id: '/new',
   path: '/new',
+  getParentRoute: () => DiscoverRoute,
+} as any)
+const DiscoverPostIdRoute = DiscoverPostIdRouteImport.update({
+  id: '/$postId',
+  path: '/$postId',
   getParentRoute: () => DiscoverRoute,
 } as any)
 const CategoriesIdRoute = CategoriesIdRouteImport.update({
@@ -496,6 +502,7 @@ export interface FileRoutesByFullPath {
   '/admin/user-tags': typeof AdminUserTagsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/categories/$id': typeof CategoriesIdRoute
+  '/discover/$postId': typeof DiscoverPostIdRoute
   '/discover/new': typeof DiscoverNewRoute
   '/discover/published': typeof DiscoverPublishedRoute
   '/exchanges/$id': typeof ExchangesIdRoute
@@ -571,6 +578,7 @@ export interface FileRoutesByTo {
   '/admin/user-tags': typeof AdminUserTagsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/categories/$id': typeof CategoriesIdRoute
+  '/discover/$postId': typeof DiscoverPostIdRoute
   '/discover/new': typeof DiscoverNewRoute
   '/discover/published': typeof DiscoverPublishedRoute
   '/exchanges/$id': typeof ExchangesIdRoute
@@ -647,6 +655,7 @@ export interface FileRoutesById {
   '/admin/user-tags': typeof AdminUserTagsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/categories/$id': typeof CategoriesIdRoute
+  '/discover/$postId': typeof DiscoverPostIdRoute
   '/discover/new': typeof DiscoverNewRoute
   '/discover/published': typeof DiscoverPublishedRoute
   '/exchanges/$id': typeof ExchangesIdRoute
@@ -724,6 +733,7 @@ export interface FileRouteTypes {
     | '/admin/user-tags'
     | '/admin/users'
     | '/categories/$id'
+    | '/discover/$postId'
     | '/discover/new'
     | '/discover/published'
     | '/exchanges/$id'
@@ -799,6 +809,7 @@ export interface FileRouteTypes {
     | '/admin/user-tags'
     | '/admin/users'
     | '/categories/$id'
+    | '/discover/$postId'
     | '/discover/new'
     | '/discover/published'
     | '/exchanges/$id'
@@ -874,6 +885,7 @@ export interface FileRouteTypes {
     | '/admin/user-tags'
     | '/admin/users'
     | '/categories/$id'
+    | '/discover/$postId'
     | '/discover/new'
     | '/discover/published'
     | '/exchanges/$id'
@@ -1206,6 +1218,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DiscoverNewRouteImport
       parentRoute: typeof DiscoverRoute
     }
+    '/discover/$postId': {
+      id: '/discover/$postId'
+      path: '/$postId'
+      fullPath: '/discover/$postId'
+      preLoaderRoute: typeof DiscoverPostIdRouteImport
+      parentRoute: typeof DiscoverRoute
+    }
     '/categories/$id': {
       id: '/categories/$id'
       path: '/categories/$id'
@@ -1483,11 +1502,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface DiscoverRouteChildren {
+  DiscoverPostIdRoute: typeof DiscoverPostIdRoute
   DiscoverNewRoute: typeof DiscoverNewRoute
   DiscoverPublishedRoute: typeof DiscoverPublishedRoute
 }
 
 const DiscoverRouteChildren: DiscoverRouteChildren = {
+  DiscoverPostIdRoute: DiscoverPostIdRoute,
   DiscoverNewRoute: DiscoverNewRoute,
   DiscoverPublishedRoute: DiscoverPublishedRoute,
 }

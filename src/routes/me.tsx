@@ -87,31 +87,6 @@ function Me() {
           </div>
         </div>
 
-        {/* 订单流程 */}
-        <div className="relative mt-3 rounded-xl bg-white/10 p-2.5 backdrop-blur">
-          <div className="mb-1.5 flex items-center justify-between px-1">
-            <span className="text-[11px] font-medium opacity-95">我的订单</span>
-            <Link to="/orders" className="text-[10px] opacity-80">全部订单 <ChevronRight className="inline h-2.5 w-2.5" /></Link>
-          </div>
-          <div className="grid grid-cols-4 gap-1 text-center text-[10px]">
-            {[
-              { i: Wallet, n: 1, l: "待付款" },
-              { i: PackageCheck, n: 2, l: "待发货" },
-              { i: Plane, n: 3, l: "在途" },
-              { i: Undo2, n: 1, l: "售后" },
-            ].map((s) => (
-              <Link to="/orders" key={s.l} className="relative rounded-lg py-1.5 active:bg-white/10">
-                <s.i className="mx-auto h-4 w-4 opacity-90" />
-                <div className="mt-0.5 opacity-85">{s.l}</div>
-                {s.n > 0 && (
-                  <span className="absolute right-2 top-1 min-w-[14px] rounded-full bg-rose-500 px-1 text-[9px] font-bold leading-[14px] text-white">
-                    {s.n}
-                  </span>
-                )}
-              </Link>
-            ))}
-          </div>
-        </div>
       </div>
 
       {/* 会员资产卡：积分 + 兑换入口 */}
@@ -156,10 +131,11 @@ function Me() {
       </div>
 
       <div className="space-y-2 px-4 pt-4">
-        <Item to="/exchanges" icon={RefreshCcw} label="售后 / 换货" right="仅支持换货" />
+        <Item to="/orders" icon={ClipboardList} label="我的订单" right="全部订单" />
         <Item to="/cart" icon={ShoppingBag} label="购物车" />
-        <Item to="/addresses" icon={MapPin} label="收货地址" />
         <Item to="/favorites" icon={Heart} label="我的收藏" />
+        <Item to="/exchanges" icon={RefreshCcw} label="售后 / 换货" right="仅支持换货" />
+        <Item to="/addresses" icon={MapPin} label="收货地址" />
         <Item to="/points" icon={Gift} label="积分广场" right="2,580 分" />
         <Item to="/commission" icon={Wallet} label="我的分佣钱包" right="可提现 ¥46.7" />
         <Item to="/invite-rules" icon={Share2} label="邀请分佣规则" right="L1 0.7% + L2 0.3%" />

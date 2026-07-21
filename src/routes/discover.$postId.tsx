@@ -180,10 +180,20 @@ function PostDetail() {
               <div className="text-sm font-semibold">@{author}</div>
               <div className="text-[11px] text-muted-foreground">2 小时前发布</div>
             </div>
-            <button className="rounded-full border border-primary px-3 py-1 text-xs font-medium text-primary">
-              关注
+            <button
+              onClick={() => {
+                setFollowed((v) => !v);
+                toast.success(followed ? "已取消关注" : `已关注 @${author}`);
+              }}
+              className={cn(
+                "rounded-full px-3 py-1 text-xs font-medium transition",
+                followed
+                  ? "border border-border bg-muted text-muted-foreground"
+                  : "border border-primary text-primary",
+              )}
+            >
+              {followed ? "已关注" : "关注"}
             </button>
-          </div>
           </div>
 
           {/* 档口 & 评分 */}
@@ -236,21 +246,27 @@ function PostDetail() {
             </button>
             <button className="flex items-center gap-1">
               <MessageCircle className="h-4 w-4" />
-              {COMMENTS.length}
+              {COMMENTS.length + extraComments.length}
             </button>
-            <button className="flex items-center gap-1">
-              <Bookmark className="h-4 w-4" />
-              收藏
+            <button
+              onClick={() => {
+                setSaved((v) => !v);
+                toast.success(saved ? "已取消收藏" : "已加入收藏");
+              }}
+              className={cn("flex items-center gap-1", saved && "text-primary")}
+            >
+              <Bookmark className={cn("h-4 w-4", saved && "fill-current")} />
+              {saved ? "已收藏" : "收藏"}
             </button>
           </div>
 
           {/* 评论区 */}
           <div className="mt-3">
             <div className="mb-2 text-xs font-semibold text-muted-foreground">
-              评论 · {COMMENTS.length}
+              评论 · {COMMENTS.length + extraComments.length}
             </div>
             <ul className="space-y-3">
-              {COMMENTS.map((c, i) => (
+              {[...COMMENTS, ...extraComments.map((c) => ({ ...c, reply: false }))].map((c, i) => (
                 <li key={i} className={cn("flex gap-2 text-xs", c.reply && "pl-6")}>
                   <span className={cn(
                     "grid h-6 w-6 shrink-0 place-items-center rounded-full text-[10px] font-bold text-white",
@@ -270,9 +286,36 @@ function PostDetail() {
                 </li>
               ))}
             </ul>
-            <div className="mt-3 rounded-full border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
-              说点什么…
-            </div>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const t = commentText.trim();
+                if (!t) return;
+                setExtraComments((p) => [...p, { u: "我", t }]);
+                setCommentText("");
+                toast.success("已发送评论");
+              }}
+              className="mt-3 flex items-center gap-2 rounded-full border border-border bg-muted/40 px-3 py-1.5"
+            >
+              <input
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                placeholder="说点什么…"
+                className="min-w-0 flex-1 bg-transparent text-xs outline-none placeholder:text-muted-foreground"
+              />
+              <button
+                type="submit"
+                disabled={!commentText.trim()}
+                className={cn(
+                  "rounded-full px-3 py-1 text-[11px] font-medium",
+                  commentText.trim()
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground",
+                )}
+              >
+                发送
+              </button>
+            </form>
           </div>
         </div>
       </div>

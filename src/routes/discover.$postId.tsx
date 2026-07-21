@@ -5,6 +5,14 @@ import { ArrowLeft, Share2, Store, Heart, MessageCircle, Bookmark, Star, Chevron
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Copy, Link2, MessageSquare, QrCode } from "lucide-react";
 
 export const Route = createFileRoute("/discover/$postId")({
   head: () => ({ meta: [{ title: "好物笔记 · 东大门订货通" }] }),
@@ -57,7 +65,55 @@ function PostDetail() {
 
   const [idx, setIdx] = useState(0);
   const [liked, setLiked] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
   const images = product.images.length ? product.images : [product.images[0]];
+
+  // 分享链接：附带 ref=<author> 用于佣金归属
+  const shareUrl = useMemo(() => {
+    const origin =
+      typeof window !== "undefined" && window.location?.origin
+        ? window.location.origin
+        : "https://ddm.example.com";
+    return `${origin}/discover/${postId}?ref=${encodeURIComponent(author)}`;
+  }, [postId, author]);
+  const shareText = `【东大门好物】${product.name} · 拼单价 ${formatCNY(priceCNY)}，@${author} 推荐`;
+
+  const copy = async (text: string, tip = "链接已复制") => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success(tip);
+    } catch {
+      // 兼容旧环境
+      const el = document.createElement("textarea");
+      el.value = text;
+      document.body.appendChild(el);
+      el.select();
+      try {
+        document.execCommand("copy");
+        toast.success(tip);
+      } catch {
+        toast.error("复制失败，请长按手动复制");
+      }
+      document.body.removeChild(el);
+    }
+  };
+
+  const openShare = async () => {
+    // 优先系统原生分享（移动端）
+    if (typeof navigator !== "undefined" && (navigator as Navigator).share) {
+      try {
+        await (navigator as Navigator).share({
+          title: "东大门好物",
+          text: shareText,
+          url: shareUrl,
+        });
+        return;
+      } catch {
+        // 用户取消或不支持，回退到弹层
+      }
+    }
+    setShareOpen(true);
+  };
 
   const onBuy = () => {
     // 佣金归属：URL 参数 ref=<author> 记录推荐人，下单时带入订单快照
@@ -77,17 +133,7 @@ function PostDetail() {
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div className="truncate text-sm font-medium">@{author} 的好物</div>
-        <button
-          onClick={() => {
-            const url = typeof window !== "undefined" ? window.location.href : "";
-            if (navigator.share) navigator.share({ title: "东大门好物", url });
-            else {
-              navigator.clipboard?.writeText(url);
-              toast.success("链接已复制");
-            }
-          }}
-          className="rounded-full p-1"
-        >
+        <button onClick={openShare} className="rounded-full p-1" aria-label="分享">
           <Share2 className="h-5 w-5" />
         </button>
       </header>
@@ -262,6 +308,43 @@ function PostDetail() {
           </button>
         </div>
       </div>
+
+      {/* 分享弹层 */}
+      <Dialog open={shareOpen} onOpenChange={setShareOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>分享好物笔记</DialogTitle>
+            <DialogDescription>
+              好友通过你的链接下单，佣金自动归属 @{author}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="rounded-lg border border-border bg-muted/40 p-3">
+            <div className="mb-1 flex items-center gap-1 text-[11px] text-muted-foreground">
+              <Link2 className="h-3 w-3" /> 专属分享链接
+            </div>
+            <div className="break-all text-xs">{shareUrl}</div>
+          </div>
+
+          <button
+            onClick={() => copy(shareUrl)}
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-rose-500 to-orange-500 py-2.5 text-sm font-semibold text-white shadow"
+          >
+            <Copy className="h-4 w-4" /> 一键复制链接
+          </button>
+
+          <button
+            onClick={() => copy(`${shareText}\n${shareUrl}`, "文案+链接已复制")}
+            className="flex w-full items-center justify-center gap-2 rounded-full border border-border py-2.5 text-sm font-medium"
+          >
+            <MessageSquare className="h-4 w-4" /> 复制推荐文案 + 链接
+          </button>
+
+          <div className="flex items-center justify-center gap-2 pt-1 text-[11px] text-muted-foreground">
+            <QrCode className="h-3 w-3" /> 微信/小红书可直接粘贴分享
+          </div>
+        </DialogContent>
+      </Dialog>
     </MobileShell>
   );
 }

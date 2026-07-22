@@ -3,7 +3,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { PLANS, RIGHTS, setTier, type MembershipTier } from "@/lib/membership";
-import { Check, X, Crown, Sparkles, Truck, Tag, Wallet, Coins, Users, PenSquare, ShieldCheck, HelpCircle } from "lucide-react";
+import { Check, X, Crown, Sparkles, Truck, Wallet, Coins, Users, PenSquare, ShieldCheck, HelpCircle } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { toast } from "sonner";
@@ -75,7 +75,6 @@ function PlanPage() {
         <div className="grid grid-cols-2 gap-2">
           {[
             { icon: Truck, t: "全场包邮", d: "国内段免运，跨境按重" },
-            { icon: Tag, t: "9.5 折专享价", d: "精选爆款仅会员可见" },
             { icon: Coins, t: "购物返积分", d: "¥1=1 积分 · 1.5×加速" },
             { icon: PenSquare, t: "发帖赚返佣", d: "3% 创作 · 引用订单" },
             { icon: Users, t: "邀请分成", d: "L1 0.5% · L2 0.2%" },
@@ -180,7 +179,7 @@ function PlanPage() {
               <span className="flex items-center gap-1.5"><HelpCircle className="h-3.5 w-3.5 text-rose-500" />会员费支持退款吗？</span>
             </AccordionTrigger>
             <AccordionContent className="text-[11px] text-muted-foreground">
-              会员费一经开通即刻生效，因政策原因不支持退款；开卡礼积分与专享价即时到账。
+              会员费一经开通即刻生效，因政策原因不支持退款；开卡礼积分即时到账。
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="q3" className="border-b-0">

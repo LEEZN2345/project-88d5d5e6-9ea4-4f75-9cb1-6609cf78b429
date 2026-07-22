@@ -3,7 +3,7 @@ import { z } from "zod";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { PLANS, type MembershipTier } from "@/lib/membership";
 import {
-  PartyPopper, Check, ShoppingBag, Sparkles, Truck, Tag, Coins, Gift,
+  PartyPopper, Check, ShoppingBag, Sparkles, Truck, Coins, Gift,
   PenSquare, Users, Wallet, Compass, ArrowRight,
 } from "lucide-react";
 
@@ -35,7 +35,6 @@ function featuresFor(tier: MembershipTier): Feature[] {
     { icon: ShoppingBag, title: "去逛首页", desc: "东大门今日上新 & 楼层档口", to: "/", cta: "开始逛" },
     { icon: Compass, title: "发现好物", desc: "看真实买家实拍，一键跟买", to: "/discover", cta: "去看看" },
     { icon: Gift, title: "积分商城", desc: "开卡礼积分立即兑换好物", to: "/points", cta: "去兑换" },
-    { icon: Tag, title: "会员专享价", desc: "9.5 折精选款，仅会员可见", to: "/", cta: "去挑选" },
     { icon: Truck, title: "全场包邮", desc: "国内段免运费，跨境按重计算", to: "/guide", cta: "看规则" },
     { icon: Coins, title: "我的资产", desc: "积分 / 佣金 / 优惠券一览", to: "/me", cta: "查看" },
   ];

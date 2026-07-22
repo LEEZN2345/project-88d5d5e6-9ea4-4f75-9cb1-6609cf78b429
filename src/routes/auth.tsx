@@ -95,13 +95,6 @@ function Auth() {
           注册即代表同意 <Link to="/" className="underline">服务协议</Link> 与隐私政策
         </div>
       </div>
-
-      <div className="mt-8 rounded-2xl border border-dashed border-rose-200 bg-rose-50/50 px-4 py-3 text-[11px] leading-relaxed text-rose-700 mx-6">
-        <div className="mb-1 font-semibold">注册完成后你可以：</div>
-        · 免费以「游客」身份开始逛<br />
-        · ¥99 开通普通会员：全场包邮 + 9.5 折 + 返佣抵扣<br />
-        · ¥199 开通创作者：返佣可提现到微信/支付宝
-      </div>
     </MobileShell>
   );
 }

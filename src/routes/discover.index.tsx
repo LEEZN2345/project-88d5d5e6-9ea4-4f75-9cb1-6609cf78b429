@@ -190,12 +190,9 @@ function Discover() {
                     <span className="mx-0.5">·</span>
                     <span className="truncate">🏢 {p.shop?.name ?? "档口"}</span>
                   </div>
-                  <div className="flex items-center justify-between pt-0.5">
-                    <span className="text-sm font-bold text-rose-600">
-                      {formatCNY(p.priceCNY)}
-                    </span>
+                  <div className="flex items-center justify-end pt-0.5">
                     <span className="text-[10px] text-muted-foreground">
-                      已售 {p.soldCount}
+                      已有 {p.soldCount} 跟买
                     </span>
                   </div>
                 </div>

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { PLANS, RIGHTS, setTier, type MembershipTier } from "@/lib/membership";
-import { Check, X, Crown, Sparkles, Truck, Tag, Wallet, Coins, Users, PenSquare, ShieldCheck, HelpCircle } from "lucide-react";
+import { Check, X, Crown, Sparkles, Truck, Wallet, Coins, Users, PenSquare, ShieldCheck, HelpCircle } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { toast } from "sonner";
@@ -75,7 +75,6 @@ function PlanPage() {
         <div className="grid grid-cols-2 gap-2">
           {[
             { icon: Truck, t: "全场包邮", d: "国内段免运，跨境按重" },
-            { icon: Tag, t: "9.5 折专享价", d: "精选爆款仅会员可见" },
             { icon: Coins, t: "购物返积分", d: "¥1=1 积分 · 1.5×加速" },
             { icon: PenSquare, t: "发帖赚返佣", d: "3% 创作 · 引用订单" },
             { icon: Users, t: "邀请分成", d: "L1 0.5% · L2 0.2%" },

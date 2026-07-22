@@ -179,7 +179,7 @@ function PlanPage() {
               <span className="flex items-center gap-1.5"><HelpCircle className="h-3.5 w-3.5 text-rose-500" />会员费支持退款吗？</span>
             </AccordionTrigger>
             <AccordionContent className="text-[11px] text-muted-foreground">
-              会员费一经开通即刻生效，因政策原因不支持退款；开卡礼积分与专享价即时到账。
+              会员费一经开通即刻生效，因政策原因不支持退款；开卡礼积分即时到账。
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="q3" className="border-b-0">

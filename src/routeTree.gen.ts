@@ -14,6 +14,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as PointsRulesRouteImport } from './routes/points-rules'
 import { Route as PointsRouteImport } from './routes/points'
 import { Route as NewArrivalsRouteImport } from './routes/new-arrivals'
+import { Route as MembershipRouteImport } from './routes/membership'
 import { Route as MeRouteImport } from './routes/me'
 import { Route as KycRouteImport } from './routes/kyc'
 import { Route as InviteRulesRouteImport } from './routes/invite-rules'
@@ -107,6 +108,11 @@ const PointsRoute = PointsRouteImport.update({
 const NewArrivalsRoute = NewArrivalsRouteImport.update({
   id: '/new-arrivals',
   path: '/new-arrivals',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MembershipRoute = MembershipRouteImport.update({
+  id: '/membership',
+  path: '/membership',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MeRoute = MeRouteImport.update({
@@ -470,6 +476,7 @@ export interface FileRoutesByFullPath {
   '/invite-rules': typeof InviteRulesRoute
   '/kyc': typeof KycRoute
   '/me': typeof MeRouteWithChildren
+  '/membership': typeof MembershipRoute
   '/new-arrivals': typeof NewArrivalsRoute
   '/points': typeof PointsRouteWithChildren
   '/points-rules': typeof PointsRulesRoute
@@ -546,6 +553,7 @@ export interface FileRoutesByTo {
   '/invite-rules': typeof InviteRulesRoute
   '/kyc': typeof KycRoute
   '/me': typeof MeRouteWithChildren
+  '/membership': typeof MembershipRoute
   '/new-arrivals': typeof NewArrivalsRoute
   '/points': typeof PointsRouteWithChildren
   '/points-rules': typeof PointsRulesRoute
@@ -623,6 +631,7 @@ export interface FileRoutesById {
   '/invite-rules': typeof InviteRulesRoute
   '/kyc': typeof KycRoute
   '/me': typeof MeRouteWithChildren
+  '/membership': typeof MembershipRoute
   '/new-arrivals': typeof NewArrivalsRoute
   '/points': typeof PointsRouteWithChildren
   '/points-rules': typeof PointsRulesRoute
@@ -701,6 +710,7 @@ export interface FileRouteTypes {
     | '/invite-rules'
     | '/kyc'
     | '/me'
+    | '/membership'
     | '/new-arrivals'
     | '/points'
     | '/points-rules'
@@ -777,6 +787,7 @@ export interface FileRouteTypes {
     | '/invite-rules'
     | '/kyc'
     | '/me'
+    | '/membership'
     | '/new-arrivals'
     | '/points'
     | '/points-rules'
@@ -853,6 +864,7 @@ export interface FileRouteTypes {
     | '/invite-rules'
     | '/kyc'
     | '/me'
+    | '/membership'
     | '/new-arrivals'
     | '/points'
     | '/points-rules'
@@ -930,6 +942,7 @@ export interface RootRouteChildren {
   InviteRulesRoute: typeof InviteRulesRoute
   KycRoute: typeof KycRoute
   MeRoute: typeof MeRouteWithChildren
+  MembershipRoute: typeof MembershipRoute
   NewArrivalsRoute: typeof NewArrivalsRoute
   PointsRoute: typeof PointsRouteWithChildren
   PointsRulesRoute: typeof PointsRulesRoute
@@ -1015,6 +1028,13 @@ declare module '@tanstack/react-router' {
       path: '/new-arrivals'
       fullPath: '/new-arrivals'
       preLoaderRoute: typeof NewArrivalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/membership': {
+      id: '/membership'
+      path: '/membership'
+      fullPath: '/membership'
+      preLoaderRoute: typeof MembershipRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/me': {
@@ -1638,6 +1658,7 @@ const rootRouteChildren: RootRouteChildren = {
   InviteRulesRoute: InviteRulesRoute,
   KycRoute: KycRoute,
   MeRoute: MeRouteWithChildren,
+  MembershipRoute: MembershipRoute,
   NewArrivalsRoute: NewArrivalsRoute,
   PointsRoute: PointsRouteWithChildren,
   PointsRulesRoute: PointsRulesRoute,

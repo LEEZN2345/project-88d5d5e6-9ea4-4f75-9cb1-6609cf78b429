@@ -27,13 +27,13 @@ import { Route as DiscountsRouteImport } from './routes/discounts'
 import { Route as CommissionRouteImport } from './routes/commission'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CartRouteImport } from './routes/cart'
-import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AddressesRouteImport } from './routes/addresses'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ShopsIndexRouteImport } from './routes/shops.index'
 import { Route as OrdersIndexRouteImport } from './routes/orders.index'
 import { Route as ExchangesIndexRouteImport } from './routes/exchanges.index'
 import { Route as DiscoverIndexRouteImport } from './routes/discover.index'
+import { Route as AuthIndexRouteImport } from './routes/auth.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ShopsIdRouteImport } from './routes/shops.$id'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
@@ -179,11 +179,6 @@ const CartRoute = CartRouteImport.update({
   path: '/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AddressesRoute = AddressesRouteImport.update({
   id: '/addresses',
   path: '/addresses',
@@ -212,6 +207,11 @@ const ExchangesIndexRoute = ExchangesIndexRouteImport.update({
 const DiscoverIndexRoute = DiscoverIndexRouteImport.update({
   id: '/discover/',
   path: '/discover/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthIndexRoute = AuthIndexRouteImport.update({
+  id: '/auth/',
+  path: '/auth/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -280,19 +280,19 @@ const CategoriesIdRoute = CategoriesIdRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthWelcomeRoute = AuthWelcomeRouteImport.update({
-  id: '/welcome',
-  path: '/welcome',
-  getParentRoute: () => AuthRoute,
+  id: '/auth/welcome',
+  path: '/auth/welcome',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthPlanRoute = AuthPlanRouteImport.update({
-  id: '/plan',
-  path: '/plan',
-  getParentRoute: () => AuthRoute,
+  id: '/auth/plan',
+  path: '/auth/plan',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthPayRoute = AuthPayRouteImport.update({
-  id: '/pay',
-  path: '/pay',
-  getParentRoute: () => AuthRoute,
+  id: '/auth/pay',
+  path: '/auth/pay',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/admin/users',
@@ -488,7 +488,6 @@ const AdminUsersIdPointsRoute = AdminUsersIdPointsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/addresses': typeof AddressesRoute
-  '/auth': typeof AuthRouteWithChildren
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/commission': typeof CommissionRoute
@@ -547,6 +546,7 @@ export interface FileRoutesByFullPath {
   '/products/$id': typeof ProductsIdRoute
   '/shops/$id': typeof ShopsIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/auth/': typeof AuthIndexRoute
   '/discover/': typeof DiscoverIndexRoute
   '/exchanges/': typeof ExchangesIndexRoute
   '/orders/': typeof OrdersIndexRoute
@@ -569,7 +569,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/addresses': typeof AddressesRoute
-  '/auth': typeof AuthRouteWithChildren
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/commission': typeof CommissionRoute
@@ -628,6 +627,7 @@ export interface FileRoutesByTo {
   '/products/$id': typeof ProductsIdRoute
   '/shops/$id': typeof ShopsIdRoute
   '/admin': typeof AdminIndexRoute
+  '/auth': typeof AuthIndexRoute
   '/discover': typeof DiscoverIndexRoute
   '/exchanges': typeof ExchangesIndexRoute
   '/orders': typeof OrdersIndexRoute
@@ -651,7 +651,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/addresses': typeof AddressesRoute
-  '/auth': typeof AuthRouteWithChildren
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/commission': typeof CommissionRoute
@@ -710,6 +709,7 @@ export interface FileRoutesById {
   '/products/$id': typeof ProductsIdRoute
   '/shops/$id': typeof ShopsIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/auth/': typeof AuthIndexRoute
   '/discover/': typeof DiscoverIndexRoute
   '/exchanges/': typeof ExchangesIndexRoute
   '/orders/': typeof OrdersIndexRoute
@@ -734,7 +734,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/addresses'
-    | '/auth'
     | '/cart'
     | '/checkout'
     | '/commission'
@@ -793,6 +792,7 @@ export interface FileRouteTypes {
     | '/products/$id'
     | '/shops/$id'
     | '/admin/'
+    | '/auth/'
     | '/discover/'
     | '/exchanges/'
     | '/orders/'
@@ -815,7 +815,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/addresses'
-    | '/auth'
     | '/cart'
     | '/checkout'
     | '/commission'
@@ -874,6 +873,7 @@ export interface FileRouteTypes {
     | '/products/$id'
     | '/shops/$id'
     | '/admin'
+    | '/auth'
     | '/discover'
     | '/exchanges'
     | '/orders'
@@ -896,7 +896,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/addresses'
-    | '/auth'
     | '/cart'
     | '/checkout'
     | '/commission'
@@ -955,6 +954,7 @@ export interface FileRouteTypes {
     | '/products/$id'
     | '/shops/$id'
     | '/admin/'
+    | '/auth/'
     | '/discover/'
     | '/exchanges/'
     | '/orders/'
@@ -978,7 +978,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AddressesRoute: typeof AddressesRoute
-  AuthRoute: typeof AuthRouteWithChildren
   CartRoute: typeof CartRoute
   CheckoutRoute: typeof CheckoutRoute
   CommissionRoute: typeof CommissionRoute
@@ -1021,6 +1020,9 @@ export interface RootRouteChildren {
   AdminUserGroupsRoute: typeof AdminUserGroupsRoute
   AdminUserTagsRoute: typeof AdminUserTagsRoute
   AdminUsersRoute: typeof AdminUsersRouteWithChildren
+  AuthPayRoute: typeof AuthPayRoute
+  AuthPlanRoute: typeof AuthPlanRoute
+  AuthWelcomeRoute: typeof AuthWelcomeRoute
   CategoriesIdRoute: typeof CategoriesIdRoute
   DiscoverPostIdRoute: typeof DiscoverPostIdRoute
   DiscoverNewRoute: typeof DiscoverNewRoute
@@ -1031,6 +1033,7 @@ export interface RootRouteChildren {
   ProductsIdRoute: typeof ProductsIdRoute
   ShopsIdRoute: typeof ShopsIdRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AuthIndexRoute: typeof AuthIndexRoute
   DiscoverIndexRoute: typeof DiscoverIndexRoute
   ExchangesIndexRoute: typeof ExchangesIndexRoute
   OrdersIndexRoute: typeof OrdersIndexRoute
@@ -1170,13 +1173,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/addresses': {
       id: '/addresses'
       path: '/addresses'
@@ -1217,6 +1213,13 @@ declare module '@tanstack/react-router' {
       path: '/discover'
       fullPath: '/discover/'
       preLoaderRoute: typeof DiscoverIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/': {
+      id: '/auth/'
+      path: '/auth'
+      fullPath: '/auth/'
+      preLoaderRoute: typeof AuthIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -1312,24 +1315,24 @@ declare module '@tanstack/react-router' {
     }
     '/auth/welcome': {
       id: '/auth/welcome'
-      path: '/welcome'
+      path: '/auth/welcome'
       fullPath: '/auth/welcome'
       preLoaderRoute: typeof AuthWelcomeRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof rootRouteImport
     }
     '/auth/plan': {
       id: '/auth/plan'
-      path: '/plan'
+      path: '/auth/plan'
       fullPath: '/auth/plan'
       preLoaderRoute: typeof AuthPlanRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof rootRouteImport
     }
     '/auth/pay': {
       id: '/auth/pay'
-      path: '/pay'
+      path: '/auth/pay'
       fullPath: '/auth/pay'
       preLoaderRoute: typeof AuthPayRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/users': {
       id: '/admin/users'
@@ -1600,20 +1603,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AuthRouteChildren {
-  AuthPayRoute: typeof AuthPayRoute
-  AuthPlanRoute: typeof AuthPlanRoute
-  AuthWelcomeRoute: typeof AuthWelcomeRoute
-}
-
-const AuthRouteChildren: AuthRouteChildren = {
-  AuthPayRoute: AuthPayRoute,
-  AuthPlanRoute: AuthPlanRoute,
-  AuthWelcomeRoute: AuthWelcomeRoute,
-}
-
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
-
 interface MeRouteChildren {
   MePostsRoute: typeof MePostsRoute
   MePromoLinksRoute: typeof MePromoLinksRoute
@@ -1737,7 +1726,6 @@ const OrdersIdRouteWithChildren = OrdersIdRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AddressesRoute: AddressesRoute,
-  AuthRoute: AuthRouteWithChildren,
   CartRoute: CartRoute,
   CheckoutRoute: CheckoutRoute,
   CommissionRoute: CommissionRoute,
@@ -1780,6 +1768,9 @@ const rootRouteChildren: RootRouteChildren = {
   AdminUserGroupsRoute: AdminUserGroupsRoute,
   AdminUserTagsRoute: AdminUserTagsRoute,
   AdminUsersRoute: AdminUsersRouteWithChildren,
+  AuthPayRoute: AuthPayRoute,
+  AuthPlanRoute: AuthPlanRoute,
+  AuthWelcomeRoute: AuthWelcomeRoute,
   CategoriesIdRoute: CategoriesIdRoute,
   DiscoverPostIdRoute: DiscoverPostIdRoute,
   DiscoverNewRoute: DiscoverNewRoute,
@@ -1790,6 +1781,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProductsIdRoute: ProductsIdRoute,
   ShopsIdRoute: ShopsIdRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AuthIndexRoute: AuthIndexRoute,
   DiscoverIndexRoute: DiscoverIndexRoute,
   ExchangesIndexRoute: ExchangesIndexRoute,
   OrdersIndexRoute: OrdersIndexRoute,

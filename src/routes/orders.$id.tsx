@@ -3,7 +3,7 @@ import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { ORDERS, STATUS_LABEL, formatKRW, formatCNY } from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Copy, Truck, Receipt, Wallet, RefreshCcw } from "lucide-react";
+import { Copy, Truck, Receipt, Wallet, RefreshCcw, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/orders/$id")({
   component: OrderDetail,
@@ -102,6 +102,36 @@ function OrderDetail() {
           </div>
           <span className="text-xs text-rose-600">前往 →</span>
         </Link>
+      )}
+
+      {["paid_locked", "in_warehouse", "in_transit", "delivering", "delivered"].includes(o.status) && (
+        o.postId ? (
+          <div className="mx-4 mt-3 flex items-center gap-3 rounded-xl border border-emerald-300 bg-emerald-50 p-3 dark:bg-emerald-950/30">
+            <Sparkles className="h-4 w-4 text-emerald-600" />
+            <div className="flex-1 text-sm">
+              <div className="font-medium text-emerald-700 dark:text-emerald-300">已分享心得</div>
+              <div className="text-xs text-emerald-600/80 dark:text-emerald-400">
+                本单已生成一篇帖子（一单一帖），可在「我的分销数据」查看效果
+              </div>
+            </div>
+            <Link to="/me/posts" className="text-xs text-emerald-700">查看 →</Link>
+          </div>
+        ) : (
+          <Link
+            to="/discover/new"
+            search={{ orderId: o.id }}
+            className="mx-4 mt-3 flex items-center gap-3 rounded-xl border border-rose-300 bg-gradient-to-r from-rose-50 to-orange-50 p-3 dark:from-rose-950/30 dark:to-orange-950/20"
+          >
+            <Sparkles className="h-4 w-4 text-rose-600" />
+            <div className="flex-1 text-sm">
+              <div className="font-medium text-rose-700 dark:text-rose-300">分享心得 · 赚 3% 创作返佣</div>
+              <div className="text-xs text-rose-600/80 dark:text-rose-400">
+                真实晒单更容易被推荐，一单只能发一帖
+              </div>
+            </div>
+            <span className="text-xs text-rose-600">去分享 →</span>
+          </Link>
+        )
       )}
 
       <div className="mx-4 mt-3 mb-6 rounded-xl border border-border bg-card p-3 text-xs">

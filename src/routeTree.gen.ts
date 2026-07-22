@@ -34,6 +34,7 @@ import { Route as ShopsIndexRouteImport } from './routes/shops.index'
 import { Route as OrdersIndexRouteImport } from './routes/orders.index'
 import { Route as ExchangesIndexRouteImport } from './routes/exchanges.index'
 import { Route as DiscoverIndexRouteImport } from './routes/discover.index'
+import { Route as AuthIndexRouteImport } from './routes/auth.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ShopsIdRouteImport } from './routes/shops.$id'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
@@ -213,6 +214,11 @@ const DiscoverIndexRoute = DiscoverIndexRouteImport.update({
   id: '/discover/',
   path: '/discover/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthIndexRoute = AuthIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthRoute,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/admin/',
@@ -547,6 +553,7 @@ export interface FileRoutesByFullPath {
   '/products/$id': typeof ProductsIdRoute
   '/shops/$id': typeof ShopsIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/auth/': typeof AuthIndexRoute
   '/discover/': typeof DiscoverIndexRoute
   '/exchanges/': typeof ExchangesIndexRoute
   '/orders/': typeof OrdersIndexRoute
@@ -569,7 +576,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/addresses': typeof AddressesRoute
-  '/auth': typeof AuthRouteWithChildren
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/commission': typeof CommissionRoute
@@ -628,6 +634,7 @@ export interface FileRoutesByTo {
   '/products/$id': typeof ProductsIdRoute
   '/shops/$id': typeof ShopsIdRoute
   '/admin': typeof AdminIndexRoute
+  '/auth': typeof AuthIndexRoute
   '/discover': typeof DiscoverIndexRoute
   '/exchanges': typeof ExchangesIndexRoute
   '/orders': typeof OrdersIndexRoute
@@ -710,6 +717,7 @@ export interface FileRoutesById {
   '/products/$id': typeof ProductsIdRoute
   '/shops/$id': typeof ShopsIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/auth/': typeof AuthIndexRoute
   '/discover/': typeof DiscoverIndexRoute
   '/exchanges/': typeof ExchangesIndexRoute
   '/orders/': typeof OrdersIndexRoute
@@ -793,6 +801,7 @@ export interface FileRouteTypes {
     | '/products/$id'
     | '/shops/$id'
     | '/admin/'
+    | '/auth/'
     | '/discover/'
     | '/exchanges/'
     | '/orders/'
@@ -815,7 +824,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/addresses'
-    | '/auth'
     | '/cart'
     | '/checkout'
     | '/commission'
@@ -874,6 +882,7 @@ export interface FileRouteTypes {
     | '/products/$id'
     | '/shops/$id'
     | '/admin'
+    | '/auth'
     | '/discover'
     | '/exchanges'
     | '/orders'
@@ -955,6 +964,7 @@ export interface FileRouteTypes {
     | '/products/$id'
     | '/shops/$id'
     | '/admin/'
+    | '/auth/'
     | '/discover/'
     | '/exchanges/'
     | '/orders/'
@@ -1218,6 +1228,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/discover/'
       preLoaderRoute: typeof DiscoverIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/auth/': {
+      id: '/auth/'
+      path: '/'
+      fullPath: '/auth/'
+      preLoaderRoute: typeof AuthIndexRouteImport
+      parentRoute: typeof AuthRoute
     }
     '/admin/': {
       id: '/admin/'
@@ -1604,12 +1621,14 @@ interface AuthRouteChildren {
   AuthPayRoute: typeof AuthPayRoute
   AuthPlanRoute: typeof AuthPlanRoute
   AuthWelcomeRoute: typeof AuthWelcomeRoute
+  AuthIndexRoute: typeof AuthIndexRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthPayRoute: AuthPayRoute,
   AuthPlanRoute: AuthPlanRoute,
   AuthWelcomeRoute: AuthWelcomeRoute,
+  AuthIndexRoute: AuthIndexRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)

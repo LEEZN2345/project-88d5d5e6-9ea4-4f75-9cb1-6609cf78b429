@@ -24,7 +24,7 @@ function MyPosts() {
       const priceCNY = krwToCny(p.priceKRW);
       const sold = [12, 5, 8, 3, 6, 2][i] ?? 1;
       const views = [520, 230, 410, 180, 305, 96][i] ?? 100;
-      const earned = Math.round(priceCNY * 0.1 * sold * 100) / 100;
+      const earned = Math.round(priceCNY * 0.03 * sold * 100) / 100;
       const pending = Math.round(earned * 0.3 * 100) / 100;
       return {
         id: p.id,

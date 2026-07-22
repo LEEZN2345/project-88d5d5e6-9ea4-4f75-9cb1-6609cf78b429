@@ -119,23 +119,29 @@ function Membership() {
       {/* 权益对比 */}
       <div className="px-4 pt-6">
         <div className="mb-2 text-sm font-semibold">权益对比</div>
-        <div className="overflow-x-auto rounded-2xl border border-border bg-card">
-          <table className="w-full min-w-[520px] text-[12px]">
+        <div className="overflow-hidden rounded-2xl border border-border bg-card">
+          <table className="w-full table-fixed text-[11px] leading-tight">
+            <colgroup>
+              <col className="w-[34%]" />
+              <col className="w-[22%]" />
+              <col className="w-[22%]" />
+              <col className="w-[22%]" />
+            </colgroup>
             <thead>
-              <tr className="border-b border-border bg-muted/40 text-[11px] text-muted-foreground">
-                <th className="p-2 text-left font-medium">权益项</th>
-                <th className="p-2 text-center font-medium">游客<br/><span className="opacity-70">免费</span></th>
-                <th className="p-2 text-center font-medium">普通<br/><span className="opacity-70">¥99/年</span></th>
-                <th className="p-2 text-center font-medium text-rose-600">创作者<br/><span className="opacity-70">¥199/年</span></th>
+              <tr className="border-b border-border bg-muted/40 text-[10px] text-muted-foreground">
+                <th className="px-1.5 py-1.5 text-left font-medium">权益项</th>
+                <th className="px-1 py-1.5 text-center font-medium">游客<br/><span className="opacity-70">免费</span></th>
+                <th className="px-1 py-1.5 text-center font-medium">普通<br/><span className="opacity-70">¥99/年</span></th>
+                <th className="px-1 py-1.5 text-center font-medium text-rose-600">创作者<br/><span className="opacity-70">¥199/年</span></th>
               </tr>
             </thead>
             <tbody>
               {RIGHTS.map(([label, g, a, b]) => (
                 <tr key={label} className="border-b border-border last:border-0 align-top">
-                  <td className="p-2 text-foreground">{label}</td>
-                  <td className="p-2 text-center text-muted-foreground">{renderCell(g)}</td>
-                  <td className="p-2 text-center text-muted-foreground">{renderCell(a)}</td>
-                  <td className="p-2 text-center text-foreground">{renderCell(b)}</td>
+                  <td className="px-1.5 py-1.5 text-foreground break-words">{label}</td>
+                  <td className="px-1 py-1.5 text-center text-muted-foreground break-words">{renderCell(g)}</td>
+                  <td className="px-1 py-1.5 text-center text-muted-foreground break-words">{renderCell(a)}</td>
+                  <td className="px-1 py-1.5 text-center text-foreground break-words">{renderCell(b)}</td>
                 </tr>
               ))}
             </tbody>

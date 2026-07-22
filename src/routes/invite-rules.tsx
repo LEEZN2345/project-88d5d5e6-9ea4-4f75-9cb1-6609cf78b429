@@ -17,8 +17,8 @@ function InviteRules() {
           <div className="flex items-center gap-2 text-sm opacity-90">
             <Sparkles className="h-4 w-4" /> 二级分佣 · 长期收益
           </div>
-          <div className="mt-2 text-2xl font-semibold">L1 0.7% + L2 0.3%</div>
-          <div className="mt-1 text-xs opacity-80">好友下的每一单，你都能分到钱；好友再邀请的人下单，你还能拿一层</div>
+          <div className="mt-2 text-2xl font-semibold">L1 0.5% + L2 0.2%</div>
+          <div className="mt-1 text-xs opacity-80">好友「直接下单」你才拿佣金；若走了他人帖子链接，归创作者，你不拿</div>
           <Link to="/commission" className="mt-3 inline-flex items-center gap-1 rounded-full bg-white/20 px-3 py-1 text-xs backdrop-blur">
             <Wallet className="h-3 w-3" /> 我的分佣钱包 <ArrowRight className="h-3 w-3" />
           </Link>
@@ -31,17 +31,20 @@ function InviteRules() {
           <div className="grid grid-cols-2 gap-3">
             <div className="rounded-xl border border-primary/30 bg-primary/5 p-3">
               <div className="text-[11px] text-primary">一级邀请（你直接拉的）</div>
-              <div className="mt-1 text-2xl font-bold tabular-nums text-primary">0.7%</div>
-              <div className="text-[11px] text-muted-foreground">好友每笔实付 × 0.7%</div>
+              <div className="mt-1 text-2xl font-bold tabular-nums text-primary">0.5%</div>
+              <div className="text-[11px] text-muted-foreground">好友每笔实付 × 0.5%</div>
             </div>
             <div className="rounded-xl border border-border bg-muted/40 p-3">
               <div className="text-[11px] text-muted-foreground">二级邀请（好友的好友）</div>
-              <div className="mt-1 text-2xl font-bold tabular-nums">0.3%</div>
-              <div className="text-[11px] text-muted-foreground">间接下线实付 × 0.3%</div>
+              <div className="mt-1 text-2xl font-bold tabular-nums">0.2%</div>
+              <div className="text-[11px] text-muted-foreground">间接下线实付 × 0.2%</div>
             </div>
           </div>
           <div className="mt-3 rounded-lg bg-muted/40 px-3 py-2 text-[11px] leading-relaxed text-muted-foreground">
-            <b className="text-foreground">举例：</b>你拉了小王，小王拉了小李。小李下 ¥1,000 单 → 你得 ¥3（L2），小王得 ¥7（L1）。两层可同时拿。
+            <b className="text-foreground">举例：</b>你拉了小王，小王拉了小李。小李下 ¥1,000 单 → 你得 ¥2（L2），小王得 ¥5（L1）。两层可同时拿。
+          </div>
+          <div className="mt-2 rounded-lg border border-dashed border-rose-300 bg-rose-50 px-3 py-2 text-[11px] leading-relaxed text-rose-700 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-300">
+            <b>与创作返佣互斥：</b>如果被邀人是通过某篇帖子链接下单的，归属该帖作者（3% 创作返佣），你不再拿邀请返佣。
           </div>
         </section>
 

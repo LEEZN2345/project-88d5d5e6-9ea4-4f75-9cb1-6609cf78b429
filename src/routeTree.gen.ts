@@ -47,6 +47,7 @@ import { Route as DiscoverPublishedRouteImport } from './routes/discover.publish
 import { Route as DiscoverNewRouteImport } from './routes/discover.new'
 import { Route as DiscoverPostIdRouteImport } from './routes/discover.$postId'
 import { Route as CategoriesIdRouteImport } from './routes/categories.$id'
+import { Route as AuthPlanRouteImport } from './routes/auth.plan'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminUserTagsRouteImport } from './routes/admin.user-tags'
 import { Route as AdminUserGroupsRouteImport } from './routes/admin.user-groups'
@@ -276,6 +277,11 @@ const CategoriesIdRoute = CategoriesIdRouteImport.update({
   path: '/categories/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthPlanRoute = AuthPlanRouteImport.update({
+  id: '/plan',
+  path: '/plan',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/admin/users',
   path: '/admin/users',
@@ -470,7 +476,7 @@ const AdminUsersIdPointsRoute = AdminUsersIdPointsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/addresses': typeof AddressesRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/commission': typeof CommissionRoute
@@ -513,6 +519,7 @@ export interface FileRoutesByFullPath {
   '/admin/user-groups': typeof AdminUserGroupsRoute
   '/admin/user-tags': typeof AdminUserTagsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
+  '/auth/plan': typeof AuthPlanRoute
   '/categories/$id': typeof CategoriesIdRoute
   '/discover/$postId': typeof DiscoverPostIdRoute
   '/discover/new': typeof DiscoverNewRoute
@@ -548,7 +555,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/addresses': typeof AddressesRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/commission': typeof CommissionRoute
@@ -591,6 +598,7 @@ export interface FileRoutesByTo {
   '/admin/user-groups': typeof AdminUserGroupsRoute
   '/admin/user-tags': typeof AdminUserTagsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
+  '/auth/plan': typeof AuthPlanRoute
   '/categories/$id': typeof CategoriesIdRoute
   '/discover/$postId': typeof DiscoverPostIdRoute
   '/discover/new': typeof DiscoverNewRoute
@@ -627,7 +635,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/addresses': typeof AddressesRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/commission': typeof CommissionRoute
@@ -670,6 +678,7 @@ export interface FileRoutesById {
   '/admin/user-groups': typeof AdminUserGroupsRoute
   '/admin/user-tags': typeof AdminUserTagsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
+  '/auth/plan': typeof AuthPlanRoute
   '/categories/$id': typeof CategoriesIdRoute
   '/discover/$postId': typeof DiscoverPostIdRoute
   '/discover/new': typeof DiscoverNewRoute
@@ -750,6 +759,7 @@ export interface FileRouteTypes {
     | '/admin/user-groups'
     | '/admin/user-tags'
     | '/admin/users'
+    | '/auth/plan'
     | '/categories/$id'
     | '/discover/$postId'
     | '/discover/new'
@@ -828,6 +838,7 @@ export interface FileRouteTypes {
     | '/admin/user-groups'
     | '/admin/user-tags'
     | '/admin/users'
+    | '/auth/plan'
     | '/categories/$id'
     | '/discover/$postId'
     | '/discover/new'
@@ -906,6 +917,7 @@ export interface FileRouteTypes {
     | '/admin/user-groups'
     | '/admin/user-tags'
     | '/admin/users'
+    | '/auth/plan'
     | '/categories/$id'
     | '/discover/$postId'
     | '/discover/new'
@@ -942,7 +954,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AddressesRoute: typeof AddressesRoute
-  AuthRoute: typeof AuthRoute
+  AuthRoute: typeof AuthRouteWithChildren
   CartRoute: typeof CartRoute
   CheckoutRoute: typeof CheckoutRoute
   CommissionRoute: typeof CommissionRoute
@@ -1274,6 +1286,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategoriesIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/plan': {
+      id: '/auth/plan'
+      path: '/plan'
+      fullPath: '/auth/plan'
+      preLoaderRoute: typeof AuthPlanRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/admin/users': {
       id: '/admin/users'
       path: '/admin/users'
@@ -1543,6 +1562,16 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthRouteChildren {
+  AuthPlanRoute: typeof AuthPlanRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthPlanRoute: AuthPlanRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 interface MeRouteChildren {
   MePostsRoute: typeof MePostsRoute
   MePromoLinksRoute: typeof MePromoLinksRoute
@@ -1666,7 +1695,7 @@ const OrdersIdRouteWithChildren = OrdersIdRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AddressesRoute: AddressesRoute,
-  AuthRoute: AuthRoute,
+  AuthRoute: AuthRouteWithChildren,
   CartRoute: CartRoute,
   CheckoutRoute: CheckoutRoute,
   CommissionRoute: CommissionRoute,

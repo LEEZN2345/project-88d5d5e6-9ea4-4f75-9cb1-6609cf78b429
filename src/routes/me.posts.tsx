@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { PRODUCTS, SHOPS, krwToCny, formatCNY } from "@/lib/mock-data";
-import { Sparkles, Wallet, ScrollText, BarChart3 } from "lucide-react";
+import { Sparkles, Wallet, ScrollText, BarChart3, Clock, CheckCircle2, CircleDollarSign, PackageCheck } from "lucide-react";
 import { useMemo } from "react";
 import { toast } from "sonner";
 
@@ -45,6 +45,42 @@ function MyPosts() {
   const todayNew = 45;
   const publishedCount = 23;
   const fans = 156;
+
+  // 结算流水（引用订单发帖模式）：签收 → +14 天 = 预计结算日
+  // stage: pending(待结算,冻结中) → settled(已结算,进入可提现池) → withdrawable(已到账,可发起提现)
+  const today = new Date("2026-07-22");
+  const fmtDate = (d: Date) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const addDays = (d: Date, n: number) => {
+    const x = new Date(d);
+    x.setDate(x.getDate() + n);
+    return x;
+  };
+  const daysBetween = (a: Date, b: Date) =>
+    Math.ceil((b.getTime() - a.getTime()) / 86400000);
+
+  const settlements = [
+    { orderId: "DD20251128001", caption: "碎花裙推荐", amount: 45.0, deliveredAt: "2026-07-18" },
+    { orderId: "DD20251127014", caption: "西装外套分享", amount: 30.0, deliveredAt: "2026-07-10" },
+    { orderId: "DD20251126008", caption: "小方包百搭日常", amount: 22.5, deliveredAt: "2026-07-05" },
+    { orderId: "DD20250625012", caption: "蕾丝拼接连衣裙", amount: 68.0, deliveredAt: "2026-06-20" },
+  ].map((s) => {
+    const settleAt = addDays(new Date(s.deliveredAt), 14);
+    const daysLeft = daysBetween(today, settleAt);
+    const stage: "pending" | "settled" | "withdrawable" =
+      daysLeft > 0 ? "pending" : daysLeft > -30 ? "settled" : "withdrawable";
+    return { ...s, settleAt: fmtDate(settleAt), daysLeft, stage };
+  });
+
+  const poolPending = settlements
+    .filter((s) => s.stage === "pending")
+    .reduce((sum, s) => sum + s.amount, 0);
+  const poolSettled = settlements
+    .filter((s) => s.stage === "settled")
+    .reduce((sum, s) => sum + s.amount, 0);
+  const poolWithdrawable = settlements
+    .filter((s) => s.stage === "withdrawable")
+    .reduce((sum, s) => sum + s.amount, 0);
 
   return (
     <MobileShell>
@@ -94,6 +130,81 @@ function MyPosts() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* 结算时间线 */}
+        <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+          <div className="flex items-center justify-between border-b border-border px-4 py-3">
+            <div className="flex items-center gap-1.5 text-sm font-semibold">
+              <Clock className="h-4 w-4 text-primary" /> 结算进度
+            </div>
+            <span className="text-[10px] text-muted-foreground">签收 +14 天自动结算</span>
+          </div>
+
+          {/* 三段式进度条 */}
+          <div className="px-4 pt-4">
+            <div className="relative flex items-start justify-between">
+              <span className="absolute left-6 right-6 top-3 h-0.5 bg-border" />
+              {[
+                { key: "pending", label: "待结算", icon: Clock, amount: poolPending, tone: "text-amber-600 bg-amber-100 dark:bg-amber-500/20" },
+                { key: "settled", label: "已结算", icon: CheckCircle2, amount: poolSettled, tone: "text-emerald-600 bg-emerald-100 dark:bg-emerald-500/20" },
+                { key: "withdrawable", label: "可提现", icon: CircleDollarSign, amount: poolWithdrawable, tone: "text-primary bg-primary/10" },
+              ].map((s) => (
+                <div key={s.key} className="relative z-10 flex w-1/3 flex-col items-center text-center">
+                  <span className={`grid h-6 w-6 place-items-center rounded-full ring-4 ring-card ${s.tone}`}>
+                    <s.icon className="h-3.5 w-3.5" />
+                  </span>
+                  <div className="mt-1.5 text-[10px] text-muted-foreground">{s.label}</div>
+                  <div className="text-sm font-bold tabular-nums text-foreground">{formatCNY(s.amount)}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 明细列表 */}
+          <ul className="mt-3 divide-y divide-border border-t border-border">
+            {settlements.map((s) => {
+              const badge =
+                s.stage === "pending"
+                  ? { text: "待结算", cls: "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300" }
+                  : s.stage === "settled"
+                    ? { text: "已结算", cls: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300" }
+                    : { text: "可提现", cls: "bg-primary/10 text-primary" };
+              return (
+                <li key={s.orderId} className="flex items-start gap-3 px-4 py-3">
+                  <PackageCheck className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="truncate text-sm font-medium">📸 {s.caption}</span>
+                      <span className={`shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-medium ${badge.cls}`}>{badge.text}</span>
+                    </div>
+                    <div className="mt-0.5 text-[11px] text-muted-foreground">
+                      订单 {s.orderId} · 签收 {s.deliveredAt}
+                    </div>
+                    <div className="mt-0.5 text-[11px] text-muted-foreground">
+                      {s.stage === "pending" ? (
+                        <>
+                          预计结算日：
+                          <span className="font-semibold text-foreground">{s.settleAt}</span>
+                          <span className="ml-1 text-amber-600">（还剩 {s.daysLeft} 天）</span>
+                        </>
+                      ) : (
+                        <>
+                          已于 <span className="font-semibold text-foreground">{s.settleAt}</span> 自动结算
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  <div className="text-right text-sm font-bold tabular-nums text-primary">
+                    +{formatCNY(s.amount)}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+          <div className="border-t border-border bg-muted/30 px-4 py-2 text-[10px] leading-relaxed text-muted-foreground">
+            规则：好友签收当日起 14 天售后期结束，返佣自动从「待结算」转入「可提现」；若发生退款则同步冲销。
+          </div>
         </div>
 
         {/* 我的推广效果 */}

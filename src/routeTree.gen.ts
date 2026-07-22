@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WithdrawRouteImport } from './routes/withdraw'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as PointsRulesRouteImport } from './routes/points-rules'
@@ -85,6 +86,11 @@ import { Route as AdminBannersNewRouteImport } from './routes/admin.banners.new'
 import { Route as AdminBannersIdRouteImport } from './routes/admin.banners.$id'
 import { Route as AdminUsersIdPointsRouteImport } from './routes/admin.users.$id.points'
 
+const WithdrawRoute = WithdrawRouteImport.update({
+  id: '/withdraw',
+  path: '/withdraw',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
   path: '/support',
@@ -482,6 +488,7 @@ export interface FileRoutesByFullPath {
   '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
+  '/withdraw': typeof WithdrawRoute
   '/admin/after-sales': typeof AdminAfterSalesRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/banners': typeof AdminBannersRouteWithChildren
@@ -559,6 +566,7 @@ export interface FileRoutesByTo {
   '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
+  '/withdraw': typeof WithdrawRoute
   '/admin/after-sales': typeof AdminAfterSalesRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/banners': typeof AdminBannersRouteWithChildren
@@ -637,6 +645,7 @@ export interface FileRoutesById {
   '/points-rules': typeof PointsRulesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
+  '/withdraw': typeof WithdrawRoute
   '/admin/after-sales': typeof AdminAfterSalesRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/banners': typeof AdminBannersRouteWithChildren
@@ -716,6 +725,7 @@ export interface FileRouteTypes {
     | '/points-rules'
     | '/settings'
     | '/support'
+    | '/withdraw'
     | '/admin/after-sales'
     | '/admin/analytics'
     | '/admin/banners'
@@ -793,6 +803,7 @@ export interface FileRouteTypes {
     | '/points-rules'
     | '/settings'
     | '/support'
+    | '/withdraw'
     | '/admin/after-sales'
     | '/admin/analytics'
     | '/admin/banners'
@@ -870,6 +881,7 @@ export interface FileRouteTypes {
     | '/points-rules'
     | '/settings'
     | '/support'
+    | '/withdraw'
     | '/admin/after-sales'
     | '/admin/analytics'
     | '/admin/banners'
@@ -948,6 +960,7 @@ export interface RootRouteChildren {
   PointsRulesRoute: typeof PointsRulesRoute
   SettingsRoute: typeof SettingsRoute
   SupportRoute: typeof SupportRoute
+  WithdrawRoute: typeof WithdrawRoute
   AdminAfterSalesRoute: typeof AdminAfterSalesRoute
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
   AdminBannersRoute: typeof AdminBannersRouteWithChildren
@@ -995,6 +1008,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/withdraw': {
+      id: '/withdraw'
+      path: '/withdraw'
+      fullPath: '/withdraw'
+      preLoaderRoute: typeof WithdrawRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/support': {
       id: '/support'
       path: '/support'
@@ -1664,6 +1684,7 @@ const rootRouteChildren: RootRouteChildren = {
   PointsRulesRoute: PointsRulesRoute,
   SettingsRoute: SettingsRoute,
   SupportRoute: SupportRoute,
+  WithdrawRoute: WithdrawRoute,
   AdminAfterSalesRoute: AdminAfterSalesRoute,
   AdminAnalyticsRoute: AdminAnalyticsRoute,
   AdminBannersRoute: AdminBannersRouteWithChildren,

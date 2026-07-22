@@ -1,8 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { Button } from "@/components/ui/button";
 import { Wallet, Users, ArrowRight, Info, TrendingUp, Clock, CheckCircle2, XCircle } from "lucide-react";
-import { toast } from "sonner";
 
 export const Route = createFileRoute("/commission")({
   head: () => ({ meta: [{ title: "邀请分佣 · 东大门订货通" }] }),
@@ -23,6 +22,7 @@ function Commission() {
   const withdrawable = 46.7;
   const pending = 128.4;
   const total = 312.9;
+  const navigate = useNavigate();
 
   return (
     <MobileShell>
@@ -46,7 +46,7 @@ function Commission() {
           </div>
         </div>
         <Button
-          onClick={() => toast.success("已发起提现，T+1 到账")}
+          onClick={() => navigate({ to: "/withdraw" })}
           className="mt-3 w-full bg-white text-emerald-700 hover:bg-white/90"
           disabled={withdrawable < 10}
         >

@@ -13,6 +13,7 @@ export const Route = createFileRoute("/discover/")({
 // 频道标签：推荐 / 服饰 / 鞋包 / 饰品 / 帽子
 const TABS = [
   { key: "all", label: "推荐" },
+  { key: "following", label: "我的关注" },
   { key: "apparel", label: "服饰", match: ["女装", "男装", "童装"] },
   { key: "shoesbag", label: "鞋包", match: ["女鞋", "男鞋", "女包", "男包"] },
   { key: "jewelry", label: "饰品", match: ["首饰", "饰品", "珠宝"] },
@@ -36,6 +37,9 @@ const CAPTIONS = [
 ];
 
 const AUTHORS = ["小A", "小B", "小C", "小D", "小E", "小F", "小K", "阿May", "Luna", "小七"];
+
+// 我的关注（Mock：已关注的达人 ID / 昵称）
+const FOLLOWING = new Set(["小七", "阿May", "Luna", "小K"]);
 
 function hash(s: string) {
   let h = 0;
@@ -69,6 +73,7 @@ function Discover() {
     const cur = TABS.find((t) => t.key === tab);
     const match = (cur as any)?.match as string[] | undefined;
     return posts.filter((p) => {
+      if (tab === "following" && !FOLLOWING.has(p.author)) return false;
       if (match && match.length) {
         const cat = p.product.category || "";
         if (!match.some((m) => cat.includes(m))) return false;
@@ -153,7 +158,9 @@ function Discover() {
       {/* 双列瀑布流 */}
       <div className="px-3 pb-8 pt-3">
         {list.length === 0 ? (
-          <div className="py-16 text-center text-sm text-muted-foreground">暂无相关好物</div>
+          <div className="py-16 text-center text-sm text-muted-foreground">
+            {tab === "following" ? "还没有关注的达人，去推荐里发现吧～" : "暂无相关好物"}
+          </div>
         ) : (
           <div className="columns-2 gap-2 [column-fill:_balance]">
             {list.map((p) => (

@@ -38,16 +38,22 @@ const PLANS: Plan[] = [
   },
 ];
 
-// (权益项, 普通会员, 创作者会员)
-const RIGHTS: [string, string | boolean, string | boolean][] = [
-  ["下单基础积分", "1x", "1.5x"],
-  ["生日双倍积分", true, true],
-  ["满 ¥100 包邮", true, true],
-  ["档口私密价 / 上新优先", false, true],
-  ["创作返佣 3%（自购也返）", "✅ 仅可抵扣订单", "✅ 可抵扣 & 可提现"],
-  ["邀请返佣 L1 0.5% / L2 0.2%", "✅ 仅可抵扣订单", "✅ 可抵扣 & 可提现"],
-  ["提现权限", false, "满 ¥50 起提，T+1"],
-  ["专属客服", "8h 内响应", "2h 内响应"],
+// (权益项, 游客/非会员, 普通会员, 创作者会员)
+const RIGHTS: [string, string | boolean, string | boolean, string | boolean][] = [
+  ["基础购物", "可下单", "可下单", "可下单"],
+  ["基础积分（¥1=1积分）", "无积分", "可获得", "可获得"],
+  ["积分加速（额外 +50%）", false, "1.5×", "1.5×"],
+  ["积分用途", "不可用", "可兑换积分商城物品", "可兑换积分商城物品"],
+  ["全场包邮", "满 ¥300 包邮（不满收 ¥6）", "全场包邮", "全场包邮"],
+  ["会员专享价（9.5 折精选款）", "不可见", "可见 / 可享", "可见 / 可享"],
+  ["开卡礼（立即到账积分）", "无", "1000 积分", "3000 积分"],
+  ["发帖权限（引用订单）", "不可发帖", "可发帖，佣金仅抵扣", "可发帖，佣金可提现"],
+  ["创作返佣（3%）", "不可参与", "可赚，仅购物抵扣", "可赚，可提现"],
+  ["邀请返佣（L1 0.5%）", "不可参与", "可赚，仅购物抵扣", "可赚，可提现"],
+  ["拼单返佣（+1%）", "不可参与", "可赚，仅购物抵扣", "可赚，可提现"],
+  ["提现权限", false, false, "满 ¥50 起提，T+1"],
+  ["年费", "¥0", "¥99", "¥169（续费）"],
+  ["会员费是否可退", "—", "不退", "不退"],
 ];
 
 const CURRENT: Plan["key"] = "normal";
@@ -113,19 +119,21 @@ function Membership() {
       {/* 权益对比 */}
       <div className="px-4 pt-6">
         <div className="mb-2 text-sm font-semibold">权益对比</div>
-        <div className="overflow-hidden rounded-2xl border border-border bg-card">
-          <table className="w-full text-[12px]">
+        <div className="overflow-x-auto rounded-2xl border border-border bg-card">
+          <table className="w-full min-w-[520px] text-[12px]">
             <thead>
               <tr className="border-b border-border bg-muted/40 text-[11px] text-muted-foreground">
-                <th className="p-2 text-left font-medium">权益</th>
-                <th className="p-2 text-center font-medium">普通 ¥99</th>
-                <th className="p-2 text-center font-medium text-rose-600">创作者 ¥199</th>
+                <th className="p-2 text-left font-medium">权益项</th>
+                <th className="p-2 text-center font-medium">游客<br/><span className="opacity-70">免费</span></th>
+                <th className="p-2 text-center font-medium">普通<br/><span className="opacity-70">¥99/年</span></th>
+                <th className="p-2 text-center font-medium text-rose-600">创作者<br/><span className="opacity-70">¥199/年</span></th>
               </tr>
             </thead>
             <tbody>
-              {RIGHTS.map(([label, a, b]) => (
-                <tr key={label} className="border-b border-border last:border-0">
+              {RIGHTS.map(([label, g, a, b]) => (
+                <tr key={label} className="border-b border-border last:border-0 align-top">
                   <td className="p-2 text-foreground">{label}</td>
+                  <td className="p-2 text-center text-muted-foreground">{renderCell(g)}</td>
                   <td className="p-2 text-center text-muted-foreground">{renderCell(a)}</td>
                   <td className="p-2 text-center text-foreground">{renderCell(b)}</td>
                 </tr>

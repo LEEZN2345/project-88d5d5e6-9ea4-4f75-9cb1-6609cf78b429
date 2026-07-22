@@ -1,199 +1,168 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
-import { Crown, Check, Truck, Percent, Gift, Headphones, Sparkles, Star, Shield, Zap } from "lucide-react";
+import { Crown, Check, Sparkles, Shield, Zap, X } from "lucide-react";
 
 export const Route = createFileRoute("/membership")({
-  head: () => ({ meta: [{ title: "会员等级权益 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "会员权益 · 东大门订货通" }] }),
   component: Membership,
 });
 
-type Tier = {
-  key: string;
+type Plan = {
+  key: "normal" | "creator";
   name: string;
-  cn: string;
-  threshold: string;
+  price: string;
+  tag: string;
   color: string;
   ring: string;
-  discount: string;
-  benefits: string[];
+  desc: string;
 };
 
-const TIERS: Tier[] = [
+const PLANS: Plan[] = [
   {
-    key: "bronze",
-    name: "Bronze",
-    cn: "青铜买手",
-    threshold: "注册即得",
-    color: "from-amber-700/80 to-amber-500/70",
-    ring: "ring-amber-400/40",
-    discount: "积分 1x · 满 ¥300 包邮",
-    benefits: ["每日签到得积分", "参与拼单广场", "享受平台售后保障"],
-  },
-  {
-    key: "silver",
-    name: "Silver",
-    cn: "白银买手",
-    threshold: "近 12 月累计消费 ≥ ¥2,000",
-    color: "from-slate-400 to-slate-300",
+    key: "normal",
+    name: "普通会员",
+    price: "¥99 / 年",
+    tag: "自用党首选",
+    color: "from-slate-500 to-slate-400",
     ring: "ring-slate-300/60",
-    discount: "积分 1.2x · 满 ¥200 包邮",
-    benefits: ["积分 1.2 倍加成", "生日双倍积分", "客服 8h 响应"],
+    desc: "赚返佣抵扣自己订单，越买越省",
   },
   {
-    key: "gold",
-    name: "Gold",
-    cn: "黄金买手",
-    threshold: "近 12 月累计消费 ≥ ¥10,000",
-    color: "from-amber-400 to-yellow-300",
-    ring: "ring-amber-300/70",
-    discount: "积分 1.5x · 满 ¥100 包邮",
-    benefits: ["积分 1.5 倍加成", "档口私密价 / 独家新款", "拼单免起订门槛", "客服 2h 响应"],
-  },
-  {
-    key: "diamond",
-    name: "Diamond",
-    cn: "钻石买手",
-    threshold: "近 12 月累计消费 ≥ ¥100,000",
-    color: "from-sky-400 via-cyan-300 to-fuchsia-300",
-    ring: "ring-cyan-300/70",
-    discount: "积分 2x · 全场包邮",
-    benefits: ["积分 2 倍加成", "1v1 专属买手顾问", "首尔看货 / 展会邀请", "订单账期支持（T+7）"],
+    key: "creator",
+    name: "创作者会员",
+    price: "¥199 / 年",
+    tag: "分享党推荐",
+    color: "from-rose-500 via-orange-400 to-amber-400",
+    ring: "ring-rose-300/70",
+    desc: "返佣可提现到微信 / 支付宝，T+1 到账",
   },
 ];
 
-const CURRENT = "gold";
+// (权益项, 普通会员, 创作者会员)
+const RIGHTS: [string, string | boolean, string | boolean][] = [
+  ["下单基础积分", "1x", "1.5x"],
+  ["生日双倍积分", true, true],
+  ["满 ¥100 包邮", true, true],
+  ["档口私密价 / 上新优先", false, true],
+  ["创作返佣 3%（自购也返）", "✅ 仅可抵扣订单", "✅ 可抵扣 & 可提现"],
+  ["邀请返佣 L1 0.5% / L2 0.2%", "✅ 仅可抵扣订单", "✅ 可抵扣 & 可提现"],
+  ["提现权限", false, "满 ¥50 起提，T+1"],
+  ["专属客服", "8h 内响应", "2h 内响应"],
+];
+
+const CURRENT: Plan["key"] = "normal";
 
 function Membership() {
-  const current = TIERS.find((t) => t.key === CURRENT)!;
-  const nextIndex = TIERS.findIndex((t) => t.key === CURRENT) + 1;
-  const next = TIERS[nextIndex];
-  const progress = 62;
-
   return (
     <MobileShell>
-      <MobileHeader title="会员等级权益" back />
+      <MobileHeader title="会员权益" back />
 
+      {/* 当前会员卡 */}
       <div className="px-4 pt-4">
-        <div
-          className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${current.color} p-4 text-white shadow-lg ring-1 ${current.ring}`}
-        >
+        <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${PLANS[0].color} p-4 text-white shadow-lg ring-1 ${PLANS[0].ring}`}>
           <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/10 blur-xl" />
           <div className="flex items-center gap-2 text-[11px] uppercase tracking-widest opacity-90">
-            <Crown className="h-3.5 w-3.5" /> Current Tier
+            <Crown className="h-3.5 w-3.5" /> Current Plan
           </div>
           <div className="mt-1 flex items-end justify-between">
             <div>
-              <div className="text-2xl font-black tracking-tight">{current.cn}</div>
-              <div className="text-xs opacity-90">{current.name} · 有效期至 2026-12-31</div>
+              <div className="text-2xl font-black tracking-tight">普通会员</div>
+              <div className="text-xs opacity-90">¥99 · 有效期至 2026-12-31</div>
             </div>
             <div className="text-right text-[11px] opacity-90">
-              <div>本月成交</div>
-              <div className="text-base font-semibold tabular-nums">¥ 32,140</div>
+              <div>今年累计返佣</div>
+              <div className="text-base font-semibold tabular-nums">¥ 168.20</div>
             </div>
           </div>
-
-          {next && (
-            <div className="mt-4">
-              <div className="mb-1 flex justify-between text-[11px] opacity-90">
-                <span>距离 {next.cn}</span>
-                <span>还差 ¥ 17,860</span>
-              </div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-white/25">
-                <div className="h-full rounded-full bg-white" style={{ width: `${progress}%` }} />
-              </div>
-            </div>
-          )}
+          <div className="mt-3 rounded-lg bg-white/10 px-2.5 py-1.5 text-[11px] leading-relaxed">
+            升级为创作者会员 → 返佣可提现到微信零钱，¥50 起提
+          </div>
         </div>
       </div>
 
+      {/* 两个方案卡 */}
       <div className="px-4 pt-4">
         <div className="mb-2 flex items-center gap-1.5 text-sm font-semibold">
-          <Sparkles className="h-4 w-4 text-rose-500" /> 你当前享有
+          <Sparkles className="h-4 w-4 text-rose-500" /> 会员方案
         </div>
-        <div className="grid grid-cols-4 gap-2 text-center">
-          {[
-            { i: Gift, l: "积分 1.5x" },
-            { i: Truck, l: "满 ¥100 包邮" },
-            { i: Percent, l: "档口私密价" },
-            { i: Headphones, l: "2h 客服" },
-          ].map((b) => (
-            <div key={b.l} className="rounded-xl border border-border bg-card p-2">
-              <b.i className="mx-auto h-4 w-4 text-rose-500" />
-              <div className="mt-1 text-[11px] text-muted-foreground">{b.l}</div>
+        <div className="grid grid-cols-2 gap-3">
+          {PLANS.map((p) => (
+            <div
+              key={p.key}
+              className={`relative overflow-hidden rounded-2xl border p-3 ${p.key === CURRENT ? "border-rose-300 ring-1 ring-rose-200" : "border-border"}`}
+            >
+              <div className={`inline-block rounded-full bg-gradient-to-r ${p.color} px-2 py-0.5 text-[10px] font-semibold text-white`}>{p.tag}</div>
+              <div className="mt-2 text-base font-bold">{p.name}</div>
+              <div className="mt-0.5 text-lg font-black tabular-nums text-rose-600">{p.price}</div>
+              <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">{p.desc}</p>
+              <button
+                disabled={p.key === CURRENT}
+                className={`mt-2 w-full rounded-lg py-1.5 text-xs font-semibold ${
+                  p.key === CURRENT
+                    ? "bg-muted text-muted-foreground"
+                    : "bg-gradient-to-r from-rose-500 to-orange-500 text-white shadow"
+                }`}
+              >
+                {p.key === CURRENT ? "当前方案" : "立即升级"}
+              </button>
             </div>
           ))}
         </div>
       </div>
 
+      {/* 权益对比 */}
       <div className="px-4 pt-6">
-        <div className="mb-2 text-sm font-semibold">全部等级</div>
-        <div className="space-y-3">
-          {TIERS.map((t) => {
-            const isCurrent = t.key === CURRENT;
-            return (
-              <div
-                key={t.key}
-                className={`rounded-2xl border bg-card p-4 ${isCurrent ? "border-rose-300 ring-1 ring-rose-200" : "border-border"}`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className={`flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br ${t.color} text-white`}
-                    >
-                      <Star className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <div className="text-sm font-semibold">
-                        {t.cn}
-                        {isCurrent && (
-                          <span className="ml-2 rounded-full bg-rose-500/10 px-2 py-0.5 text-[10px] text-rose-500">
-                            当前
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-[11px] text-muted-foreground">{t.threshold}</div>
-                    </div>
-                  </div>
-                  <div className="text-right text-[11px] text-muted-foreground">{t.name}</div>
-                </div>
-
-                <div className="mt-2 rounded-lg bg-muted/60 px-2.5 py-1.5 text-[11px] font-medium text-foreground">
-                  {t.discount}
-                </div>
-
-                <ul className="mt-3 space-y-1.5">
-                  {t.benefits.map((b) => (
-                    <li key={b} className="flex items-start gap-2 text-[12px] text-foreground">
-                      <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-500" /> {b}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            );
-          })}
+        <div className="mb-2 text-sm font-semibold">权益对比</div>
+        <div className="overflow-hidden rounded-2xl border border-border bg-card">
+          <table className="w-full text-[12px]">
+            <thead>
+              <tr className="border-b border-border bg-muted/40 text-[11px] text-muted-foreground">
+                <th className="p-2 text-left font-medium">权益</th>
+                <th className="p-2 text-center font-medium">普通 ¥99</th>
+                <th className="p-2 text-center font-medium text-rose-600">创作者 ¥199</th>
+              </tr>
+            </thead>
+            <tbody>
+              {RIGHTS.map(([label, a, b]) => (
+                <tr key={label} className="border-b border-border last:border-0">
+                  <td className="p-2 text-foreground">{label}</td>
+                  <td className="p-2 text-center text-muted-foreground">{renderCell(a)}</td>
+                  <td className="p-2 text-center text-foreground">{renderCell(b)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
+      {/* 规则说明 */}
       <div className="px-4 pt-6">
         <div className="mb-2 flex items-center gap-1.5 text-sm font-semibold">
-          <Shield className="h-4 w-4 text-rose-500" /> 升级 & 保级规则
+          <Shield className="h-4 w-4 text-rose-500" /> 会员规则
         </div>
         <div className="space-y-2 rounded-2xl border border-border bg-card p-4 text-[12px] leading-relaxed text-muted-foreground">
-          <p>· 等级依据 <b className="text-foreground">近 12 个月累计消费金额</b> 动态更新，每日凌晨自动结算。</p>
-          <p>· 达标后立即升级，权益即时生效。</p>
-          <p>· 每个自然年重新评估，不达标降 <b className="text-foreground">1 级</b>（非归零），给你缓冲空间。</p>
-          <p>· 退款订单不计入消费额；虚假交易一经发现降级并冻结。</p>
+          <p>· 会员年费一次性购买，有效期 <b className="text-foreground">12 个月</b>，到期自动降级为普通用户。</p>
+          <p>· 「引用订单发帖」：一笔已购订单只能发一篇帖子；帖子链接下单归 <b className="text-foreground">创作返佣（3%）</b>。</p>
+          <p>· 帖子链接归因 <b className="text-foreground">优先于邀请关系</b>；两者不叠加。</p>
+          <p>· 同款自购复购返佣上限 <b className="text-foreground">2 单</b>，第 3 单起不发放（防刷单）。</p>
+          <p>· 退款订单冲销对应返佣；虚假晒单直接封禁并追回历史返佣。</p>
         </div>
       </div>
 
       <div className="px-4 py-6">
         <Link
-          to="/points"
+          to="/discover"
           className="flex items-center justify-center gap-1.5 rounded-xl bg-rose-500 py-3 text-sm font-semibold text-white shadow-sm active:scale-[0.99]"
         >
-          <Zap className="h-4 w-4" /> 去下单冲刺下一等级
+          <Zap className="h-4 w-4" /> 去分享心得赚返佣
         </Link>
       </div>
     </MobileShell>
   );
+}
+
+function renderCell(v: string | boolean) {
+  if (v === true) return <Check className="mx-auto h-4 w-4 text-emerald-500" />;
+  if (v === false) return <X className="mx-auto h-3.5 w-3.5 text-muted-foreground/50" />;
+  return <span>{v}</span>;
 }

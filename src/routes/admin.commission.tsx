@@ -20,7 +20,7 @@ function AdminCommission() {
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold">邀请分佣</h1>
-          <p className="text-xs text-muted-foreground">二级分佣配置 / 提现审核 / 结算流水。分佣与积分独立记账。</p>
+          <p className="text-xs text-muted-foreground">二级分佣配置 / 提现审核 / 结算流水。与「创作返佣」互斥：帖子链接下单归创作者。</p>
         </div>
       </div>
 
@@ -48,7 +48,7 @@ function AdminCommission() {
                 </div>
                 <Switch defaultChecked />
               </div>
-              <NumberField label="比例" defaultValue={0.7} suffix="% × 订单实付" step="0.1" />
+              <NumberField label="比例" defaultValue={0.5} suffix="% × 订单实付" step="0.1" />
               <NumberField label="单人单日封顶" defaultValue={0} suffix="元（0 不限）" />
             </Card>
             <Card className="p-4">
@@ -59,7 +59,21 @@ function AdminCommission() {
                 </div>
                 <Switch defaultChecked />
               </div>
-              <NumberField label="比例" defaultValue={0.3} suffix="% × 订单实付" step="0.1" />
+              <NumberField label="比例" defaultValue={0.2} suffix="% × 订单实付" step="0.1" />
+            </Card>
+            <Card className="p-4">
+              <div className="mb-3 flex items-start justify-between">
+                <div>
+                  <div className="text-sm font-semibold">创作返佣（引用订单发帖）</div>
+                  <p className="mt-0.5 text-xs text-muted-foreground">帖子引用真实订单；任何人通过帖子链接下单即结算</p>
+                </div>
+                <Switch defaultChecked />
+              </div>
+              <NumberField label="比例" defaultValue={3} suffix="% × 订单实付" step="0.1" />
+              <NumberField label="同款自购复购上限" defaultValue={2} suffix="单（超出不发放）" />
+              <div className="mt-2 rounded-md bg-muted/40 px-2 py-1.5 text-[11px] text-muted-foreground">
+                归因优先级：帖子链接 &gt; 邀请关系。走了帖子链接则不再发放邀请返佣。
+              </div>
             </Card>
             <Card className="p-4">
               <div className="mb-3 text-sm font-semibold">结算 & 提现</div>

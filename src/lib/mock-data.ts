@@ -74,7 +74,19 @@ export type Order = {
   logisticsNo?: string;
   channel: OrderChannel; // 下单渠道
   buyer: { name: string; phone: string; address: string };
+  // 「引用订单发帖」模式：一单只能生成一篇帖子，postId 为已引用的帖子 ID
+  postId?: string;
 };
+
+// 分佣规则常量（引用订单发帖模式）
+// - 创作返佣：帖子引用真实订单，任何人（含作者本人）通过帖子链接下单，作者拿 3%
+// - 邀请返佣：好友未点帖子链接、直接下单，邀请人 L1 0.5% / L2 0.2%
+// - 两条链路互斥：点了帖子链接 → 创作返佣；否则 → 邀请返佣
+// - 同一用户通过自己链接复购同一商品，前 2 单有佣金，第 3 单起作废
+export const CREATOR_COMMISSION_RATE = 0.03;
+export const INVITE_L1_RATE = 0.005;
+export const INVITE_L2_RATE = 0.002;
+export const SELF_REPURCHASE_CAP = 2;
 
 // 下单渠道
 // single = 单件购买（档口支持 minOrderQty=1）

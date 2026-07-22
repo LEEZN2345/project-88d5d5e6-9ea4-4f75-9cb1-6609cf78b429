@@ -3,6 +3,12 @@ import { AdminShell } from "@/components/AdminShell";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
   BookOpen,
   ShieldCheck,
   Package,
@@ -14,6 +20,16 @@ import {
   Sparkles,
   Settings2,
   ChevronRight,
+  Users,
+  Store,
+  Tags,
+  Image as ImageIcon,
+  LayoutGrid,
+  BarChart3,
+  Gift,
+  UserCog,
+  Boxes,
+  Percent,
 } from "lucide-react";
 
 export const Route = createFileRoute("/admin/guide")({
@@ -110,6 +126,160 @@ const TIPS = [
   },
 ];
 
+// 每个后台模块 · 每个按钮 / 操作的详细说明
+const PAGE_GUIDES: {
+  icon: typeof Package;
+  page: string;
+  to: string;
+  buttons: { name: string; desc: string }[];
+}[] = [
+  {
+    icon: ClipboardList,
+    page: "订单管理",
+    to: "/admin/orders",
+    buttons: [
+      { name: "状态筛选 Tab", desc: "按待付款 / 待发货 / 售后等状态过滤订单。" },
+      { name: "订单详情", desc: "查看 SKU、金额、支付账户、物流节点，可备注。" },
+      { name: "断货标记", desc: "点击后自动通知买家，生成时间线记录，可发起退款。" },
+      { name: "导出", desc: "按当前筛选导出 Excel，含档口 / SKU / 金额明细。" },
+    ],
+  },
+  {
+    icon: MessageSquare,
+    page: "订单反馈",
+    to: "/admin/feedback",
+    buttons: [
+      { name: "会话式回复", desc: "对同一订单的多轮问题聚合回复，实时通知买家。" },
+      { name: "断货 / 备货中 / 已解决 快捷动作", desc: "一键改状态并写入时间线，必填理由校验。" },
+      { name: "转售后", desc: "对需要退款 / 换货的反馈一键转售后工单。" },
+    ],
+  },
+  {
+    icon: Truck,
+    page: "发货管理",
+    to: "/admin/shipping",
+    buttons: [
+      { name: "按订单号折叠展开", desc: "同一订单的多档口 SKU 合并显示，点击展开子项。" },
+      { name: "标记已交档口 / 已入韩仓 / 已出境", desc: "推进物流节点，前端订单页同步展示。" },
+      { name: "导出档口备货单", desc: "按档口维度导出，便于线下对账。" },
+    ],
+  },
+  {
+    icon: Undo2,
+    page: "售后管理（换货 / 退款）",
+    to: "/admin/after-sales",
+    buttons: [
+      { name: "换货 / 退款 Tab", desc: "分别处理换货与退款工单，退款仅限断货或平台主动联系。" },
+      { name: "接收换货", desc: "买家寄回后勾选实收，进入韩国转寄流程。" },
+      { name: "驳回 / 补充凭证", desc: "必填理由，买家端会收到通知。" },
+    ],
+  },
+  {
+    icon: Boxes,
+    page: "现货库存",
+    to: "/admin/stock",
+    buttons: [
+      { name: "入库来源筛选", desc: "手动入库 / 首件 / 2件起订 分别追溯来源订单。" },
+      { name: "调整库存", desc: "输入变动数量与备注，保留操作流水。" },
+    ],
+  },
+  {
+    icon: Package,
+    page: "商品管理",
+    to: "/admin/products",
+    buttons: [
+      { name: "新增商品", desc: "上传图片、绑定档口、维护 SKU（颜色/尺码/成分）、预估重量(kg)。" },
+      { name: "编辑 / 上下架", desc: "行末操作直接切换上下架，或进入详情批量修改。" },
+      { name: "CSV 批量导入", desc: "下载模板后按列填写，重量以克为单位。" },
+    ],
+  },
+  {
+    icon: Store,
+    page: "档口 & 商圈",
+    to: "/admin/shops",
+    buttons: [
+      { name: "楼栋列表", desc: "维护 APM / CPW / APM Place / NUZZON 四栋，可编辑楼层。" },
+      { name: "编辑楼层 → 编辑档口", desc: "在楼层弹层内新增 / 移除档口。" },
+      { name: "启用 / 停用", desc: "停用后档口不出现在前端，但历史订单仍可查。" },
+    ],
+  },
+  {
+    icon: Tags,
+    page: "属性分类",
+    to: "/admin/categories",
+    buttons: [
+      { name: "新增分类", desc: "维护一二级分类，设置默认预估重量(kg)用于运费预估。" },
+      { name: "排序", desc: "拖拽调整前端首页展示顺序。" },
+    ],
+  },
+  {
+    icon: Users,
+    page: "用户管理",
+    to: "/admin/users",
+    buttons: [
+      { name: "详情", desc: "查看该用户订单 / 积分 / 邀请 / 售后聚合信息。" },
+      { name: "冻结", desc: "冻结登录，用户无法进入 App，需人工解冻。" },
+      { name: "禁止下单", desc: "允许登录浏览但拦截下单，用于风控。" },
+      { name: "调整积分", desc: "手动增减积分并写入流水，需要备注原因。" },
+    ],
+  },
+  {
+    icon: UserCog,
+    page: "员工与权限",
+    to: "/admin/staff",
+    buttons: [
+      { name: "新增员工", desc: "分配角色：总管理员 / 订单管理 / 发货管理。" },
+      { name: "调整角色", desc: "切换角色后菜单权限即时生效，无需重登。" },
+    ],
+  },
+  {
+    icon: Gift,
+    page: "积分商城 & 规则",
+    to: "/admin/points-rules",
+    buttons: [
+      { name: "编辑规则", desc: "设置签到 / 下单 / 邀请奖励，保存即时生效，不追溯历史。" },
+      { name: "积分商城上架", desc: "在 /admin/points-mall 维护兑换商品与库存。" },
+    ],
+  },
+  {
+    icon: Percent,
+    page: "分销 & 佣金",
+    to: "/admin/commission",
+    buttons: [
+      { name: "创作返佣 3%", desc: "买家从帖子跟买时，作者获得订单金额 3%。" },
+      { name: "邀请返佣 L1 0.5% / L2 0.2%", desc: "仅邀请链路生效，帖子归属优先于邀请归属。" },
+      { name: "结算规则", desc: "签收 +14 天自动结算至可提现余额，退款则清算扣回。" },
+    ],
+  },
+  {
+    icon: LayoutGrid,
+    page: "首页装修 & Banner",
+    to: "/admin/home-decoration",
+    buttons: [
+      { name: "拖拽模块", desc: "调整轮播 / 分类 / 热门档口 / 今日上新的顺序。" },
+      { name: "Banner 新增", desc: "在 /admin/banners 上传封面并绑定跳转链接。" },
+    ],
+  },
+  {
+    icon: BarChart3,
+    page: "数据中心",
+    to: "/admin/analytics",
+    buttons: [
+      { name: "排行榜", desc: "商品 / 档口 / 用户维度排行，可切换时间段。" },
+      { name: "导出", desc: "按当前视图导出 CSV。" },
+    ],
+  },
+  {
+    icon: Settings2,
+    page: "系统配置 / 商户号",
+    to: "/admin/config",
+    buttons: [
+      { name: "汇率维护", desc: "展示汇率手工维护；实际锁汇以支付时刻为准。" },
+      { name: "商户号切换", desc: "/admin/payment-accounts 按日限额启用备用账户。" },
+    ],
+  },
+];
+
 function AdminGuide() {
   return (
     <AdminShell>
@@ -185,6 +355,54 @@ function AdminGuide() {
             </Card>
           ))}
         </div>
+      </div>
+
+      <div className="mt-8">
+        <div className="mb-2 text-sm font-semibold">按模块 · 每个按钮怎么用</div>
+        <p className="mb-3 text-xs text-muted-foreground">
+          展开对应模块查看每个按钮 / 操作的用途与注意事项，点击右侧箭头可直达该页面。
+        </p>
+        <Accordion type="multiple" className="grid gap-2 md:grid-cols-2">
+          {PAGE_GUIDES.map((p) => (
+            <AccordionItem
+              key={p.page}
+              value={p.page}
+              className="rounded-lg border bg-card px-3"
+            >
+              <AccordionTrigger className="py-3 hover:no-underline">
+                <div className="flex items-center gap-2 text-left">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <p.icon className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold">{p.page}</div>
+                    <div className="text-[10px] text-muted-foreground">{p.to}</div>
+                  </div>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pb-3">
+                <ul className="space-y-2">
+                  {p.buttons.map((b) => (
+                    <li key={b.name} className="rounded-md bg-muted/40 p-2">
+                      <div className="text-xs font-medium">{b.name}</div>
+                      <div className="mt-0.5 text-[11px] text-muted-foreground">
+                        {b.desc}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-2 text-right">
+                  <Link
+                    to={p.to}
+                    className="inline-flex items-center gap-1 text-xs text-primary"
+                  >
+                    进入该模块 <ChevronRight className="h-3 w-3" />
+                  </Link>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </div>
     </AdminShell>
   );

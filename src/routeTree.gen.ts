@@ -47,6 +47,7 @@ import { Route as DiscoverPublishedRouteImport } from './routes/discover.publish
 import { Route as DiscoverNewRouteImport } from './routes/discover.new'
 import { Route as DiscoverPostIdRouteImport } from './routes/discover.$postId'
 import { Route as CategoriesIdRouteImport } from './routes/categories.$id'
+import { Route as AuthWelcomeRouteImport } from './routes/auth.welcome'
 import { Route as AuthPlanRouteImport } from './routes/auth.plan'
 import { Route as AuthPayRouteImport } from './routes/auth.pay'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
@@ -277,6 +278,11 @@ const CategoriesIdRoute = CategoriesIdRouteImport.update({
   id: '/categories/$id',
   path: '/categories/$id',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthWelcomeRoute = AuthWelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
+  getParentRoute: () => AuthRoute,
 } as any)
 const AuthPlanRoute = AuthPlanRouteImport.update({
   id: '/plan',
@@ -527,6 +533,7 @@ export interface FileRoutesByFullPath {
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/auth/pay': typeof AuthPayRoute
   '/auth/plan': typeof AuthPlanRoute
+  '/auth/welcome': typeof AuthWelcomeRoute
   '/categories/$id': typeof CategoriesIdRoute
   '/discover/$postId': typeof DiscoverPostIdRoute
   '/discover/new': typeof DiscoverNewRoute
@@ -607,6 +614,7 @@ export interface FileRoutesByTo {
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/auth/pay': typeof AuthPayRoute
   '/auth/plan': typeof AuthPlanRoute
+  '/auth/welcome': typeof AuthWelcomeRoute
   '/categories/$id': typeof CategoriesIdRoute
   '/discover/$postId': typeof DiscoverPostIdRoute
   '/discover/new': typeof DiscoverNewRoute
@@ -688,6 +696,7 @@ export interface FileRoutesById {
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/auth/pay': typeof AuthPayRoute
   '/auth/plan': typeof AuthPlanRoute
+  '/auth/welcome': typeof AuthWelcomeRoute
   '/categories/$id': typeof CategoriesIdRoute
   '/discover/$postId': typeof DiscoverPostIdRoute
   '/discover/new': typeof DiscoverNewRoute
@@ -770,6 +779,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/auth/pay'
     | '/auth/plan'
+    | '/auth/welcome'
     | '/categories/$id'
     | '/discover/$postId'
     | '/discover/new'
@@ -850,6 +860,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/auth/pay'
     | '/auth/plan'
+    | '/auth/welcome'
     | '/categories/$id'
     | '/discover/$postId'
     | '/discover/new'
@@ -930,6 +941,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/auth/pay'
     | '/auth/plan'
+    | '/auth/welcome'
     | '/categories/$id'
     | '/discover/$postId'
     | '/discover/new'
@@ -1298,6 +1310,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategoriesIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/welcome': {
+      id: '/auth/welcome'
+      path: '/welcome'
+      fullPath: '/auth/welcome'
+      preLoaderRoute: typeof AuthWelcomeRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/auth/plan': {
       id: '/auth/plan'
       path: '/plan'
@@ -1584,11 +1603,13 @@ declare module '@tanstack/react-router' {
 interface AuthRouteChildren {
   AuthPayRoute: typeof AuthPayRoute
   AuthPlanRoute: typeof AuthPlanRoute
+  AuthWelcomeRoute: typeof AuthWelcomeRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthPayRoute: AuthPayRoute,
   AuthPlanRoute: AuthPlanRoute,
+  AuthWelcomeRoute: AuthWelcomeRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)

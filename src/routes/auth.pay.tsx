@@ -45,6 +45,7 @@ function PayPage() {
     setTimeout(() => {
       setTier(tier as MembershipTier);
       setPaid(true);
+      navigate({ to: "/auth/welcome", search: { tier } });
     }, 800);
   };
 

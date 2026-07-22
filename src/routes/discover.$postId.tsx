@@ -19,7 +19,7 @@ export const Route = createFileRoute("/discover/$postId")({
   component: PostDetail,
 });
 
-const COMMISSION_RATE = 0.1;
+import { CREATOR_COMMISSION_RATE as COMMISSION_RATE } from "@/lib/mock-data";
 
 const CAPTIONS = [
   "今天在RIVER淘到这条碎花裙！挂版太仙了！\n档口小姐姐说是新款，面料很舒服，夏天穿绝了。\n拼单还差 2 件，快来～",

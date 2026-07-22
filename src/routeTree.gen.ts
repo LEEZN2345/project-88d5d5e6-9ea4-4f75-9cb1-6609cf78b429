@@ -43,6 +43,7 @@ import { Route as MePostsRouteImport } from './routes/me.posts'
 import { Route as LogisticsIdRouteImport } from './routes/logistics.$id'
 import { Route as ExchangesIdRouteImport } from './routes/exchanges.$id'
 import { Route as DiscoverPublishedRouteImport } from './routes/discover.published'
+import { Route as DiscoverNewRouteImport } from './routes/discover.new'
 import { Route as DiscoverPostIdRouteImport } from './routes/discover.$postId'
 import { Route as CategoriesIdRouteImport } from './routes/categories.$id'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
@@ -252,6 +253,11 @@ const ExchangesIdRoute = ExchangesIdRouteImport.update({
 const DiscoverPublishedRoute = DiscoverPublishedRouteImport.update({
   id: '/discover/published',
   path: '/discover/published',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiscoverNewRoute = DiscoverNewRouteImport.update({
+  id: '/discover/new',
+  path: '/discover/new',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DiscoverPostIdRoute = DiscoverPostIdRouteImport.update({
@@ -502,6 +508,7 @@ export interface FileRoutesByFullPath {
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/categories/$id': typeof CategoriesIdRoute
   '/discover/$postId': typeof DiscoverPostIdRoute
+  '/discover/new': typeof DiscoverNewRoute
   '/discover/published': typeof DiscoverPublishedRoute
   '/exchanges/$id': typeof ExchangesIdRoute
   '/logistics/$id': typeof LogisticsIdRoute
@@ -578,6 +585,7 @@ export interface FileRoutesByTo {
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/categories/$id': typeof CategoriesIdRoute
   '/discover/$postId': typeof DiscoverPostIdRoute
+  '/discover/new': typeof DiscoverNewRoute
   '/discover/published': typeof DiscoverPublishedRoute
   '/exchanges/$id': typeof ExchangesIdRoute
   '/logistics/$id': typeof LogisticsIdRoute
@@ -655,6 +663,7 @@ export interface FileRoutesById {
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/categories/$id': typeof CategoriesIdRoute
   '/discover/$postId': typeof DiscoverPostIdRoute
+  '/discover/new': typeof DiscoverNewRoute
   '/discover/published': typeof DiscoverPublishedRoute
   '/exchanges/$id': typeof ExchangesIdRoute
   '/logistics/$id': typeof LogisticsIdRoute
@@ -733,6 +742,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/categories/$id'
     | '/discover/$postId'
+    | '/discover/new'
     | '/discover/published'
     | '/exchanges/$id'
     | '/logistics/$id'
@@ -809,6 +819,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/categories/$id'
     | '/discover/$postId'
+    | '/discover/new'
     | '/discover/published'
     | '/exchanges/$id'
     | '/logistics/$id'
@@ -885,6 +896,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/categories/$id'
     | '/discover/$postId'
+    | '/discover/new'
     | '/discover/published'
     | '/exchanges/$id'
     | '/logistics/$id'
@@ -962,6 +974,7 @@ export interface RootRouteChildren {
   AdminUsersRoute: typeof AdminUsersRouteWithChildren
   CategoriesIdRoute: typeof CategoriesIdRoute
   DiscoverPostIdRoute: typeof DiscoverPostIdRoute
+  DiscoverNewRoute: typeof DiscoverNewRoute
   DiscoverPublishedRoute: typeof DiscoverPublishedRoute
   ExchangesIdRoute: typeof ExchangesIdRoute
   LogisticsIdRoute: typeof LogisticsIdRoute
@@ -1218,6 +1231,13 @@ declare module '@tanstack/react-router' {
       path: '/discover/published'
       fullPath: '/discover/published'
       preLoaderRoute: typeof DiscoverPublishedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/discover/new': {
+      id: '/discover/new'
+      path: '/discover/new'
+      fullPath: '/discover/new'
+      preLoaderRoute: typeof DiscoverNewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/discover/$postId': {
@@ -1670,6 +1690,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminUsersRoute: AdminUsersRouteWithChildren,
   CategoriesIdRoute: CategoriesIdRoute,
   DiscoverPostIdRoute: DiscoverPostIdRoute,
+  DiscoverNewRoute: DiscoverNewRoute,
   DiscoverPublishedRoute: DiscoverPublishedRoute,
   ExchangesIdRoute: ExchangesIdRoute,
   LogisticsIdRoute: LogisticsIdRoute,

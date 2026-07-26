@@ -56,8 +56,10 @@ function Index() {
     <MobileShell>
       <MobileHeader
         title="东大门蚂蚁"
+        center={<AppLogo className="h-9 w-auto" />}
         right={<Link to="/admin" className="text-xs text-muted-foreground">运营后台</Link>}
       />
+
       {/* 首页海报轮播 */}
       <div className="mx-4 mt-3">
         <HeroCarousel slides={heroSlides} />

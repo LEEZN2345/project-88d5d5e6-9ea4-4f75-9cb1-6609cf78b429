@@ -69,7 +69,7 @@ export function PendingCheckoutRecovery() {
               <div>
                 你有 <b className="text-foreground">{pending.items.length}</b> 款商品共{" "}
                 <b className="text-foreground">{totalQty}</b> 件待支付，合计约{" "}
-                <b className="text-[#FF4D2E]">{formatCNY(krwToCny(totalKRW))}</b>。
+                <b className="text-primary">{formatCNY(krwToCny(totalKRW))}</b>。
               </div>
               {createdAt && (
                 <div className="text-muted-foreground">

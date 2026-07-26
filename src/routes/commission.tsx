@@ -119,7 +119,7 @@ function FlowIcon({ type, status }: { type: Flow["type"]; status: Flow["status"]
   const cls =
     status === "paid" ? "bg-emerald-50 text-emerald-600"
     : status === "rejected" ? "bg-rose-50 text-rose-500"
-    : type === "withdraw" ? "bg-blue-50 text-blue-600"
+    : type === "withdraw" ? "bg-primary/10 text-primary"
     : type === "refund" ? "bg-rose-50 text-rose-500"
     : "bg-emerald-50 text-emerald-600";
   const Icon = type === "withdraw" ? Wallet : type === "refund" ? XCircle : status === "pending" ? Clock : CheckCircle2;
@@ -130,7 +130,7 @@ function StatusBadge({ status }: { status: Flow["status"] }) {
   const map: Record<Flow["status"], { l: string; c: string }> = {
     settled: { l: "已结算", c: "bg-emerald-50 text-emerald-600" },
     pending: { l: "待结算", c: "bg-amber-50 text-amber-600" },
-    paid: { l: "已到账", c: "bg-blue-50 text-blue-600" },
+    paid: { l: "已到账", c: "bg-primary/10 text-primary" },
     rejected: { l: "驳回", c: "bg-rose-50 text-rose-500" },
   };
   const s = map[status];

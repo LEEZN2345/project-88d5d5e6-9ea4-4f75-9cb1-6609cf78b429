@@ -28,7 +28,7 @@ const INITIAL: Tag[] = [
   { id: "t3", name: "刷单可疑", type: "manual", color: "bg-rose-100 text-rose-700", desc: "风控人工标注", userCount: 3 },
   { id: "t4", name: "新用户 (7 天)", type: "system", color: "bg-emerald-100 text-emerald-700", desc: "注册 ≤ 7 天", userCount: 128 },
   { id: "t5", name: "7 日未下单", type: "system", color: "bg-orange-100 text-orange-700", desc: "最近 7 天无订单", userCount: 356 },
-  { id: "t6", name: "高客单 (≥¥1000)", type: "system", color: "bg-indigo-100 text-indigo-700", desc: "单笔订单 ≥ ¥1000", userCount: 67 },
+  { id: "t6", name: "高客单 (≥¥1000)", type: "system", color: "bg-primary/15 text-primary", desc: "单笔订单 ≥ ¥1000", userCount: 67 },
   { id: "t7", name: "沉睡用户", type: "system", color: "bg-zinc-100 text-zinc-700", desc: "≥30 天无登录", userCount: 214 },
 ];
 
@@ -40,7 +40,7 @@ function UserTags() {
   const add = () => {
     if (!name.trim()) return toast.error("请输入标签名");
     setTags((prev) => [
-      { id: `t${Date.now()}`, name, type: "manual", color: "bg-blue-100 text-blue-700", desc, userCount: 0 },
+      { id: `t${Date.now()}`, name, type: "manual", color: "bg-primary/15 text-primary", desc, userCount: 0 },
       ...prev,
     ]);
     setName("");

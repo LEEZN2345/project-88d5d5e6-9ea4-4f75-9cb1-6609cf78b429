@@ -422,7 +422,7 @@ function SummaryCard({
   onClick?: () => void;
 }) {
   const toneCls: Record<string, string> = {
-    blue: "text-blue-600 dark:text-blue-400",
+    blue: "text-primary dark:text-primary",
     purple: "text-purple-600 dark:text-purple-400",
     foreground: "text-foreground",
     muted: "text-muted-foreground",

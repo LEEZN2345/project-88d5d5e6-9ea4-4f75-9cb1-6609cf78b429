@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { MALLS } from "@/lib/buildings";
+import { SHOPS } from "@/lib/mock-data";
+import { Badge } from "@/components/ui/badge";
 import {
   APM_RANK,
   OFFLINE_HOT,
@@ -53,7 +55,7 @@ function supportsSingleBuy(name: string): boolean {
   return h % 3 !== 0; // 约 2/3 支持单件
 }
 
-type TabKey = "area" | "rank";
+type TabKey = "area" | "rank" | "hot";
 
 function ShopsIndex() {
   const [tab, setTab] = useState<TabKey>("area");
@@ -72,7 +74,7 @@ function ShopsIndex() {
       />
 
       {/* Card switcher */}
-      <div className="grid grid-cols-2 gap-2 border-b border-border bg-background px-3 py-3">
+      <div className="grid grid-cols-3 gap-2 border-b border-border bg-background px-3 py-3">
         <TabCard
           active={tab === "area"}
           onClick={() => setTab("area")}
@@ -89,10 +91,55 @@ function ShopsIndex() {
           subtitle="销量 · 实体店热门"
           tone="amber"
         />
+        <TabCard
+          active={tab === "hot"}
+          onClick={() => setTab("hot")}
+          icon={<Flame className="h-4 w-4" />}
+          title="热门档口"
+          subtitle="人气 · 大图速览"
+          tone="amber"
+        />
       </div>
 
-      {tab === "area" ? <AreaView /> : <RankView />}
+      {tab === "area" ? <AreaView /> : tab === "rank" ? <RankView /> : <HotShopsView />}
     </MobileShell>
+  );
+}
+
+function HotShopsView() {
+  return (
+    <div className="space-y-3 px-4 py-3">
+      {SHOPS.map((s) => (
+        <Link
+          key={s.id}
+          to="/shops/$id"
+          params={{ id: s.id }}
+          className="block overflow-hidden rounded-xl border border-border bg-card"
+        >
+          <div className="relative aspect-video w-full overflow-hidden bg-muted">
+            <img src={s.cover} alt={s.name} className="h-full w-full object-cover" />
+          </div>
+          <div className="flex items-start justify-between gap-3 p-3">
+            <div className="min-w-0 flex-1">
+              <div className="truncate text-sm font-semibold">{s.name}</div>
+              <div className="text-xs text-muted-foreground">
+                {s.building} · {s.floor}
+              </div>
+              <div className="mt-1 flex flex-wrap gap-1">
+                {s.tags.map((t) => (
+                  <Badge key={t} variant="secondary" className="text-[10px]">
+                    {t}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+            <div className="shrink-0 self-center text-xs text-muted-foreground">
+              {s.productCount} 款
+            </div>
+          </div>
+        </Link>
+      ))}
+    </div>
   );
 }
 

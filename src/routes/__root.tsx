@@ -92,9 +92,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "apM 订货通 · 东大门档口直采" },
-      { name: "description", content: "东大门 apM / apM Place / apM Luxe 档口直采、拼单、代付一站式平台。" },
-      { property: "og:title", content: "apM 订货通" },
+      { title: "东大门蚂蚁 · Dongdaemun ants" },
+      { name: "description", content: "东大门蚂蚁 — 档口直采、拼单、代付一站式平台。" },
+      { property: "og:title", content: "东大门蚂蚁" },
       { property: "og:description", content: "档口直采 · 拼单代付 · 全程跟踪" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

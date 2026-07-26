@@ -12,9 +12,9 @@ import { useCategories } from "@/lib/categories";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "东大门订货通 · 首页" },
+      { title: "东大门蚂蚁 · 首页" },
       { name: "description", content: "为东大门买手与 B 端客户提供档口全量货源:新款抢先、折扣促销、一键下单、全程物流跟踪。" },
-      { property: "og:title", content: "东大门订货通" },
+      { property: "og:title", content: "东大门蚂蚁" },
       { property: "og:description", content: "档口直采 · 一键代购 · 全程跟踪" },
     ],
   }),
@@ -53,7 +53,7 @@ function Index() {
   return (
     <MobileShell>
       <MobileHeader
-        title="apM 订货通"
+        title="东大门蚂蚁"
         right={<Link to="/admin" className="text-xs text-muted-foreground">运营后台</Link>}
       />
       {/* 首页海报轮播 */}

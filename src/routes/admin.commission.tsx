@@ -28,7 +28,7 @@ function AdminCommission() {
         <Kpi icon={Wallet} label="累计已发放" value="¥12,846" tone="text-emerald-600" />
         <Kpi icon={Clock} label="待结算池" value="¥3,204" tone="text-amber-600" />
         <Kpi icon={TrendingUp} label="本月新增邀请" value="184 人" />
-        <Kpi icon={Users} label="邀请转化率" value="42.3%" tone="text-blue-600" />
+        <Kpi icon={Users} label="邀请转化率" value="42.3%" tone="text-primary" />
       </div>
 
       <Tabs defaultValue="rules">

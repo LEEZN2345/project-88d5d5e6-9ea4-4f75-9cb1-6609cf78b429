@@ -287,7 +287,7 @@ function ShopDetail() {
           className={cn(
             "group relative aspect-[16/10] overflow-hidden rounded-xl border text-left",
             newFilter === "new"
-              ? "border-blue-500 ring-2 ring-blue-500/40"
+              ? "border-primary ring-2 ring-primary/40"
               : "border-border",
           )}
         >

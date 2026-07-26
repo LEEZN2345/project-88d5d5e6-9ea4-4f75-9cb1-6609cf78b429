@@ -288,7 +288,7 @@ function Checkout() {
                 <DrawerTitle className="sr-only">收银台</DrawerTitle>
                 <DrawerDescription className="sr-only">选择支付方式</DrawerDescription>
                 <div className="text-sm text-muted-foreground">收银台</div>
-                <div className="mt-3 text-3xl font-semibold text-[#FF4D2E]">
+                <div className="mt-3 text-3xl font-semibold text-primary">
                   ¥ {totalCNY.toFixed(2)}
                 </div>
                 <div className="mt-1 text-xs text-muted-foreground">
@@ -320,7 +320,7 @@ function Checkout() {
                         <div
                           className={`flex h-5 w-5 items-center justify-center rounded-full border ${
                             selected
-                              ? "border-[#FF4D2E] bg-[#FF4D2E]"
+                              ? "border-primary bg-primary"
                               : "border-muted-foreground/40"
                           }`}
                         >
@@ -334,7 +334,7 @@ function Checkout() {
 
               <DrawerFooter className="pb-6">
                 <Button
-                  className="h-12 rounded-full bg-gradient-to-r from-[#FF6B3D] to-[#FF3D2E] text-base font-medium text-white shadow-md hover:opacity-95"
+                  className="h-12 rounded-full bg-primary text-base font-medium text-primary-foreground shadow-md hover:opacity-95"
                   onClick={confirmPaid}
                 >
                   立即支付
@@ -366,7 +366,7 @@ function Checkout() {
           {step === "failed" && (
             <>
               <div className="flex flex-col items-center gap-3 px-6 pt-10 pb-4 text-center">
-                <AlertTriangle className="h-12 w-12 text-[#FF4D2E]" />
+                <AlertTriangle className="h-12 w-12 text-primary" />
                 <div className="text-base font-semibold">支付未成功</div>
                 <div className="text-xs text-muted-foreground">{failReason}</div>
                 <div className="mt-2 rounded-md bg-muted/50 px-3 py-2 text-[11px] text-muted-foreground">

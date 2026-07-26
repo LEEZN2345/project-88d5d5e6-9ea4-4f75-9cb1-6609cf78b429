@@ -59,7 +59,7 @@ function GroupsPlaza() {
   return (
     <MobileShell>
       <MobileHeader title="拼单广场" />
-      <div className="bg-gradient-to-br from-sky-500 to-indigo-500 px-4 py-4 text-white">
+      <div className="bg-gradient-to-br from-sky-500 to-primary px-4 py-4 text-white">
         <div className="flex items-center gap-2 text-sm font-semibold">
           <Flame className="h-4 w-4" /> 正在拼的团 · 满 2 人即可成团享拼单价
         </div>

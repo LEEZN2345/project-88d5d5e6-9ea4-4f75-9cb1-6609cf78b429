@@ -73,80 +73,80 @@
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --foreground: oklch(0.19 0.02 60);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
+  --card-foreground: oklch(0.19 0.02 60);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  /* apM royal blue as primary brand */
-  --primary: oklch(0.36 0.18 264);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
+  --popover-foreground: oklch(0.19 0.02 60);
+  /* 东大门蚂蚁 logo yellow as primary brand */
+  --primary: oklch(0.82 0.16 85);
+  --primary-foreground: oklch(0.21 0.03 60);
+  --secondary: oklch(0.96 0.02 85);
+  --secondary-foreground: oklch(0.26 0.03 60);
+  --muted: oklch(0.96 0.012 80);
+  --muted-foreground: oklch(0.52 0.025 65);
+  --accent: oklch(0.94 0.05 88);
+  --accent-foreground: oklch(0.26 0.03 60);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.9 0.02 260);
-  --input: oklch(0.9 0.02 260);
-  --ring: oklch(0.36 0.18 264);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
-  /* apM brand tokens */
-  --apm: oklch(0.36 0.18 264);           /* apM bag blue */
-  --apm-ink: oklch(0.24 0.14 264);       /* deeper apM blue */
-  --apm-soft: oklch(0.965 0.02 250);     /* off-white paper */
-  --place: oklch(0.42 0.008 260);        /* apM Place graphite */
-  --place-ink: oklch(0.22 0.008 260);
-  --luxe: oklch(0.78 0.11 85);           /* apM Luxe champagne */
+  --border: oklch(0.9 0.025 82);
+  --input: oklch(0.9 0.025 82);
+  --ring: oklch(0.82 0.16 85);
+  --chart-1: oklch(0.82 0.16 85);
+  --chart-2: oklch(0.7 0.14 62);
+  --chart-3: oklch(0.45 0.06 60);
+  --chart-4: oklch(0.88 0.1 95);
+  --chart-5: oklch(0.3 0.04 60);
+  --sidebar: oklch(0.24 0.03 62);
+  --sidebar-foreground: oklch(0.96 0.01 85);
+  --sidebar-primary: oklch(0.82 0.16 85);
+  --sidebar-primary-foreground: oklch(0.21 0.03 60);
+  --sidebar-accent: oklch(0.3 0.035 62);
+  --sidebar-accent-foreground: oklch(0.96 0.01 85);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.82 0.16 85);
+  /* 品牌色 tokens（沿用变量名，取自 logo） */
+  --apm: oklch(0.82 0.16 85);            /* logo 货袋黄 */
+  --apm-ink: oklch(0.26 0.04 62);        /* 蚂蚁深褐 */
+  --apm-soft: oklch(0.97 0.02 88);       /* 暖白纸感 */
+  --place: oklch(0.42 0.03 62);          /* 深褐灰 */
+  --place-ink: oklch(0.22 0.03 62);
+  --luxe: oklch(0.7 0.13 70);            /* 琥珀金 */
 }
 
 .dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
+  --background: oklch(0.17 0.02 62);
+  --foreground: oklch(0.96 0.01 85);
+  --card: oklch(0.22 0.025 62);
+  --card-foreground: oklch(0.96 0.01 85);
+  --popover: oklch(0.22 0.025 62);
+  --popover-foreground: oklch(0.96 0.01 85);
+  --primary: oklch(0.82 0.16 85);
+  --primary-foreground: oklch(0.21 0.03 60);
+  --secondary: oklch(0.28 0.03 62);
+  --secondary-foreground: oklch(0.96 0.01 85);
+  --muted: oklch(0.28 0.03 62);
+  --muted-foreground: oklch(0.72 0.03 78);
+  --accent: oklch(0.32 0.05 72);
+  --accent-foreground: oklch(0.96 0.01 85);
   --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(0.984 0.003 247.858);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
+  --ring: oklch(0.82 0.16 85);
+  --chart-1: oklch(0.82 0.16 85);
+  --chart-2: oklch(0.7 0.14 62);
+  --chart-3: oklch(0.6 0.08 80);
+  --chart-4: oklch(0.88 0.1 95);
+  --chart-5: oklch(0.45 0.06 60);
+  --sidebar: oklch(0.22 0.025 62);
+  --sidebar-foreground: oklch(0.96 0.01 85);
+  --sidebar-primary: oklch(0.82 0.16 85);
+  --sidebar-primary-foreground: oklch(0.21 0.03 60);
+  --sidebar-accent: oklch(0.3 0.035 62);
+  --sidebar-accent-foreground: oklch(0.96 0.01 85);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+  --sidebar-ring: oklch(0.82 0.16 85);
 }
 
 @layer base {
@@ -178,7 +178,7 @@
   color: #fff;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 40%),
-    linear-gradient(180deg, #3a3d44 0%, #24272c 55%, #191b1f 100%);
+    linear-gradient(180deg, #46392e 0%, #2c241d 55%, #1e1813 100%);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.14),
@@ -188,35 +188,35 @@
 
 /* Backlit white "lit-letter" text — signage look */
 @utility text-lit {
-  color: #f4f8ff;
+  color: #fff8e6;
   text-shadow:
-    0 0 1px rgba(255, 255, 255, 0.9),
-    0 0 8px rgba(160, 200, 255, 0.55),
-    0 0 18px rgba(80, 140, 255, 0.35);
+    0 0 1px rgba(255, 250, 235, 0.9),
+    0 0 8px rgba(255, 205, 90, 0.55),
+    0 0 18px rgba(240, 170, 30, 0.35);
 }
 
 /* Cyan-tint variant — matches building signs in the reference */
 @utility text-lit-cyan {
-  color: #d6ecff;
+  color: #ffe9b0;
   text-shadow:
-    0 0 1px rgba(220, 240, 255, 0.9),
-    0 0 8px rgba(120, 200, 255, 0.7),
-    0 0 20px rgba(60, 160, 255, 0.45);
+    0 0 1px rgba(255, 240, 205, 0.9),
+    0 0 8px rgba(255, 200, 70, 0.7),
+    0 0 20px rgba(235, 160, 20, 0.45);
 }
 
 /* apM plastic-bag surface — soft off-white with faint blue tint */
 @utility surface-apm {
   background:
-    radial-gradient(120% 80% at 50% -10%, rgba(60, 90, 200, 0.06), transparent 60%),
-    linear-gradient(180deg, #ffffff 0%, #f5f7fb 100%);
+    radial-gradient(120% 80% at 50% -10%, rgba(245, 183, 21, 0.12), transparent 60%),
+    linear-gradient(180deg, #ffffff 0%, #fbf7ee 100%);
 }
 
 /* apM Place surface — graphite matte with faint sheen */
 @utility surface-place {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 40%),
-    linear-gradient(180deg, #4c5058 0%, #2f3238 100%);
-  color: #f2f4f8;
+    linear-gradient(180deg, #55483a 0%, #332a22 100%);
+  color: #f8f3e8;
 }
 
 /* Brushed metal texture accent (used sparingly, e.g. header plates) */
@@ -229,7 +229,7 @@
       rgba(0, 0, 0, 0.05) 1px,
       rgba(0, 0, 0, 0.05) 2px
     ),
-    linear-gradient(180deg, #3a3d44 0%, #24272c 100%);
+    linear-gradient(180deg, #46392e 0%, #2c241d 100%);
 }
 
 /* Text link — apM blue, underline on hover */

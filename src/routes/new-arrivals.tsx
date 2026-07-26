@@ -14,7 +14,7 @@ function NewArrivals() {
   return (
     <MobileShell>
       <MobileHeader title="今日上新" back />
-      <div className="bg-gradient-to-r from-blue-500 to-cyan-400 px-4 py-5 text-white">
+      <div className="bg-gradient-to-r from-primary to-cyan-400 px-4 py-5 text-white">
         <div className="flex items-center gap-2">
           <Sparkles className="h-5 w-5" />
           <span className="text-base font-semibold">档口直采新款</span>

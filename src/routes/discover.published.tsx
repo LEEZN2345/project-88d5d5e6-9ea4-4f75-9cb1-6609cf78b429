@@ -80,10 +80,13 @@ function Published() {
           <div className="mt-4 flex items-center gap-3 rounded-2xl border border-rose-200 bg-gradient-to-br from-rose-500 to-orange-500 p-4 text-white shadow dark:border-rose-500/40">
             <Sparkles className="h-8 w-8 opacity-80" />
             <div className="min-w-0 flex-1">
-              <div className="text-xs opacity-90">本篇预估佣金</div>
+              <div className="text-xs opacity-90">每笔跟买预估佣金</div>
               <div className="text-2xl font-black leading-none">￥{commission.toFixed(2)}</div>
               <div className="mt-1 text-[11px] opacity-90">
-                档口 {shop ?? "—"} · 用户下单成交后到账
+                他人通过本篇链接下单，每成交 1 单你可得 ￥{commission.toFixed(2)}
+              </div>
+              <div className="mt-0.5 text-[11px] opacity-80">
+                档口 {shop ?? "—"} · 签收 14 天后自动结算到账
               </div>
             </div>
           </div>

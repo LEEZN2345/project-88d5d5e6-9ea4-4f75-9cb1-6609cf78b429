@@ -8,6 +8,8 @@ import { Search, Flame, Sparkles, TicketPercent, TrendingUp } from "lucide-react
 import { useBanner } from "@/lib/banners";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { useCategories } from "@/lib/categories";
+import { AppLogo } from "@/components/AppLogo";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({

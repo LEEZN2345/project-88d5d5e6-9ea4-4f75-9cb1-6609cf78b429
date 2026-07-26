@@ -4,7 +4,7 @@ import { ORDERS, STATUS_LABEL, formatKRW, formatCNY } from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/orders/")({
-  head: () => ({ meta: [{ title: "我的订单 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "我的订单 · 东大门蚂蚁" }] }),
   component: OrdersIndex,
 });
 

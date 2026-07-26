@@ -37,7 +37,7 @@ function brandVariant(name: string): "apm" | "place" | "luxe" {
 export const Route = createFileRoute("/shops/")({
   head: () => ({
     meta: [
-      { title: "档口列表 · 东大门订货通" },
+      { title: "档口列表 · 东大门蚂蚁" },
       { name: "description", content: "浏览东大门核心商场档口的全量货源。" },
     ],
   }),

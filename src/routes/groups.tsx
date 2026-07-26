@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import { Users, Clock, Share2, Flame, Store, User as UserIcon, Copy, Check } from "lucide-react";
 
 export const Route = createFileRoute("/groups")({
-  head: () => ({ meta: [{ title: "拼单广场 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "拼单广场 · 东大门蚂蚁" }] }),
   component: GroupsPlaza,
 });
 

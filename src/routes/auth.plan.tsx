@@ -14,7 +14,7 @@ export const Route = createFileRoute("/auth/plan")({
   validateSearch: (s) => search.parse(s),
   head: () => ({
     meta: [
-      { title: "选择会员身份 · 东大门订货通" },
+      { title: "选择会员身份 · 东大门蚂蚁" },
       { name: "description", content: "游客 / 普通 ¥99 / 创作者 ¥199 三档会员权益对比与开通。" },
     ],
   }),

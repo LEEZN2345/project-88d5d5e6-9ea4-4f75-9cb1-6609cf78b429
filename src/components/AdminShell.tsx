@@ -71,8 +71,8 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     <div className="flex min-h-screen bg-muted/30">
       <aside className="hidden w-56 shrink-0 border-r border-border bg-background md:block">
         <div className="border-b border-border px-5 py-4">
-          <div className="text-sm font-semibold">东大门订货通</div>
-          <div className="text-xs text-muted-foreground">运营后台 · M1</div>
+          <div className="text-sm font-semibold">东大门蚂蚁</div>
+          <div className="text-xs text-muted-foreground">Dongdaemun ants · 运营后台</div>
           <div className="mt-3">
             <div className="mb-1 text-[10px] uppercase tracking-wider text-muted-foreground/70">当前角色</div>
             <RoleSwitcher value={role} />

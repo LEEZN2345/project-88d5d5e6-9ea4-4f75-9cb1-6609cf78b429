@@ -27,7 +27,7 @@ import {
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/checkout")({
-  head: () => ({ meta: [{ title: "提交订单 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "提交订单 · 东大门蚂蚁" }] }),
   component: Checkout,
 });
 

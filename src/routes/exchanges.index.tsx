@@ -5,7 +5,7 @@ import { EXCHANGES, EXCHANGE_STATUS_LABEL, EXCHANGE_REASON_LABEL } from "@/lib/m
 import { Undo2 } from "lucide-react";
 
 export const Route = createFileRoute("/exchanges/")({
-  head: () => ({ meta: [{ title: "售后 / 换货 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "售后 / 换货 · 东大门蚂蚁" }] }),
   component: BuyerExchanges,
 });
 

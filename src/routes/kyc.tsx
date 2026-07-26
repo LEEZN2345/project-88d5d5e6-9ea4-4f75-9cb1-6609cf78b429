@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { ShieldCheck, Upload } from "lucide-react";
 
 export const Route = createFileRoute("/kyc")({
-  head: () => ({ meta: [{ title: "实名认证 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "实名认证 · 东大门蚂蚁" }] }),
   component: Kyc,
 });
 

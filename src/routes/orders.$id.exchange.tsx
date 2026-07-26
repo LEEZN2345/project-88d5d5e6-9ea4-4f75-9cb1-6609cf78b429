@@ -16,7 +16,7 @@ const ACCEPT_ATTR = ACCEPT_TYPES.join(",");
 const ACCEPT_LABEL = "JPG / PNG / WEBP";
 
 export const Route = createFileRoute("/orders/$id/exchange")({
-  head: () => ({ meta: [{ title: "申请换货 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "申请换货 · 东大门蚂蚁" }] }),
   component: ApplyExchange,
   notFoundComponent: () => (
     <MobileShell>

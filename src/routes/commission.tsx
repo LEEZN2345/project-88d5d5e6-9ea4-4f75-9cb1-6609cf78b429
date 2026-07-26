@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Wallet, Users, ArrowRight, Info, TrendingUp, Clock, CheckCircle2, XCircle } from "lucide-react";
 
 export const Route = createFileRoute("/commission")({
-  head: () => ({ meta: [{ title: "邀请分佣 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "邀请分佣 · 东大门蚂蚁" }] }),
   component: Commission,
 });
 

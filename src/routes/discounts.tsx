@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { TicketPercent } from "lucide-react";
 
 export const Route = createFileRoute("/discounts")({
-  head: () => ({ meta: [{ title: "档口折扣 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "档口折扣 · 东大门蚂蚁" }] }),
   component: Discounts,
 });
 

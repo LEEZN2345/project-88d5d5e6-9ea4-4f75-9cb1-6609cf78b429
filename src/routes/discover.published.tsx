@@ -9,7 +9,7 @@ const search = z.object({
 });
 
 export const Route = createFileRoute("/discover/published")({
-  head: () => ({ meta: [{ title: "发布成功 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "发布成功 · 东大门蚂蚁" }] }),
   validateSearch: (raw) => search.parse(raw),
   component: Published,
 });

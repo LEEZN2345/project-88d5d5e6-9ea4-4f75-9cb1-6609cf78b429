@@ -7,7 +7,7 @@ import { Crown, Wallet, ArrowRight, Lock, CheckCircle2, Sparkles } from "lucide-
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/withdraw")({
-  head: () => ({ meta: [{ title: "提现 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "提现 · 东大门蚂蚁" }] }),
   component: Withdraw,
 });
 

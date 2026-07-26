@@ -14,7 +14,7 @@ export const Route = createFileRoute("/auth/pay")({
   validateSearch: (s) => search.parse(s),
   head: () => ({
     meta: [
-      { title: "开通会员 · 东大门订货通" },
+      { title: "开通会员 · 东大门蚂蚁" },
       { name: "description", content: "微信 / 支付宝 / 银行卡开通会员，支付成功即刻到账开卡礼积分。" },
     ],
   }),

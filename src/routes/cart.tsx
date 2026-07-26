@@ -9,7 +9,7 @@ import { checkoutStore } from "@/lib/checkout-store";
 import { useState, useMemo, useEffect } from "react";
 
 export const Route = createFileRoute("/cart")({
-  head: () => ({ meta: [{ title: "购物车 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "购物车 · 东大门蚂蚁" }] }),
   component: Cart,
 });
 

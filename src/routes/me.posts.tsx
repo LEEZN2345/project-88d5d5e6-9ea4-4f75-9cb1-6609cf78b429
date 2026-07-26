@@ -6,7 +6,7 @@ import { useMemo } from "react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/me/posts")({
-  head: () => ({ meta: [{ title: "我的发布 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "我的发布 · 东大门蚂蚁" }] }),
   component: MyPosts,
 });
 

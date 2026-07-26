@@ -23,7 +23,7 @@ export const DEFAULT_BANNERS: BannerSlot[] = [
     name: "首页顶部轮播",
     description: "买手端首页顶部主视觉轮播横幅",
     image: "https://picsum.photos/seed/home-hero/1200/480",
-    title: "东大门订货通",
+    title: "东大门蚂蚁",
     subtitle: "档口直采 · 一键代购 · 全程跟踪",
     link: "/shops",
     enabled: true,

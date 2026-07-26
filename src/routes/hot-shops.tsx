@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 export const Route = createFileRoute("/hot-shops")({
   head: () => ({
     meta: [
-      { title: "热门档口 · 东大门订货通" },
+      { title: "热门档口 · 东大门蚂蚁" },
       { name: "description", content: "东大门人气档口推荐,精选高销量与买手热门补货档口。" },
     ],
   }),

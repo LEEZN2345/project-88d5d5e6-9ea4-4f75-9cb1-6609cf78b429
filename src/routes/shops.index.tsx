@@ -4,14 +4,12 @@ import { MALLS } from "@/lib/buildings";
 import { SHOPS } from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
 import {
-  APM_RANK,
-  OFFLINE_HOT,
   shopsByBuildingFloor,
   floorsWithShops,
   buildingHasShops,
-  type RankShop,
   type IndexedShop,
 } from "@/lib/rank-data";
+import { useRankConfig, useHotShops, type RankEntry } from "@/lib/rank-config";
 import {
   Search,
   ShoppingCart,
@@ -107,9 +105,10 @@ function ShopsIndex() {
 }
 
 function HotShopsView() {
+  const hotShops = useHotShops();
   return (
     <div className="space-y-3 px-4 py-3">
-      {SHOPS.map((s) => (
+      {hotShops.map((s) => (
         <Link
           key={s.id}
           to="/shops/$id"

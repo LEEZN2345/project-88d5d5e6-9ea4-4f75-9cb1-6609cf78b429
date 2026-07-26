@@ -43,15 +43,17 @@ export function MobileShell({ children }: { children: React.ReactNode }) {
 
 export function MobileHeader({
   title,
+  center,
   right,
   back,
 }: {
   title: string;
+  center?: React.ReactNode;
   right?: React.ReactNode;
   back?: boolean;
 }) {
   return (
-    <header className="sticky top-0 z-40 flex h-12 items-center justify-between border-b border-border bg-background/95 px-4 backdrop-blur">
+    <header className="sticky top-0 z-40 grid h-12 grid-cols-[1fr_auto_1fr] items-center border-b border-border bg-background/95 px-4 backdrop-blur">
       <div className="flex items-center gap-2">
         {back && (
           <button
@@ -63,7 +65,8 @@ export function MobileHeader({
         )}
         <h1 className="font-display text-base font-black tracking-tight uppercase">{title}</h1>
       </div>
-      <div>{right}</div>
+      <div className="flex justify-center">{center}</div>
+      <div className="flex justify-end">{right}</div>
     </header>
   );
 }

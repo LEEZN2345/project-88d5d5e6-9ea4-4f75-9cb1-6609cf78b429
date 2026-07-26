@@ -8,6 +8,8 @@ import { Search, Flame, Sparkles, TicketPercent, TrendingUp } from "lucide-react
 import { useBanner } from "@/lib/banners";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { useCategories } from "@/lib/categories";
+import { AppLogo } from "@/components/AppLogo";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -54,8 +56,10 @@ function Index() {
     <MobileShell>
       <MobileHeader
         title="东大门蚂蚁"
+        center={<AppLogo className="h-9 w-auto" />}
         right={<Link to="/admin" className="text-xs text-muted-foreground">运营后台</Link>}
       />
+
       {/* 首页海报轮播 */}
       <div className="mx-4 mt-3">
         <HeroCarousel slides={heroSlides} />

@@ -10,7 +10,7 @@ import { Search, SlidersHorizontal } from "lucide-react";
 export const Route = createFileRoute("/categories/$id")({
   head: ({ params }) => {
     const cat = getCategoryById(params.id);
-    const title = cat ? `${cat.name} · apM 订货通` : "分类 · apM 订货通";
+    const title = cat ? `${cat.name} · 东大门蚂蚁` : "分类 · 东大门蚂蚁";
     return { meta: [{ title }, { name: "description", content: `${cat?.name ?? ""} 全部商品与二级分类。` }] };
   },
   loader: ({ params }) => {

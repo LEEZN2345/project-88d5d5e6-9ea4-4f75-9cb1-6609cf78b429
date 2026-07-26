@@ -6,6 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { SHOPS, PRODUCTS, formatKRW } from "@/lib/mock-data";
+import { CPW_AS_SHOPS } from "@/lib/cpw-as-shops";
+import { APM_AS_SHOPS } from "@/lib/apm-as-shops";
+import { APM_PLACE_AS_SHOPS } from "@/lib/apm-place-shops";
+import { NUZZON_AS_SHOPS } from "@/lib/nuzzon-shops";
 import { MALLS } from "@/lib/buildings";
 import { ArrowLeft, Upload, Save, X } from "lucide-react";
 import { useState } from "react";
@@ -18,7 +22,8 @@ export const Route = createFileRoute("/admin/shops/$id")({
 
 function ShopEdit() {
   const { id } = Route.useParams();
-  const shop = SHOPS.find((s) => s.id === id) ?? SHOPS[0]!;
+  const allShops = [...SHOPS, ...CPW_AS_SHOPS, ...APM_AS_SHOPS, ...APM_PLACE_AS_SHOPS, ...NUZZON_AS_SHOPS];
+  const shop = allShops.find((s) => s.id === id) ?? SHOPS[0]!;
   const products = PRODUCTS.filter((p) => p.shopId === shop.id);
   const [tags, setTags] = useState<string[]>(shop.tags);
   const [newTag, setNewTag] = useState("");

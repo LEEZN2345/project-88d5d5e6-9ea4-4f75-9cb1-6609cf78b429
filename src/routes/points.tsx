@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Flame, Gift, Share2, ChevronRight, Sparkles, Clock } from "lucide-react";
 
 export const Route = createFileRoute("/points")({
-  head: () => ({ meta: [{ title: "积分广场 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "积分广场 · 东大门蚂蚁" }] }),
   component: PointsMall,
 });
 

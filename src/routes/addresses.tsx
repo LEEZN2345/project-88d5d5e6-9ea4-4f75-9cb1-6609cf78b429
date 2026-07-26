@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Plus, MapPin, Pencil, Star } from "lucide-react";
 
 export const Route = createFileRoute("/addresses")({
-  head: () => ({ meta: [{ title: "收货地址 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "收货地址 · 东大门蚂蚁" }] }),
   component: Addresses,
 });
 

@@ -15,7 +15,7 @@ import {
 import { Copy, Link2, MessageSquare, QrCode } from "lucide-react";
 
 export const Route = createFileRoute("/discover/$postId")({
-  head: () => ({ meta: [{ title: "好物笔记 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "好物笔记 · 东大门蚂蚁" }] }),
   component: PostDetail,
 });
 

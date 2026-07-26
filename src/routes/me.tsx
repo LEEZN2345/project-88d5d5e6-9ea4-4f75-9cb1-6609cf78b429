@@ -5,7 +5,7 @@ import { ChevronRight, MapPin, Heart, MessageSquare, Settings, Shield, Gift, Sho
 import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/me")({
-  head: () => ({ meta: [{ title: "我的 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "我的 · 东大门蚂蚁" }] }),
   component: Me,
 });
 

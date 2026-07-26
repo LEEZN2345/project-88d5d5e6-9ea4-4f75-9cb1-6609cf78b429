@@ -3,7 +3,7 @@ import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { ArrowUpRight, ArrowDownRight, Gift, ShoppingBag, Users, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/points/history")({
-  head: () => ({ meta: [{ title: "积分明细 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "积分明细 · 东大门蚂蚁" }] }),
   component: PointsHistory,
 });
 

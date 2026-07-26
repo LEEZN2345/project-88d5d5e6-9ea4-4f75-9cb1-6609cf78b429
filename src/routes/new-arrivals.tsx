@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/new-arrivals")({
-  head: () => ({ meta: [{ title: "今日上新 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "今日上新 · 东大门蚂蚁" }] }),
   component: NewArrivals,
 });
 

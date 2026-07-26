@@ -3,7 +3,7 @@ import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { Users, Sparkles, ArrowRight, Wallet, Shield, Info } from "lucide-react";
 
 export const Route = createFileRoute("/invite-rules")({
-  head: () => ({ meta: [{ title: "邀请分佣规则 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "邀请分佣规则 · 东大门蚂蚁" }] }),
   component: InviteRules,
 });
 

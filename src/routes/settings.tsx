@@ -6,7 +6,7 @@ import { ChevronRight, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/settings")({
-  head: () => ({ meta: [{ title: "设置 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "设置 · 东大门蚂蚁" }] }),
   component: Settings,
 });
 

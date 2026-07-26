@@ -3,7 +3,7 @@ import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { Gift, Sparkles, ArrowRight, ShoppingBag, Shield } from "lucide-react";
 
 export const Route = createFileRoute("/points-rules")({
-  head: () => ({ meta: [{ title: "邀请赚积分 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "邀请赚积分 · 东大门蚂蚁" }] }),
   component: PointsRules,
 });
 

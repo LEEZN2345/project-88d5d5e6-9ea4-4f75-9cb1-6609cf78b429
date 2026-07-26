@@ -36,7 +36,7 @@ import {
 export const Route = createFileRoute("/guide")({
   head: () => ({
     meta: [
-      { title: "使用指引 · 东大门订货通" },
+      { title: "使用指引 · 东大门蚂蚁" },
       { name: "description", content: "买手端从注册、下单、支付到收货、退款、积分的完整使用说明。" },
     ],
   }),

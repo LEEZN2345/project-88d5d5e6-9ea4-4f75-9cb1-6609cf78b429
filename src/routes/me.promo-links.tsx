@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/dialog";
 
 export const Route = createFileRoute("/me/promo-links")({
-  head: () => ({ meta: [{ title: "我的推广链接 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "我的推广链接 · 东大门蚂蚁" }] }),
   component: PromoLinks,
 });
 

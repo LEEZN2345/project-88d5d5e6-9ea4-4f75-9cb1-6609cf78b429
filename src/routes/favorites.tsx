@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Heart } from "lucide-react";
 
 export const Route = createFileRoute("/favorites")({
-  head: () => ({ meta: [{ title: "我的收藏 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "我的收藏 · 东大门蚂蚁" }] }),
   component: Favorites,
 });
 

@@ -6,7 +6,7 @@ import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/discover/")({
-  head: () => ({ meta: [{ title: "发现好物 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "发现好物 · 东大门蚂蚁" }] }),
   component: Discover,
 });
 

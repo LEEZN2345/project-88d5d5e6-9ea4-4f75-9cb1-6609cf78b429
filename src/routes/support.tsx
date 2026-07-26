@@ -7,7 +7,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/support")({
-  head: () => ({ meta: [{ title: "联系客服 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "联系客服 · 东大门蚂蚁" }] }),
   component: Support,
 });
 

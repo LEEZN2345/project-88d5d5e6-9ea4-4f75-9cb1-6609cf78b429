@@ -3,7 +3,7 @@ import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { Crown, Check, Sparkles, Shield, Zap, X } from "lucide-react";
 
 export const Route = createFileRoute("/membership")({
-  head: () => ({ meta: [{ title: "会员权益 · 东大门订货通" }] }),
+  head: () => ({ meta: [{ title: "会员权益 · 东大门蚂蚁" }] }),
   component: Membership,
 });
 

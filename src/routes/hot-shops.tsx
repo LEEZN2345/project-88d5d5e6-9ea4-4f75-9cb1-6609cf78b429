@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
-import { SHOPS } from "@/lib/mock-data";
+import { useHotShops } from "@/lib/rank-config";
 import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/hot-shops")({
@@ -14,11 +14,12 @@ export const Route = createFileRoute("/hot-shops")({
 });
 
 function HotShopsPage() {
+  const shops = useHotShops();
   return (
     <MobileShell>
       <MobileHeader title="热门档口" back />
       <div className="space-y-3 px-4 py-3">
-        {SHOPS.map((s) => (
+        {shops.map((s) => (
           <Link
             key={s.id}
             to="/shops/$id"

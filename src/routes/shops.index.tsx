@@ -1,17 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { MALLS } from "@/lib/buildings";
-import { SHOPS } from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
 import {
-  APM_RANK,
-  OFFLINE_HOT,
   shopsByBuildingFloor,
   floorsWithShops,
   buildingHasShops,
-  type RankShop,
   type IndexedShop,
 } from "@/lib/rank-data";
+import { useRankConfig, useHotShops, type RankEntry } from "@/lib/rank-config";
 import {
   Search,
   ShoppingCart,
@@ -107,9 +104,10 @@ function ShopsIndex() {
 }
 
 function HotShopsView() {
+  const hotShops = useHotShops();
   return (
     <div className="space-y-3 px-4 py-3">
-      {SHOPS.map((s) => (
+      {hotShops.map((s) => (
         <Link
           key={s.id}
           to="/shops/$id"
@@ -371,26 +369,24 @@ function AreaView() {
 }
 
 function RankView() {
+  const cfg = useRankConfig();
   return (
     <div className="space-y-4 bg-muted/20 px-3 py-4">
-      <RankSection
-        title="东大门排行榜"
-        subtitle="apM 集团档口 · 近 30 天销量 TOP"
-        icon={<Crown className="h-4 w-4" />}
-        accent="from-amber-400 to-orange-500"
-        data={APM_RANK}
-        badge="TOP 30"
-      />
-      <RankSection
-        title="实体店热门拿货档口"
-        subtitle="线下买手店 · 高频补货榜"
-        icon={<Store className="h-4 w-4" />}
-        accent="from-rose-500 to-red-500"
-        data={OFFLINE_HOT}
-        badge="实体精选"
-      />
+      {cfg.boards
+        .filter((b) => b.enabled)
+        .map((b, i) => (
+          <RankSection
+            key={b.id}
+            title={b.title}
+            subtitle={b.subtitle}
+            icon={i === 0 ? <Crown className="h-4 w-4" /> : <Store className="h-4 w-4" />}
+            accent={i === 0 ? "from-amber-400 to-orange-500" : "from-rose-500 to-red-500"}
+            data={b.items}
+            badge={b.badge}
+          />
+        ))}
       <p className="pb-4 text-center text-[10px] text-muted-foreground">
-        数据每日 00:00 北京时间更新 · 仅供参考
+        {cfg.hotNote}
       </p>
     </div>
   );
@@ -408,7 +404,7 @@ function RankSection({
   subtitle: string;
   icon: React.ReactNode;
   accent: string;
-  data: RankShop[];
+  data: RankEntry[];
   badge: string;
 }) {
   return (
@@ -433,14 +429,14 @@ function RankSection({
 
       {/* List */}
       <ul className="divide-y divide-border">
-        {data.map((s) => (
-          <li key={`${title}-${s.rank}`}>
+        {data.map((s, idx) => (
+          <li key={`${title}-${idx}`}>
             <Link
               to="/shops/$id"
               params={{ id: "s1" }}
               className="flex items-center gap-3 px-3 py-2.5 active:bg-muted/50"
             >
-              <RankBadge rank={s.rank} />
+              <RankBadge rank={idx + 1} />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-[13px] font-bold text-foreground">
                   {s.name}
@@ -449,10 +445,10 @@ function RankSection({
                   {s.location}
                 </p>
               </div>
-              {s.rank <= 3 && (
+              {idx < 3 && (
                 <Flame className="h-3.5 w-3.5 text-orange-500" />
               )}
-              {s.rank > 3 && s.rank <= 10 && (
+              {idx >= 3 && idx < 10 && (
                 <TrendingUp className="h-3.5 w-3.5 text-emerald-500" />
               )}
               <ChevronRight className="h-4 w-4 text-muted-foreground" />

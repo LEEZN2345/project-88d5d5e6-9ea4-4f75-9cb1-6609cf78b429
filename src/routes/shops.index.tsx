@@ -178,7 +178,7 @@ function AreaView() {
       {/* Top building chip strip (replaces left rail) */}
       {/* Building signboard strip — mimics physical stall plates */}
       <div className="border-b border-border bg-neutral-950">
-        <div className="scrollbar-none flex gap-2 overflow-x-auto px-3 py-3">
+        <div className="flex flex-wrap gap-2 px-3 py-3">
           {buildings.map((b) => {
             const isActive = b.name === activeBuilding;
             const has = buildingHasShops(b.name);
@@ -190,7 +190,7 @@ function AreaView() {
                 variant={brandVariant(b.name)}
                 active={isActive}
                 onClick={() => onPickBuilding(b.name)}
-                className="shrink-0"
+                className=""
               />
             );
           })}
@@ -220,7 +220,7 @@ function AreaView() {
 
         {/* Secondary floor strip (kept) */}
         <div className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
-          <div className="scrollbar-none flex gap-1.5 overflow-x-auto px-3 py-2">
+          <div className="flex flex-wrap gap-1.5 px-3 py-2">
             {current.floors.map((f) => {
               const fa = f === activeFloor;
               const has = shopsByBuildingFloor(activeBuilding, f).length > 0;
@@ -229,7 +229,7 @@ function AreaView() {
                   key={f}
                   onClick={() => setActiveFloor(f)}
                   className={cn(
-                    "shrink-0 rounded-md px-2.5 py-1 text-[12px] font-bold tabular-nums transition",
+                    "rounded-md px-2.5 py-1 text-[12px] font-bold tabular-nums transition",
                     fa
                       ? "bg-foreground text-background"
                       : "bg-muted/50 text-muted-foreground"

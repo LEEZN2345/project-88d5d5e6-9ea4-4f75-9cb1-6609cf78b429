@@ -163,7 +163,7 @@ export const MERCHANT_ACCOUNTS: MerchantAccount[] = [
   {
     id: "m1",
     channel: "wechat",
-    merchantName: "东大门订货通（主）",
+    merchantName: "东大门蚂蚁（主）",
     mchId: "16006******",
     settleBank: "招商银行 6214****8821",
     status: "active",
@@ -173,7 +173,7 @@ export const MERCHANT_ACCOUNTS: MerchantAccount[] = [
   {
     id: "m2",
     channel: "alipay",
-    merchantName: "东大门订货通（主）",
+    merchantName: "东大门蚂蚁（主）",
     mchId: "20880******",
     settleBank: "招商银行 6214****8821",
     status: "active",
@@ -695,7 +695,7 @@ export const SHIP_STATUS_LABEL: Record<ShipStatus, string> = {
 // 韩国档口签收后再配同款/换款 → 重新发出给买家。
 
 export const EXCHANGE_WAREHOUSE = {
-  name: "东大门订货通 · 上海集运仓",
+  name: "东大门蚂蚁 · 上海集运仓",
   contact: "换货收件组 · 021-6000-8899",
   address: "上海市青浦区华徐公路 3288 号 A 栋 2 楼 换货组(请注明工单号)",
   zip: "201703",

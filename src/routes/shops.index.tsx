@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { MALLS } from "@/lib/buildings";
+import { SHOPS } from "@/lib/mock-data";
+import { Badge } from "@/components/ui/badge";
 import {
   APM_RANK,
   OFFLINE_HOT,

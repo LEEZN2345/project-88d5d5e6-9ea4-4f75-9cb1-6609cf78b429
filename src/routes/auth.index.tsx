@@ -3,12 +3,13 @@ import { useState } from "react";
 import { MobileShell } from "@/components/MobileShell";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { AppLogo } from "@/components/AppLogo";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth/")({
   head: () => ({
     meta: [
-      { title: "登录 / 注册 · 东大门订货通" },
+      { title: "登录 / 注册 · 东大门蚂蚁" },
       { name: "description", content: "手机号一键注册，注册后即可选择会员身份并解锁全场包邮 / 返佣提现等权益。" },
     ],
   }),
@@ -58,8 +59,9 @@ function Auth() {
   return (
     <MobileShell>
       <div className="flex flex-col items-center pt-14">
-        <div className="text-2xl font-bold">东大门订货通</div>
-        <div className="mt-1 text-xs text-muted-foreground">为东大门买手 & B 端而生</div>
+        <AppLogo className="h-24 w-auto" />
+        <div className="mt-3 text-2xl font-bold">东大门蚂蚁</div>
+        <div className="mt-1 text-xs text-muted-foreground">Dongdaemun ants · 为东大门买手 & B 端而生</div>
       </div>
 
       <div className="mt-10 space-y-3 px-6">

@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { AdminShell } from "@/components/AdminShell";
 import { SHOPS, PRODUCTS } from "@/lib/mock-data";
 import type { Shop } from "@/lib/mock-data";
@@ -184,7 +184,9 @@ function ShopsTab({ downloadTemplate: _dl, allShops }: { downloadTemplate: () =>
                     <Td className="text-xs text-muted-foreground">{s.tags.join(" / ")}</Td>
                     <Td className="text-xs">{count}</Td>
                     <Td>
-                      <Button size="sm" variant="outline">编辑</Button>
+                      <Button size="sm" variant="outline" asChild>
+                        <Link to="/admin/shops/$id" params={{ id: s.id }}>编辑</Link>
+                      </Button>
                     </Td>
                   </tr>
                 );

@@ -137,33 +137,6 @@ function Index() {
         </div>
       </Section>
 
-      <Section title="推荐档口" linkTo="/shops" linkLabel="全部档口">
-        <div className="space-y-3 px-4">
-          {SHOPS.slice(0, 3).map((s) => (
-            <Link
-              key={s.id}
-              to="/shops/$id"
-              params={{ id: s.id }}
-              className="block overflow-hidden rounded-xl border border-border bg-card"
-            >
-              <div className="relative aspect-video w-full overflow-hidden bg-muted">
-                <img src={s.cover} alt={s.name} className="h-full w-full object-cover" />
-              </div>
-              <div className="flex items-center justify-between gap-3 p-3">
-                <div className="min-w-0 flex-1">
-                  <div className="truncate text-sm font-semibold">{s.name}</div>
-                  <div className="text-xs text-muted-foreground">{s.building} · {s.floor}</div>
-                  <div className="mt-1 flex flex-wrap gap-1">
-                    {s.tags.map((t) => <Badge key={t} variant="secondary" className="text-[10px]">{t}</Badge>)}
-                  </div>
-                </div>
-                <div className="shrink-0 text-xs text-muted-foreground">{s.productCount} 款</div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </Section>
-
       <div className="h-6" />
     </MobileShell>
   );

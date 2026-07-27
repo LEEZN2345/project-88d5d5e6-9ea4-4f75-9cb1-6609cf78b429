@@ -341,20 +341,11 @@ function PostDetail() {
             <div className="line-clamp-1 text-[13px] font-medium">{product.name}</div>
             <div className="mt-0.5 flex items-baseline gap-1">
               <span className="text-base font-bold text-rose-600">{formatCNY(priceCNY)}</span>
-              <span className="text-[10px] text-muted-foreground">拼单价</span>
+              <span className="text-[10px] text-muted-foreground">跟买价</span>
             </div>
-            {/* 进度条 */}
-            <div className="mt-1 flex items-center gap-1.5">
-              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-rose-500 to-orange-500 transition-all"
-                  style={{ width: `${percent}%` }}
-                />
-              </div>
-              <span className="flex items-center gap-0.5 text-[10px] text-muted-foreground">
-                <Users className="h-3 w-3" />
-                {joined}/{target}
-              </span>
+            <div className="mt-1 flex items-center gap-1 text-[10px] text-muted-foreground">
+              <Users className="h-3 w-3" />
+              已有 {joined} 人跟买 · 支持单件 / 2 件起拍
             </div>
           </div>
           <button

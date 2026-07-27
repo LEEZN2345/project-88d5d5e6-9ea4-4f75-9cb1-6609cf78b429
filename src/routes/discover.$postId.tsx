@@ -13,6 +13,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Copy, Link2, MessageSquare, QrCode } from "lucide-react";
+import { cart } from "@/lib/cart-store";
 
 export const Route = createFileRoute("/discover/$postId")({
   head: () => ({ meta: [{ title: "好物笔记 · 东大门蚂蚁" }] }),
@@ -59,13 +60,12 @@ function PostDetail() {
   const commission = Math.round(priceCNY * COMMISSION_RATE * 100) / 100;
 
   // 拼单进度（mock）
-  const target = 5;
   const joined = 2 + (h % 3); // 2 / 3 / 4
-  const percent = Math.min(100, Math.round((joined / target) * 100));
 
   const [idx, setIdx] = useState(0);
   const [liked, setLiked] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
+  const [buyOpen, setBuyOpen] = useState(false);
   const [followed, setFollowed] = useState(false);
   const [saved, setSaved] = useState(false);
   const [commentText, setCommentText] = useState("");
@@ -119,14 +119,21 @@ function PostDetail() {
     setShareOpen(true);
   };
 
-  const onBuy = () => {
-    // 佣金归属：URL 参数 ref=<author> 记录推荐人，下单时带入订单快照
-    toast.success(`已下单 · 佣金 ${formatCNY(commission)} 归属 @${author}`);
-    nav({
-      to: "/products/$id",
-      params: { id: product.id },
-      search: { ref: author } as never,
+  const soloAllowed = (shop?.minOrderQty ?? 1) === 1;
+
+  const onPickTier = (tier: "solo" | "group") => {
+    cart.add({
+      productId: product.id,
+      color: product.colors[0] ?? "默认",
+      size: product.sizes[0] ?? "FREE",
+      qty: tier === "group" ? 2 : 1,
+      tier,
     });
+    setBuyOpen(false);
+    toast.success(
+      `已加入购物车 · 佣金 ${formatCNY(commission)} 归属 @${author}`,
+    );
+    nav({ to: "/cart" });
   };
 
   return (
@@ -332,30 +339,69 @@ function PostDetail() {
             <div className="line-clamp-1 text-[13px] font-medium">{product.name}</div>
             <div className="mt-0.5 flex items-baseline gap-1">
               <span className="text-base font-bold text-rose-600">{formatCNY(priceCNY)}</span>
-              <span className="text-[10px] text-muted-foreground">拼单价</span>
+              <span className="text-[10px] text-muted-foreground">跟买价</span>
             </div>
-            {/* 进度条 */}
-            <div className="mt-1 flex items-center gap-1.5">
-              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-rose-500 to-orange-500 transition-all"
-                  style={{ width: `${percent}%` }}
-                />
-              </div>
-              <span className="flex items-center gap-0.5 text-[10px] text-muted-foreground">
-                <Users className="h-3 w-3" />
-                {joined}/{target}
-              </span>
+            <div className="mt-1 flex items-center gap-1 text-[10px] text-muted-foreground">
+              <Users className="h-3 w-3" />
+              已有 {joined} 人跟买 · 支持单件 / 2 件起拍
             </div>
           </div>
           <button
-            onClick={onBuy}
+            onClick={() => setBuyOpen(true)}
             className="shrink-0 rounded-full bg-gradient-to-r from-rose-500 to-orange-500 px-5 py-2.5 text-sm font-bold text-white shadow"
           >
-            立即拼单
+            跟买下单
           </button>
         </div>
       </div>
+
+      {/* 跟买下单方式 */}
+      <Dialog open={buyOpen} onOpenChange={setBuyOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>选择下单方式</DialogTitle>
+            <DialogDescription>
+              通过本笔记下单，佣金归属 @{author}
+            </DialogDescription>
+          </DialogHeader>
+
+          <button
+            disabled={!soloAllowed}
+            onClick={() => onPickTier("solo")}
+            className={cn(
+              "w-full rounded-xl border p-3 text-left",
+              soloAllowed
+                ? "border-border hover:border-primary"
+                : "cursor-not-allowed border-dashed border-border opacity-50",
+            )}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-semibold">单件购买</span>
+              <span className="text-sm font-bold text-rose-600">
+                {formatCNY(priceCNY)}
+              </span>
+            </div>
+            <div className="mt-0.5 text-[11px] text-muted-foreground">
+              {soloAllowed ? "1 件即可下单，档口现货优先发" : "该档口不支持单件购买"}
+            </div>
+          </button>
+
+          <button
+            onClick={() => onPickTier("group")}
+            className="w-full rounded-xl border border-border p-3 text-left hover:border-primary"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-semibold">2 件起拍</span>
+              <span className="text-sm font-bold text-rose-600">
+                {formatCNY(Math.round(priceCNY * 2 * 100) / 100)}
+              </span>
+            </div>
+            <div className="mt-0.5 text-[11px] text-muted-foreground">
+              同款 2 件起批，单件成本更低
+            </div>
+          </button>
+        </DialogContent>
+      </Dialog>
 
       {/* 分享弹层 */}
       <Dialog open={shareOpen} onOpenChange={setShareOpen}>

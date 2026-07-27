@@ -60,9 +60,7 @@ function PostDetail() {
   const commission = Math.round(priceCNY * COMMISSION_RATE * 100) / 100;
 
   // 拼单进度（mock）
-  const target = 5;
   const joined = 2 + (h % 3); // 2 / 3 / 4
-  const percent = Math.min(100, Math.round((joined / target) * 100));
 
   const [idx, setIdx] = useState(0);
   const [liked, setLiked] = useState(false);

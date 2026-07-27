@@ -119,14 +119,21 @@ function PostDetail() {
     setShareOpen(true);
   };
 
-  const onBuy = () => {
-    // 佣金归属：URL 参数 ref=<author> 记录推荐人，下单时带入订单快照
-    toast.success(`已下单 · 佣金 ${formatCNY(commission)} 归属 @${author}`);
-    nav({
-      to: "/products/$id",
-      params: { id: product.id },
-      search: { ref: author } as never,
+  const soloAllowed = (shop?.minOrderQty ?? 1) === 1;
+
+  const onPickTier = (tier: "solo" | "group") => {
+    cart.add({
+      productId: product.id,
+      color: product.colors[0] ?? "默认",
+      size: product.sizes[0] ?? "FREE",
+      qty: tier === "group" ? 2 : 1,
+      tier,
     });
+    setBuyOpen(false);
+    toast.success(
+      `已加入购物车 · 佣金 ${formatCNY(commission)} 归属 @${author}`,
+    );
+    nav({ to: "/cart" });
   };
 
   return (

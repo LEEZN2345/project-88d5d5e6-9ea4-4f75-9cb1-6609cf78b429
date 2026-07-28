@@ -66,7 +66,6 @@ export const ADMIN_ROUTE_ROLES: Record<string, AdminRole[]> = {
   "/admin/sign-in": ["super"],
   "/admin/points-mall": ["super"],
   "/admin/points-rules": ["super"],
-  "/admin/membership": ["super"],
   "/admin/commission": ["super"],
   "/admin/invites": ["super"],
   "/admin/payment-accounts": ["super"],

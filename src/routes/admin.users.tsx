@@ -25,7 +25,7 @@ type Row = {
   id: string;
   nick: string;
   phone: string;
-  level?: "黄金" | "白银";
+  level?: "黄金会员" | "钻石会员";
   points: number;
   invitedValid: number; // 有效邀请
   status: "active" | "frozen";
@@ -33,11 +33,11 @@ type Row = {
 };
 
 const MOCK: Row[] = [
-  { id: "U1001", nick: "小李", phone: "138****2311", level: "白银", points: 3240, invitedValid: 6, status: "active" },
+  { id: "U1001", nick: "小李", phone: "138****2311", level: "钻石会员", points: 3240, invitedValid: 6, status: "active" },
   { id: "U1002", nick: "韩姐女装-王姐", phone: "139****8877", points: 0, invitedValid: 3, status: "active" },
   { id: "U1003", nick: "Molly档口", phone: "136****1122", points: 0, invitedValid: 8, status: "active" },
   { id: "U1004", nick: "刷单可疑账号", phone: "170****0001", points: 12000, invitedValid: 0, status: "frozen", orderBan: { reason: "刷单风控", at: "2026-07-15 10:22", by: "admin" } },
-  { id: "U1005", nick: "Nana", phone: "158****3333", level: "黄金", points: 890, invitedValid: 0, status: "active" },
+  { id: "U1005", nick: "Nana", phone: "158****3333", level: "黄金会员", points: 890, invitedValid: 0, status: "active" },
 ];
 
 function AdminUsers() {
@@ -74,14 +74,14 @@ function AdminUsers() {
     <AdminShell>
       <div className="mb-4">
         <h1 className="text-xl font-semibold">用户管理</h1>
-        <p className="text-xs text-muted-foreground">C 端买家统一管理 · 会员等级 / 积分 / 邀请 / 风控冻结。</p>
+        <p className="text-xs text-muted-foreground">C 端买家统一管理 · 会员类型 / 积分 / 邀请 / 风控冻结。</p>
       </div>
 
       <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
         <Stat label="用户总数" value={String(rows.length)} />
         <Stat label="已冻结" value={String(frozen)} />
         <Stat label="禁止下单" value={String(banned)} />
-        <Stat label="黄金会员" value={String(rows.filter((u) => u.level === "黄金").length)} />
+        <Stat label="黄金会员" value={String(rows.filter((u) => u.level === "黄金会员").length)} />
       </div>
 
       <Card className="p-4">

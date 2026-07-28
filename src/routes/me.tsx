@@ -48,22 +48,11 @@ function Me() {
                 </span>
               </div>
               <div className="mt-0.5 flex items-center gap-1.5 text-[11px] opacity-90">
-                <span>黄金买手</span>
+                <span>黄金会员</span>
                 <span className="opacity-50">·</span>
                 <span>ID 20260615</span>
               </div>
-              {/* 升级进度条 */}
-              <div className="mt-2">
-                <div className="mb-0.5 flex justify-between text-[10px] opacity-90">
-                  <span>距钻石买手</span>
-                  <span className="tabular-nums">¥32,140 / ¥200,000</span>
-                </div>
-                <div className="h-1 overflow-hidden rounded-full bg-white/20">
-                  <div className="h-full rounded-full bg-white" style={{ width: "16%" }} />
-                </div>
-              </div>
-            </div>
-            <Link to="/membership" className="shrink-0 self-start rounded-full bg-white/15 px-2 py-1 text-[10px] backdrop-blur">
+                          <Link to="/membership" className="shrink-0 self-start rounded-full bg-white/15 px-2 py-1 text-[10px] backdrop-blur">
               权益 <ChevronRight className="inline h-2.5 w-2.5" />
             </Link>
           </div>
@@ -75,7 +64,7 @@ function Me() {
           >
             <div className="flex items-center justify-between text-[11px] opacity-90">
               <span className="inline-flex items-center gap-1">
-                <Crown className="h-3 w-3" /> 黄金买手 · 当前权益
+                <Crown className="h-3 w-3" /> 黄金会员 · 当前权益
               </span>
               <span className="inline-flex items-center gap-0.5">查看全部 <ChevronRight className="h-3 w-3" /></span>
             </div>
@@ -146,7 +135,7 @@ function Me() {
           <Item to="/me/posts" icon={Sparkles} label="我的分销数据" right="种草官" />
           <Item to="/me/promo-links" icon={Share2} label="我的推广链接" />
           <Item to="/invite-rules" icon={Share2} label="邀请分佣规则" right="L1 0.7% + L2 0.3%" />
-          <Item to="/membership" icon={Crown} label="会员等级权益" right="黄金买手" />
+          <Item to="/membership" icon={Crown} label="会员权益" right="黄金会员" />
           <Item to="/guide" icon={BookOpen} label="使用指引" right="新手必看" />
           <Item to="/support" icon={MessageSquare} label="联系客服" />
           <Item to="/kyc" icon={Shield} label="实名认证" right="未认证" />

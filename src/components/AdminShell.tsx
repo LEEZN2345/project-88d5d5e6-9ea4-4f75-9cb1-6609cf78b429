@@ -22,7 +22,7 @@ import {
   MessageSquare,
   Warehouse,
 } from "lucide-react";
-import { Image as ImageIcon, Tags, Building2, Sparkles, UserPlus, BookOpen, RefreshCcw, Tag, UsersRound, CalendarCheck, BarChart3, LayoutTemplate, Crown, Share2, Trophy } from "lucide-react";
+import { Image as ImageIcon, Tags, Building2, Sparkles, UserPlus, BookOpen, RefreshCcw, Tag, CalendarCheck, BarChart3, LayoutTemplate, Crown, Share2, Trophy } from "lucide-react";
 
 type NavItem = {
   to: string;

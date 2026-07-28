@@ -30,9 +30,9 @@ const SHOPS = [
 ];
 
 const USERS = [
-  { rank: 1, nick: "小李", phone: "138****2311", level: "钻石", spend: 24800, orders: 42 },
-  { rank: 2, nick: "买手-Nana", phone: "158****3333", level: "黄金", spend: 18600, orders: 31 },
-  { rank: 3, nick: "韩姐女装", phone: "139****8877", level: "白银", spend: 12400, orders: 22 },
+  { rank: 1, nick: "小李", phone: "138****2311", level: "钻石会员", spend: 24800, orders: 42 },
+  { rank: 2, nick: "买手-Nana", phone: "158****3333", level: "黄金会员", spend: 18600, orders: 31 },
+  { rank: 3, nick: "韩姐女装", phone: "139****8877", level: "黄金会员", spend: 12400, orders: 22 },
 ];
 
 const INVITES = [

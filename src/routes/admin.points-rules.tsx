@@ -25,7 +25,7 @@ function AdminPointsRules() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <RuleCard title="下单消费积分" desc="订单实付人民币金额按比例发放，会员等级享加成" defaultOn>
+        <RuleCard title="下单消费积分" desc="订单实付人民币金额按比例发放，付费会员享加成" defaultOn>
           <NumberField label="基础比例（每元）" defaultValue={1} suffix="分（=1%）" />
           <NumberField label="单笔封顶" defaultValue={0} suffix="分（0 不限）" />
           <NumberField label="到账延迟" defaultValue={14} suffix="天（签收后释放）" />

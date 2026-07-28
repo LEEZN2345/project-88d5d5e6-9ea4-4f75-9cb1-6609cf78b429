@@ -63,7 +63,6 @@ import { Route as AdminPointsRulesRouteImport } from './routes/admin.points-rule
 import { Route as AdminPointsMallRouteImport } from './routes/admin.points-mall'
 import { Route as AdminPaymentAccountsRouteImport } from './routes/admin.payment-accounts'
 import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
-import { Route as AdminMembershipRouteImport } from './routes/admin.membership'
 import { Route as AdminInvitesRouteImport } from './routes/admin.invites'
 import { Route as AdminHomeDecorationRouteImport } from './routes/admin.home-decoration'
 import { Route as AdminGuideRouteImport } from './routes/admin.guide'
@@ -360,11 +359,6 @@ const AdminOrdersRoute = AdminOrdersRouteImport.update({
   path: '/admin/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminMembershipRoute = AdminMembershipRouteImport.update({
-  id: '/admin/membership',
-  path: '/admin/membership',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminInvitesRoute = AdminInvitesRouteImport.update({
   id: '/admin/invites',
   path: '/admin/invites',
@@ -524,7 +518,6 @@ export interface FileRoutesByFullPath {
   '/admin/guide': typeof AdminGuideRoute
   '/admin/home-decoration': typeof AdminHomeDecorationRoute
   '/admin/invites': typeof AdminInvitesRoute
-  '/admin/membership': typeof AdminMembershipRoute
   '/admin/orders': typeof AdminOrdersRouteWithChildren
   '/admin/payment-accounts': typeof AdminPaymentAccountsRouteWithChildren
   '/admin/points-mall': typeof AdminPointsMallRoute
@@ -605,7 +598,6 @@ export interface FileRoutesByTo {
   '/admin/guide': typeof AdminGuideRoute
   '/admin/home-decoration': typeof AdminHomeDecorationRoute
   '/admin/invites': typeof AdminInvitesRoute
-  '/admin/membership': typeof AdminMembershipRoute
   '/admin/orders': typeof AdminOrdersRouteWithChildren
   '/admin/payment-accounts': typeof AdminPaymentAccountsRouteWithChildren
   '/admin/points-mall': typeof AdminPointsMallRoute
@@ -688,7 +680,6 @@ export interface FileRoutesById {
   '/admin/guide': typeof AdminGuideRoute
   '/admin/home-decoration': typeof AdminHomeDecorationRoute
   '/admin/invites': typeof AdminInvitesRoute
-  '/admin/membership': typeof AdminMembershipRoute
   '/admin/orders': typeof AdminOrdersRouteWithChildren
   '/admin/payment-accounts': typeof AdminPaymentAccountsRouteWithChildren
   '/admin/points-mall': typeof AdminPointsMallRoute
@@ -772,7 +763,6 @@ export interface FileRouteTypes {
     | '/admin/guide'
     | '/admin/home-decoration'
     | '/admin/invites'
-    | '/admin/membership'
     | '/admin/orders'
     | '/admin/payment-accounts'
     | '/admin/points-mall'
@@ -853,7 +843,6 @@ export interface FileRouteTypes {
     | '/admin/guide'
     | '/admin/home-decoration'
     | '/admin/invites'
-    | '/admin/membership'
     | '/admin/orders'
     | '/admin/payment-accounts'
     | '/admin/points-mall'
@@ -935,7 +924,6 @@ export interface FileRouteTypes {
     | '/admin/guide'
     | '/admin/home-decoration'
     | '/admin/invites'
-    | '/admin/membership'
     | '/admin/orders'
     | '/admin/payment-accounts'
     | '/admin/points-mall'
@@ -1018,7 +1006,6 @@ export interface RootRouteChildren {
   AdminGuideRoute: typeof AdminGuideRoute
   AdminHomeDecorationRoute: typeof AdminHomeDecorationRoute
   AdminInvitesRoute: typeof AdminInvitesRoute
-  AdminMembershipRoute: typeof AdminMembershipRoute
   AdminOrdersRoute: typeof AdminOrdersRouteWithChildren
   AdminPaymentAccountsRoute: typeof AdminPaymentAccountsRouteWithChildren
   AdminPointsMallRoute: typeof AdminPointsMallRoute
@@ -1432,13 +1419,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminOrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/membership': {
-      id: '/admin/membership'
-      path: '/admin/membership'
-      fullPath: '/admin/membership'
-      preLoaderRoute: typeof AdminMembershipRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/invites': {
       id: '/admin/invites'
       path: '/admin/invites'
@@ -1786,7 +1766,6 @@ const rootRouteChildren: RootRouteChildren = {
   AdminGuideRoute: AdminGuideRoute,
   AdminHomeDecorationRoute: AdminHomeDecorationRoute,
   AdminInvitesRoute: AdminInvitesRoute,
-  AdminMembershipRoute: AdminMembershipRoute,
   AdminOrdersRoute: AdminOrdersRouteWithChildren,
   AdminPaymentAccountsRoute: AdminPaymentAccountsRouteWithChildren,
   AdminPointsMallRoute: AdminPointsMallRoute,

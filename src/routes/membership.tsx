@@ -8,7 +8,7 @@ export const Route = createFileRoute("/membership")({
 });
 
 type Plan = {
-  key: "normal" | "creator";
+  key: "gold" | "diamond";
   name: string;
   price: string;
   tag: string;
@@ -19,26 +19,26 @@ type Plan = {
 
 const PLANS: Plan[] = [
   {
-    key: "normal",
-    name: "普通会员",
+    key: "gold",
+    name: "黄金会员",
     price: "¥99 / 年",
     tag: "自用党首选",
-    color: "from-slate-500 to-slate-400",
-    ring: "ring-slate-300/60",
-    desc: "赚返佣抵扣自己订单，越买越省",
+    color: "from-amber-500 to-yellow-400",
+    ring: "ring-amber-300/60",
+    desc: "返佣变抵用金，买商品直接抵现（最高抵扣订单金额 30%）",
   },
   {
-    key: "creator",
-    name: "创作者会员",
+    key: "diamond",
+    name: "钻石会员",
     price: "¥199 / 年",
     tag: "分享党推荐",
-    color: "from-rose-500 via-orange-400 to-amber-400",
-    ring: "ring-rose-300/70",
-    desc: "返佣可提现到微信 / 支付宝，T+1 到账",
+    color: "from-sky-500 via-cyan-400 to-teal-300",
+    ring: "ring-cyan-300/70",
+    desc: "黄金全部权益，且返佣可提现到微信 / 支付宝，T+1 到账",
   },
 ];
 
-// (权益项, 游客/非会员, 普通会员, 创作者会员)
+// (权益项, 游客/非会员, 黄金会员, 钻石会员)
 const RIGHTS: [string, string | boolean, string | boolean, string | boolean][] = [
   ["基础购物", "可下单", "可下单", "可下单"],
   ["基础积分（¥1=1积分）", "无积分", "可获得", "可获得"],
@@ -46,16 +46,17 @@ const RIGHTS: [string, string | boolean, string | boolean, string | boolean][] =
   ["积分用途", "不可用", "可兑换积分商城物品", "可兑换积分商城物品"],
   ["全场包邮", "满 ¥300 包邮（不满收 ¥6）", "全场包邮", "全场包邮"],
   ["开卡礼（立即到账积分）", "无", "1000 积分", "3000 积分"],
-  ["发帖权限（引用订单）", "不可发帖", "可发帖，佣金仅抵扣", "可发帖，佣金可提现"],
-  ["创作返佣（3%）", "不可参与", "可赚，仅购物抵扣", "可赚，可提现"],
-  ["邀请返佣（L1 0.5%）", "不可参与", "可赚，仅购物抵扣", "可赚，可提现"],
-  ["拼单返佣（+1%）", "不可参与", "可赚，仅购物抵扣", "可赚，可提现"],
+  ["返佣抵现购物", false, "最高抵扣订单金额 30%", "最高抵扣订单金额 30%"],
+  ["发帖权限（引用订单）", "不可发帖", "可发帖，佣金抵现", "可发帖，佣金可提现"],
+  ["创作返佣（3%）", "不可参与", "可赚，抵现购物", "可赚，可提现"],
+  ["邀请返佣（L1 0.5%）", "不可参与", "可赚，抵现购物", "可赚，可提现"],
+  ["拼单返佣（+1%）", "不可参与", "可赚，抵现购物", "可赚，可提现"],
   ["提现权限", false, false, "满 ¥50 起提，T+1"],
   ["年费", "¥0", "¥99", "¥169（续费）"],
   ["会员费是否可退", "—", "不退", "不退"],
 ];
 
-const CURRENT: Plan["key"] = "normal";
+const CURRENT: Plan["key"] = "gold";
 
 function Membership() {
   return (
@@ -71,7 +72,7 @@ function Membership() {
           </div>
           <div className="mt-1 flex items-end justify-between">
             <div>
-              <div className="text-2xl font-black tracking-tight">普通会员</div>
+              <div className="text-2xl font-black tracking-tight">黄金会员</div>
               <div className="text-xs opacity-90">¥99 · 有效期至 2026-12-31</div>
             </div>
             <div className="text-right text-[11px] opacity-90">
@@ -80,7 +81,7 @@ function Membership() {
             </div>
           </div>
           <div className="mt-3 rounded-lg bg-white/10 px-2.5 py-1.5 text-[11px] leading-relaxed">
-            升级为创作者会员 → 返佣可提现到微信零钱，¥50 起提
+            升级为钻石会员 → 返佣可提现到微信零钱，¥50 起提
           </div>
         </div>
       </div>
@@ -131,7 +132,7 @@ function Membership() {
                 <th className="px-1.5 py-1.5 text-left font-medium">权益项</th>
                 <th className="px-1 py-1.5 text-center font-medium">游客<br/><span className="opacity-70">免费</span></th>
                 <th className="px-1 py-1.5 text-center font-medium">普通<br/><span className="opacity-70">¥99/年</span></th>
-                <th className="px-1 py-1.5 text-center font-medium text-rose-600">创作者<br/><span className="opacity-70">¥199/年</span></th>
+                <th className="px-1 py-1.5 text-center font-medium text-rose-600">钻石会员<br/><span className="opacity-70">¥199/年</span></th>
               </tr>
             </thead>
             <tbody>

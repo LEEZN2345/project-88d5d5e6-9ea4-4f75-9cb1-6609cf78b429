@@ -11,7 +11,7 @@ export const Route = createFileRoute("/withdraw")({
   component: Withdraw,
 });
 
-// 与 membership.tsx 一致，当前会员为普通会员
+// 与 membership.tsx 一致，当前会员为黄金会员
 const IS_CREATOR = false;
 const WITHDRAWABLE = 46.7;
 
@@ -35,10 +35,10 @@ function Withdraw() {
             <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-widest opacity-90">
               <Lock className="h-3.5 w-3.5" /> 提现权限未开通
             </div>
-            <div className="mt-2 text-xl font-bold">当前为普通会员</div>
+            <div className="mt-2 text-xl font-bold">当前为黄金会员</div>
             <div className="mt-1 text-[12px] leading-relaxed opacity-90">
-              普通会员的返佣仅可用于抵扣自己订单。<br />
-              升级为「创作者会员」即可提现到 支付宝 / 微信 / 银行卡，T+1 到账。
+              黄金会员的返佣转为「抵用金」，购买商品时最高可抵扣订单金额 30%。<br />
+              升级为「钻石会员」即可提现到 支付宝 / 微信 / 银行卡，T+1 到账。
             </div>
             <div className="mt-3 rounded-lg bg-white/15 px-3 py-2 text-[12px] backdrop-blur">
               可提现金额 <span className="font-bold tabular-nums">¥{WITHDRAWABLE.toFixed(2)}</span> · 满 ¥50 起提
@@ -47,7 +47,7 @@ function Withdraw() {
 
           <div className="mt-4 rounded-2xl border border-border bg-card p-4">
             <div className="flex items-center gap-1.5 text-sm font-semibold">
-              <Crown className="h-4 w-4 text-rose-500" /> 创作者会员 · ¥199/年
+              <Crown className="h-4 w-4 text-rose-500" /> 钻石会员 · ¥199/年
             </div>
             <ul className="mt-2 space-y-1.5 text-[12px] text-muted-foreground">
               <Item>返佣可提现（支付宝 / 微信 / 银行卡）</Item>
@@ -59,7 +59,7 @@ function Withdraw() {
               className="mt-3 w-full bg-gradient-to-r from-rose-500 to-orange-500 text-white hover:opacity-95"
               onClick={() => navigate({ to: "/membership" })}
             >
-              立即升级为创作者会员 <ArrowRight className="ml-1 h-4 w-4" />
+              立即升级为钻石会员 <ArrowRight className="ml-1 h-4 w-4" />
             </Button>
             <Link
               to="/invite-rules"

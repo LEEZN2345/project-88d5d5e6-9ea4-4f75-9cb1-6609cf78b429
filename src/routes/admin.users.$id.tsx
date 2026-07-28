@@ -115,7 +115,7 @@ function UserDetail() {
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-lg font-semibold">陈**</span>
-                <Badge variant="outline">黄金买手</Badge>
+                <Badge variant="outline">黄金会员</Badge>
                 <Badge variant={status === "active" ? "default" : "destructive"}>{status === "active" ? "正常" : "冻结"}</Badge>
                 {banned && <Badge variant="destructive">禁购</Badge>}
               </div>

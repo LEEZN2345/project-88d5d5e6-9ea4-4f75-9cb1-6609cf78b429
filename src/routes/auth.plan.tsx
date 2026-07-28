@@ -15,7 +15,7 @@ export const Route = createFileRoute("/auth/plan")({
   head: () => ({
     meta: [
       { title: "选择会员身份 · 东大门蚂蚁" },
-      { name: "description", content: "游客 / 普通 ¥99 / 创作者 ¥199 三档会员权益对比与开通。" },
+      { name: "description", content: "游客 / 普通 ¥99 / 钻石会员 ¥199 三档会员权益对比与开通。" },
     ],
   }),
   component: PlanPage,
@@ -29,7 +29,7 @@ function mask(p?: string) {
 function PlanPage() {
   const navigate = useNavigate();
   const { phone } = Route.useSearch();
-  const [selected, setSelected] = useState<MembershipTier>("creator");
+  const [selected, setSelected] = useState<MembershipTier>("diamond");
 
   const currentPlan = PLANS.find((p) => p.key === selected)!;
 
@@ -78,7 +78,7 @@ function PlanPage() {
             { icon: Coins, t: "购物返积分", d: "¥1=1 积分 · 1.5×加速" },
             { icon: PenSquare, t: "发帖赚返佣", d: "3% 创作 · 引用订单" },
             { icon: Users, t: "邀请分成", d: "L1 0.5% · L2 0.2%" },
-            { icon: Wallet, t: "佣金可提现", d: "创作者 T+1 到账" },
+            { icon: Wallet, t: "佣金可提现", d: "钻石会员 T+1 到账" },
           ].map((b) => {
             const Icon = b.icon;
             return (
@@ -97,7 +97,7 @@ function PlanPage() {
       <div className="mt-5 px-4">
         <div className="mb-2 flex items-baseline justify-between">
           <div className="text-sm font-semibold">选择你的会员身份</div>
-          <div className="text-[11px] text-muted-foreground">推荐创作者会员</div>
+          <div className="text-[11px] text-muted-foreground">推荐钻石会员</div>
         </div>
       </div>
 
@@ -112,7 +112,7 @@ function PlanPage() {
                 active ? "border-rose-400 ring-2 ring-rose-200" : "border-border"
               }`}
             >
-              {p.key === "creator" && (
+              {p.key === "diamond" && (
                 <div className="absolute right-3 top-3 rounded-full bg-rose-500 px-2 py-0.5 text-[10px] font-semibold text-white">
                   推荐
                 </div>
@@ -136,7 +136,7 @@ function PlanPage() {
                   </li>
                 ))}
               </ul>
-              {p.key === "creator" && (
+              {p.key === "diamond" && (
                 <div className="mt-3 rounded-lg bg-rose-50 px-2 py-1.5 text-[11px] text-rose-700">
                   自购年度 ≈ ¥6,700 即可回本；分享出去回本更快
                 </div>
@@ -152,12 +152,12 @@ function PlanPage() {
           </div>
           <div className="mt-2 grid grid-cols-2 gap-2 text-[11px]">
             <div className="rounded-lg bg-white p-2">
-              <div className="text-muted-foreground">普通会员 ¥99</div>
+              <div className="text-muted-foreground">黄金会员 ¥99</div>
               <div className="mt-0.5 font-semibold">≈ 17 次运费即回本</div>
               <div className="text-[10px] text-muted-foreground">按每单 ¥6 国内运费</div>
             </div>
             <div className="rounded-lg bg-white p-2">
-              <div className="text-muted-foreground">创作者 ¥199</div>
+              <div className="text-muted-foreground">钻石会员 ¥199</div>
               <div className="mt-0.5 font-semibold">≈ 1 篇好物 = 回本</div>
               <div className="text-[10px] text-muted-foreground">按 3% 分成、客单 ¥7,000</div>
             </div>
@@ -171,7 +171,7 @@ function PlanPage() {
               <span className="flex items-center gap-1.5"><HelpCircle className="h-3.5 w-3.5 text-rose-500" />可以先游客体验再升级吗？</span>
             </AccordionTrigger>
             <AccordionContent className="text-[11px] text-muted-foreground">
-              可以。游客可下单，随时在「我的 → 会员」升级为普通或创作者会员，不影响历史订单。
+              可以。游客可下单，随时在「我的 → 会员」升级为普通或钻石会员，不影响历史订单。
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="q2" className="border-b-0">
@@ -184,10 +184,10 @@ function PlanPage() {
           </AccordionItem>
           <AccordionItem value="q3" className="border-b-0">
             <AccordionTrigger className="py-2.5 text-xs">
-              <span className="flex items-center gap-1.5"><HelpCircle className="h-3.5 w-3.5 text-rose-500" />普通会员和创作者的返佣区别？</span>
+              <span className="flex items-center gap-1.5"><HelpCircle className="h-3.5 w-3.5 text-rose-500" />黄金会员和钻石会员的返佣区别？</span>
             </AccordionTrigger>
             <AccordionContent className="text-[11px] text-muted-foreground">
-              普通会员的返佣仅用于抵扣自己订单；创作者会员的返佣满 ¥50 可提现到微信 / 支付宝 / 银行卡，T+1 到账。
+              黄金会员的返佣仅用于抵扣自己订单；钻石会员的返佣满 ¥50 可提现到微信 / 支付宝 / 银行卡，T+1 到账。
             </AccordionContent>
           </AccordionItem>
         </Accordion>
@@ -216,7 +216,7 @@ function PlanPage() {
                     <th className="px-1.5 py-1.5 text-left font-medium">权益项</th>
                     <th className="px-1 py-1.5 text-center font-medium">游客</th>
                     <th className="px-1 py-1.5 text-center font-medium">普通</th>
-                    <th className="px-1 py-1.5 text-center font-medium text-rose-600">创作者</th>
+                    <th className="px-1 py-1.5 text-center font-medium text-rose-600">钻石会员</th>
                   </tr>
                 </thead>
                 <tbody>

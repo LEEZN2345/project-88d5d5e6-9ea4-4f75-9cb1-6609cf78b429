@@ -52,12 +52,13 @@ function Me() {
                 <span className="opacity-50">·</span>
                 <span>ID 20260615</span>
               </div>
-                          <Link to="/membership" className="shrink-0 self-start rounded-full bg-white/15 px-2 py-1 text-[10px] backdrop-blur">
+            </div>
+            <Link to="/membership" className="shrink-0 self-start rounded-full bg-white/15 px-2 py-1 text-[10px] backdrop-blur">
               权益 <ChevronRight className="inline h-2.5 w-2.5" />
             </Link>
           </div>
 
-          {/* 当前等级权益 */}
+          {/* 当前会员权益 */}
           <Link
             to="/membership"
             className="relative mt-4 block rounded-xl bg-white/10 p-3 backdrop-blur active:scale-[0.99]"

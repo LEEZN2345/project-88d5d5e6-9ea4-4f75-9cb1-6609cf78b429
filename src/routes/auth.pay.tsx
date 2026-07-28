@@ -7,7 +7,7 @@ import { Check, Wallet, QrCode, Timer, PartyPopper } from "lucide-react";
 import { toast } from "sonner";
 
 const search = z.object({
-  tier: z.enum(["normal", "creator"]),
+  tier: z.enum(["gold", "diamond"]),
 });
 
 export const Route = createFileRoute("/auth/pay")({
@@ -80,10 +80,10 @@ function PayPage() {
               去逛首页
             </Link>
             <Link
-              to={tier === "creator" ? "/discover/new" : "/points"}
+              to={tier === "diamond" ? "/discover/new" : "/points"}
               className="rounded-xl bg-gradient-to-r from-rose-500 to-orange-500 py-3 text-center text-sm font-semibold text-white"
             >
-              {tier === "creator" ? "发第一篇好物" : "去看积分商城"}
+              {tier === "diamond" ? "发第一篇好物" : "去看积分商城"}
             </Link>
           </div>
         </div>

@@ -7,7 +7,7 @@ import {
   PenSquare, Users, Wallet, Compass, ArrowRight,
 } from "lucide-react";
 
-const search = z.object({ tier: z.enum(["normal", "creator"]) });
+const search = z.object({ tier: z.enum(["gold", "diamond"]) });
 
 export const Route = createFileRoute("/auth/welcome")({
   validateSearch: (s) => search.parse(s),
@@ -38,7 +38,7 @@ function featuresFor(tier: MembershipTier): Feature[] {
     { icon: Truck, title: "全场包邮", desc: "国内段免运费，跨境按重计算", to: "/guide", cta: "看规则" },
     { icon: Coins, title: "我的资产", desc: "积分 / 佣金 / 优惠券一览", to: "/me", cta: "查看" },
   ];
-  if (tier === "creator") {
+  if (tier === "diamond") {
     return [
       { icon: PenSquare, title: "发第一篇好物", desc: "引用订单发帖，赚 3% 创作返佣", to: "/discover/new", cta: "去发布" },
       { icon: Users, title: "邀请返佣", desc: "L1 0.5% / L2 0.2%，好友消费即分成", to: "/me/promo-links", cta: "生成链接" },
@@ -53,8 +53,8 @@ function WelcomePage() {
   const { tier } = Route.useSearch();
   const plan = PLANS.find((p) => p.key === tier)!;
   const features = featuresFor(tier as MembershipTier);
-  const primary = tier === "creator" ? "/discover/new" : "/points";
-  const primaryLabel = tier === "creator" ? "去发第一篇好物" : "去积分商城";
+  const primary = tier === "diamond" ? "/discover/new" : "/points";
+  const primaryLabel = tier === "diamond" ? "去发第一篇好物" : "去积分商城";
 
   return (
     <MobileShell>

@@ -22,7 +22,7 @@ import {
   MessageSquare,
   Warehouse,
 } from "lucide-react";
-import { Image as ImageIcon, Tags, Building2, Sparkles, UserPlus, BookOpen, RefreshCcw, Tag, UsersRound, CalendarCheck, BarChart3, LayoutTemplate, Crown, Share2, Trophy } from "lucide-react";
+import { Image as ImageIcon, Tags, Building2, Sparkles, UserPlus, BookOpen, RefreshCcw, Tag, CalendarCheck, BarChart3, LayoutTemplate, Crown, Share2, Trophy } from "lucide-react";
 
 type NavItem = {
   to: string;
@@ -46,8 +46,6 @@ const NAV: NavItem[] = [
   { to: "/admin/rank", icon: Trophy, label: "榜单 / 热门档口", group: "商品" },
   { to: "/admin/users", icon: Users2, label: "用户管理", group: "用户与增长" },
   { to: "/admin/staff", icon: UserPlus, label: "员工与权限", group: "用户与增长" },
-  { to: "/admin/user-tags", icon: Tag, label: "会员标签", group: "用户与增长" },
-  { to: "/admin/user-groups", icon: UsersRound, label: "人群包分组", group: "用户与增长" },
   { to: "/admin/sign-in", icon: CalendarCheck, label: "签到管理", group: "用户与增长" },
   { to: "/admin/points-mall", icon: Gift, label: "积分商城", group: "用户与增长" },
   { to: "/admin/points-rules", icon: Sparkles, label: "积分规则", group: "用户与增长" },
@@ -158,7 +156,7 @@ function matchAdminBase(pathname: string): string {
     "/admin/orders", "/admin/feedback", "/admin/shipping", "/admin/stock",
     "/admin/groups", "/admin/after-sales", "/admin/refunds", "/admin/exchanges",
     "/admin/products", "/admin/categories", "/admin/shops", "/admin/rank",
-    "/admin/users", "/admin/user-tags", "/admin/user-groups", "/admin/sign-in",
+    "/admin/users", "/admin/user-tags", "/admin/sign-in",
     "/admin/points-mall", "/admin/points-rules", "/admin/membership",
     "/admin/commission", "/admin/invites", "/admin/payment-accounts",
     "/admin/analytics", "/admin/config", "/admin/banners", "/admin/home-decoration",

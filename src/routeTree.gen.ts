@@ -53,7 +53,6 @@ import { Route as AuthPlanRouteImport } from './routes/auth.plan'
 import { Route as AuthPayRouteImport } from './routes/auth.pay'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminUserTagsRouteImport } from './routes/admin.user-tags'
-import { Route as AdminUserGroupsRouteImport } from './routes/admin.user-groups'
 import { Route as AdminStockRouteImport } from './routes/admin.stock'
 import { Route as AdminStaffRouteImport } from './routes/admin.staff'
 import { Route as AdminSignInRouteImport } from './routes/admin.sign-in'
@@ -311,11 +310,6 @@ const AdminUserTagsRoute = AdminUserTagsRouteImport.update({
   path: '/admin/user-tags',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminUserGroupsRoute = AdminUserGroupsRouteImport.update({
-  id: '/admin/user-groups',
-  path: '/admin/user-groups',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminStockRoute = AdminStockRouteImport.update({
   id: '/admin/stock',
   path: '/admin/stock',
@@ -541,7 +535,6 @@ export interface FileRoutesByFullPath {
   '/admin/sign-in': typeof AdminSignInRoute
   '/admin/staff': typeof AdminStaffRoute
   '/admin/stock': typeof AdminStockRoute
-  '/admin/user-groups': typeof AdminUserGroupsRoute
   '/admin/user-tags': typeof AdminUserTagsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/auth/pay': typeof AuthPayRoute
@@ -623,7 +616,6 @@ export interface FileRoutesByTo {
   '/admin/sign-in': typeof AdminSignInRoute
   '/admin/staff': typeof AdminStaffRoute
   '/admin/stock': typeof AdminStockRoute
-  '/admin/user-groups': typeof AdminUserGroupsRoute
   '/admin/user-tags': typeof AdminUserTagsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/auth/pay': typeof AuthPayRoute
@@ -707,7 +699,6 @@ export interface FileRoutesById {
   '/admin/sign-in': typeof AdminSignInRoute
   '/admin/staff': typeof AdminStaffRoute
   '/admin/stock': typeof AdminStockRoute
-  '/admin/user-groups': typeof AdminUserGroupsRoute
   '/admin/user-tags': typeof AdminUserTagsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/auth/pay': typeof AuthPayRoute
@@ -792,7 +783,6 @@ export interface FileRouteTypes {
     | '/admin/sign-in'
     | '/admin/staff'
     | '/admin/stock'
-    | '/admin/user-groups'
     | '/admin/user-tags'
     | '/admin/users'
     | '/auth/pay'
@@ -874,7 +864,6 @@ export interface FileRouteTypes {
     | '/admin/sign-in'
     | '/admin/staff'
     | '/admin/stock'
-    | '/admin/user-groups'
     | '/admin/user-tags'
     | '/admin/users'
     | '/auth/pay'
@@ -957,7 +946,6 @@ export interface FileRouteTypes {
     | '/admin/sign-in'
     | '/admin/staff'
     | '/admin/stock'
-    | '/admin/user-groups'
     | '/admin/user-tags'
     | '/admin/users'
     | '/auth/pay'
@@ -1041,7 +1029,6 @@ export interface RootRouteChildren {
   AdminSignInRoute: typeof AdminSignInRoute
   AdminStaffRoute: typeof AdminStaffRoute
   AdminStockRoute: typeof AdminStockRoute
-  AdminUserGroupsRoute: typeof AdminUserGroupsRoute
   AdminUserTagsRoute: typeof AdminUserTagsRoute
   AdminUsersRoute: typeof AdminUsersRouteWithChildren
   CategoriesIdRoute: typeof CategoriesIdRoute
@@ -1373,13 +1360,6 @@ declare module '@tanstack/react-router' {
       path: '/admin/user-tags'
       fullPath: '/admin/user-tags'
       preLoaderRoute: typeof AdminUserTagsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/user-groups': {
-      id: '/admin/user-groups'
-      path: '/admin/user-groups'
-      fullPath: '/admin/user-groups'
-      preLoaderRoute: typeof AdminUserGroupsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/stock': {
@@ -1817,7 +1797,6 @@ const rootRouteChildren: RootRouteChildren = {
   AdminSignInRoute: AdminSignInRoute,
   AdminStaffRoute: AdminStaffRoute,
   AdminStockRoute: AdminStockRoute,
-  AdminUserGroupsRoute: AdminUserGroupsRoute,
   AdminUserTagsRoute: AdminUserTagsRoute,
   AdminUsersRoute: AdminUsersRouteWithChildren,
   CategoriesIdRoute: CategoriesIdRoute,

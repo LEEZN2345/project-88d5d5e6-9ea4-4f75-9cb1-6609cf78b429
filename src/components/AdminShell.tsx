@@ -156,7 +156,7 @@ function matchAdminBase(pathname: string): string {
     "/admin/orders", "/admin/feedback", "/admin/shipping", "/admin/stock",
     "/admin/groups", "/admin/after-sales", "/admin/refunds", "/admin/exchanges",
     "/admin/products", "/admin/categories", "/admin/shops", "/admin/rank",
-    "/admin/users", "/admin/user-tags", "/admin/user-groups", "/admin/sign-in",
+    "/admin/users", "/admin/user-tags", "/admin/sign-in",
     "/admin/points-mall", "/admin/points-rules", "/admin/membership",
     "/admin/commission", "/admin/invites", "/admin/payment-accounts",
     "/admin/analytics", "/admin/config", "/admin/banners", "/admin/home-decoration",

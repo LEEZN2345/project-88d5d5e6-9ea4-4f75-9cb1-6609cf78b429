@@ -3,7 +3,7 @@ import { MobileShell, MobileHeader } from "@/components/MobileShell";
 import { Button } from "@/components/ui/button";
 import { PRODUCTS, SHOPS, krwToCny, formatCNY } from "@/lib/mock-data";
 import {
-  Wallet, Users, ArrowRight, Info, TrendingUp, Clock, CheckCircle2, XCircle,
+  Wallet, Users, ArrowRight, Info, Clock, CheckCircle2, XCircle,
   Sparkles, BarChart3, CircleDollarSign, PackageCheck, ScrollText,
 } from "lucide-react";
 import { useMemo, useState } from "react";
